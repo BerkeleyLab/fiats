@@ -181,7 +181,7 @@ contains
     using_skip = self%network_configuration_%skip_connections()
   end procedure
 
-  module procedure default_real_differentiable_activation
+  module procedure default_real_activation
 #if defined __INTEL_COMPILER || _CRAYFTN
     type(string_t) :: activation_name
     activation_name = self%network_configuration_%activation_name()
@@ -206,7 +206,7 @@ contains
 #endif
   end procedure
 
-  module procedure double_precision_differentiable_activation
+  module procedure double_precision_activation
 #if defined __INTEL_COMPILER || _CRAYFTN
     type(string_t) :: activation_name
     activation_name = self%network_configuration_%activation_name()

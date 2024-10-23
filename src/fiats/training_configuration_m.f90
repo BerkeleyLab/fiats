@@ -18,20 +18,20 @@ module training_configuration_m
     type(hyperparameters_t(k)),    private :: hyperparameters_
     type(network_configuration_t), private :: network_configuration_
   contains
-    generic :: operator(==) => default_real_equals, double_precision_equals
-    procedure, private ::      default_real_equals, double_precision_equals
-    generic :: to_json => default_real_to_json, double_precision_to_json
-    procedure, private :: default_real_to_json, double_precision_to_json
-    generic :: mini_batches => default_real_mini_batches, double_precision_mini_batches
-    procedure, private ::      default_real_mini_batches, double_precision_mini_batches
-    generic :: optimizer_name => default_real_optimizer_name, double_precision_optimizer_name
-    procedure, private ::        default_real_optimizer_name, double_precision_optimizer_name
-    generic :: learning_rate => default_real_learning_rate, double_precision_learning_rate
-    procedure, private ::       default_real_learning_rate, double_precision_learning_rate
-    generic :: differentiable_activation => default_real_differentiable_activation, double_precision_differentiable_activation
-    procedure, private ::                   default_real_differentiable_activation, double_precision_differentiable_activation
-    generic :: nodes_per_layer => default_real_nodes_per_layer, double_precision_nodes_per_layer
-    procedure, private ::         default_real_nodes_per_layer, double_precision_nodes_per_layer
+    generic :: operator(==)     => default_real_equals          , double_precision_equals
+    procedure, private          :: default_real_equals          , double_precision_equals
+    generic :: to_json          => default_real_to_json         , double_precision_to_json
+    procedure, private          :: default_real_to_json         , double_precision_to_json
+    generic :: mini_batches     => default_real_mini_batches    , double_precision_mini_batches
+    procedure, private          :: default_real_mini_batches    , double_precision_mini_batches
+    generic :: optimizer_name   => default_real_optimizer_name  , double_precision_optimizer_name
+    procedure, private          :: default_real_optimizer_name  , double_precision_optimizer_name
+    generic :: learning_rate    => default_real_learning_rate   , double_precision_learning_rate
+    procedure, private          :: default_real_learning_rate   , double_precision_learning_rate
+    generic :: activation       => default_real_activation      , double_precision_activation
+    procedure, private          :: default_real_activation      , double_precision_activation
+    generic :: nodes_per_layer  => default_real_nodes_per_layer , double_precision_nodes_per_layer
+    procedure, private          :: default_real_nodes_per_layer , double_precision_nodes_per_layer
     generic :: skip_connections => default_real_skip_connections, double_precision_skip_connections
     procedure, private ::          default_real_skip_connections, double_precision_skip_connections
   end type
@@ -128,13 +128,13 @@ module training_configuration_m
       double precision rate
     end function
 
-    module function default_real_differentiable_activation(self) result(activation)
+    module function default_real_activation(self) result(activation)
       implicit none
       class(training_configuration_t), intent(in) :: self
       type(activation_t) activation
     end function
 
-    module function double_precision_differentiable_activation(self) result(activation)
+    module function double_precision_activation(self) result(activation)
       implicit none
       class(training_configuration_t(double_precision)), intent(in) :: self
       type(activation_t) activation

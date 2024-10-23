@@ -15,6 +15,22 @@ contains
     tensor_map%slope_ = maxima - minima
   end procedure
 
+  module procedure default_real_minima
+    minima = self%intercept_
+  end procedure
+
+  module procedure default_real_maxima
+    maxima = self%intercept_ + self%slope_
+  end procedure
+
+  module procedure double_precision_minima
+    minima = self%intercept_
+  end procedure
+
+  module procedure double_precision_maxima
+    maxima = self%intercept_ + self%slope_
+  end procedure
+
   module procedure construct_double_precision
     call assert(size(minima)==size(maxima),"tensor_map_s(construct_double_precision): size(minima)==size(maxima)")
     tensor_map%layer_ = layer
