@@ -164,7 +164,7 @@ contains
     integer(int64) start_training, finish_training
     logical stop_requested
 
-   input_names: &
+    input_names: &
     associate(input_names => &
       [string_t("pressure"), string_t("potential_temperature"), string_t("temperature"), &
        string_t("qv"), string_t("qc"), string_t("qr"), string_t("qs")] &
@@ -254,191 +254,177 @@ contains
     print *,"Defining output tensors for time step", args%start_step, "through", end_step, "with strides of", args%stride
     output_tensors = tensors(derivative, step_start = args%start_step, step_end = end_step, step_stride = args%stride)
 
-    output_map: &
+    output_map_and_network_file:  &
     associate(                    &
       output_map => tensor_map_t( &
          layer    = "outputs"     &
         ,minima   = [( derivative(v)%minimum(), v=1, size(derivative) )] &
         ,maxima   = [( derivative(v)%maximum(), v=1, size(derivative) )] &
-    ))
-      train_network: &
+      ), &
+      network_file => args%base_name // "_network.json" &
+    )
+      open(newunit=network_unit, file=network_file, form='formatted', status='old', iostat=io_status, action='read')
+      
+      read_or_initialize_network:   &
+      if (io_status==0) then
+        print *,"Reading network from file " // network_file
+        trainable_network = trainable_network_t(neural_network_t(file_t(string_t(network_file))))
+        close(network_unit)
+      else
+        close(network_unit)
+
+        initialize_network: &
+        block
+          character(len=len('YYYYMMDD')) date
+
+          call date_and_time(date)
+
+          print *,"Defining a new network from training_configuration_t and tensor_map_t objects"
+
+          activation: &
+          associate(activation => training_configuration%activation())
+            trainable_network = trainable_network_t( &
+               training_configuration                &
+              ,perturbation_magnitude = 0.05         &
+              ,metadata = [                          &
+                 string_t("ICAR microphysics" )      &
+                ,string_t("max-entropy-filter")      &
+                ,string_t(date                )      &
+                ,activation%function_name(    )      &
+                ,string_t(trim(merge("true ", "false", training_configuration%skip_connections()))) &
+              ]                                      &
+              ,input_map  = tensor_map_t(            &
+                 layer    = "inputs"                &
+                ,minima   = [( input_variable(v)%minimum(),  v=1, size( input_variable) )] &
+                ,maxima   = [( input_variable(v)%maximum(),  v=1, size( input_variable) )] &
+              )                        &
+              ,output_map = output_map &
+            )
+          end associate activation
+        end block initialize_network
+
+      end if read_or_initialize_network
+
+      print *, "Conditionally sampling for a flat distribution of output values"
+
+      flatten_histogram: &
       block
-        
-        network_file: &
-        associate(network_file => args%base_name // "_network.json")
-        
-          open(newunit=network_unit, file=network_file, form='formatted', status='old', iostat=io_status, action='read')
-          
-          read_or_initialize_network:   &
-          if (io_status==0) then
-            print *,"Reading network from file " // network_file
-            trainable_network = trainable_network_t(neural_network_t(file_t(string_t(network_file))))
-            close(network_unit)
-          else
-            close(network_unit)
+        integer i
+        !logical occupied(args%num_bins, args%num_bins, args%num_bins, args%num_bins, args%num_bins)
+        logical occupied(args%num_bins, args%num_bins)
+        logical keepers(size(output_tensors))
+        type(phase_space_bin_t), allocatable :: bin(:)
+        type(occupancy_t) occupancy
 
-            initialize_network: &
-            block
-              character(len=len('YYYYMMDD')) date
+        ! Determine the phase-space bin that holds each output tensor
+        bin = [(phase_space_bin_t(output_tensors(i), output_map%minima(), output_map%maxima(), args%num_bins), i = 1, size(output_tensors))]
+        call occupancy%vacate( dims = [( args%num_bins, i = 1, size(output_variable))] )
 
-              call date_and_time(date)
+        keepers = .false.
 
-              print *,"Defining a new network from training_configuration_t and tensor_map_t objects"
+        do i = 1, size(output_tensors)
+          if (occupancy%occupied(bin(i)%loc)) cycle
+          call occupancy%occupy(bin(i)%loc)
+          keepers(i) = .true.
+        end do
+        input_output_pairs = input_output_pair_t(pack(input_tensors, keepers), pack(output_tensors, keepers))
+        print '(*(a,i))' &
+         ," Keeping "              , size(input_output_pairs, kind=int64) &
+         ," out of "               , size(output_tensors, kind=int64)            &
+         ," input/output pairs in ", occupancy%num_occupied()             &
+         ," out of "               , occupancy%num_bins()                 &
+         ," bins."
 
-              activation: &
-              associate(activation => training_configuration%activation())
-                trainable_network = trainable_network_t( &
-                   training_configuration                &
-                  ,perturbation_magnitude = 0.05         &
-                  ,metadata = [                          &
-                     string_t("ICAR microphysics" )      &
-                    ,string_t("max-entropy-filter")      &
-                    ,string_t(date                )      &
-                    ,activation%function_name(    )      &
-                    ,string_t(trim(merge("true ", "false", training_configuration%skip_connections()))) &
-                  ]                                      &
-                  ,input_map  = tensor_map_t(            &
-                     layer    = "inputs"                &
-                    ,minima   = [( input_variable(v)%minimum(),  v=1, size( input_variable) )] &
-                    ,maxima   = [( input_variable(v)%maximum(),  v=1, size( input_variable) )] &
-                  )                        &
-                  ,output_map = output_map &
-                )
-              end associate activation
-            end block initialize_network
+      end block flatten_histogram
 
-          end if read_or_initialize_network
+      print *,"Normalizing the remaining input and output tensors"
+      input_output_pairs = trainable_network%map_to_training_ranges(input_output_pairs)
 
-          print *, "Conditionally sampling for a flat distribution of output values"
+      training_parameters: &
+      associate( &
+        num_pairs => size(input_output_pairs), &
+        n_bins => training_configuration%mini_batches(), &
+        adam => merge(.true., .false., training_configuration%optimizer_name() == "adam"), &
+        learning_rate => training_configuration%learning_rate() &
+      )
+        bins = [(bin_t(num_items=num_pairs, num_bins=n_bins, bin_number=b), b = 1, n_bins)]
 
-          flatten_histogram: &
-          block
-            integer i
-            !logical occupied(args%num_bins, args%num_bins, args%num_bins, args%num_bins, args%num_bins)
-            logical occupied(args%num_bins, args%num_bins)
-            logical keepers(size(output_tensors))
-            type(phase_space_bin_t), allocatable :: bin(:)
-            type(occupancy_t) occupancy
+        print *,"Training network"
+        print *, "       Epoch  Cost (avg)"
 
-            ! Determine the phase-space bin that holds each output tensor
-            bin = [(phase_space_bin_t(output_tensors(i), output_map%minima(), output_map%maxima(), args%num_bins), i = 1, size(output_tensors))]
-            call occupancy%vacate( dims = [( args%num_bins, i = 1, size(output_variable))] )
-
-            keepers = .false.
-
-            do i = 1, size(output_tensors)
-              if (occupancy%occupied(bin(i)%loc)) cycle
-              call occupancy%occupy(bin(i)%loc)
-              keepers(i) = .true.
-            end do
-            input_output_pairs = input_output_pair_t(pack(input_tensors, keepers), pack(output_tensors, keepers))
-            print '(*(a,i))' &
-             ," Keeping "              , size(input_output_pairs, kind=int64) &
-             ," out of "               , size(output_tensors, kind=int64)            &
-             ," input/output pairs in ", occupancy%num_occupied()             &
-             ," out of "               , occupancy%num_bins()                 &
-             ," bins."
-
-          end block flatten_histogram
-
-        print *,"Normalizing the remaining input and output tensors"
-        input_output_pairs = trainable_network%map_to_training_ranges(input_output_pairs)
-
-        training_parameters: &
-        associate( &
-          num_pairs => size(input_output_pairs), &
-          n_bins => training_configuration%mini_batches(), &
-          adam => merge(.true., .false., training_configuration%optimizer_name() == "adam"), &
-          learning_rate => training_configuration%learning_rate() &
-        )
-          bins = [(bin_t(num_items=num_pairs, num_bins=n_bins, bin_number=b), b = 1, n_bins)]
-
-          print *,"Training network"
-          print *, "       Epoch  Cost (avg)"
-
-          call system_clock(start_training)
-        
-          train_write_and_maybe_exit: &
-          block
-            integer first_epoch
-            integer me
-
-
+        call system_clock(start_training)
+      
+        train_write_and_maybe_exit: &
+        block
+          integer first_epoch
+          integer me
 #if defined(MULTI_IMAGE_SUPPORT)
           me = this_image()
 #else
           me = 1
 #endif
-            if (me==1) first_epoch = plot_file%previous_epoch + 1
-
+          if (me==1) first_epoch = plot_file%previous_epoch + 1
 #if defined(MULTI_IMAGE_SUPPORT)
-            call co_broadcast(first_epoch, source_image=1)
+          call co_broadcast(first_epoch, source_image=1)
 #endif
-            last_epoch: &
-            associate(last_epoch => first_epoch + args%num_epochs - 1)
-              epochs: &
-              do epoch = first_epoch, last_epoch
+          last_epoch: &
+          associate(last_epoch => first_epoch + args%num_epochs - 1)
+            epochs: &
+            do epoch = first_epoch, last_epoch
 
-                if (size(bins)>1) call shuffle(input_output_pairs) ! set up for stochastic gradient descent
-                mini_batches = [(mini_batch_t(input_output_pairs(bins(b)%first():bins(b)%last())), b = 1, size(bins))]
+              if (size(bins)>1) call shuffle(input_output_pairs) ! set up for stochastic gradient descent
+              mini_batches = [(mini_batch_t(input_output_pairs(bins(b)%first():bins(b)%last())), b = 1, size(bins))]
 
-                call trainable_network%train(mini_batches, cost, adam, learning_rate)
+              call trainable_network%train(mini_batches, cost, adam, learning_rate)
 
-                average_cost: &
-                associate(average_cost => sum(cost)/size(cost))
-                  converged: &
-                  associate(converged => average_cost <= args%cost_tolerance)
+              average_cost: &
+              associate(average_cost => sum(cost)/size(cost))
+                converged: &
+                associate(converged => average_cost <= args%cost_tolerance)
 
-                    image_1_maybe_writes: &
-                    if (me==1 .and. any([converged, epoch==[first_epoch,last_epoch], mod(epoch,args%report_step)==0])) then
+                  image_1_maybe_writes: &
+                  if (me==1 .and. any([converged, epoch==[first_epoch,last_epoch], mod(epoch,args%report_step)==0])) then
 
-                      print *, epoch, average_cost
-                      write(plot_file%plot_unit,*) epoch, average_cost
+                    print *, epoch, average_cost
+                    write(plot_file%plot_unit,*) epoch, average_cost
 
-                      associate(json_file => trainable_network%to_json())
-                        call json_file%write_lines(string_t(network_file))
-                      end associate
+                    associate(json_file => trainable_network%to_json())
+                      call json_file%write_lines(string_t(network_file))
+                    end associate
 
-                    end if image_1_maybe_writes
+                  end if image_1_maybe_writes
 
-                    signal_convergence: & 
-                    if (converged) then
-                      block
-                        integer unit
-                        open(newunit=unit, file="converged", status="unknown") ! The train.sh script detects & removes this file.
-                        close(unit)
-                        exit epochs
-                      end block
-                    end if signal_convergence
-                  end associate converged
-                end associate average_cost
+                  signal_convergence: & 
+                  if (converged) then
+                    block
+                      integer unit
+                      open(newunit=unit, file="converged", status="unknown") ! The train.sh script detects & removes this file.
+                      close(unit)
+                      exit epochs
+                    end block
+                  end if signal_convergence
+                end associate converged
+              end associate average_cost
 
-                inquire(file="stop", exist=stop_requested)
+              inquire(file="stop", exist=stop_requested)
 
-                graceful_exit: &
-                if (stop_requested) then
-                  print *,'Shutting down because a file named "stop" was found.'
-                  return
-                end if graceful_exit
+              graceful_exit: &
+              if (stop_requested) then
+                print *,'Shutting down because a file named "stop" was found.'
+                return
+              end if graceful_exit
 
-              end do epochs
-            end associate last_epoch
-          end block train_write_and_maybe_exit
+            end do epochs
+          end associate last_epoch
+        end block train_write_and_maybe_exit
 
-        end associate training_parameters
+      end associate training_parameters
+    end associate output_map_and_network_file
 
-        end associate network_file
-
-        call system_clock(finish_training)
-        print *,"Training time: ", real(finish_training - start_training, real64)/real(clock_rate, real64),"for", &
-          args%num_epochs,"epochs"
-
-      !  end associate 
-      end block train_network
-
-    end associate output_map
-
-    !close(plot_file%plot_unit)
+    call system_clock(finish_training)
+    print *,"Training time: ", real(finish_training - start_training, real64)/real(clock_rate, real64),"for", &
+      args%num_epochs,"epochs"
+    close(plot_file%plot_unit)
 
   end subroutine read_train_write
 
