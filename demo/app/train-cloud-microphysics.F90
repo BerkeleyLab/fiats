@@ -164,16 +164,19 @@ contains
     integer(int64) start_training, finish_training
     logical stop_requested
 
+   input_names: &
     associate(input_names => &
       [string_t("pressure"), string_t("potential_temperature"), string_t("temperature"), &
        string_t("qv"), string_t("qc"), string_t("qr"), string_t("qs")] &
     )
       allocate(input_variable(size(input_names)))
 
+      input_file_name: &
       associate(input_file_name => args%base_name // "_input.nc")
 
         print *,"Reading physics-based model inputs from " // input_file_name 
 
+        input_file: &
         associate(input_file => netCDF_file_t(input_file_name))
 
           do v=1, size(input_variable) 
@@ -188,18 +191,21 @@ contains
           print *,"- reading time"
           call input_time%input("time", input_file, rank=1)
 
-        end associate
-      end associate
-    end associate
+        end associate input_file
+      end associate input_file_name
+    end associate input_names
 
+    output_names: &
     associate(output_names => [string_t("potential_temperature"),string_t("qv"), string_t("qc"), string_t("qr"), string_t("qs")])
 
       allocate(output_variable(size(output_names)))
 
+      output_file_name: &
       associate(output_file_name => args%base_name // "_output.nc")
 
         print *,"Reading physics-based model outputs from " // output_file_name 
 
+        output_file: &
         associate(output_file => netCDF_file_t(output_file_name))
 
           do v=1, size(output_variable)
@@ -216,23 +222,25 @@ contains
 
           call assert(output_time%conformable_with(input_time), "train_cloud_microphysics: input/output time conformance")
 
-        end associate
-      end associate
+        end associate output_file
+      end associate output_file_name
 
       print *,"Calculating desired neural-network model outputs"
 
       allocate(derivative, mold=output_variable)
 
+      dt: &
       associate(dt => NetCDF_variable_t(output_time - input_time, "dt"))
         do v = 1, size(derivative)
+          derivative_name: &
           associate(derivative_name => "d" // output_names(v)%string() // "/dt")
             print *,"- " // derivative_name
             derivative(v) = NetCDF_variable_t( input_variable(v) - output_variable(v) / dt, derivative_name)
             call assert(.not. derivative(v)%any_nan(), "train_cloud_microhphysics: non NaN's")
-          end associate
+          end associate derivative_name
         end do
-      end associate
-    end associate
+      end associate dt
+    end associate output_names
 
     if (allocated(args%end_step)) then
       end_step = args%end_step
@@ -246,6 +254,7 @@ contains
     print *,"Defining output tensors for time step", args%start_step, "through", end_step, "with strides of", args%stride
     output_tensors = tensors(derivative, step_start = args%start_step, step_end = end_step, step_stride = args%stride)
 
+    output_map: &
     associate(                    &
       output_map => tensor_map_t( &
          layer    = "outputs"     &
@@ -255,7 +264,8 @@ contains
       train_network: &
       block
         
-        associate( network_file => args%base_name // "_network.json")
+        network_file: &
+        associate(network_file => args%base_name // "_network.json")
         
           open(newunit=network_unit, file=network_file, form='formatted', status='old', iostat=io_status, action='read')
           
@@ -275,6 +285,7 @@ contains
 
               print *,"Defining a new network from training_configuration_t and tensor_map_t objects"
 
+              activation: &
               associate(activation => training_configuration%activation())
                 trainable_network = trainable_network_t( &
                    training_configuration                &
@@ -293,7 +304,7 @@ contains
                   )                        &
                   ,output_map = output_map &
                 )
-              end associate
+              end associate activation
             end block initialize_network
 
           end if read_or_initialize_network
@@ -330,98 +341,102 @@ contains
 
           end block flatten_histogram
 
-        end associate
+        print *,"Normalizing the remaining input and output tensors"
+        input_output_pairs = trainable_network%map_to_training_ranges(input_output_pairs)
 
-      !  print *,"Normalizing the remaining input and output tensors"
-      !  input_output_pairs = trainable_network%map_to_training_ranges(input_output_pairs)
+        training_parameters: &
+        associate( &
+          num_pairs => size(input_output_pairs), &
+          n_bins => training_configuration%mini_batches(), &
+          adam => merge(.true., .false., training_configuration%optimizer_name() == "adam"), &
+          learning_rate => training_configuration%learning_rate() &
+        )
+          bins = [(bin_t(num_items=num_pairs, num_bins=n_bins, bin_number=b), b = 1, n_bins)]
 
-      !  associate( &
-      !    num_pairs => size(input_output_pairs), &
-      !    n_bins => training_configuration%mini_batches(), &
-      !    adam => merge(.true., .false., training_configuration%optimizer_name() == "adam"), &
-      !    learning_rate => training_configuration%learning_rate() &
-      !  )
-      !    bins = [(bin_t(num_items=num_pairs, num_bins=n_bins, bin_number=b), b = 1, n_bins)]
+          print *,"Training network"
+          print *, "       Epoch  Cost (avg)"
 
-      !    print *,"Training network"
-      !    print *, "       Epoch  Cost (avg)"
-
-      !    call system_clock(start_training)
-      !  
-      !    train_write_and_maybe_exit: &
-      !    block
-      !      integer first_epoch
-      !      integer me
+          call system_clock(start_training)
+        
+          train_write_and_maybe_exit: &
+          block
+            integer first_epoch
+            integer me
 
 
 #if defined(MULTI_IMAGE_SUPPORT)
-      !    me = this_image()
+          me = this_image()
 #else
-      !    me = 1
+          me = 1
 #endif
-      !      if (me==1) first_epoch = plot_file%previous_epoch + 1
+            if (me==1) first_epoch = plot_file%previous_epoch + 1
 
 #if defined(MULTI_IMAGE_SUPPORT)
-      !      call co_broadcast(first_epoch, source_image=1)
+            call co_broadcast(first_epoch, source_image=1)
 #endif
-      !      associate(last_epoch => first_epoch + args%num_epochs - 1)
-      !        epochs: &
-      !        do epoch = first_epoch, last_epoch
+            last_epoch: &
+            associate(last_epoch => first_epoch + args%num_epochs - 1)
+              epochs: &
+              do epoch = first_epoch, last_epoch
 
-      !          if (size(bins)>1) call shuffle(input_output_pairs) ! set up for stochastic gradient descent
-      !          mini_batches = [(mini_batch_t(input_output_pairs(bins(b)%first():bins(b)%last())), b = 1, size(bins))]
+                if (size(bins)>1) call shuffle(input_output_pairs) ! set up for stochastic gradient descent
+                mini_batches = [(mini_batch_t(input_output_pairs(bins(b)%first():bins(b)%last())), b = 1, size(bins))]
 
-      !          call trainable_network%train(mini_batches, cost, adam, learning_rate)
+                call trainable_network%train(mini_batches, cost, adam, learning_rate)
 
-      !          associate(average_cost => sum(cost)/size(cost))
-      !            associate(converged => average_cost <= args%cost_tolerance)
+                average_cost: &
+                associate(average_cost => sum(cost)/size(cost))
+                  converged: &
+                  associate(converged => average_cost <= args%cost_tolerance)
 
-      !              image_1_maybe_writes: &
-      !              if (me==1 .and. any([converged, epoch==[first_epoch,last_epoch], mod(epoch,args%report_step)==0])) then
+                    image_1_maybe_writes: &
+                    if (me==1 .and. any([converged, epoch==[first_epoch,last_epoch], mod(epoch,args%report_step)==0])) then
 
-      !                print *, epoch, average_cost
-      !                write(plot_file%plot_unit,*) epoch, average_cost
+                      print *, epoch, average_cost
+                      write(plot_file%plot_unit,*) epoch, average_cost
 
-      !                associate(json_file => trainable_network%to_json())
-      !                  call json_file%write_lines(string_t(network_file))
-      !                end associate
+                      associate(json_file => trainable_network%to_json())
+                        call json_file%write_lines(string_t(network_file))
+                      end associate
 
-      !              end if image_1_maybe_writes
+                    end if image_1_maybe_writes
 
-      !              signal_convergence: & 
-      !              if (converged) then
-      !                block
-      !                  integer unit
-      !                  open(newunit=unit, file="converged", status="unknown") ! The train.sh script detects & removes this file.
-      !                  close(unit)
-      !                  exit epochs
-      !                end block
-      !              end if signal_convergence
-      !            end associate
-      !          end associate
+                    signal_convergence: & 
+                    if (converged) then
+                      block
+                        integer unit
+                        open(newunit=unit, file="converged", status="unknown") ! The train.sh script detects & removes this file.
+                        close(unit)
+                        exit epochs
+                      end block
+                    end if signal_convergence
+                  end associate converged
+                end associate average_cost
 
-      !          inquire(file="stop", exist=stop_requested)
+                inquire(file="stop", exist=stop_requested)
 
-      !          graceful_exit: &
-      !          if (stop_requested) then
-      !            print *,'Shutting down because a file named "stop" was found.'
-      !            return
-      !          end if graceful_exit
+                graceful_exit: &
+                if (stop_requested) then
+                  print *,'Shutting down because a file named "stop" was found.'
+                  return
+                end if graceful_exit
 
-      !        end do epochs
-      !      end associate
-      !    end block train_write_and_maybe_exit
+              end do epochs
+            end associate last_epoch
+          end block train_write_and_maybe_exit
 
-      !  end associate
+        end associate training_parameters
 
-      !  call system_clock(finish_training)
-      !  print *,"Training time: ", real(finish_training - start_training, real64)/real(clock_rate, real64),"for", &
-      !    args%num_epochs,"epochs"
+        end associate network_file
+
+        call system_clock(finish_training)
+        print *,"Training time: ", real(finish_training - start_training, real64)/real(clock_rate, real64),"for", &
+          args%num_epochs,"epochs"
 
       !  end associate 
       end block train_network
 
-    end associate
+    end associate output_map
 
     !close(plot_file%plot_unit)
 
