@@ -37,9 +37,6 @@ contains
   end procedure
 
   module procedure default_real_from_file
-    integer, parameter :: hyperparameters_start=2, hyperparameters_end=6, separator_line=7   ! line numbers
-    integer, parameter :: net_config_start=8, net_config_end=12                         ! line numbers
-    integer, parameter :: file_start=hyperparameters_start-1, file_end=net_config_end+1 ! line numbers
 #if defined __INTEL_COMPILER || _CRAYFTN
     type(string_t), allocatable :: lines(:)
 #endif
@@ -48,35 +45,20 @@ contains
 
 #if defined __INTEL_COMPILER || _CRAYFTN
     lines = training_configuration%file_t%lines()
-    call assert(trim(adjustl(lines(file_start)%string()))==header, &
-      "training_configuration_s(default_precision_from_file): header",lines(file_start))
-    training_configuration%hyperparameters_ = hyperparameters_t(lines(hyperparameters_start:hyperparameters_end))
-    call assert(trim(adjustl(lines(separator_line)%string()))==separator, &
-      "training_configuration_s(default_precision_from_file): separator", &
-      lines(file_start))
-    training_configuration%network_configuration_= network_configuration_t(lines(net_config_start:net_config_end))
-    call assert(trim(adjustl(lines(file_end)%string()))==footer, &
-      "training_configuration_s(default_precision_from_file): footer", lines(file_end))
 #else
     associate(lines => training_configuration%file_t%lines())
-      call assert(trim(adjustl(lines(file_start)%string()))==header, &
-        "training_configuration_s(default_precision_from_file): header",lines(file_start))
-      training_configuration%hyperparameters_ = hyperparameters_t(lines(hyperparameters_start:hyperparameters_end))
-      call assert(trim(adjustl(lines(separator_line)%string()))==separator, &
-        "training_configuration_s(default_precision_from_file): separator", &
-        lines(file_start))
-      training_configuration%network_configuration_= network_configuration_t(lines(net_config_start:net_config_end))
-      call assert(trim(adjustl(lines(file_end)%string()))==footer, &
-        "training_configuration_s(default_precision_from_file): footer", lines(file_end))
+#endif
+
+      training_configuration%hyperparameters_ = hyperparameters_t(lines)
+      training_configuration%network_configuration_= network_configuration_t(lines)
+
+#if ! defined __INTEL_COMPILER || _CRAYFTN
     end associate
 #endif
 
   end procedure
 
   module procedure double_precision_from_file
-    integer, parameter :: hyperparameters_start=2, hyperparameters_end=6, separator_line=7   ! line numbers
-    integer, parameter :: net_config_start=8, net_config_end=12                         ! line numbers
-    integer, parameter :: file_start=hyperparameters_start-1, file_end=net_config_end+1 ! line numbers
 #if defined __INTEL_COMPILER || _CRAYFTN
     type(double_precision_string_t), allocatable :: lines(:)
 #endif
@@ -85,40 +67,16 @@ contains
 
 #if defined __INTEL_COMPILER || _CRAYFTN
     lines = training_configuration%double_precision_file_t%double_precision_lines()
-
-    call assert(adjustl(lines(file_start)%string()) == header, &
-      "training_configuration_s(double_precision_from_file): header",lines(file_start))
-
-    training_configuration%hyperparameters_ = hyperparameters_t(lines(hyperparameters_start:hyperparameters_end))
-
-    call assert(adjustl(lines(separator_line)%string()) == separator, &
-      "training_configuration_s(double_precision_from_file): separator", lines(file_start))
-
-    training_configuration%network_configuration_= network_configuration_t(lines(net_config_start:net_config_end))
-
-    call assert(adjustl(lines(file_end)%string()) == footer, &
-      "training_configuration_s(double_precision_from_file): footer", lines(file_end))
 #else
-
     associate(lines => training_configuration%double_precision_file_t%double_precision_lines())
-
-      call assert(adjustl(lines(file_start)%string()) == header, &
-        "training_configuration_s(double_precision_from_file): header", lines(file_start))
-
-      training_configuration%hyperparameters_ = hyperparameters_t(lines(hyperparameters_start:hyperparameters_end))
-
-      call assert(adjustl(lines(separator_line)%string()) == separator, &
-        "training_configuration_s(double_precision_from_file): separator", lines(file_start))
-
-      training_configuration%network_configuration_= network_configuration_t(lines(net_config_start:net_config_end))
-
-      call assert(adjustl(lines(file_end)%string()) == footer, &
-        "training_configuration_s(double_precision_from_file): footer", lines(file_end))
-
-    end associate
-
 #endif
 
+      training_configuration%hyperparameters_ = hyperparameters_t(lines)
+      training_configuration%network_configuration_= network_configuration_t(lines)
+
+#if ! defined __INTEL_COMPILER || _CRAYFTN
+    end associate
+#endif
   end procedure
 
   module procedure default_real_to_json
