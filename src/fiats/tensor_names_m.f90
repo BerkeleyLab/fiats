@@ -13,6 +13,8 @@ module tensor_names_m
   contains
     procedure :: to_json
     procedure :: equals
+    procedure :: input_names
+    procedure :: output_names
     generic :: operator(==) => equals
   end type
 
@@ -44,6 +46,18 @@ module tensor_names_m
       implicit none
       class(tensor_names_t), intent(in) :: lhs, rhs
       logical lhs_equals_rhs
+    end function
+
+    pure module function input_names(self) result(names)
+      implicit none
+      class(tensor_names_t), intent(in) :: self
+      type(string_t), allocatable :: names(:)
+    end function
+
+    pure module function output_names(self) result(names)
+      implicit none
+      class(tensor_names_t), intent(in) :: self
+      type(string_t), allocatable :: names(:)
     end function
 
   end interface

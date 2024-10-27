@@ -51,4 +51,12 @@ contains
 
   end procedure
 
+  module procedure input_names
+    names = self%inputs_
+  end procedure
+
+  module procedure output_names
+    names = self%outputs_
+  end procedure
+
 end submodule tensor_names_s

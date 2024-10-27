@@ -36,6 +36,10 @@ module training_configuration_m
     procedure, private          :: default_real_nodes_per_layer , double_precision_nodes_per_layer
     generic :: skip_connections => default_real_skip_connections, double_precision_skip_connections
     procedure, private ::          default_real_skip_connections, double_precision_skip_connections
+    generic :: input_names      => default_real_input_names     , double_precision_input_names
+    procedure, private ::          default_real_input_names     , double_precision_input_names
+    generic :: output_names     => default_real_output_names    , double_precision_output_names
+    procedure, private ::          default_real_output_names    , double_precision_output_names
   end type
 
   interface training_configuration_t
@@ -168,6 +172,30 @@ module training_configuration_m
       logical using_skip
     end function
  
+    pure module function default_real_input_names(self) result(input_names)
+      implicit none
+      class(training_configuration_t), intent(in) :: self
+      type(string_t), allocatable :: input_names(:)
+    end function
+
+    pure module function double_precision_input_names(self) result(input_names)
+      implicit none
+      class(training_configuration_t(double_precision)), intent(in) :: self
+      type(string_t), allocatable :: input_names(:)
+    end function
+
+    pure module function default_real_output_names(self) result(output_names)
+      implicit none
+      class(training_configuration_t), intent(in) :: self
+      type(string_t), allocatable :: output_names(:)
+    end function
+
+    pure module function double_precision_output_names(self) result(output_names)
+      implicit none
+      class(training_configuration_t(double_precision)), intent(in) :: self
+      type(string_t), allocatable :: output_names(:)
+    end function
+
   end interface
 
 end module

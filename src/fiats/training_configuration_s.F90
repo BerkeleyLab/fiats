@@ -171,8 +171,7 @@ contains
         case default
           error stop 'activation_factory_s(factory): unrecognized activation name "' // activation_name%string() // '"' 
       end select
-#if defined __INTEL_COMPILER || _CRAYFTN
-#else
+#if ! (defined __INTEL_COMPILER || _CRAYFTN)
     end associate
 #endif
   end procedure
@@ -196,10 +195,25 @@ contains
         case default
           error stop 'activation_factory_s(factory): unrecognized activation name "' // activation_name%string() // '"' 
       end select
-#if defined __INTEL_COMPILER || _CRAYFTN
-#else
+#if ! (defined __INTEL_COMPILER || _CRAYFTN)
     end associate
 #endif
+  end procedure
+
+  module procedure default_real_input_names
+    input_names = self%tensor_names_%input_names()
+  end procedure
+
+  module procedure double_precision_input_names
+    input_names = self%tensor_names_%input_names()
+  end procedure
+
+  module procedure default_real_output_names
+    output_names = self%tensor_names_%output_names()
+  end procedure
+
+  module procedure double_precision_output_names
+    output_names = self%tensor_names_%output_names()
   end procedure
 
 end submodule training_configuration_s
