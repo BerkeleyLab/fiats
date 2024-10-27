@@ -2,7 +2,7 @@
 ! Terms of use are as specified in LICENSE.txt
 submodule(tensor_names_m) tensor_names_s
   use assert_m, only : assert
-  use julienne_m, only : operator(.csv.)
+  use julienne_m, only : operator(.csv.), operator(.cat.)
   implicit none
 
   character(len=*), parameter :: inputs_key = "inputs"
@@ -41,13 +41,14 @@ contains
 
   module procedure to_json
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
-    
+
     lines = [ &
       string_t(indent // '"tensor names": {'                 ) &
-     ,indent // '"inputs"  : [' // .csv. self%inputs_%bracket('"')  // ']'  &
-     ,indent // '"outputs" : [' // .csv. self%outputs_%bracket('"') // ']'  &
+     ,indent // indent // '"inputs"  : [' // .csv. self%inputs_%bracket('"')  // '],'  &
+     ,indent // indent // '"outputs" : [' // .csv. self%outputs_%bracket('"') // ']'  &
      ,string_t(indent // '}'                                 ) &
     ]
+
   end procedure
 
 end submodule tensor_names_s

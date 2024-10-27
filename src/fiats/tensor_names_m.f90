@@ -20,7 +20,7 @@ module tensor_names_m
 
     pure module function from_json(lines) result(tensor_names)
       implicit none
-      type(string_t), intent(in) :: lines(:)
+      class(string_t), intent(in) :: lines(:)
       type(tensor_names_t) tensor_names
     end function
 
