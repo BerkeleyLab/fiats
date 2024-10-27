@@ -61,7 +61,7 @@ program train_cloud_microphysics
   call system_clock(t_finish)
 
   print *,"System clock time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
-  print *,new_line('a') // "______train_cloud_microhpysics done _______"
+  print *,new_line('a') // "______train_cloud_microphysics done _______"
 
 contains
 
@@ -164,11 +164,14 @@ contains
     integer(int64) start_training, finish_training
     logical stop_requested
 
+    type(file_t) file
+
+    file = file_t(training_configuration%to_json())
+    call file%write_lines()
+
     input_names: &
-    associate(input_names => &
-      [string_t("pressure"), string_t("potential_temperature"), string_t("temperature"), &
-       string_t("qv"), string_t("qc"), string_t("qr"), string_t("qs")] &
-    )
+    associate(input_names => training_configuration%input_names())
+
       allocate(input_variable(size(input_names)))
 
       input_file_name: &
@@ -196,7 +199,7 @@ contains
     end associate input_names
 
     output_names: &
-    associate(output_names => [string_t("potential_temperature"),string_t("qv"), string_t("qc"), string_t("qr"), string_t("qs")])
+    associate(output_names => training_configuration%output_names())
 
       allocate(output_variable(size(output_names)))
 

@@ -9,5 +9,10 @@
          "skip connections" : false,
          "nodes per layer" : [7,32,32,32,5],
          "activation function" : "sigmoid"
+     },
+ ,
+     "tensor names": {
+         "inputs"  : ["pressure", "potential_temperature", "temperature", "qv", "qc", "qr", "qs"],
+         "outputs" : ["potential_temperature","qv", "qc", "qr", "qs"]
      }
  }
