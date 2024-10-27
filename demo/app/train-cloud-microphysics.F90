@@ -164,11 +164,6 @@ contains
     integer(int64) start_training, finish_training
     logical stop_requested
 
-    type(file_t) file
-
-    file = file_t(training_configuration%to_json())
-    call file%write_lines()
-
     input_names: &
     associate(input_names => training_configuration%input_names())
 
