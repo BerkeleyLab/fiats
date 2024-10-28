@@ -12,7 +12,7 @@
      },
  ,
      "tensor names": {
-         "inputs"  : ["pressure", "potential_temperature", "temperature", "qv", "qc", "qr", "qs"],
+         "inputs"  : ["potential_temperature","qv", "qc", "qr", "qs", "pressure", "temperature"],
          "outputs" : ["potential_temperature","qv", "qc", "qr", "qs"]
      }
  }
