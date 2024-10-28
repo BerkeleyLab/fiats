@@ -57,16 +57,16 @@ contains
     type(file_t) json_output_file, json_input_file
     type(tensor_t) inputs, outputs 
 
-    print *, "Constructing an neural_network_t neural-network object from scratch."
+    print *, "Constructing a neural_network_t neural-network object from scratch."
     network = identity_network()
 
-    print *, "Converting an neural_network_t object to a file_t object."
+    print *, "Converting a neural_network_t object to a file_t object."
     json_output_file = network%to_json()
 
-    print *, "Writing an neural_network_t object to the file '"//output_file_name%string()//"' in JSON format."
+    print *, "Writing a neural_network_t object to the file '"//output_file_name%string()//"' in JSON format."
     call json_output_file%write_lines(output_file_name)
 
-    print *, "Reading an neural_network_t object from the same JSON file '"//output_file_name%string()//"'."
+    print *, "Reading a neural_network_t object from the same JSON file '"//output_file_name%string()//"'."
     json_input_file = file_t(output_file_name)
 
     print *, "Constructing a new neural_network_t object from the parameters read."
