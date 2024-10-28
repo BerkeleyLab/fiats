@@ -265,7 +265,12 @@ contains
   end procedure
 
   module procedure default_real_subtract
+
     call assert(lhs%conformable_with(rhs), "NetCDF_variable_s(default_real_subtract): lhs%conformable_with(rhs)")
+    call assert(lhs%name_==rhs%name_, "NetCDF_variable_s(default_real_subtract): lhs%name_==rhs%name_", lhs%name_//"/="//rhs%name_)
+
+    difference%name_ = lhs%name_
+
     select case(lhs%rank())
     case(1)
       difference%values_1D_ = lhs%values_1D_ - rhs%values_1D_
@@ -281,7 +286,12 @@ contains
   end procedure
 
   module procedure double_precision_subtract
+
     call assert(lhs%conformable_with(rhs), "NetCDF_variable_s(double_precision_subtract): lhs%conformable_with(rhs)")
+    call assert(lhs%name_ == rhs%name_, "NetCDF_variable_s(double_precision_subtract): lhs%name_==rhs%name_",lhs%name_//"/="//rhs%name_)
+
+    difference%name_ = lhs%name_
+
     select case(lhs%rank())
     case(1)
       difference%values_1D_ = lhs%values_1D_ - rhs%values_1D_
