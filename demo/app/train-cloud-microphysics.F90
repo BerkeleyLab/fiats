@@ -75,7 +75,7 @@ contains
 
     if (.not. preexisting_plot_file) then
       open(newunit=plot_unit, file=plot_file_name, status="new", action="write")
-      write(plot_unit,*) "      Epoch  Cost (avg)"
+      write(plot_unit,'(a)') "      Epoch  Cost (avg)"
       previous_epoch = 0
     else
       associate(plot_file => file_t(string_t(plot_file_name)))
@@ -233,7 +233,7 @@ contains
           derivative_name: &
           associate(derivative_name => "d" // output_names(v)%string() // "/dt")
             print *,"- " // derivative_name
-            derivative(v) = NetCDF_variable_t( input_variable(v) - output_variable(v) / dt, derivative_name)
+            derivative(v) = NetCDF_variable_t( (input_variable(v) - output_variable(v)) / dt, derivative_name)
             call assert(.not. derivative(v)%any_nan(), "train_cloud_microhphysics: non NaN's")
           end associate derivative_name
         end do
@@ -308,14 +308,16 @@ contains
       flatten_histogram: &
       block
         integer i
-        !logical occupied(args%num_bins, args%num_bins, args%num_bins, args%num_bins, args%num_bins)
         logical occupied(args%num_bins, args%num_bins)
         logical keepers(size(output_tensors))
         type(phase_space_bin_t), allocatable :: bin(:)
         type(occupancy_t) occupancy
 
         ! Determine the phase-space bin that holds each output tensor
-        bin = [(phase_space_bin_t(output_tensors(i), output_map%minima(), output_map%maxima(), args%num_bins), i = 1, size(output_tensors))]
+        associate(output_minima => output_map%minima(), output_maxima => output_map%maxima())
+          bin = [(phase_space_bin_t(output_tensors(i), output_minima, output_maxima, args%num_bins), i = 1, size(output_tensors))]
+        end associate
+
         call occupancy%vacate( dims = [( args%num_bins, i = 1, size(output_variable))] )
 
         keepers = .false.
@@ -325,10 +327,12 @@ contains
           call occupancy%occupy(bin(i)%loc)
           keepers(i) = .true.
         end do
+
         input_output_pairs = input_output_pair_t(pack(input_tensors, keepers), pack(output_tensors, keepers))
+
         print '(*(a,i))' &
          ," Keeping "              , size(input_output_pairs, kind=int64) &
-         ," out of "               , size(output_tensors, kind=int64)            &
+         ," out of "               , size(output_tensors, kind=int64)     &
          ," input/output pairs in ", occupancy%num_occupied()             &
          ," out of "               , occupancy%num_bins()                 &
          ," bins."
@@ -383,8 +387,8 @@ contains
                   image_1_maybe_writes: &
                   if (me==1 .and. any([converged, epoch==[first_epoch,last_epoch], mod(epoch,args%report_step)==0])) then
 
-                    print *, epoch, average_cost
-                    write(plot_file%plot_unit,*) epoch, average_cost
+                    !print '(*(g0,4x))', epoch, average_cost
+                    write(plot_file%plot_unit,'(*(g0,4x))') epoch, average_cost
 
                     associate(json_file => trainable_network%to_json())
                       call json_file%write_lines(string_t(network_file))
