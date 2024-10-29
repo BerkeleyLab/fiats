@@ -9,6 +9,7 @@ program main
   use network_configuration_test_m, only : network_configuration_test_t
   use training_configuration_test_m, only : training_configuration_test_t
   use tensor_map_test_m, only : tensor_map_test_t
+  use tensor_names_test_m, only : tensor_names_test_t
   use tensor_test_m, only : tensor_test_t
   use julienne_m, only : command_line_t
   implicit none
@@ -21,6 +22,7 @@ program main
   type(network_configuration_test_t) network_configuration_test
   type(training_configuration_test_t) training_configuration_test
   type(tensor_map_test_t) tensor_map_test
+  type(tensor_names_test_t) tensor_names_test
   type(tensor_test_t) tensor_test
   real t_start, t_finish
 
@@ -46,6 +48,7 @@ program main
   call metadata_test%report(passes, tests)
   call training_configuration_test%report(passes, tests)
   call tensor_map_test%report(passes, tests)
+  call tensor_names_test%report(passes, tests)
   call tensor_test%report(passes, tests)
   call asymmetric_network_test%report(passes, tests)
   call neural_network_test%report(passes, tests)

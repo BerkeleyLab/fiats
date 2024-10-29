@@ -14,32 +14,38 @@ contains
 
     training_configuration%hyperparameters_ = hyperparameters
     training_configuration%network_configuration_ = network_configuration
+    training_configuration%tensor_names_ = tensor_names
+
     training_configuration%file_t = file_t([ &
       string_t(header), &
       training_configuration%hyperparameters_%to_json(), &
       string_t(separator), &
       training_configuration%network_configuration_%to_json(), &
+      string_t(separator), &
+      training_configuration%tensor_names_%to_json(), &
       string_t(footer) &
     ])
+
   end procedure
 
   module procedure double_precision_from_components
 
     training_configuration%hyperparameters_ = hyperparameters
     training_configuration%network_configuration_ = network_configuration
+    training_configuration%tensor_names_ = tensor_names
+
     training_configuration%file_t = file_t([ &
       string_t(header), &
       training_configuration%hyperparameters_%to_json(), &
       string_t(separator), &
       training_configuration%network_configuration_%to_json(), &
+      string_t(separator), &
+      training_configuration%tensor_names_%to_json(), &
       string_t(footer) &
     ])
   end procedure
 
   module procedure default_real_from_file
-    integer, parameter :: hyperparameters_start=2, hyperparameters_end=6, separator_line=7   ! line numbers
-    integer, parameter :: net_config_start=8, net_config_end=12                         ! line numbers
-    integer, parameter :: file_start=hyperparameters_start-1, file_end=net_config_end+1 ! line numbers
 #if defined __INTEL_COMPILER || _CRAYFTN
     type(string_t), allocatable :: lines(:)
 #endif
@@ -48,35 +54,21 @@ contains
 
 #if defined __INTEL_COMPILER || _CRAYFTN
     lines = training_configuration%file_t%lines()
-    call assert(trim(adjustl(lines(file_start)%string()))==header, &
-      "training_configuration_s(default_precision_from_file): header",lines(file_start))
-    training_configuration%hyperparameters_ = hyperparameters_t(lines(hyperparameters_start:hyperparameters_end))
-    call assert(trim(adjustl(lines(separator_line)%string()))==separator, &
-      "training_configuration_s(default_precision_from_file): separator", &
-      lines(file_start))
-    training_configuration%network_configuration_= network_configuration_t(lines(net_config_start:net_config_end))
-    call assert(trim(adjustl(lines(file_end)%string()))==footer, &
-      "training_configuration_s(default_precision_from_file): footer", lines(file_end))
 #else
     associate(lines => training_configuration%file_t%lines())
-      call assert(trim(adjustl(lines(file_start)%string()))==header, &
-        "training_configuration_s(default_precision_from_file): header",lines(file_start))
-      training_configuration%hyperparameters_ = hyperparameters_t(lines(hyperparameters_start:hyperparameters_end))
-      call assert(trim(adjustl(lines(separator_line)%string()))==separator, &
-        "training_configuration_s(default_precision_from_file): separator", &
-        lines(file_start))
-      training_configuration%network_configuration_= network_configuration_t(lines(net_config_start:net_config_end))
-      call assert(trim(adjustl(lines(file_end)%string()))==footer, &
-        "training_configuration_s(default_precision_from_file): footer", lines(file_end))
+#endif
+
+      training_configuration%hyperparameters_ = hyperparameters_t(lines)
+      training_configuration%network_configuration_= network_configuration_t(lines)
+      training_configuration%tensor_names_ = tensor_names_t(lines)
+
+#if ! defined __INTEL_COMPILER || _CRAYFTN
     end associate
 #endif
 
   end procedure
 
   module procedure double_precision_from_file
-    integer, parameter :: hyperparameters_start=2, hyperparameters_end=6, separator_line=7   ! line numbers
-    integer, parameter :: net_config_start=8, net_config_end=12                         ! line numbers
-    integer, parameter :: file_start=hyperparameters_start-1, file_end=net_config_end+1 ! line numbers
 #if defined __INTEL_COMPILER || _CRAYFTN
     type(double_precision_string_t), allocatable :: lines(:)
 #endif
@@ -85,40 +77,17 @@ contains
 
 #if defined __INTEL_COMPILER || _CRAYFTN
     lines = training_configuration%double_precision_file_t%double_precision_lines()
-
-    call assert(adjustl(lines(file_start)%string()) == header, &
-      "training_configuration_s(double_precision_from_file): header",lines(file_start))
-
-    training_configuration%hyperparameters_ = hyperparameters_t(lines(hyperparameters_start:hyperparameters_end))
-
-    call assert(adjustl(lines(separator_line)%string()) == separator, &
-      "training_configuration_s(double_precision_from_file): separator", lines(file_start))
-
-    training_configuration%network_configuration_= network_configuration_t(lines(net_config_start:net_config_end))
-
-    call assert(adjustl(lines(file_end)%string()) == footer, &
-      "training_configuration_s(double_precision_from_file): footer", lines(file_end))
 #else
-
     associate(lines => training_configuration%double_precision_file_t%double_precision_lines())
-
-      call assert(adjustl(lines(file_start)%string()) == header, &
-        "training_configuration_s(double_precision_from_file): header", lines(file_start))
-
-      training_configuration%hyperparameters_ = hyperparameters_t(lines(hyperparameters_start:hyperparameters_end))
-
-      call assert(adjustl(lines(separator_line)%string()) == separator, &
-        "training_configuration_s(double_precision_from_file): separator", lines(file_start))
-
-      training_configuration%network_configuration_= network_configuration_t(lines(net_config_start:net_config_end))
-
-      call assert(adjustl(lines(file_end)%string()) == footer, &
-        "training_configuration_s(double_precision_from_file): footer", lines(file_end))
-
-    end associate
-
 #endif
 
+      training_configuration%hyperparameters_ = hyperparameters_t(lines)
+      training_configuration%network_configuration_= network_configuration_t(lines)
+      training_configuration%tensor_names_ = tensor_names_t(lines)
+
+#if ! defined __INTEL_COMPILER || _CRAYFTN
+    end associate
+#endif
   end procedure
 
   module procedure default_real_to_json
@@ -132,13 +101,15 @@ contains
   module procedure default_real_equals
     lhs_eq_rhs = &
       lhs%hyperparameters_ == rhs%hyperparameters_ .and. &
-      lhs%network_configuration_ == rhs%network_configuration_
+      lhs%network_configuration_ == rhs%network_configuration_ .and. &
+      lhs%tensor_names_ == rhs%tensor_names_
   end procedure
 
   module procedure double_precision_equals
     lhs_eq_rhs = &
       lhs%hyperparameters_ == rhs%hyperparameters_ .and. &
-      lhs%network_configuration_ == rhs%network_configuration_
+      lhs%network_configuration_ == rhs%network_configuration_ .and. &
+      lhs%tensor_names_ == rhs%tensor_names_
   end procedure
 
   module procedure default_real_mini_batches
@@ -181,7 +152,7 @@ contains
     using_skip = self%network_configuration_%skip_connections()
   end procedure
 
-  module procedure default_real_differentiable_activation
+  module procedure default_real_activation
 #if defined __INTEL_COMPILER || _CRAYFTN
     type(string_t) :: activation_name
     activation_name = self%network_configuration_%activation_name()
@@ -200,13 +171,12 @@ contains
         case default
           error stop 'activation_factory_s(factory): unrecognized activation name "' // activation_name%string() // '"' 
       end select
-#if defined __INTEL_COMPILER || _CRAYFTN
-#else
+#if ! (defined __INTEL_COMPILER || _CRAYFTN)
     end associate
 #endif
   end procedure
 
-  module procedure double_precision_differentiable_activation
+  module procedure double_precision_activation
 #if defined __INTEL_COMPILER || _CRAYFTN
     type(string_t) :: activation_name
     activation_name = self%network_configuration_%activation_name()
@@ -225,10 +195,25 @@ contains
         case default
           error stop 'activation_factory_s(factory): unrecognized activation name "' // activation_name%string() // '"' 
       end select
-#if defined __INTEL_COMPILER || _CRAYFTN
-#else
+#if ! (defined __INTEL_COMPILER || _CRAYFTN)
     end associate
 #endif
+  end procedure
+
+  module procedure default_real_input_names
+    input_names = self%tensor_names_%input_names()
+  end procedure
+
+  module procedure double_precision_input_names
+    input_names = self%tensor_names_%input_names()
+  end procedure
+
+  module procedure default_real_output_names
+    output_names = self%tensor_names_%output_names()
+  end procedure
+
+  module procedure double_precision_output_names
+    output_names = self%tensor_names_%output_names()
   end procedure
 
 end submodule training_configuration_s
