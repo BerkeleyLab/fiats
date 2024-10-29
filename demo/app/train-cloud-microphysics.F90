@@ -267,45 +267,45 @@ contains
 
         inquire(file=network_file, exist=preexisting_network_file)
 
-      read_or_initialize_network:   &
-      if (preexisting_network_file) then
-        print *,"Reading network from file " // network_file
-        trainable_network = trainable_network_t(neural_network_t(file_t(string_t(network_file))))
-        close(network_unit)
-      else
-        close(network_unit)
+        read_or_initialize_network:   &
+        if (preexisting_network_file) then
+          print *,"Reading network from file " // network_file
+          trainable_network = trainable_network_t(neural_network_t(file_t(string_t(network_file))))
+          close(network_unit)
+        else
+          close(network_unit)
 
-        initialize_network: &
-        block
-          character(len=len('YYYYMMDD')) date
+          initialize_network: &
+          block
+            character(len=len('YYYYMMDD')) date
 
-          call date_and_time(date)
+            call date_and_time(date)
 
-          print *,"Defining a new network from training_configuration_t and tensor_map_t objects"
+            print *,"Defining a new network from training_configuration_t and tensor_map_t objects"
 
-          activation: &
-          associate(activation => training_configuration%activation())
-            trainable_network = trainable_network_t( &
-               training_configuration                &
-              ,perturbation_magnitude = 0.05         &
-              ,metadata = [                          &
-                 string_t("ICAR microphysics" )      &
-                ,string_t("max-entropy-filter")      &
-                ,string_t(date                )      &
-                ,activation%function_name(    )      &
-                ,string_t(trim(merge("true ", "false", training_configuration%skip_connections()))) &
-              ]                                      &
-              ,input_map  = tensor_map_t(            &
-                 layer    = "inputs"                &
-                ,minima   = [( input_variable(v)%minimum(),  v=1, size( input_variable) )] &
-                ,maxima   = [( input_variable(v)%maximum(),  v=1, size( input_variable) )] &
-              )                        &
-              ,output_map = output_map &
-            )
-          end associate activation
-        end block initialize_network
+            activation: &
+            associate(activation => training_configuration%activation())
+              trainable_network = trainable_network_t( &
+                 training_configuration                &
+                ,perturbation_magnitude = 0.05         &
+                ,metadata = [                          &
+                   string_t("ICAR microphysics" )      &
+                  ,string_t("max-entropy-filter")      &
+                  ,string_t(date                )      &
+                  ,activation%function_name(    )      &
+                  ,string_t(trim(merge("true ", "false", training_configuration%skip_connections()))) &
+                ]                                      &
+                ,input_map  = tensor_map_t(            &
+                   layer    = "inputs"                &
+                  ,minima   = [( input_variable(v)%minimum(),  v=1, size( input_variable) )] &
+                  ,maxima   = [( input_variable(v)%maximum(),  v=1, size( input_variable) )] &
+                )                        &
+                ,output_map = output_map &
+              )
+            end associate activation
+          end block initialize_network
 
-      end if read_or_initialize_network
+        end if read_or_initialize_network
 
       end block  check_for_network_file
 
