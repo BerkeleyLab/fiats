@@ -142,22 +142,27 @@ To see the expected file format, run the [print-training-configuration] example 
 which should produce output like the following:
 ```
 Project is up to date
- {
-     "hyperparameters": {
-         "mini-batches" : 10,
-         "learning rate" : 1.50000000,
-         "optimizer" : "adam"
-     }
- ,
-     "network configuration": {
-         "skip connections" : false,
-         "nodes per layer" : [2,72,2],
-         "activation function" : "sigmoid"
-     }
- }
+{
+    "hyperparameters": {
+        "mini-batches" : 10,
+        "learning rate" : 1.5,
+        "optimizer" : "adam"
+    }
+,
+    "network configuration": {
+        "skip connections" : false,
+        "nodes per layer" : [2,72,2],
+        "activation function" : "sigmoid"
+    }
+,
+    "tensor names": {
+        "inputs"  : ["pressure","temperature"],
+        "outputs" : ["saturated mixing ratio"]
+    }
+}
 ```
 The Fiats JSON file format is fragile: splitting or combining lines breaks the file reader.
-Files with added or removed white space or reordered whole objects ("hyperparameters" or "network configuration") should work.
+Files with added or removed white space or reordered whole objects ("hyperparameters", "network configuration", or "tensor names") should work.
 A future release will leverage the [rojff] JSON interface to allow for more flexible file formatting.
 
 ### Training a neural network
