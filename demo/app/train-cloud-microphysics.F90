@@ -261,10 +261,14 @@ contains
       ), &
       network_file => args%base_name // "_network.json" &
     )
-      open(newunit=network_unit, file=network_file, form='formatted', status='old', iostat=io_status, action='read')
-      
+      check_for_network_file: &
+      block
+        logical preexisting_network_file
+
+        inquire(file=network_file, exist=preexisting_network_file)
+
       read_or_initialize_network:   &
-      if (io_status==0) then
+      if (preexisting_network_file) then
         print *,"Reading network from file " // network_file
         trainable_network = trainable_network_t(neural_network_t(file_t(string_t(network_file))))
         close(network_unit)
@@ -302,6 +306,8 @@ contains
         end block initialize_network
 
       end if read_or_initialize_network
+
+      end block  check_for_network_file
 
       print *, "Conditionally sampling for a flat distribution of output values"
 
