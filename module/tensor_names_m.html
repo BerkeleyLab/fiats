@@ -1,0 +1,1286 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Functional inference and training of surrogate models for computational science.">
+    <meta name="author" content="Berkeley Lab" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>tensor_names_m &ndash; Fiats</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">Fiats </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/programs.html">Programs</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>tensor_names_m
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.5% of total for modules and submodules.">50 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/tensor_names_m.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/tensor_names_m.f90.html'>tensor_names_m.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">tensor_names_m</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-bs-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/tensor_names_m.html#interface-tensor_names_t">tensor_names_t</a>
+            <a class="list-group-item" href="../module/tensor_names_m.html#interface-equals~4">equals</a>
+            <a class="list-group-item" href="../module/tensor_names_m.html#interface-input_names">input_names</a>
+            <a class="list-group-item" href="../module/tensor_names_m.html#interface-output_names">output_names</a>
+            <a class="list-group-item" href="../module/tensor_names_m.html#interface-to_json~3">to_json</a>
+        </div>
+      </div>
+    </div>
+
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#types-0"
+         aria-expanded="false" aria-controls="types-0">
+         <h4 class="card-header bg-primary text-white">Derived Types</h4>
+      </a>
+      <div id="types-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/tensor_names_m.html#type-tensor_names_t">tensor_names_t</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item">julienne_string_m</li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 12.1.2 (20240928.0832)
+ -->
+<!-- Title: module~~tensor_names_m~~UsesGraph Pages: 1 -->
+<svg id="moduletensor_names_mUsesGraph" width="252pt" height="32pt"
+ viewBox="0.00 0.00 251.54 32.27" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~tensor_names_m~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>module~~tensor_names_m~~UsesGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 247.54,-28.27 247.54,4 -4,4"/>
+<!-- module~tensor_names_m -->
+<g id="module~~tensor_names_m~~UsesGraph_node1" class="node">
+<title>module~tensor_names_m</title>
+<polygon fill="none" stroke="black" points="243.54,-24.27 141.27,-24.27 141.27,0 243.54,0 243.54,-24.27"/>
+<text text-anchor="middle" x="192.4" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">tensor_names_m</text>
+</g>
+<!-- julienne_string_m -->
+<g id="module~~tensor_names_m~~UsesGraph_node2" class="node">
+<title>julienne_string_m</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="105.27,-24.27 0,-24.27 0,0 105.27,0 105.27,-24.27"/>
+<text text-anchor="middle" x="52.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">julienne_string_m</text>
+</g>
+<!-- module~tensor_names_m&#45;&gt;julienne_string_m -->
+<g id="module~~tensor_names_m~~UsesGraph_edge1" class="edge">
+<title>module~tensor_names_m&#45;&gt;julienne_string_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M140.89,-12.13C133.06,-12.13 124.89,-12.13 116.82,-12.13"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="117.05,-8.64 107.05,-12.14 117.05,-15.64 117.05,-8.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 12.1.2 (20240928.0832)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="511pt" height="32pt"
+ viewBox="0.00 0.00 510.88 32.27" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 506.88,-28.27 506.88,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24.27 0,-24.27 0,0 54,0 54,-24.27"/>
+<text text-anchor="middle" x="27" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="144.13,-24.27 71.87,-24.27 71.87,0 144.13,0 144.13,-24.27"/>
+<text text-anchor="middle" x="108" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="231.63,-24.27 162.37,-24.27 162.37,0 231.63,0 231.63,-24.27"/>
+<text text-anchor="middle" x="197" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="306.26,-24.27 249.74,-24.27 249.74,0 306.26,0 306.26,-24.27"/>
+<text text-anchor="middle" x="278" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="381.26,-24.27 324.74,-24.27 324.74,0 381.26,0 381.26,-24.27"/>
+<text text-anchor="middle" x="353" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="502.88,-24.27 399.12,-24.27 399.12,0 502.88,0 502.88,-24.27"/>
+<text text-anchor="middle" x="451" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+          <div class="card">
+      <h3 class="card-header card-title bg-light">Used by</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                <li class="list-inline-item"><h5>Descendants:</h5></li>
+                  <li class="list-inline-item"><a href='tensor_names_s.html'>tensor_names_s</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 12.1.2 (20240928.0832)
+ -->
+<!-- Title: module~~tensor_names_m~~UsedByGraph Pages: 1 -->
+<svg id="moduletensor_names_mUsedByGraph" width="641pt" height="380pt"
+ viewBox="0.00 0.00 641.00 379.58" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~tensor_names_m~~UsedByGraph" class="graph" transform="scale(0.62805 0.62805) rotate(0) translate(4 600.38)">
+<title>module~~tensor_names_m~~UsedByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-600.38 1016.62,-600.38 1016.62,4 -4,4"/>
+<!-- module~tensor_names_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_node1" class="node">
+<title>module~tensor_names_m</title>
+<polygon fill="none" stroke="black" points="102.27,-294.27 0,-294.27 0,-270 102.27,-270 102.27,-294.27"/>
+<text text-anchor="middle" x="51.13" y="-278.53" font-family="Helvetica,sans-Serif" font-size="10.50">tensor_names_m</text>
+</g>
+<!-- module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_node2" class="node">
+<title>module~fiats_m</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node2"><a xlink:href="../module/fiats_m.html" xlink:title="fiats_m">
+<polygon fill="#337ab7" stroke="#337ab7" points="581.07,-314.27 527.07,-314.27 527.07,-290 581.07,-290 581.07,-314.27"/>
+<text text-anchor="middle" x="554.07" y="-298.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fiats_m</text>
+</a>
+</g>
+</g>
+<!-- module~fiats_m&#45;&gt;module~tensor_names_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge1" class="edge">
+<title>module~fiats_m&#45;&gt;module~tensor_names_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M526.67,-296.95C494.55,-291.1 438.61,-282.35 390.18,-282.13"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M388.18,-282.13C292.35,-281.7 181.16,-281.82 113.76,-281.97"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="114.02,-278.47 104.03,-281.99 114.04,-285.47 114.02,-278.47"/>
+</g>
+<!-- module~training_configuration_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_node4" class="node">
+<title>module~training_configuration_m</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node4"><a xlink:href="../module/training_configuration_m.html" xlink:title="training_configuration_m">
+<polygon fill="#337ab7" stroke="#337ab7" points="283.29,-334.27 138.27,-334.27 138.27,-310 283.29,-310 283.29,-334.27"/>
+<text text-anchor="middle" x="210.78" y="-318.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">training_configuration_m</text>
+</a>
+</g>
+</g>
+<!-- module~fiats_m&#45;&gt;module~training_configuration_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge19" class="edge">
+<title>module~fiats_m&#45;&gt;module~training_configuration_m</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M388.18,-282.13C342.56,-281.93 291.91,-294.84 256.63,-306.04"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="255.6,-302.7 247.18,-309.13 257.77,-309.35 255.6,-302.7"/>
+</g>
+<!-- module~trainable_network_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_node10" class="node">
+<title>module~trainable_network_m</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node10"><a xlink:href="../module/trainable_network_m.html" xlink:title="trainable_network_m">
+<polygon fill="#337ab7" stroke="#337ab7" points="450.81,-376.27 327.54,-376.27 327.54,-352 450.81,-352 450.81,-376.27"/>
+<text text-anchor="middle" x="389.18" y="-360.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trainable_network_m</text>
+</a>
+</g>
+</g>
+<!-- module~fiats_m&#45;&gt;module~trainable_network_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge27" class="edge">
+<title>module~fiats_m&#45;&gt;module~trainable_network_m</title>
+<path fill="none" stroke="#3cff00" stroke-dasharray="5,2" d="M526.66,-314.63C508,-323.21 482.28,-334.57 459.06,-343.13 454.45,-344.84 449.63,-346.51 444.77,-348.13"/>
+<polygon fill="#3cff00" stroke="#3cff00" points="444.04,-344.69 435.6,-351.09 446.19,-351.35 444.04,-344.69"/>
+</g>
+<!-- module~tensor_names_s -->
+<g id="module~~tensor_names_m~~UsedByGraph_node3" class="node">
+<title>module~tensor_names_s</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node3"><a xlink:href="../module/tensor_names_s.html" xlink:title="tensor_names_s">
+<polygon fill="#5bc0de" stroke="#5bc0de" points="259.29,-254.27 162.27,-254.27 162.27,-230 259.29,-230 259.29,-254.27"/>
+<text text-anchor="middle" x="210.78" y="-238.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">tensor_names_s</text>
+</a>
+</g>
+</g>
+<!-- module~tensor_names_s&#45;&gt;module~tensor_names_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge3" class="edge">
+<title>module~tensor_names_s&#45;&gt;module~tensor_names_m</title>
+<path fill="none" stroke="#ff0000" d="M162.05,-254.24C146.59,-258.17 129.23,-262.57 112.95,-266.71"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="112.18,-263.29 103.35,-269.14 113.91,-270.07 112.18,-263.29"/>
+</g>
+<!-- module~training_configuration_m&#45;&gt;module~tensor_names_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge2" class="edge">
+<title>module~training_configuration_m&#45;&gt;module~tensor_names_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M160.33,-309.59C145.15,-305.74 128.26,-301.45 112.43,-297.43"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="113.7,-294.14 103.14,-295.08 111.98,-300.93 113.7,-294.14"/>
+</g>
+<!-- module~addition_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_node5" class="node">
+<title>module~addition_m</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node5"><a xlink:href="../module/addition_m.html" xlink:title="addition_m">
+<polygon fill="#337ab7" stroke="#337ab7" points="764.1,-554.27 693.33,-554.27 693.33,-530 764.1,-530 764.1,-554.27"/>
+<text text-anchor="middle" x="728.72" y="-538.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">addition_m</text>
+</a>
+</g>
+</g>
+<!-- module~addition_m&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge4" class="edge">
+<title>module~addition_m&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M692.85,-538.48C677.37,-535.09 660.18,-528.58 649.08,-516.13 596.81,-457.52 656.14,-408.81 613.08,-343.13 607.33,-334.37 599,-326.9 590.44,-320.84"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="592.37,-317.92 582.08,-315.42 588.57,-323.8 592.37,-317.92"/>
+</g>
+<!-- module~exponentiation_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_node6" class="node">
+<title>module~exponentiation_m</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node6"><a xlink:href="../module/exponentiation_m.html" xlink:title="exponentiation_m">
+<polygon fill="#337ab7" stroke="#337ab7" points="782.1,-474.27 675.33,-474.27 675.33,-450 782.1,-450 782.1,-474.27"/>
+<text text-anchor="middle" x="728.72" y="-458.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">exponentiation_m</text>
+</a>
+</g>
+</g>
+<!-- module~exponentiation_m&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge5" class="edge">
+<title>module~exponentiation_m&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M675.05,-451.89C665.56,-448.16 656.37,-443.07 649.08,-436.13 616.97,-405.59 640.34,-378.08 613.08,-343.13 606.4,-334.57 597.44,-327.04 588.57,-320.85"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="590.64,-318.02 580.35,-315.5 586.82,-323.89 590.64,-318.02"/>
+</g>
+<!-- module~multiply_inputs -->
+<g id="module~~tensor_names_m~~UsedByGraph_node7" class="node">
+<title>module~multiply_inputs</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node7"><a xlink:href="../module/multiply_inputs.html" xlink:title="multiply_inputs">
+<polygon fill="#337ab7" stroke="#337ab7" points="774.6,-394.27 682.83,-394.27 682.83,-370 774.6,-370 774.6,-394.27"/>
+<text text-anchor="middle" x="728.72" y="-378.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">multiply_inputs</text>
+</a>
+</g>
+</g>
+<!-- module~multiply_inputs&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge6" class="edge">
+<title>module~multiply_inputs&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M684.27,-369.51C672.66,-365.66 660.24,-361.12 649.08,-356.13 626.42,-346.01 602.17,-331.99 583.97,-320.77"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="585.89,-317.84 575.55,-315.51 582.18,-323.78 585.89,-317.84"/>
+</g>
+<!-- module~power_series -->
+<g id="module~~tensor_names_m~~UsedByGraph_node8" class="node">
+<title>module~power_series</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node8"><a xlink:href="../module/power_series.html" xlink:title="power_series">
+<polygon fill="#337ab7" stroke="#337ab7" points="769.35,-314.27 688.08,-314.27 688.08,-290 769.35,-290 769.35,-314.27"/>
+<text text-anchor="middle" x="728.72" y="-298.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">power_series</text>
+</a>
+</g>
+</g>
+<!-- module~power_series&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge7" class="edge">
+<title>module~power_series&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M687.67,-302.13C659.08,-302.13 620.88,-302.13 592.82,-302.13"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="592.99,-298.64 582.99,-302.14 592.99,-305.64 592.99,-298.64"/>
+</g>
+<!-- module~saturated_mixing_ratio_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_node9" class="node">
+<title>module~saturated_mixing_ratio_m</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node9"><a xlink:href="../module/saturated_mixing_ratio_m.html" xlink:title="saturated_mixing_ratio_m">
+<polygon fill="#337ab7" stroke="#337ab7" points="803.48,-234.27 653.96,-234.27 653.96,-210 803.48,-210 803.48,-234.27"/>
+<text text-anchor="middle" x="728.72" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">saturated_mixing_ratio_m</text>
+</a>
+</g>
+</g>
+<!-- module~saturated_mixing_ratio_m&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge8" class="edge">
+<title>module~saturated_mixing_ratio_m&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M684.27,-234.76C672.66,-238.61 660.24,-243.15 649.08,-248.13 626.42,-258.26 602.17,-272.28 583.97,-283.5"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="582.18,-280.49 575.55,-288.76 585.89,-286.43 582.18,-280.49"/>
+</g>
+<!-- module~trainable_network_m&#45;&gt;module~training_configuration_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge20" class="edge">
+<title>module~trainable_network_m&#45;&gt;module~training_configuration_m</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M335.25,-351.53C316.5,-347.07 295.2,-342 275.64,-337.34"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="276.68,-333.99 266.14,-335.08 275.06,-340.8 276.68,-333.99"/>
+</g>
+<!-- module~training_configuration_s -->
+<g id="module~~tensor_names_m~~UsedByGraph_node11" class="node">
+<title>module~training_configuration_s</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node11"><a xlink:href="../module/training_configuration_s.html" xlink:title="training_configuration_s">
+<polygon fill="#5bc0de" stroke="#5bc0de" points="459.06,-334.27 319.29,-334.27 319.29,-310 459.06,-310 459.06,-334.27"/>
+<text text-anchor="middle" x="389.18" y="-318.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">training_configuration_s</text>
+</a>
+</g>
+</g>
+<!-- module~training_configuration_s&#45;&gt;module~training_configuration_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge21" class="edge">
+<title>module~training_configuration_s&#45;&gt;module~training_configuration_m</title>
+<path fill="none" stroke="#0000ff" d="M318.97,-322.13C311.09,-322.13 303.01,-322.13 294.98,-322.13"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="295.21,-318.64 285.21,-322.14 295.21,-325.64 295.21,-318.64"/>
+</g>
+<!-- program~concurrent_inferences -->
+<g id="module~~tensor_names_m~~UsedByGraph_node12" class="node">
+<title>program~concurrent_inferences</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node12"><a xlink:href="../program/concurrent_inferences.html" xlink:title="concurrent_inferences">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="793.73,-192.27 663.71,-192.27 663.71,-168 793.73,-168 793.73,-192.27"/>
+<text text-anchor="middle" x="728.72" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">concurrent_inferences</text>
+</a>
+</g>
+</g>
+<!-- program~concurrent_inferences&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge9" class="edge">
+<title>program~concurrent_inferences&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M666.62,-192.74C660.49,-195.09 654.53,-197.86 649.08,-201.13 615.28,-221.45 586.07,-257.41 569.53,-280.49"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="566.75,-278.35 563.91,-288.55 572.5,-282.35 566.75,-278.35"/>
+</g>
+<!-- program~learn_addition -->
+<g id="module~~tensor_names_m~~UsedByGraph_node13" class="node">
+<title>program~learn_addition</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node13"><a xlink:href="../program/learn_addition.html" xlink:title="learn_addition">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="972.5,-564.27 884.48,-564.27 884.48,-540 972.5,-540 972.5,-564.27"/>
+<text text-anchor="middle" x="928.49" y="-548.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_addition</text>
+</a>
+</g>
+</g>
+<!-- program~learn_addition&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge10" class="edge">
+<title>program~learn_addition&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M898.56,-564.62C842.97,-586.44 720.41,-623.74 649.08,-563.13 573.58,-498.98 665.61,-427.14 613.08,-343.13 607.57,-334.32 599.4,-326.87 590.92,-320.83"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="592.9,-317.95 582.61,-315.45 589.1,-323.82 592.9,-317.95"/>
+</g>
+<!-- program~learn_addition&#45;&gt;module~addition_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge22" class="edge">
+<title>program~learn_addition&#45;&gt;module~addition_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M884.08,-549.94C851.94,-548.32 808.24,-546.11 775.54,-544.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="776.14,-540.98 765.98,-543.97 775.79,-547.97 776.14,-540.98"/>
+</g>
+<!-- program~learn_exponentiation -->
+<g id="module~~tensor_names_m~~UsedByGraph_node14" class="node">
+<title>program~learn_exponentiation</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node14"><a xlink:href="../program/learn_exponentiation.html" xlink:title="learn_exponentiation">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="990.5,-503.27 866.48,-503.27 866.48,-479 990.5,-479 990.5,-503.27"/>
+<text text-anchor="middle" x="928.49" y="-487.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_exponentiation</text>
+</a>
+</g>
+</g>
+<!-- program~learn_exponentiation&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge11" class="edge">
+<title>program~learn_exponentiation&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M886.92,-503.67C827.71,-519.24 717.28,-537.6 649.08,-483.13 598.88,-443.04 649.55,-396.03 613.08,-343.13 607.13,-334.5 598.73,-327.08 590.17,-321.02"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="592.12,-318.11 581.83,-315.59 588.3,-323.98 592.12,-318.11"/>
+</g>
+<!-- program~learn_exponentiation&#45;&gt;module~exponentiation_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge23" class="edge">
+<title>program~learn_exponentiation&#45;&gt;module~exponentiation_m</title>
+<path fill="none" stroke="#ff5900" stroke-dasharray="5,2" d="M865.99,-482.12C843,-478.75 816.84,-474.91 793.62,-471.51"/>
+<polygon fill="#ff5900" stroke="#ff5900" points="794.39,-468.08 783.99,-470.09 793.38,-475.01 794.39,-468.08"/>
+</g>
+<!-- program~learn_multiplication -->
+<g id="module~~tensor_names_m~~UsedByGraph_node15" class="node">
+<title>program~learn_multiplication</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node15"><a xlink:href="../program/learn_multiplication.html" xlink:title="learn_multiplication">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="987.12,-414.27 869.85,-414.27 869.85,-390 987.12,-390 987.12,-414.27"/>
+<text text-anchor="middle" x="928.49" y="-398.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_multiplication</text>
+</a>
+</g>
+</g>
+<!-- program~learn_multiplication&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge12" class="edge">
+<title>program~learn_multiplication&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M884.11,-414.77C826.35,-428.95 722.9,-444.93 649.08,-403.13 622.02,-387.81 634.23,-365.93 613.08,-343.13 605.36,-334.81 595.69,-327.18 586.48,-320.81"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="588.68,-318.07 578.4,-315.49 584.83,-323.91 588.68,-318.07"/>
+</g>
+<!-- program~learn_multiplication&#45;&gt;module~multiply_inputs -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge24" class="edge">
+<title>program~learn_multiplication&#45;&gt;module~multiply_inputs</title>
+<path fill="none" stroke="#ffb300" stroke-dasharray="5,2" d="M869.48,-396.27C843.17,-393.61 812.18,-390.47 786.07,-387.83"/>
+<polygon fill="#ffb300" stroke="#ffb300" points="786.63,-384.37 776.33,-386.85 785.93,-391.34 786.63,-384.37"/>
+</g>
+<!-- program~learn_power_series -->
+<g id="module~~tensor_names_m~~UsedByGraph_node16" class="node">
+<title>program~learn_power_series</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node16"><a xlink:href="../program/learn_power_series.html" xlink:title="learn_power_series">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="985.62,-334.27 871.35,-334.27 871.35,-310 985.62,-310 985.62,-334.27"/>
+<text text-anchor="middle" x="928.49" y="-318.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_power_series</text>
+</a>
+</g>
+</g>
+<!-- program~learn_power_series&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge13" class="edge">
+<title>program~learn_power_series&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M871.03,-326.07C814.64,-329.13 725.59,-331.58 649.08,-323.13 630.13,-321.04 609.41,-316.65 592.25,-312.42"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="593.57,-309.14 583.02,-310.06 591.84,-315.93 593.57,-309.14"/>
+</g>
+<!-- program~learn_power_series&#45;&gt;module~power_series -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge25" class="edge">
+<title>program~learn_power_series&#45;&gt;module~power_series</title>
+<path fill="none" stroke="#f0ff00" stroke-dasharray="5,2" d="M871.08,-316.43C842.71,-313.56 808.57,-310.11 780.96,-307.32"/>
+<polygon fill="#f0ff00" stroke="#f0ff00" points="781.36,-303.84 771.06,-306.32 780.66,-310.8 781.36,-303.84"/>
+</g>
+<!-- program~print_training_configuration -->
+<g id="module~~tensor_names_m~~UsedByGraph_node17" class="node">
+<title>program~print_training_configuration</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node17"><a xlink:href="../program/print_training_configuration.html" xlink:title="print_training_configuration">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="808.35,-150.27 649.08,-150.27 649.08,-126 808.35,-126 808.35,-150.27"/>
+<text text-anchor="middle" x="728.72" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">print_training_configuration</text>
+</a>
+</g>
+</g>
+<!-- program~print_training_configuration&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge14" class="edge">
+<title>program~print_training_configuration&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M664.03,-150.69C658.73,-153.04 653.66,-155.83 649.08,-159.13 606.16,-190.1 577.46,-247.21 563.96,-279.08"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="560.78,-277.61 560.25,-288.19 567.27,-280.25 560.78,-277.61"/>
+</g>
+<!-- program~read_query_infer -->
+<g id="module~~tensor_names_m~~UsedByGraph_node18" class="node">
+<title>program~read_query_infer</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node18"><a xlink:href="../program/read_query_infer.html" xlink:title="read_query_infer">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="779.48,-108.27 677.96,-108.27 677.96,-84 779.48,-84 779.48,-108.27"/>
+<text text-anchor="middle" x="728.72" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_query_infer</text>
+</a>
+</g>
+</g>
+<!-- program~read_query_infer&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge15" class="edge">
+<title>program~read_query_infer&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M677.72,-102.78C667.47,-105.9 657.32,-110.46 649.08,-117.13 596.68,-159.58 570.64,-238.87 560.44,-278.42"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="557.05,-277.54 558.07,-288.09 563.85,-279.2 557.05,-277.54"/>
+</g>
+<!-- program~train_and_write -->
+<g id="module~~tensor_names_m~~UsedByGraph_node19" class="node">
+<title>program~train_and_write</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node19"><a xlink:href="../program/train_and_write.html" xlink:title="train_and_write">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="775.35,-66.27 682.08,-66.27 682.08,-42 775.35,-42 775.35,-66.27"/>
+<text text-anchor="middle" x="728.72" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">train_and_write</text>
+</a>
+</g>
+</g>
+<!-- program~train_and_write&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge16" class="edge">
+<title>program~train_and_write&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M681.83,-59.02C670.09,-62.13 658.22,-67.13 649.08,-75.13 586.78,-129.73 564.9,-232.12 557.97,-278.38"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="554.53,-277.72 556.63,-288.11 561.46,-278.68 554.53,-277.72"/>
+</g>
+<!-- program~train_saturated_mixture_ratio -->
+<g id="module~~tensor_names_m~~UsedByGraph_node20" class="node">
+<title>program~train_saturated_mixture_ratio</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node20"><a xlink:href="../program/train_saturated_mixture_ratio.html" xlink:title="train_saturated_mixture_ratio">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="1012.62,-254.27 844.35,-254.27 844.35,-230 1012.62,-230 1012.62,-254.27"/>
+<text text-anchor="middle" x="928.49" y="-238.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">train_saturated_mixture_ratio</text>
+</a>
+</g>
+</g>
+<!-- program~train_saturated_mixture_ratio&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge17" class="edge">
+<title>program~train_saturated_mixture_ratio&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M844.06,-252.04C788.61,-259.06 714.27,-269.31 649.08,-281.13 630.18,-284.56 609.32,-289.14 592.06,-293.15"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="591.7,-289.64 582.77,-295.34 593.3,-296.45 591.7,-289.64"/>
+</g>
+<!-- program~train_saturated_mixture_ratio&#45;&gt;module~saturated_mixing_ratio_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge26" class="edge">
+<title>program~train_saturated_mixture_ratio&#45;&gt;module~saturated_mixing_ratio_m</title>
+<path fill="none" stroke="#96ff00" stroke-dasharray="5,2" d="M843.9,-233.68C834.46,-232.73 824.82,-231.75 815.35,-230.8"/>
+<polygon fill="#96ff00" stroke="#96ff00" points="815.72,-227.31 805.41,-229.79 815.01,-234.28 815.72,-227.31"/>
+</g>
+<!-- program~write_read_infer -->
+<g id="module~~tensor_names_m~~UsedByGraph_node21" class="node">
+<title>program~write_read_infer</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node21"><a xlink:href="../program/write_read_infer.html" xlink:title="write_read_infer">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="777.23,-24.27 680.21,-24.27 680.21,0 777.23,0 777.23,-24.27"/>
+<text text-anchor="middle" x="728.72" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">write_read_infer</text>
+</a>
+</g>
+</g>
+<!-- program~write_read_infer&#45;&gt;module~fiats_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge18" class="edge">
+<title>program~write_read_infer&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M679.89,-17.13C668.7,-20.27 657.58,-25.26 649.08,-33.13 576.87,-100.11 560.12,-225.6 556.24,-278.09"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="552.75,-277.8 555.61,-288 559.73,-278.24 552.75,-277.8"/>
+</g>
+<!-- module~trainable_network_s -->
+<g id="module~~tensor_names_m~~UsedByGraph_node22" class="node">
+<title>module~trainable_network_s</title>
+<g id="a_module~~tensor_names_m~~UsedByGraph_node22"><a xlink:href="../module/trainable_network_s.html" xlink:title="trainable_network_s">
+<polygon fill="#5bc0de" stroke="#5bc0de" points="613.08,-376.27 495.06,-376.27 495.06,-352 613.08,-352 613.08,-376.27"/>
+<text text-anchor="middle" x="554.07" y="-360.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trainable_network_s</text>
+</a>
+</g>
+</g>
+<!-- module~trainable_network_s&#45;&gt;module~trainable_network_m -->
+<g id="module~~tensor_names_m~~UsedByGraph_edge28" class="edge">
+<title>module~trainable_network_s&#45;&gt;module~trainable_network_m</title>
+<path fill="none" stroke="#3cff00" d="M494.72,-364.13C484.22,-364.13 473.16,-364.13 462.32,-364.13"/>
+<polygon fill="#3cff00" stroke="#3cff00" points="462.65,-360.64 452.65,-364.14 462.65,-367.64 462.65,-360.64"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panmoduletensor_names_mUsedByGraph = svgPanZoom('#moduletensor_names_mUsedByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsedByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 12.1.2 (20240928.0832)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="511pt" height="32pt"
+ viewBox="0.00 0.00 510.88 32.27" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 506.88,-28.27 506.88,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24.27 0,-24.27 0,0 54,0 54,-24.27"/>
+<text text-anchor="middle" x="27" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="144.13,-24.27 71.87,-24.27 71.87,0 144.13,0 144.13,-24.27"/>
+<text text-anchor="middle" x="108" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="231.63,-24.27 162.37,-24.27 162.37,0 231.63,0 231.63,-24.27"/>
+<text text-anchor="middle" x="197" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="306.26,-24.27 249.74,-24.27 249.74,0 306.26,0 306.26,-24.27"/>
+<text text-anchor="middle" x="278" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="381.26,-24.27 324.74,-24.27 324.74,0 381.26,0 381.26,-24.27"/>
+<text text-anchor="middle" x="353" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="502.88,-24.27 399.12,-24.27 399.12,0 502.88,0 502.88,-24.27"/>
+<text text-anchor="middle" x="451" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      <br>
+
+
+
+
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-tensor_names_t"></span>
+      <h3>public        interface <a href='../interface/tensor_names_t.html'>tensor_names_t</a> 
+      </h3>
+    </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function from_components(inputs, outputs) result(tensor_names)  
+    <a href="../proc/from_components~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-inputs~10"></span>
+              type(string_t),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>inputs</strong>(:)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-outputs~6"></span>
+              type(string_t),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>outputs</strong>(:)</td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/tensor_names_t.html'>tensor_names_t</a>)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure module function from_json(lines) result(tensor_names)  
+    <a href="../proc/from_json~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lines~21"></span>
+              class(string_t),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lines</strong>(:)</td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/tensor_names_t.html'>tensor_names_t</a>)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-equals~4"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    private elemental module function equals(lhs, rhs) result(lhs_equals_rhs)  
+    <a href="../proc/equals~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lhs~11"></span>
+              class(<a href='../type/tensor_names_t.html'>tensor_names_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lhs</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rhs~12"></span>
+              class(<a href='../type/tensor_names_t.html'>tensor_names_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rhs</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-input_names"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    private pure module function input_names(self) result(names)  
+    <a href="../proc/input_names.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~111"></span>
+              class(<a href='../type/tensor_names_t.html'>tensor_names_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(string_t), allocatable, (:)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-output_names"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    private pure module function output_names(self) result(names)  
+    <a href="../proc/output_names.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~112"></span>
+              class(<a href='../type/tensor_names_t.html'>tensor_names_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(string_t), allocatable, (:)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-to_json~3"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    private pure module function to_json(self) result(lines)  
+    <a href="../proc/to_json~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~110"></span>
+              class(<a href='../type/tensor_names_t.html'>tensor_names_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(string_t), allocatable, (:)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Derived Types</h2>
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-tensor_names_t"></span>
+      <h3>
+        type, public&nbsp;::&nbsp;
+        <a href='../type/tensor_names_t.html'>tensor_names_t</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-inputs_~2"></span>
+              type(string_t),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>inputs_</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-outputs_"></span>
+              type(string_t),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>outputs_</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        <h4>Constructor</h4>
+          
+        <table class="table table-striped varlist">
+          <tbody>
+                <tr>
+                  <td>
+                        private
+
+                    pure, module
+                    function
+                    <strong>from_components</strong>
+                    (inputs, outputs)
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                        private
+
+                    pure, module
+                    function
+                    <strong>from_json</strong>
+                    (lines)
+                  </td>
+                  <td></td>
+                </tr>
+          </tbody>
+        </table>
+
+
+        <h4>Type-Bound Procedures</h4>
+        <table class="table table-striped varlist">
+          <tbody>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/tensor_names_t.html#boundprocedure-equals~4'>equals</a></strong></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/tensor_names_t.html#boundprocedure-input_names~4'>input_names</a></strong></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>  generic, public ::
+  <strong><a href='../type/tensor_names_t.html#boundprocedure-operator%28%3D%3D%29~8'>operator(==)</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_names_t.html#boundprocedure-equals~4'>equals</a></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/tensor_names_t.html#boundprocedure-output_names~4'>output_names</a></strong></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/tensor_names_t.html#boundprocedure-to_json~8'>to_json</a></strong></td>
+                <td></td>
+              </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              Fiats
+ was developed by Berkeley Lab<br>              &copy; 2024 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2024-10-29 04:27              </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
+
+    <!-- MathJax JavaScript
+             ================================================== -->
+             <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+          });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+          <script src="../tipuesearch/tipuesearch_content.js"></script>
+          <script src="../tipuesearch/tipuesearch_set.js"></script>
+          <script src="../tipuesearch/tipuesearch.js"></script>
+
+  </body>
+</html>

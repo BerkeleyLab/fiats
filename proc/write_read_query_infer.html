@@ -241,18 +241,18 @@
 <path fill="none" stroke="#ff0000" d="M72.84,-266.71C85.62,-295.58 120.55,-367.46 169.02,-411.13 191.29,-431.2 221.12,-446.62 245.94,-457.18"/>
 <polygon fill="#ff0000" stroke="#ff0000" points="244.61,-460.42 255.19,-460.97 247.27,-453.94 244.61,-460.42"/>
 </g>
-<!-- none~nodes_per_layer~5 -->
+<!-- none~nodes_per_layer~3 -->
 <g id="proc~~write_read_query_infer~~CallsGraph_node5" class="node">
-<title>none~nodes_per_layer~5</title>
-<g id="a_proc~~write_read_query_infer~~CallsGraph_node5"><a xlink:href="../type/neural_network_t.html#boundprocedure-nodes_per_layer~5" xlink:title="neural_network_t%nodes_per_layer">
+<title>none~nodes_per_layer~3</title>
+<g id="a_proc~~write_read_query_infer~~CallsGraph_node5"><a xlink:href="../type/neural_network_t.html#boundprocedure-nodes_per_layer~3" xlink:title="neural_network_t%nodes_per_layer">
 <polygon fill="#a7506f" stroke="#a7506f" points="394.29,-402.27 193.77,-402.27 193.77,-378 394.29,-378 394.29,-402.27"/>
 <text text-anchor="middle" x="294.03" y="-386.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">neural_network_t%nodes_per_layer</text>
 </a>
 </g>
 </g>
-<!-- proc~write_read_query_infer&#45;&gt;none~nodes_per_layer~5 -->
+<!-- proc~write_read_query_infer&#45;&gt;none~nodes_per_layer~3 -->
 <g id="proc~~write_read_query_infer~~CallsGraph_edge4" class="edge">
-<title>proc~write_read_query_infer&#45;&gt;none~nodes_per_layer~5</title>
+<title>proc~write_read_query_infer&#45;&gt;none~nodes_per_layer~3</title>
 <path fill="none" stroke="#ff0000" d="M83.16,-266.55C102.67,-281.75 137.31,-307.84 169.02,-327.13 197,-344.16 230.14,-360.83 255.12,-372.74"/>
 <polygon fill="#ff0000" stroke="#ff0000" points="253.38,-375.79 263.91,-376.9 256.37,-369.46 253.38,-375.79"/>
 </g>
@@ -424,9 +424,9 @@
 </a>
 </g>
 </g>
-<!-- none~nodes_per_layer~5&#45;&gt;interface~default_real_nodes_per_layer~2 -->
+<!-- none~nodes_per_layer~3&#45;&gt;interface~default_real_nodes_per_layer~2 -->
 <g id="proc~~write_read_query_infer~~CallsGraph_edge16" class="edge">
-<title>none~nodes_per_layer~5&#45;&gt;interface~default_real_nodes_per_layer~2</title>
+<title>none~nodes_per_layer~3&#45;&gt;interface~default_real_nodes_per_layer~2</title>
 <path fill="none" stroke="#5cff00" stroke-dasharray="5,2" d="M387.22,-402.74C422.39,-407.54 462.69,-413.05 498.84,-417.99"/>
 <polygon fill="#5cff00" stroke="#5cff00" points="498.03,-421.41 508.41,-419.3 498.98,-414.48 498.03,-421.41"/>
 </g>
@@ -439,9 +439,9 @@
 </a>
 </g>
 </g>
-<!-- none~nodes_per_layer~5&#45;&gt;interface~double_precision_nodes_per_layer~2 -->
+<!-- none~nodes_per_layer~3&#45;&gt;interface~double_precision_nodes_per_layer~2 -->
 <g id="proc~~write_read_query_infer~~CallsGraph_edge17" class="edge">
-<title>none~nodes_per_layer~5&#45;&gt;interface~double_precision_nodes_per_layer~2</title>
+<title>none~nodes_per_layer~3&#45;&gt;interface~double_precision_nodes_per_layer~2</title>
 <path fill="none" stroke="#5cff00" stroke-dasharray="5,2" d="M394.37,-390.13C410.26,-390.13 427.04,-390.13 443.9,-390.13"/>
 <polygon fill="#5cff00" stroke="#5cff00" points="443.47,-393.64 453.47,-390.14 443.47,-386.64 443.47,-393.64"/>
 </g>
@@ -807,16 +807,16 @@ large graphs.</div>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">file_t</span><span class="p">)</span><span class="w"> </span><span class="n">json_output_file</span><span class="p">,</span><span class="w"> </span><span class="n">json_input_file</span>
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">tensor_t</span><span class="p">)</span><span class="w"> </span><span class="n">inputs</span><span class="p">,</span><span class="w"> </span><span class="n">outputs</span><span class="w"> </span>
 
-<span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Constructing an neural_network_t neural-network object from scratch.&quot;</span>
+<span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Constructing a neural_network_t neural-network object from scratch.&quot;</span>
 <span class="w">    </span><span class="n">network</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">identity_network</span><span class="p">()</span>
 
-<span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Converting an neural_network_t object to a file_t object.&quot;</span>
+<span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Converting a neural_network_t object to a file_t object.&quot;</span>
 <span class="w">    </span><span class="n">json_output_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">network</span><span class="p">%</span><span class="n">to_json</span><span class="p">()</span>
 
-<span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Writing an neural_network_t object to the file &#39;&quot;</span><span class="o">//</span><span class="n">output_file_name</span><span class="p">%</span><span class="n">string</span><span class="p">()</span><span class="o">//</span><span class="s2">&quot;&#39; in JSON format.&quot;</span>
+<span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Writing a neural_network_t object to the file &#39;&quot;</span><span class="o">//</span><span class="n">output_file_name</span><span class="p">%</span><span class="n">string</span><span class="p">()</span><span class="o">//</span><span class="s2">&quot;&#39; in JSON format.&quot;</span>
 <span class="w">    </span><span class="k">call </span><span class="n">json_output_file</span><span class="p">%</span><span class="n">write_lines</span><span class="p">(</span><span class="n">output_file_name</span><span class="p">)</span>
 
-<span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Reading an neural_network_t object from the same JSON file &#39;&quot;</span><span class="o">//</span><span class="n">output_file_name</span><span class="p">%</span><span class="n">string</span><span class="p">()</span><span class="o">//</span><span class="s2">&quot;&#39;.&quot;</span>
+<span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Reading a neural_network_t object from the same JSON file &#39;&quot;</span><span class="o">//</span><span class="n">output_file_name</span><span class="p">%</span><span class="n">string</span><span class="p">()</span><span class="o">//</span><span class="s2">&quot;&#39;.&quot;</span>
 <span class="w">    </span><span class="n">json_input_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">file_t</span><span class="p">(</span><span class="n">output_file_name</span><span class="p">)</span>
 
 <span class="w">    </span><span class="k">print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Constructing a new neural_network_t object from the parameters read.&quot;</span>
@@ -858,7 +858,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2024-10-17 00:07              </p>
+ on 2024-10-29 04:27              </p>
           </div>
         </div>
         <br>

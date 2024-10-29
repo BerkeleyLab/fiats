@@ -8,6 +8,7 @@ module training_configuration_m
   use network_configuration_m, only : network_configuration_t
   use kind_parameters_m, only  : default_real, double_precision
   use double_precision_file_m, only : double_precision_file_t
+  use tensor_names_m, only : tensor_names_t
   implicit none
 
   private
@@ -17,38 +18,45 @@ module training_configuration_m
     integer, kind :: k = default_real
     type(hyperparameters_t(k)),    private :: hyperparameters_
     type(network_configuration_t), private :: network_configuration_
+    type(tensor_names_t), private :: tensor_names_
   contains
-    generic :: operator(==) => default_real_equals, double_precision_equals
-    procedure, private ::      default_real_equals, double_precision_equals
-    generic :: to_json => default_real_to_json, double_precision_to_json
-    procedure, private :: default_real_to_json, double_precision_to_json
-    generic :: mini_batches => default_real_mini_batches, double_precision_mini_batches
-    procedure, private ::      default_real_mini_batches, double_precision_mini_batches
-    generic :: optimizer_name => default_real_optimizer_name, double_precision_optimizer_name
-    procedure, private ::        default_real_optimizer_name, double_precision_optimizer_name
-    generic :: learning_rate => default_real_learning_rate, double_precision_learning_rate
-    procedure, private ::       default_real_learning_rate, double_precision_learning_rate
-    generic :: differentiable_activation => default_real_differentiable_activation, double_precision_differentiable_activation
-    procedure, private ::                   default_real_differentiable_activation, double_precision_differentiable_activation
-    generic :: nodes_per_layer => default_real_nodes_per_layer, double_precision_nodes_per_layer
-    procedure, private ::         default_real_nodes_per_layer, double_precision_nodes_per_layer
+    generic :: operator(==)     => default_real_equals          , double_precision_equals
+    procedure, private          :: default_real_equals          , double_precision_equals
+    generic :: to_json          => default_real_to_json         , double_precision_to_json
+    procedure, private          :: default_real_to_json         , double_precision_to_json
+    generic :: mini_batches     => default_real_mini_batches    , double_precision_mini_batches
+    procedure, private          :: default_real_mini_batches    , double_precision_mini_batches
+    generic :: optimizer_name   => default_real_optimizer_name  , double_precision_optimizer_name
+    procedure, private          :: default_real_optimizer_name  , double_precision_optimizer_name
+    generic :: learning_rate    => default_real_learning_rate   , double_precision_learning_rate
+    procedure, private          :: default_real_learning_rate   , double_precision_learning_rate
+    generic :: activation       => default_real_activation      , double_precision_activation
+    procedure, private          :: default_real_activation      , double_precision_activation
+    generic :: nodes_per_layer  => default_real_nodes_per_layer , double_precision_nodes_per_layer
+    procedure, private          :: default_real_nodes_per_layer , double_precision_nodes_per_layer
     generic :: skip_connections => default_real_skip_connections, double_precision_skip_connections
     procedure, private ::          default_real_skip_connections, double_precision_skip_connections
+    generic :: input_names      => default_real_input_names     , double_precision_input_names
+    procedure, private ::          default_real_input_names     , double_precision_input_names
+    generic :: output_names     => default_real_output_names    , double_precision_output_names
+    procedure, private ::          default_real_output_names    , double_precision_output_names
   end type
 
   interface training_configuration_t
 
-    module function default_real_from_components(hyperparameters, network_configuration) result(training_configuration)
+    module function default_real_from_components(hyperparameters, network_configuration, tensor_names) result(training_configuration)
       implicit none
       type(hyperparameters_t), intent(in) :: hyperparameters
       type(network_configuration_t), intent(in) :: network_configuration
       type(training_configuration_t) training_configuration
+      type(tensor_names_t), intent(in) :: tensor_names
     end function
 
-    module function double_precision_from_components(hyperparameters, network_configuration) result(training_configuration)
+    module function double_precision_from_components(hyperparameters, network_configuration, tensor_names) result(training_configuration)
       implicit none
       type(hyperparameters_t(double_precision)), intent(in) :: hyperparameters
       type(network_configuration_t), intent(in) :: network_configuration
+      type(tensor_names_t), intent(in) :: tensor_names
       type(training_configuration_t(double_precision)) training_configuration
     end function
 
@@ -128,13 +136,13 @@ module training_configuration_m
       double precision rate
     end function
 
-    module function default_real_differentiable_activation(self) result(activation)
+    module function default_real_activation(self) result(activation)
       implicit none
       class(training_configuration_t), intent(in) :: self
       type(activation_t) activation
     end function
 
-    module function double_precision_differentiable_activation(self) result(activation)
+    module function double_precision_activation(self) result(activation)
       implicit none
       class(training_configuration_t(double_precision)), intent(in) :: self
       type(activation_t) activation
@@ -164,6 +172,30 @@ module training_configuration_m
       logical using_skip
     end function
  
+    pure module function default_real_input_names(self) result(input_names)
+      implicit none
+      class(training_configuration_t), intent(in) :: self
+      type(string_t), allocatable :: input_names(:)
+    end function
+
+    pure module function double_precision_input_names(self) result(input_names)
+      implicit none
+      class(training_configuration_t(double_precision)), intent(in) :: self
+      type(string_t), allocatable :: input_names(:)
+    end function
+
+    pure module function default_real_output_names(self) result(output_names)
+      implicit none
+      class(training_configuration_t), intent(in) :: self
+      type(string_t), allocatable :: output_names(:)
+    end function
+
+    pure module function double_precision_output_names(self) result(output_names)
+      implicit none
+      class(training_configuration_t(double_precision)), intent(in) :: self
+      type(string_t), allocatable :: output_names(:)
+    end function
+
   end interface
 
 end module

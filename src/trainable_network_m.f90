@@ -34,8 +34,8 @@ module trainable_network_m
       result(trainable_network)
       implicit none
       type(training_configuration_t), intent(in) :: training_configuration
-      type(string_t), intent(in) :: metadata(:)
       real, intent(in) :: perturbation_magnitude
+      type(string_t), intent(in) :: metadata(:)
       type(tensor_map_t) input_map, output_map
       type(trainable_network_t) trainable_network
     end function

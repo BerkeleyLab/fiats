@@ -15,14 +15,18 @@ module tensor_map_m
     character(len=:),      allocatable, private :: layer_
     real(k), dimension(:), allocatable, private :: intercept_, slope_
   contains
-    generic :: map_to_training_range => default_real_map_to_training_range, double_precision_map_to_training_range
-    procedure, private, non_overridable ::               default_real_map_to_training_range, double_precision_map_to_training_range
-    generic :: map_from_training_range => default_real_map_from_training_range, double_precision_map_from_training_range
-    procedure, private, non_overridable ::                 default_real_map_from_training_range, double_precision_map_from_training_range
-    generic :: to_json => default_real_to_json, double_precision_to_json
-    procedure, private :: default_real_to_json, double_precision_to_json
-    generic :: operator(==) => default_real_equals, double_precision_equals
-    procedure, private ::      default_real_equals, double_precision_equals
+    generic :: map_to_training_range    => default_real_map_to_training_range  , double_precision_map_to_training_range
+    procedure, private, non_overridable :: default_real_map_to_training_range  , double_precision_map_to_training_range
+    generic :: map_from_training_range  => default_real_map_from_training_range, double_precision_map_from_training_range
+    procedure, private, non_overridable :: default_real_map_from_training_range, double_precision_map_from_training_range
+    generic :: minima                   => default_real_minima                 , double_precision_minima
+    procedure, private, non_overridable :: default_real_minima                 , double_precision_minima
+    generic :: maxima                   => default_real_maxima                 , double_precision_maxima
+    procedure, private, non_overridable :: default_real_maxima                 , double_precision_maxima
+    generic :: to_json                  => default_real_to_json                , double_precision_to_json
+    procedure, private                  :: default_real_to_json                , double_precision_to_json
+    generic :: operator(==)             => default_real_equals                 , double_precision_equals
+    procedure, private                  :: default_real_equals                 , double_precision_equals
   end type
 
 
@@ -57,6 +61,30 @@ module tensor_map_m
   end interface
 
   interface
+
+    pure module function default_real_minima(self) result(minima)
+      implicit none
+      class(tensor_map_t), intent(in) :: self
+      real, allocatable :: minima(:)
+    end function
+
+    pure module function double_precision_minima(self) result(minima)
+      implicit none
+      class(tensor_map_t(double_precision)), intent(in) :: self
+      double precision, allocatable :: minima(:)
+    end function
+
+    pure module function default_real_maxima(self) result(maxima)
+      implicit none
+      class(tensor_map_t), intent(in) :: self
+      real, allocatable :: maxima(:)
+    end function
+
+    pure module function double_precision_maxima(self) result(maxima)
+      implicit none
+      class(tensor_map_t(double_precision)), intent(in) :: self
+      double precision, allocatable :: maxima(:)
+    end function
 
     elemental module function default_real_map_to_training_range(self, tensor) result(normalized_tensor)
       implicit none

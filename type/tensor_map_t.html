@@ -76,7 +76,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="<p> 7.6% of total for derived types.</p>Including implementation: 14 statements,  6.0% of total for derived types.">38 statements</a>
+                 title="<p> 7.9% of total for derived types.</p>Including implementation: 18 statements,  7.4% of total for derived types.">42 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -159,15 +159,21 @@
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-map_from_training_range">map_from_training_range</a>
             <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-map_to_training_range">map_to_training_range</a>
-            <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-operator%28%3D%3D%29~7">operator(==)</a>
+            <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-maxima">maxima</a>
+            <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-minima">minima</a>
+            <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-operator%28%3D%3D%29~6">operator(==)</a>
             <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-to_json~6">to_json</a>
             <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-default_real_equals~3">default_real_equals</a>
             <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-default_real_map_from_training_range">default_real_map_from_training_range</a>
             <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-default_real_map_to_training_range">default_real_map_to_training_range</a>
+            <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-default_real_maxima">default_real_maxima</a>
+            <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-default_real_minima">default_real_minima</a>
             <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-default_real_to_json~5">default_real_to_json</a>
             <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-double_precision_equals~3">double_precision_equals</a>
             <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-double_precision_map_from_training_range">double_precision_map_from_training_range</a>
             <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-double_precision_map_to_training_range">double_precision_map_to_training_range</a>
+            <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-double_precision_maxima">double_precision_maxima</a>
+            <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-double_precision_minima">double_precision_minima</a>
             <a class="list-group-item" href="../type/tensor_map_t.html#boundprocedure-double_precision_to_json~5">double_precision_to_json</a>
         </div>
       </div>
@@ -440,7 +446,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-minima"></span>
+              <span class="anchor" id="variable-minima~2"></span>
               real,
             </td>
 <td>intent(in),</td>
@@ -455,7 +461,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-maxima"></span>
+              <span class="anchor" id="variable-maxima~2"></span>
               real,
             </td>
 <td>intent(in),</td>
@@ -514,7 +520,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-minima~2"></span>
+              <span class="anchor" id="variable-minima~3"></span>
               double precision,
             </td>
 <td>intent(in),</td>
@@ -529,7 +535,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-maxima~2"></span>
+              <span class="anchor" id="variable-maxima~3"></span>
               double precision,
             </td>
 <td>intent(in),</td>
@@ -555,7 +561,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private module function double_precision_from_json(lines) result(tensor_map)  
-    <a href="../proc/double_precision_from_json~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_from_json~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -573,7 +579,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-lines~15"></span>
+              <span class="anchor" id="variable-lines~14"></span>
               type(<a href='double_precision_string_t.html'>double_precision_string_t</a>),
             </td>
 <td>intent(in)</td>
@@ -599,7 +605,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private module function from_json(lines) result(tensor_map)  
-    <a href="../proc/from_json.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/from_json~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -617,7 +623,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-lines~14"></span>
+              <span class="anchor" id="variable-lines~13"></span>
               type(string_t),
             </td>
 <td>intent(in)</td>
@@ -655,7 +661,7 @@ large graphs.</div>
       <span class="anchor" id="boundprocedure-map_from_training_range"></span>
       <h3>
           generic, public ::
-  <strong>map_from_training_range</strong> => <a href='/home/runner/work/inference-engine/inference-engine/doc/html/type/tensor_map_t.html#boundprocedure-default_real_map_from_training_range'>default_real_map_from_training_range</a>, <a href='/home/runner/work/inference-engine/inference-engine/doc/html/type/tensor_map_t.html#boundprocedure-double_precision_map_from_training_range'>double_precision_map_from_training_range</a>
+  <strong>map_from_training_range</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-default_real_map_from_training_range'>default_real_map_from_training_range</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-double_precision_map_from_training_range'>double_precision_map_from_training_range</a>
         
       </h3>
     </div>
@@ -694,7 +700,7 @@ large graphs.</div>
       <span class="anchor" id="boundprocedure-map_to_training_range"></span>
       <h3>
           generic, public ::
-  <strong>map_to_training_range</strong> => <a href='/home/runner/work/inference-engine/inference-engine/doc/html/type/tensor_map_t.html#boundprocedure-default_real_map_to_training_range'>default_real_map_to_training_range</a>, <a href='/home/runner/work/inference-engine/inference-engine/doc/html/type/tensor_map_t.html#boundprocedure-double_precision_map_to_training_range'>double_precision_map_to_training_range</a>
+  <strong>map_to_training_range</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-default_real_map_to_training_range'>default_real_map_to_training_range</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-double_precision_map_to_training_range'>double_precision_map_to_training_range</a>
         
       </h3>
     </div>
@@ -730,10 +736,88 @@ large graphs.</div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-operator%28%3D%3D%29~7"></span>
+      <span class="anchor" id="boundprocedure-maxima"></span>
       <h3>
           generic, public ::
-  <strong>operator(==)</strong> => <a href='/home/runner/work/inference-engine/inference-engine/doc/html/type/tensor_map_t.html#boundprocedure-default_real_equals~3'>default_real_equals</a>, <a href='/home/runner/work/inference-engine/inference-engine/doc/html/type/tensor_map_t.html#boundprocedure-double_precision_equals~3'>double_precision_equals</a>
+  <strong>maxima</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-default_real_maxima'>default_real_maxima</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-double_precision_maxima'>double_precision_maxima</a>
+        
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+                  <h3>
+    private  interface <a href='../interface/default_real_maxima.html'>default_real_maxima</a>()  
+</h3>
+    
+
+  
+
+  <h4>Arguments</h4>
+    <em>None</em>
+
+        </li>
+        <li class="list-group-item">
+                  <h3>
+    private  interface <a href='../interface/double_precision_maxima.html'>double_precision_maxima</a>()  
+</h3>
+    
+
+  
+
+  <h4>Arguments</h4>
+    <em>None</em>
+
+        </li>
+    </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-minima"></span>
+      <h3>
+          generic, public ::
+  <strong>minima</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-default_real_minima'>default_real_minima</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-double_precision_minima'>double_precision_minima</a>
+        
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+                  <h3>
+    private  interface <a href='../interface/default_real_minima.html'>default_real_minima</a>()  
+</h3>
+    
+
+  
+
+  <h4>Arguments</h4>
+    <em>None</em>
+
+        </li>
+        <li class="list-group-item">
+                  <h3>
+    private  interface <a href='../interface/double_precision_minima.html'>double_precision_minima</a>()  
+</h3>
+    
+
+  
+
+  <h4>Arguments</h4>
+    <em>None</em>
+
+        </li>
+    </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-operator%28%3D%3D%29~6"></span>
+      <h3>
+          generic, public ::
+  <strong>operator(==)</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-default_real_equals~3'>default_real_equals</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-double_precision_equals~3'>double_precision_equals</a>
         
       </h3>
     </div>
@@ -772,7 +856,7 @@ large graphs.</div>
       <span class="anchor" id="boundprocedure-to_json~6"></span>
       <h3>
           generic, public ::
-  <strong>to_json</strong> => <a href='/home/runner/work/inference-engine/inference-engine/doc/html/type/tensor_map_t.html#boundprocedure-default_real_to_json~5'>default_real_to_json</a>, <a href='/home/runner/work/inference-engine/inference-engine/doc/html/type/tensor_map_t.html#boundprocedure-double_precision_to_json~5'>double_precision_to_json</a>
+  <strong>to_json</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-default_real_to_json~5'>default_real_to_json</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/tensor_map_t.html#boundprocedure-double_precision_to_json~5'>double_precision_to_json</a>
         
       </h3>
     </div>
@@ -820,7 +904,7 @@ large graphs.</div>
               <h3>interface </h3>
                   <h3>
     private elemental module function default_real_equals(lhs, rhs) result(lhs_equals_rhs)  
-    <a href="../proc/default_real_equals.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_equals~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -1033,6 +1117,126 @@ large graphs.</div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-default_real_maxima"></span>
+      <h3>
+          procedure, private, non_overridable ::
+  <strong>default_real_maxima</strong>
+        
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function default_real_maxima(self) result(maxima)  
+    <a href="../proc/default_real_maxima.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+</h3>
+
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='tensor_map_t.html'>tensor_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real, allocatable, (:)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-default_real_minima"></span>
+      <h3>
+          procedure, private, non_overridable ::
+  <strong>default_real_minima</strong>
+        
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function default_real_minima(self) result(minima)  
+    <a href="../proc/default_real_minima.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+</h3>
+
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='tensor_map_t.html'>tensor_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real, allocatable, (:)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
       <span class="anchor" id="boundprocedure-default_real_to_json~5"></span>
       <h3>
           procedure, private ::
@@ -1045,7 +1249,7 @@ large graphs.</div>
               <h3>interface </h3>
                   <h3>
     private pure module function default_real_to_json(self) result(lines)  
-    <a href="../proc/default_real_to_json~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_to_json~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -1105,7 +1309,7 @@ large graphs.</div>
               <h3>interface </h3>
                   <h3>
     private elemental module function double_precision_equals(lhs, rhs) result(lhs_equals_rhs)  
-    <a href="../proc/double_precision_equals.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_equals~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -1318,6 +1522,126 @@ large graphs.</div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-double_precision_maxima"></span>
+      <h3>
+          procedure, private, non_overridable ::
+  <strong>double_precision_maxima</strong>
+        
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function double_precision_maxima(self) result(maxima)  
+    <a href="../proc/double_precision_maxima.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+</h3>
+
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='tensor_map_t.html'>tensor_map_t</a>(double_precision)),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>double precision, allocatable, (:)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-double_precision_minima"></span>
+      <h3>
+          procedure, private, non_overridable ::
+  <strong>double_precision_minima</strong>
+        
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function double_precision_minima(self) result(minima)  
+    <a href="../proc/double_precision_minima.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+</h3>
+
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='tensor_map_t.html'>tensor_map_t</a>(double_precision)),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>double precision, allocatable, (:)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
       <span class="anchor" id="boundprocedure-double_precision_to_json~5"></span>
       <h3>
           procedure, private ::
@@ -1330,7 +1654,7 @@ large graphs.</div>
               <h3>interface </h3>
                   <h3>
     private pure module function double_precision_to_json(self) result(lines)  
-    <a href="../proc/double_precision_to_json~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_to_json~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -1396,7 +1720,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2024-10-17 00:07              </p>
+ on 2024-10-29 04:27              </p>
           </div>
         </div>
         <br>
