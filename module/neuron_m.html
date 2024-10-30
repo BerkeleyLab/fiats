@@ -127,13 +127,13 @@
             <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_next_allocated~2">default_real_next_allocated</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_next_pointer~2">default_real_next_pointer</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_num_inputs">default_real_num_inputs</a>
-            <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_to_json">default_real_to_json</a>
+            <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_to_json~3">default_real_to_json</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_weights">default_real_weights</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_bias">double_precision_bias</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_next_allocated~2">double_precision_next_allocated</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_next_pointer~2">double_precision_next_pointer</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_num_inputs">double_precision_num_inputs</a>
-            <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_to_json">double_precision_to_json</a>
+            <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_to_json~3">double_precision_to_json</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_weights">double_precision_weights</a>
         </div>
       </div>
@@ -521,7 +521,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private pure module function default_real_from_components(weights, bias) result(neuron)  
-    <a href="../proc/default_real_from_components~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_from_components.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   <p>construct single neuron_t object from an array of weights and a bias</p>
@@ -580,7 +580,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private pure module function double_precision_from_components(weights, bias) result(neuron)  
-    <a href="../proc/double_precision_from_components~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_from_components.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   <p>construct single neuron_t object from an array of weights and a bias</p>
@@ -639,7 +639,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private pure recursive module function double_precision_from_json(neuron_lines, start) result(neuron)  
-    <a href="../proc/double_precision_from_json~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_from_json.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   <p>construct linked list of neuron_t objects from an array of JSON-formatted text lines</p>
@@ -698,7 +698,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private pure recursive module function from_json(neuron_lines, start) result(neuron)  
-    <a href="../proc/from_json~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/from_json~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   <p>construct linked list of neuron_t objects from an array of JSON-formatted text lines</p>
@@ -785,7 +785,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~27"></span>
+              <span class="anchor" id="variable-self~45"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in)</td>
@@ -839,7 +839,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~29"></span>
+              <span class="anchor" id="variable-self~47"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in)</td>
@@ -893,7 +893,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~31"></span>
+              <span class="anchor" id="variable-self~49"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in),</td>
@@ -929,7 +929,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private pure module function default_real_num_inputs(self) result(size_weights)  
-    <a href="../proc/default_real_num_inputs~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_num_inputs.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -947,7 +947,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~33"></span>
+              <span class="anchor" id="variable-self~51"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in)</td>
@@ -975,7 +975,7 @@ large graphs.</div>
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-default_real_to_json"></span>
+      <span class="anchor" id="interface-default_real_to_json~3"></span>
       <h3>        interface
       </h3>
     </div>
@@ -983,7 +983,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private pure module function default_real_to_json(self) result(lines)  
-    <a href="../proc/default_real_to_json~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_to_json.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1001,7 +1001,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~23"></span>
+              <span class="anchor" id="variable-self~41"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1055,7 +1055,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~25"></span>
+              <span class="anchor" id="variable-self~43"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1109,7 +1109,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~28"></span>
+              <span class="anchor" id="variable-self~46"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1163,7 +1163,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~30"></span>
+              <span class="anchor" id="variable-self~48"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1217,7 +1217,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~32"></span>
+              <span class="anchor" id="variable-self~50"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in),</td>
@@ -1253,7 +1253,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private pure module function double_precision_num_inputs(self) result(size_weights)  
-    <a href="../proc/double_precision_num_inputs~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_num_inputs.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1271,7 +1271,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~34"></span>
+              <span class="anchor" id="variable-self~52"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1299,7 +1299,7 @@ large graphs.</div>
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-double_precision_to_json"></span>
+      <span class="anchor" id="interface-double_precision_to_json~3"></span>
       <h3>        interface
       </h3>
     </div>
@@ -1307,7 +1307,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private pure module function double_precision_to_json(self) result(lines)  
-    <a href="../proc/double_precision_to_json~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_to_json.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1325,7 +1325,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~24"></span>
+              <span class="anchor" id="variable-self~42"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1379,7 +1379,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~26"></span>
+              <span class="anchor" id="variable-self~44"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1436,7 +1436,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-k~6"></span>
+              <span class="anchor" id="variable-k~12"></span>
               integer,
             </td>
               <td>public,</td>
@@ -1578,12 +1578,12 @@ large graphs.</div>
               </tr>
               <tr>
                 <td>  generic, public ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-num_inputs~3'>num_inputs</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_num_inputs'>default_real_num_inputs</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_num_inputs'>double_precision_num_inputs</a></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-num_inputs~5'>num_inputs</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_num_inputs'>default_real_num_inputs</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_num_inputs'>double_precision_num_inputs</a></td>
                 <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-to_json~2'>to_json</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_to_json'>default_real_to_json</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_to_json'>double_precision_to_json</a></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-to_json~5'>to_json</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_to_json~3'>default_real_to_json</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_to_json~3'>double_precision_to_json</a></td>
                 <td></td>
               </tr>
               <tr>
@@ -1613,7 +1613,7 @@ large graphs.</div>
               </tr>
               <tr>
                 <td>  procedure, private ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-default_real_to_json'>default_real_to_json</a></strong></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-default_real_to_json~3'>default_real_to_json</a></strong></td>
                 <td></td>
               </tr>
               <tr>
@@ -1643,7 +1643,7 @@ large graphs.</div>
               </tr>
               <tr>
                 <td>  procedure, private ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-double_precision_to_json'>double_precision_to_json</a></strong></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-double_precision_to_json~3'>double_precision_to_json</a></strong></td>
                 <td></td>
               </tr>
               <tr>
@@ -1681,7 +1681,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2024-10-29 05:09              </p>
+ on 2024-10-30 21:04              </p>
           </div>
         </div>
         <br>
