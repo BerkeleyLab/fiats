@@ -1,5 +1,8 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "language-support.F90"
+
 program main
   use neural_network_test_m, only : neural_network_test_t
   use asymmetric_network_test_m, only : asymmetric_network_test_t
@@ -59,7 +62,7 @@ program main
   print *,"Test suite execution time: ",t_finish - t_start
   print *
   print '(*(a,:,g0))',"_________ In total, ",passes," of ",tests, " tests pass. _________"
-#ifndef __flang__
+#ifdef MULTI_IMAGE_SUPPORT
   sync all
 #endif
   print *
