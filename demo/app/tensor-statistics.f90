@@ -25,7 +25,7 @@ end module
 program tensor_statistics
   !! This program
   !! 1. Computes the ranges and histograms of input and output tensors saved by
-  !!    the neural-net branch of the Berkeley Lab fork of [ICAR](https://berkeleylab.github/icar).
+  !!    the neural-net branch of the Berkeley Lab fork of [ICAR](https://go.lbl.gov/icar).
   !! 2. Saves the resulting statistics to text files with space-separated columns and column labels.
 
   ! External dependencies:
@@ -40,14 +40,14 @@ program tensor_statistics
   use histogram_m, only : histogram_t, to_file
   implicit none
 
-  character(len=*), parameter :: usage = &
-    new_line('a') // new_line('a') // &
-    'Usage: ' // new_line('a') // new_line('a') // &
-    './build/run-fpm.sh run tensor-statistics -- \' // new_line('a') // &
-    '  --base <string> --bins <integer> \' // new_line('a') // &
+  character(len=*), parameter :: usage =    new_line('a') // new_line('a') // & 
+    'Usage: '                            // new_line('a') // new_line('a') // &
+    './build/run-fpm.sh run tensor-statistics -- \'       // new_line('a') // &
+    '  --base <string> --bins <integer> \'                // new_line('a') // &
     '  [--raw] [--start <integer>] [--end <integer>] [--stride <integer>]' // &
-    new_line('a') // new_line('a') // &
-    'where angular brackets denote user-provided values and square brackets denote optional arguments.' // new_line('a')
+                                            new_line('a') // new_line('a') // &
+    'where angular brackets denote user-provided values and square brackets denote optional arguments.' &
+                                                          // new_line('a')
 
   integer(int64) t_start, t_finish, clock_rate
   integer num_bins, start_step, stride
@@ -85,7 +85,7 @@ contains
     type(command_line_t) command_line
     character(len=:), allocatable :: stride_string, bins_string, start_string, end_string
 
-    base_name = command_line%flag_value("--base") ! gfortran 13 seg faults if this is an association
+    base_name = command_line%flag_value("--base")
     bins_string = command_line%flag_value("--bins")
     start_string = command_line%flag_value("--start")
     end_string = command_line%flag_value("--end")
