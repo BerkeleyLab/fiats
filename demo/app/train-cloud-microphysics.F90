@@ -1,11 +1,10 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 program train_cloud_microphysics
-  !! Train a neural network to represent the simplest cloud microphysics model from
-  !! the Intermediate Complexity Atmospheric Research Model (ICAR) at
-  !! https://github.com/BerkeleyLab/icar.
+  !! Train a neural network to represent a cloud microphysics model from
+  !! [ICAR](https://go.lbl.gov/icar))
 
-  !! Intrinic modules :
+  !! Intrinsic modules :
   use iso_fortran_env, only : int64, real64
 
   !! External dependencies:
@@ -20,6 +19,8 @@ program train_cloud_microphysics
   use NetCDF_file_m, only: NetCDF_file_t
   use NetCDF_variable_m, only: NetCDF_variable_t, tensors
   use occupancy_m, only : occupancy_t
+  use default_value_or_internal_read_m, only : default_value_or_internal_read
+
   implicit none
 
   character(len=*), parameter :: usage =                                                        new_line('a') // new_line('a') // &
@@ -29,7 +30,7 @@ program train_cloud_microphysics
     '  [--start <integer>] [--end <integer>] [--stride <integer>] [--bins <integer>] [--report <integer>] [--tolerance <real>]'// &
                                                                                                 new_line('a') // new_line('a') // &
     'where angular brackets denote user-provided values and square brackets denote optional arguments.'       // new_line('a') // &
-    'The presence of a file named "stop" halts execution gracefully.'
+    'The presence of a file named "stop" halts execution gracefully.'                                         // new_line('')
 
   type command_line_arguments_t 
     integer num_epochs, start_step, stride, num_bins, report_step
@@ -108,7 +109,7 @@ contains
     integer, allocatable :: end_step
     integer num_epochs, num_bins, start_step, stride, report_step
 
-    base_name = command_line%flag_value("--base") ! gfortran 13 seg faults if this is an association
+    base_name = command_line%flag_value("--base")
     epochs_string = command_line%flag_value("--epochs")
     start_string = command_line%flag_value("--start")
     end_string = command_line%flag_value("--end")
@@ -123,11 +124,11 @@ contains
 
     read(epochs_string,*) num_epochs
 
-    stride         = default_integer_or_read(1,    stride_string)
-    start_step     = default_integer_or_read(1,     start_string)
-    report_step    = default_integer_or_read(1,    report_string)
-    num_bins       = default_integer_or_read(3,      bins_string)
-    cost_tolerance = default_real_or_read(5E-8, tolerance_string)
+    stride         = default_value_or_internal_read(1,    stride_string)
+    start_step     = default_value_or_internal_read(1,     start_string)
+    report_step    = default_value_or_internal_read(1,    report_string)
+    num_bins       = default_value_or_internal_read(3,      bins_string)
+    cost_tolerance = default_value_or_internal_read(5E-8, tolerance_string)
 
     if (len(end_string)/=0) then
       allocate(end_step)
@@ -435,31 +436,5 @@ contains
     close(plot_file%plot_unit)
 
   end subroutine read_train_write
-
-  pure function default_integer_or_read(default, string) result(set_value)
-    integer, intent(in) :: default
-    character(len=*), intent(in) :: string
-    integer set_value
-    
-    if (len(string)==0) then
-      set_value = default
-    else
-      read(string,*) set_value
-    end if
-
-  end function
-
-  pure function default_real_or_read(default, string) result(set_value)
-    real, intent(in) :: default
-    character(len=*), intent(in) :: string
-    real set_value
-    
-    if (len(string)==0) then
-      set_value = default
-    else
-      read(string,*) set_value
-    end if
-
-  end function
 
 end program train_cloud_microphysics
