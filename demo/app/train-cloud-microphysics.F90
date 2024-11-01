@@ -23,14 +23,14 @@ program train_cloud_microphysics
 
   implicit none
 
-  character(len=*), parameter :: usage =                                                        new_line('a') // new_line('a') // &
-    'Usage: ' //                                                                                new_line('a') // new_line('a') // &
-    './build/run-fpm.sh run train-cloud-microphysics -- \'                                                    // new_line('a') // &
-    '  --base <string> --epochs <integer> \'                                                                  // new_line('a') // &
+  character(len=*), parameter :: usage =                                                          new_line('') // new_line('') // &
+    'Usage: ' //                                                                                  new_line('') // new_line('') // &
+    './build/run-fpm.sh run train-cloud-microphysics -- \'                                                     // new_line('') // &
+    '  --base <string> --epochs <integer> \'                                                                   // new_line('') // &
     '  [--start <integer>] [--end <integer>] [--stride <integer>] [--bins <integer>] [--report <integer>] [--tolerance <real>]'// &
-                                                                                                new_line('a') // new_line('a') // &
-    'where angular brackets denote user-provided values and square brackets denote optional arguments.'       // new_line('a') // &
-    'The presence of a file named "stop" halts execution gracefully.'                                         // new_line('')
+                                                                                                  new_line('') // new_line('') // &
+    'where angular brackets denote user-provided values and square brackets denote optional arguments.'        // new_line('') // &
+    'The presence of a file named "stop" halts execution gracefully.'                                          // new_line('')
 
   type command_line_arguments_t 
     integer num_epochs, start_step, stride, num_bins, report_step
