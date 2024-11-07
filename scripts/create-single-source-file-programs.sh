@@ -2,8 +2,7 @@
 # Copyright (c), The Regents of the University of California
 # Terms of use are as specified in LICENSE.txt
 # ----
-# This script concatenates the Inference-Engine software stack into
-# single-source-file programs.
+# This script concatenates the Fiats software stack into single-source-file programs.
 
 echo ""
 echo "---------------------- create-single-source-file.sh ----------------------------"
@@ -12,7 +11,7 @@ if [ ! -d ../build/dependencies/assert ] || [ ! -d ../build/dependencies/julienn
   echo ""
   echo "Dependencies assert and julienne were not found in ../build/dependencies." 
   echo "Running fpm build to download the dependencies." 
-  echo "This unavoidably builds inference-engine too." 
+  echo "This unavoidably builds fiats too." 
   echo ""
   echo ""
   fpm build
@@ -25,7 +24,7 @@ else
   exit 1
 fi
 
-echo "Concatenating assert, julienne, and inference-engine." 
+echo "Concatenating Assert, Julienne, and Fiats." 
 cat \
   ../build/dependencies/assert/src/assert/characterizable_m.f90 \
   ../build/dependencies/assert/src/assert/intrinsic_array_m.F90 \
@@ -60,45 +59,45 @@ cat \
 >> single-file.F90
   
 cat \
-  ../src/inference_engine/kind_parameters_m.f90 \
-  ../src/inference_engine/activation_strategy_m.f90 \
-  ../src/inference_engine/differentiable_activation_strategy_m.f90 \
-  ../src/inference_engine/gelu_m.f90 \
-  ../src/inference_engine/relu_m.f90 \
-  ../src/inference_engine/sigmoid_m.f90 \
-  ../src/inference_engine/step_m.f90 \
-  ../src/inference_engine/swish_m.f90 \
-  ../src/inference_engine/hyperparameters_m.f90 \
-  ../src/inference_engine/network_configuration_m.f90 \
-  ../src/inference_engine/training_configuration_m.f90 \
-  ../src/inference_engine/neuron_m.f90 \
-  ../src/inference_engine/metadata_m.f90 \
-  ../src/inference_engine/tensor_m.f90 \
-  ../src/inference_engine/input_output_pair_m.f90 \
-  ../src/inference_engine/mini_batch_m.f90 \
-  ../src/inference_engine/tensor_range_m.f90 \
-  ../src/inference_engine/ubounds_m.f90 \
-  ../src/inference_engine/inference_engine_m_.f90 \
-  ../src/inference_engine/layer_m.f90 \
-  ../src/inference_engine/trainable_engine_m.F90 \
-  ../src/inference_engine_m.f90 \
-  ../src/inference_engine/gelu_s.f90 \
-  ../src/inference_engine/relu_s.f90 \
-  ../src/inference_engine/step_s.f90 \
-  ../src/inference_engine/sigmoid_s.f90 \
-  ../src/inference_engine/swish_s.f90 \
-  ../src/inference_engine/training_configuration_s.F90 \
-  ../src/inference_engine/network_configuration_s.F90 \
-  ../src/inference_engine/hyperparameters_s.f90 \
-  ../src/inference_engine/input_output_pair_s.f90 \
-  ../src/inference_engine/neuron_s.f90 \
-  ../src/inference_engine/layer_s.f90 \
-  ../src/inference_engine/metadata_s.f90 \
-  ../src/inference_engine/mini_batch_s.f90 \
-  ../src/inference_engine/tensor_s.f90 \
-  ../src/inference_engine/tensor_range_s.f90 \
-  ../src/inference_engine/inference_engine_s.F90 \
-  ../src/inference_engine/trainable_engine_s.F90 \
+  ../src/fiats/kind_parameters_m.f90 \
+  ../src/fiats/activation_strategy_m.f90 \
+  ../src/fiats/differentiable_activation_strategy_m.f90 \
+  ../src/fiats/gelu_m.f90 \
+  ../src/fiats/relu_m.f90 \
+  ../src/fiats/sigmoid_m.f90 \
+  ../src/fiats/step_m.f90 \
+  ../src/fiats/swish_m.f90 \
+  ../src/fiats/hyperparameters_m.f90 \
+  ../src/fiats/network_configuration_m.f90 \
+  ../src/fiats/training_configuration_m.f90 \
+  ../src/fiats/neuron_m.f90 \
+  ../src/fiats/metadata_m.f90 \
+  ../src/fiats/tensor_m.f90 \
+  ../src/fiats/input_output_pair_m.f90 \
+  ../src/fiats/mini_batch_m.f90 \
+  ../src/fiats/tensor_range_m.f90 \
+  ../src/fiats/ubounds_m.f90 \
+  ../src/fiats/fiats_m_.f90 \
+  ../src/fiats/layer_m.f90 \
+  ../src/fiats/trainable_engine_m.F90 \
+  ../src/fiats_m.f90 \
+  ../src/fiats/gelu_s.f90 \
+  ../src/fiats/relu_s.f90 \
+  ../src/fiats/step_s.f90 \
+  ../src/fiats/sigmoid_s.f90 \
+  ../src/fiats/swish_s.f90 \
+  ../src/fiats/training_configuration_s.F90 \
+  ../src/fiats/network_configuration_s.F90 \
+  ../src/fiats/hyperparameters_s.f90 \
+  ../src/fiats/input_output_pair_s.f90 \
+  ../src/fiats/neuron_s.f90 \
+  ../src/fiats/layer_s.f90 \
+  ../src/fiats/metadata_s.f90 \
+  ../src/fiats/mini_batch_s.f90 \
+  ../src/fiats/tensor_s.f90 \
+  ../src/fiats/tensor_range_s.f90 \
+  ../src/fiats/fiats_s.F90 \
+  ../src/fiats/trainable_engine_s.F90 \
 >> single-file.F90
 
 echo "Creating concurrent-inferences.F90"
