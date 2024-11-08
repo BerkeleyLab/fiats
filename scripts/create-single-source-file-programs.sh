@@ -35,6 +35,7 @@ cat \
 > single-file.F90
 
 cat \
+  ../build/dependencies/julienne/src/julienne/julienne_github_ci_m.f90 \
   ../build/dependencies/julienne/src/julienne/julienne_bin_m.f90 \
   ../build/dependencies/julienne/src/julienne/julienne_command_line_m.f90 \
   ../build/dependencies/julienne/src/julienne/julienne_formats_m.F90 \
@@ -55,49 +56,47 @@ cat \
   ../build/dependencies/julienne/src/julienne/julienne_test_description_s.f90 \
   ../build/dependencies/julienne/src/julienne/julienne_test_s.F90 \
   ../build/dependencies/julienne/src/julienne/julienne_vector_test_description_s.f90 \
+  ../build/dependencies/julienne/src/julienne/julienne_github_ci_s.f90 \
   ../build/dependencies/julienne/src/julienne_m.f90 \
 >> single-file.F90
   
 cat \
   ../src/fiats/kind_parameters_m.f90 \
-  ../src/fiats/activation_strategy_m.f90 \
-  ../src/fiats/differentiable_activation_strategy_m.f90 \
-  ../src/fiats/gelu_m.f90 \
-  ../src/fiats/relu_m.f90 \
-  ../src/fiats/sigmoid_m.f90 \
-  ../src/fiats/step_m.f90 \
-  ../src/fiats/swish_m.f90 \
+  ../src/fiats/double_precision_file_m.f90 \
+  ../src/fiats/double_precision_string_m.f90 \
+  ../src/fiats/activation_m.f90 \
   ../src/fiats/hyperparameters_m.f90 \
   ../src/fiats/network_configuration_m.f90 \
   ../src/fiats/training_configuration_m.f90 \
   ../src/fiats/neuron_m.f90 \
+  ../src/fiats/neural_network_m.f90 \
   ../src/fiats/metadata_m.f90 \
   ../src/fiats/tensor_m.f90 \
+  ../src/fiats/tensor_names_m.f90 \
   ../src/fiats/input_output_pair_m.f90 \
   ../src/fiats/mini_batch_m.f90 \
-  ../src/fiats/tensor_range_m.f90 \
-  ../src/fiats/ubounds_m.f90 \
-  ../src/fiats/fiats_m_.f90 \
+  ../src/fiats/tensor_map_m.f90 \
   ../src/fiats/layer_m.f90 \
-  ../src/fiats/trainable_engine_m.F90 \
+  ../src/fiats/trainable_network_m.F90 \
   ../src/fiats_m.f90 \
-  ../src/fiats/gelu_s.f90 \
-  ../src/fiats/relu_s.f90 \
-  ../src/fiats/step_s.f90 \
-  ../src/fiats/sigmoid_s.f90 \
-  ../src/fiats/swish_s.f90 \
+  ../src/fiats/double_precision_file_s.f90 \
+  ../src/fiats/double_precision_string_s.f90 \
   ../src/fiats/training_configuration_s.F90 \
+  ../src/fiats/activation_s.f90 \
+  ../src/fiats/unmapped_network_s.f90 \
+  ../src/fiats/workspace_s.f90 \
   ../src/fiats/network_configuration_s.F90 \
   ../src/fiats/hyperparameters_s.f90 \
   ../src/fiats/input_output_pair_s.f90 \
   ../src/fiats/neuron_s.f90 \
+  ../src/fiats/neural_network_s.F90 \
   ../src/fiats/layer_s.f90 \
   ../src/fiats/metadata_s.f90 \
   ../src/fiats/mini_batch_s.f90 \
   ../src/fiats/tensor_s.f90 \
-  ../src/fiats/tensor_range_s.f90 \
-  ../src/fiats/fiats_s.F90 \
-  ../src/fiats/trainable_engine_s.F90 \
+  ../src/fiats/tensor_map_s.f90 \
+  ../src/fiats/tensor_names_s.f90 \
+  ../src/fiats/trainable_network_s.F90 \
 >> single-file.F90
 
 echo "Creating concurrent-inferences.F90"
