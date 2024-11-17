@@ -63,6 +63,7 @@ program concurrent_inferences
           end do
         end do
       end do
+      !$omp end parallel do
       call system_clock(t_finish)
       print *,"Elapsed system clock: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
 
