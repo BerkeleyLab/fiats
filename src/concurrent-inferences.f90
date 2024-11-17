@@ -7,6 +7,7 @@ program concurrent_inferences
   use julienne_m, only : string_t, command_line_t, file_t
   use assert_m, only : assert
   use iso_fortran_env, only : int64, real64
+  use omp_lib
   implicit none
 
   type(string_t) network_file_name
@@ -35,40 +36,44 @@ program concurrent_inferences
       neural_network = neural_network_t(file_t(network_file_name))
 
       print *,"Defining an array of tensor_t input objects with random normalized components"
-      allocate(outputs(lat,lon,lev))
-      allocate( inputs(lat,lon,lev))
-      allocate(input_components(lat,lon,lev,neural_network%num_inputs()))
+      allocate(outputs(lat,lev,lon))
+      allocate( inputs(lat,lev,lon))
+      allocate(input_components(lat,lev,lon,neural_network%num_inputs()))
       call random_number(input_components)
 
-      do concurrent(i=1:lat, j=1:lon, k=1:lev)
-        inputs(i,j,k) = tensor_t(input_components(i,j,k,:))
+      do concurrent(i=1:lat, k=1:lev, j=1:lon)
+        inputs(i,k,j) = tensor_t(input_components(i,k,j,:))
       end do
 
-      print *,"Performing concurrent inference"
+      print *,"Performing",lat*lev*lon," inferences inside `do concurrent`."
       call system_clock(t_start, clock_rate)
-      do concurrent(i=1:lat, j=1:lon, k=1:lev)
-        outputs(i,j,k) = neural_network%infer(inputs(i,j,k))
+      do concurrent(i=1:lat, k=1:lev, j=1:lon)
+        outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
       end do
       call system_clock(t_finish)
-      print *,"Concurrent inference time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
+      print *,"Elapsed system clock: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
 
-      print *,"Performing loop-based inference"
-      call system_clock(t_start)
-      do k=1,lev
-        do j=1,lon
+      print *,"Performing",lat*lev*lon," inferences inside `omp parallel do`."
+      call system_clock(t_start, clock_rate)
+      !$omp parallel do shared(inputs,outputs)
+      do j=1,lon
+        do k=1,lev
           do i=1,lat
-            outputs(i,j,k) = neural_network%infer(inputs(i,j,k))
+            outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
           end do
         end do
       end do
+      !$omp end parallel do
       call system_clock(t_finish)
-      print *,"Looping inference time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
+      print *,"Elapsed system clock: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
 
-      print *,"Performing elemental inferences"
+      print *,"Performing elemental inferences inside `omp workshare`"
       call system_clock(t_start, clock_rate)
-      outputs = neural_network%infer(inputs)  ! implicit (re)allocation of outputs array only if shape(inputs) /= shape(outputs)
+      !$omp workshare
+      outputs = neural_network%infer(inputs)
+      !$omp end workshare
       call system_clock(t_finish)
-      print *,"Elemental inference time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
+      print *,"Elapsed system clock: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
 
     end block single_precision_inference
 
@@ -96,7 +101,7 @@ program concurrent_inferences
       print *,"Performing double-precision concurrent inference"
       call system_clock(t_start, clock_rate)
       do concurrent(i=1:lat, j=1:lon, k=1:lev)
-        outputs(i,j,k) = neural_network%infer(inputs(i,j,k))           
+        outputs(i,j,k) = neural_network%infer(inputs(i,j,k))
       end do
       call system_clock(t_finish)
       print *,"Double-precision concurrent inference time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
