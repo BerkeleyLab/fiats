@@ -926,6 +926,9 @@ contains
               block
                 real reduce_dcdb(size(dcdb,1),size(dcdb,2),mini_batch_size)
                 real reduce_dcdw(size(dcdw,1),size(dcdw,2),size(dcdw,3),mini_batch_size)
+                real a(maxval(self%nodes_), input_layer:output_layer) ! Activations
+                real z(size(b,1),size(b,2)), delta(size(b,1),size(b,2))
+
                 reduce_dcdb = 0.
                 reduce_dcdw = 0.
               
@@ -934,9 +937,6 @@ contains
 
                   iteration: &
                   block
-
-                    real a(maxval(self%nodes_), input_layer:output_layer) ! Activations
-                    real z(size(b,1),size(b,2)), delta(size(b,1),size(b,2))
 #endif
 
                     a(1:self%num_inputs(), input_layer) = inputs(pair)%values()
