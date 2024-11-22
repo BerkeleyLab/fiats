@@ -55,7 +55,7 @@ program concurrent_inferences
 
       print *,"Performing",lat*lev*lon," inferences inside `omp parallel do`."
       call system_clock(t_start, clock_rate)
-      !$omp parallel do shared(inputs,outputs)
+      !$omp parallel do default(none) shared(neural_network,inputs,outputs) collapse(3)
       do j=1,lon
         do k=1,lev
           do i=1,lat
@@ -63,7 +63,6 @@ program concurrent_inferences
           end do
         end do
       end do
-      !$omp end parallel do
       call system_clock(t_finish)
       print *,"Elapsed system clock: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
 
