@@ -1,7 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 submodule(tensor_map_m) tensor_map_s
-  use assert_m, only : assert
+  use assert_m
   use julienne_m, only : separated_values
   use kind_parameters_m, only : default_real
   implicit none

@@ -1,7 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 submodule(tensor_names_m) tensor_names_s
-  use assert_m, only : assert
+  use assert_m
   use julienne_m, only : operator(.csv.), operator(.cat.)
   implicit none
 

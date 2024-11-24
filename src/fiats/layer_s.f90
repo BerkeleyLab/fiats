@@ -1,7 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 submodule(layer_m) layer_s
-  use assert_m, only : assert
+  use assert_m
   implicit none
 
 contains

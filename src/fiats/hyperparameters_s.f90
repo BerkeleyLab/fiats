@@ -1,7 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 submodule(hyperparameters_m) hyperparameters_s
-  use assert_m, only : assert
+  use assert_m
   implicit none
 
   character(len=*), parameter :: mini_batches_key  = "mini-batches"

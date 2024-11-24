@@ -1,5 +1,5 @@
 submodule(neural_network_m) workspace_s
-  use assert_m, only : assert
+  use assert_m
   implicit none
 
   integer, parameter :: input_layer = 0

@@ -1,7 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 submodule(network_configuration_m) network_configuration_s
-  use assert_m, only : assert
+  use assert_m
   use julienne_formats_m, only : csv
   implicit none
 

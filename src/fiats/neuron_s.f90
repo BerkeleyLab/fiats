@@ -1,7 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 submodule(neuron_m) neuron_s
-  use assert_m, only : assert
+  use assert_m
   use julienne_formats_m, only : separated_values
   implicit none
 
