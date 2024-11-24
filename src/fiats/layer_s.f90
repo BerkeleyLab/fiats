@@ -19,7 +19,7 @@ contains
     line = adjustl(layer_lines(start)%string())
     hidden_layers = line == '['
     output_layer = line == '"output_layer": ['
-    call assert(hidden_layers .or. output_layer, "layer_s(default_real_construct_layer): layer start", line)
+    call_assert_diagnose(hidden_layers .or. output_layer, "layer_s(default_real_construct_layer): layer start", line)
 
     layer%neuron = neuron_t(layer_lines, start+1)
     num_inputs = size(layer%neuron%weights())
@@ -29,12 +29,12 @@ contains
     do 
       if (.not. neuron%next_allocated()) exit
       neuron => neuron%next_pointer()
-      call assert(size(neuron%weights()) == num_inputs, "layer_s(default_real_construct_layer): constant number of inputs")
+      call_assert_describe(size(neuron%weights()) == num_inputs, "layer_s(default_real_construct_layer): constant number of inputs")
       neurons_in_layer = neurons_in_layer + 1
     end do
 
     line = trim(adjustl(layer_lines(start+4*neurons_in_layer+1)%string()))
-    call assert(line(1:1)==']', "layer_s(default_real_construct_layer): hidden layer end")
+    call_assert_describe(line(1:1)==']', "layer_s(default_real_construct_layer): hidden layer end")
 
     if (line(len(line):len(line)) == ",") layer%next = layer_t(layer_lines, start+4*neurons_in_layer+2)
 
@@ -50,7 +50,7 @@ contains
     line = adjustl(layer_lines(start)%string())
     hidden_layers = line == '['
     output_layer = line == '"output_layer": ['
-    call assert(hidden_layers .or. output_layer, "layer_s(double_precision_construct_layer): layer start", line)
+    call_assert_diagnose(hidden_layers .or. output_layer, "layer_s(double_precision_construct_layer): layer start", line)
 
     layer%neuron = neuron_t(layer_lines, start+1)
     num_inputs = size(layer%neuron%weights())
@@ -60,12 +60,12 @@ contains
     do 
       if (.not. neuron%next_allocated()) exit
       neuron => neuron%next_pointer()
-      call assert(size(neuron%weights()) == num_inputs, "layer_s(double_precision_construct_layer): constant number of inputs")
+      call_assert_describe(size(neuron%weights()) == num_inputs, "layer_s(double_precision_construct_layer): constant number of inputs")
       neurons_in_layer = neurons_in_layer + 1
     end do
 
     line = trim(adjustl(layer_lines(start+4*neurons_in_layer+1)%string()))
-    call assert(line(1:1)==']', "layer_s(double_precision_construct_layer): hidden layer end")
+    call_assert_describe(line(1:1)==']', "layer_s(double_precision_construct_layer): hidden layer end")
 
     if (line(len(line):len(line)) == ",") layer%next = layer_t(layer_lines, start+4*neurons_in_layer+2)
 
