@@ -1,5 +1,8 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 submodule(hyperparameters_m) hyperparameters_s
   use assert_m
   implicit none
@@ -26,8 +29,7 @@ contains
 
     real, parameter :: tolerance = 1.E-08
 
-    call assert(allocated(lhs%optimizer_) .and. allocated(rhs%optimizer_), &
-      "hyperparameters_s(default_real_equals): allocated optimizers")
+    call_assert(allocated(lhs%optimizer_) .and. allocated(rhs%optimizer_))
 
     lhs_equals_rhs = &
       lhs%mini_batches_ == rhs%mini_batches_ .and. &
@@ -40,8 +42,7 @@ contains
 
     double precision, parameter :: tolerance = 1.D-15
 
-    call assert(allocated(lhs%optimizer_) .and. allocated(rhs%optimizer_), &
-      "hyperparameters_s(double_precisionequals): allocated optimizers")
+    call_assert(allocated(lhs%optimizer_) .and. allocated(rhs%optimizer_))
 
     lhs_equals_rhs = &
       lhs%mini_batches_ == rhs%mini_batches_ .and. &
@@ -66,7 +67,7 @@ contains
       end if
     end do
 
-    call assert(hyperparameters_key_found, "hyperparameters_s(default_real_from_json): hyperparameters_found")
+    call_assert(hyperparameters_key_found)
   end procedure
 
   module procedure double_precision_from_json
@@ -85,7 +86,7 @@ contains
       end if
     end do
 
-    call assert(hyperparameters_key_found, "hyperparameters_s(double_precision_from_json): hyperparameters_found")
+    call_assert(hyperparameters_key_found)
   end procedure
 
   module procedure default_real_to_json
