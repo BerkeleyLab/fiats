@@ -36,7 +36,6 @@ module neural_network_m
     generic :: num_inputs               => default_real_num_inputs,              double_precision_num_inputs
     generic :: num_outputs              => default_real_num_outputs,             double_precision_num_outputs
     generic :: nodes_per_layer          => default_real_nodes_per_layer,         double_precision_nodes_per_layer
-    generic :: assert_conformable_with  => default_real_assert_conformable_with, double_precision_assert_conformable_with
     generic :: skip                     => default_real_skip,                    double_precision_skip
     generic :: activation_function_name => default_real_activation_name,         double_precision_activation_name
     generic :: learn                    => default_real_learn
@@ -50,7 +49,6 @@ module neural_network_m
     procedure, private, non_overridable :: default_real_num_inputs,              double_precision_num_inputs
     procedure, private, non_overridable :: default_real_num_outputs,             double_precision_num_outputs
     procedure, private, non_overridable :: default_real_nodes_per_layer,         double_precision_nodes_per_layer
-    procedure, private, non_overridable :: default_real_assert_conformable_with, double_precision_assert_conformable_with
     procedure, private, non_overridable :: default_real_skip,                    double_precision_skip
     procedure, private, non_overridable :: default_real_activation_name,         double_precision_activation_name
   end type
@@ -188,18 +186,6 @@ module neural_network_m
       class(neural_network_t(double_precision)), intent(in) :: self
       type(file_t) json_file
     end function
-
-    elemental module subroutine default_real_assert_conformable_with(self, neural_network)
-      implicit none
-      class(neural_network_t), intent(in) :: self
-      type(neural_network_t), intent(in) :: neural_network
-    end subroutine
-
-    elemental module subroutine double_precision_assert_conformable_with(self, neural_network)
-      implicit none
-      class(neural_network_t(double_precision)), intent(in) :: self
-      type(neural_network_t(double_precision)), intent(in) :: neural_network
-    end subroutine
 
     elemental module function default_real_infer(self, inputs) result(outputs)
       implicit none

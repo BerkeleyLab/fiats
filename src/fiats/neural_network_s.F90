@@ -15,6 +15,22 @@ submodule(neural_network_m) neural_network_s
   character(len=*), parameter :: minimum_acceptable_tag = "0.15.0" ! git tag capable of reading the current json file format
   integer, parameter :: input_layer = 0 
 
+  interface assert_conformable
+   
+    elemental module subroutine default_real_assert_conformable_with(self, neural_network)
+      implicit none
+      class(neural_network_t), intent(in) :: self
+      type(neural_network_t), intent(in) :: neural_network
+    end subroutine
+
+    elemental module subroutine double_precision_assert_conformable_with(self, neural_network)
+      implicit none
+      class(neural_network_t(double_precision)), intent(in) :: self
+      type(neural_network_t(double_precision)), intent(in) :: neural_network
+    end subroutine
+
+  end interface
+
 contains
 
   module procedure default_real_map_to_input_range
@@ -688,10 +704,10 @@ contains
       shape(self%biases_) == shape(neural_network%biases_), &
       shape(self%nodes_) == shape(neural_network%nodes_)  &
      ])
-      call assert(all(equal_shapes), "assert_conformable_with: all(equal_shapes)", intrinsic_array_t(equal_shapes))
+      call assert(all(equal_shapes), "assert_conformable: all(equal_shapes)", intrinsic_array_t(equal_shapes))
     end associate
 
-    call assert(self%activation_ == neural_network%activation_, "assert_conformable_with: activation_")
+    call assert(self%activation_ == neural_network%activation_, "assert_conformable: activation_")
     
   end procedure
 
@@ -704,10 +720,10 @@ contains
       shape(self%biases_) == shape(neural_network%biases_), &
       shape(self%nodes_) == shape(neural_network%nodes_)  &
      ])
-      call assert(all(equal_shapes), "assert_conformable_with: all(equal_shapes)", intrinsic_array_t(equal_shapes))
+      call assert(all(equal_shapes), "assert_conformable: all(equal_shapes)", intrinsic_array_t(equal_shapes))
     end associate
 
-    call assert(self%activation_ == neural_network%activation_, "assert_conformable_with: activation_")
+    call assert(self%activation_ == neural_network%activation_, "assert_conformable: activation_")
     
   end procedure
 
@@ -719,7 +735,7 @@ contains
 
     call_assert_consistency(lhs)
     call_assert_consistency(rhs)
-    call lhs%assert_conformable_with(rhs)
+    call_assert_conformable(lhs, rhs)
 
     block
       integer l
@@ -760,7 +776,7 @@ contains
 
     call_assert_consistency(lhs)
     call_assert_consistency(rhs)
-    call lhs%assert_conformable_with(rhs)
+    call_assert_conformable(lhs, rhs)
 
     block
       integer l
