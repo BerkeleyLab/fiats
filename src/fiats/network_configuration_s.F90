@@ -1,5 +1,8 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 submodule(network_configuration_m) network_configuration_s
   use assert_m
   use julienne_formats_m, only : csv
@@ -19,8 +22,7 @@ contains
 
   module procedure equals
 
-    call assert(allocated(lhs%activation_name_) .and. allocated(rhs%activation_name_), &
-     "network_configuration_s(equals): allocated({lhs,rhs}%activation_name_)")
+    call_assert(allocated(lhs%activation_name_) .and. allocated(rhs%activation_name_))
 
     lhs_equals_rhs = &
       lhs%skip_connections_ .eqv. rhs%skip_connections_ .and. &
@@ -45,7 +47,7 @@ contains
       end if
     end do
 
-    call assert(network_configuration_key_found, "network_configuration_s(from_json): network_configuration_found")
+    call_assert(network_configuration_key_found)
   end procedure
 
   module procedure from_double_precision_string_json
@@ -64,8 +66,7 @@ contains
       end if
     end do
 
-    call assert(network_configuration_key_found, &
-      "network_configuration_s(from_double_precision_string_json): network_configuration_found")
+    call_assert(network_configuration_key_found)
   end procedure
 
   module procedure to_json
