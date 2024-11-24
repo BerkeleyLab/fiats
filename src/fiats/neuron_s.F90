@@ -1,5 +1,8 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 submodule(neuron_m) neuron_s
   use assert_m
   use julienne_formats_m, only : separated_values
@@ -12,7 +15,7 @@ contains
     character(len=*), parameter :: indent = repeat(" ",ncopies=12)
     character(len=:), allocatable :: csv_format, weights_string, bias_string
 
-    call assert(allocated(self%weights_), "neuron_s(to_json): allocated weights_")
+    call_assert(allocated(self%weights_))
 
     csv_format = separated_values(separator=",", mold=[real::])
     allocate(character(len=size(self%weights_)*(characters_per_value+1)-1)::weights_string)
@@ -32,7 +35,7 @@ contains
     character(len=*), parameter :: indent = repeat(" ",ncopies=12)
     character(len=:), allocatable :: csv_format, weights_string, bias_string
 
-    call assert(allocated(self%weights_), "neuron_s(to_json): allocated weights_")
+    call_assert(allocated(self%weights_))
 
     csv_format = separated_values(separator=",", mold=[double precision::])
     allocate(character(len=size(self%weights_)*(characters_per_value+1)-1)::weights_string)
