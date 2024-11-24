@@ -16,6 +16,7 @@ module neural_network_m
   public :: neural_network_t
   public :: unmapped_network_t
   public :: workspace_t
+  public :: assert_consistency
 
   type neural_network_t(k)
     !! Encapsulate the information needed to perform inference
@@ -39,8 +40,6 @@ module neural_network_m
     generic :: skip                     => default_real_skip,                    double_precision_skip
     generic :: activation_function_name => default_real_activation_name,         double_precision_activation_name
     generic :: learn                    => default_real_learn
-    generic :: assert_consistency       => default_real_consistency,             double_precision_consistency
-    procedure, private, non_overridable :: default_real_consistency,             double_precision_consistency
     procedure, private, non_overridable :: default_real_approximately_equal,     double_precision_approximately_equal
     procedure, private, non_overridable :: default_real_infer,                   double_precision_infer
     procedure, private, non_overridable :: default_real_learn
@@ -297,6 +296,10 @@ module neural_network_m
       real, intent(in) :: learning_rate
       type(workspace_t), intent(inout) :: workspace
     end subroutine
+
+  end interface
+
+  interface assert_consistency
 
     pure module subroutine default_real_consistency(self)
       implicit none
