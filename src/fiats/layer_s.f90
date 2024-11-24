@@ -1,5 +1,8 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 submodule(layer_m) layer_s
   use assert_m
   implicit none
@@ -77,7 +80,7 @@ contains
       num_hidden_layers =>  hidden_layers%count_layers(), &
       num_output_layers => output_layer%count_layers() &
     )   
-      call assert(num_output_layers==1, "neural_network_s(default_real_neural_network): 1 output layer", num_output_layers)
+      call_assert(num_output_layers==1)
 
       associate(nodes => [num_inputs, neurons_per_hidden_layer, num_outputs])
         associate(n_max => maxval(nodes))
@@ -149,7 +152,7 @@ contains
       num_hidden_layers =>  hidden_layers%count_layers(), &
       num_output_layers => output_layer%count_layers() &
     )   
-      call assert(num_output_layers==1, "neural_network_s(double_precision_neural_network): 1 output layer", num_output_layers)
+      call_assert(num_output_layers==1)
 
       associate(nodes => [num_inputs, neurons_per_hidden_layer, num_outputs])
         associate(n_max => maxval(nodes))
