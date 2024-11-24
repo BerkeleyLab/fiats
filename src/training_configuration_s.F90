@@ -1,7 +1,6 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 submodule(training_configuration_m) training_configuration_s
-  use assert_m, only : assert
   use double_precision_string_m, only : double_precision_string_t
   use activation_m, only : activation_t, gelu, relu, sigmoid, swish
   implicit none

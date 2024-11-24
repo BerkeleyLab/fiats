@@ -1,5 +1,8 @@
+! Copyright (c), The Regents of the University of California
+! Terms of use are as specified in LICENSE.txt
+
 submodule(activation_m) activation_s
-  use assert_m, only : assert
+  use assert_m
   implicit none
 
   real            , parameter :: pi    = 3.141592653589793

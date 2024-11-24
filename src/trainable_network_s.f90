@@ -1,3 +1,6 @@
+! Copyright (c), The Regents of the University of California
+! Terms of use are as specified in LICENSE.txt
+
 submodule(trainable_network_m) trainable_network_s
   implicit none 
 

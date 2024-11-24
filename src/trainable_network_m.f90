@@ -1,3 +1,6 @@
+! Copyright (c), The Regents of the University of California
+! Terms of use are as specified in LICENSE.txt
+
 module trainable_network_m
   use neural_network_m, only : neural_network_t, workspace_t
   use input_output_pair_m, only : input_output_pair_t

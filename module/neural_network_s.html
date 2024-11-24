@@ -76,7 +76,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="17.6% of total for modules and submodules.">605 statements</a>
+                 title="19.5% of total for modules and submodules.">688 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -127,7 +127,18 @@
   
   
   
-  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/neural_network_s.html#interface-assert_conformable">assert_conformable</a>
+        </div>
+      </div>
+    </div>
+
   
   
   
@@ -162,7 +173,7 @@
             <a class="list-group-item" href="../module/neural_network_s.html#proc-double_precision_assert_conformable_with">double_precision_assert_conformable_with</a>
             <a class="list-group-item" href="../module/neural_network_s.html#proc-double_precision_consistency">double_precision_consistency</a>
             <a class="list-group-item" href="../module/neural_network_s.html#proc-double_precision_construct_from_components">double_precision_construct_from_components</a>
-            <a class="list-group-item" href="../module/neural_network_s.html#proc-double_precision_from_json~3">double_precision_from_json</a>
+            <a class="list-group-item" href="../module/neural_network_s.html#proc-double_precision_from_json~2">double_precision_from_json</a>
             <a class="list-group-item" href="../module/neural_network_s.html#proc-double_precision_infer">double_precision_infer</a>
             <a class="list-group-item" href="../module/neural_network_s.html#proc-double_precision_map_from_output_range">double_precision_map_from_output_range</a>
             <a class="list-group-item" href="../module/neural_network_s.html#proc-double_precision_map_to_input_range">double_precision_map_to_input_range</a>
@@ -194,11 +205,11 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
+                  <li class="list-inline-item"><a href='layer_m.html'>layer_m</a></li>
+                  <li class="list-inline-item">assert_m</li>
                   <li class="list-inline-item"><a href='neuron_m.html'>neuron_m</a></li>
                   <li class="list-inline-item"><a href='double_precision_string_m.html'>double_precision_string_m</a></li>
-                  <li class="list-inline-item">assert_m</li>
                   <li class="list-inline-item"><a href='kind_parameters_m.html'>kind_parameters_m</a></li>
-                  <li class="list-inline-item"><a href='layer_m.html'>layer_m</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -741,6 +752,128 @@ parameter
         <br>
 
 
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-assert_conformable"></span>
+      <h3>        interface <a href='../interface/assert_conformable.html'>assert_conformable</a> 
+      </h3>
+    </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    elemental module subroutine default_real_assert_conformable_with(self, neural_network)  
+    <a href="../proc/default_real_assert_conformable_with.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~28"></span>
+              class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-neural_network~3"></span>
+              type(<a href='../type/neural_network_t.html'>neural_network_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>neural_network</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    elemental module subroutine double_precision_assert_conformable_with(self, neural_network)  
+    <a href="../proc/double_precision_assert_conformable_with.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~29"></span>
+              class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-neural_network~4"></span>
+              type(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>neural_network</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
 
 
 
@@ -771,7 +904,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~40"></span>
+              <span class="anchor" id="variable-self~104"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -817,7 +950,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-lhs~3"></span>
+              <span class="anchor" id="variable-lhs~10"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -832,7 +965,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-rhs~3"></span>
+              <span class="anchor" id="variable-rhs~11"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -859,7 +992,6 @@ parameter
 
               <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-default_real_assert_conformable_with"></span> <h3>module procedure /home/runner/work/fiats/fiats/doc/html/module/neural_network_s.html <a href='../proc/default_real_assert_conformable_with.html'>default_real_assert_conformable_with</a> <small>elemental module subroutine default_real_assert_conformable_with(self, neural_network)</small>  
-    <a href="../interface/default_real_assert_conformable_with.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
 </h3></div>
     <div class="card-body">
           
@@ -893,7 +1025,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-neural_network~9"></span>
+              <span class="anchor" id="variable-neural_network~3"></span>
               type(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -915,7 +1047,6 @@ parameter
 
               <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-default_real_consistency"></span> <h3>module procedure /home/runner/work/fiats/fiats/doc/html/module/neural_network_s.html <a href='../proc/default_real_consistency.html'>default_real_consistency</a> <small>pure module subroutine default_real_consistency(self)</small>  
-    <a href="../interface/default_real_consistency.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
 </h3></div>
     <div class="card-body">
           
@@ -934,7 +1065,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~45"></span>
+              <span class="anchor" id="variable-self~109"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -974,7 +1105,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-metadata"></span>
+              <span class="anchor" id="variable-metadata~7"></span>
               type(string_t),
             </td>
 <td>intent(in)</td>
@@ -989,7 +1120,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-weights"></span>
+              <span class="anchor" id="variable-weights~4"></span>
               real,
             </td>
 <td>intent(in)</td>
@@ -1019,7 +1150,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-nodes~3"></span>
+              <span class="anchor" id="variable-nodes~5"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1034,7 +1165,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-input_map"></span>
+              <span class="anchor" id="variable-input_map~6"></span>
               type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>),
             </td>
 <td>intent(in),</td>
@@ -1049,7 +1180,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-output_map"></span>
+              <span class="anchor" id="variable-output_map~6"></span>
               type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>),
             </td>
 <td>intent(in),</td>
@@ -1140,7 +1271,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~30"></span>
+              <span class="anchor" id="variable-self~94"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1155,7 +1286,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-inputs"></span>
+              <span class="anchor" id="variable-inputs~7"></span>
               type(<a href='../type/tensor_t.html'>tensor_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1201,7 +1332,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~44"></span>
+              <span class="anchor" id="variable-self~108"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(inout)</td>
@@ -1216,7 +1347,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-mini_batches_arr"></span>
+              <span class="anchor" id="variable-mini_batches_arr~2"></span>
               type(<a href='../type/mini_batch_t.html'>mini_batch_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1231,7 +1362,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-cost"></span>
+              <span class="anchor" id="variable-cost~4"></span>
               real,
             </td>
 <td>intent(out),</td>
@@ -1246,7 +1377,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-adam"></span>
+              <span class="anchor" id="variable-adam~2"></span>
               logical,
             </td>
 <td>intent(in)</td>
@@ -1261,7 +1392,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-learning_rate~2"></span>
+              <span class="anchor" id="variable-learning_rate~6"></span>
               real,
             </td>
 <td>intent(in)</td>
@@ -1317,7 +1448,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~24"></span>
+              <span class="anchor" id="variable-self~90"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1332,7 +1463,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-normalized_tensor~3"></span>
+              <span class="anchor" id="variable-normalized_tensor~5"></span>
               type(<a href='../type/tensor_t.html'>tensor_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1378,7 +1509,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~22"></span>
+              <span class="anchor" id="variable-self~88"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1393,7 +1524,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor"></span>
+              <span class="anchor" id="variable-tensor~7"></span>
               type(<a href='../type/tensor_t.html'>tensor_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1439,7 +1570,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~38"></span>
+              <span class="anchor" id="variable-self~102"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1485,7 +1616,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~34"></span>
+              <span class="anchor" id="variable-self~98"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1512,7 +1643,7 @@ parameter
 
               <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-default_real_num_inputs"></span> <h3>module procedure /home/runner/work/fiats/fiats/doc/html/module/neural_network_s.html <a href='../proc/default_real_num_inputs.html'>default_real_num_inputs</a> <small>elemental module function default_real_num_inputs(self) result(input_count)</small>  
-    <a href="../interface/default_real_num_inputs.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
+    <a href="../interface/default_real_num_inputs~2.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
 </h3></div>
     <div class="card-body">
           
@@ -1531,7 +1662,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~36"></span>
+              <span class="anchor" id="variable-self~100"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1577,7 +1708,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~32"></span>
+              <span class="anchor" id="variable-self~96"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1623,7 +1754,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~42"></span>
+              <span class="anchor" id="variable-self~106"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1650,7 +1781,7 @@ parameter
 
               <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-default_real_to_json~2"></span> <h3>module procedure /home/runner/work/fiats/fiats/doc/html/module/neural_network_s.html <a href='../proc/default_real_to_json~2.html'>default_real_to_json</a> <small>impure elemental module function default_real_to_json(self) result(json_file)</small>  
-    <a href="../interface/default_real_to_json~2.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
+    <a href="../interface/default_real_to_json~5.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
 </h3></div>
     <div class="card-body">
           
@@ -1669,7 +1800,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~26"></span>
+              <span class="anchor" id="variable-self~92"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1715,7 +1846,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~41"></span>
+              <span class="anchor" id="variable-self~105"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1761,7 +1892,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-lhs~4"></span>
+              <span class="anchor" id="variable-lhs~11"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1776,7 +1907,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-rhs~4"></span>
+              <span class="anchor" id="variable-rhs~12"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1803,7 +1934,6 @@ parameter
 
               <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-double_precision_assert_conformable_with"></span> <h3>module procedure /home/runner/work/fiats/fiats/doc/html/module/neural_network_s.html <a href='../proc/double_precision_assert_conformable_with.html'>double_precision_assert_conformable_with</a> <small>elemental module subroutine double_precision_assert_conformable_with(self, neural_network)</small>  
-    <a href="../interface/double_precision_assert_conformable_with.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
 </h3></div>
     <div class="card-body">
           
@@ -1837,7 +1967,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-neural_network~10"></span>
+              <span class="anchor" id="variable-neural_network~4"></span>
               type(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1859,7 +1989,6 @@ parameter
 
               <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-double_precision_consistency"></span> <h3>module procedure /home/runner/work/fiats/fiats/doc/html/module/neural_network_s.html <a href='../proc/double_precision_consistency.html'>double_precision_consistency</a> <small>pure module subroutine double_precision_consistency(self)</small>  
-    <a href="../interface/double_precision_consistency.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
 </h3></div>
     <div class="card-body">
           
@@ -1878,7 +2007,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~46"></span>
+              <span class="anchor" id="variable-self~110"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1918,7 +2047,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-metadata~2"></span>
+              <span class="anchor" id="variable-metadata~8"></span>
               type(<a href='../type/metadata_t.html'>metadata_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1933,7 +2062,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-weights~2"></span>
+              <span class="anchor" id="variable-weights~5"></span>
               double precision,
             </td>
 <td>intent(in)</td>
@@ -1963,7 +2092,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-nodes~4"></span>
+              <span class="anchor" id="variable-nodes~6"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -1978,7 +2107,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-input_map~2"></span>
+              <span class="anchor" id="variable-input_map~7"></span>
               type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>(double_precision)),
             </td>
 <td>intent(in),</td>
@@ -1993,7 +2122,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-output_map~2"></span>
+              <span class="anchor" id="variable-output_map~7"></span>
               type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>(double_precision)),
             </td>
 <td>intent(in),</td>
@@ -2019,7 +2148,7 @@ parameter
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-double_precision_from_json~3"></span> <h3>module procedure /home/runner/work/fiats/fiats/doc/html/module/neural_network_s.html <a href='../proc/double_precision_from_json~3.html'>double_precision_from_json</a> <small>impure elemental module function double_precision_from_json(file) result(neural_network)</small>  
+    <div class="card-header codesum"><span class="anchor" id="proc-double_precision_from_json~2"></span> <h3>module procedure /home/runner/work/fiats/fiats/doc/html/module/neural_network_s.html <a href='../proc/double_precision_from_json~2.html'>double_precision_from_json</a> <small>impure elemental module function double_precision_from_json(file) result(neural_network)</small>  
 </h3></div>
     <div class="card-body">
           
@@ -2084,7 +2213,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~31"></span>
+              <span class="anchor" id="variable-self~95"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2099,7 +2228,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-inputs~2"></span>
+              <span class="anchor" id="variable-inputs~8"></span>
               type(<a href='../type/tensor_t.html'>tensor_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2145,7 +2274,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~25"></span>
+              <span class="anchor" id="variable-self~91"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2160,7 +2289,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-normalized_tensor~4"></span>
+              <span class="anchor" id="variable-normalized_tensor~6"></span>
               type(<a href='../type/tensor_t.html'>tensor_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2206,7 +2335,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~23"></span>
+              <span class="anchor" id="variable-self~89"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2221,7 +2350,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-tensor~2"></span>
+              <span class="anchor" id="variable-tensor~8"></span>
               type(<a href='../type/tensor_t.html'>tensor_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2267,7 +2396,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~39"></span>
+              <span class="anchor" id="variable-self~103"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2313,7 +2442,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~35"></span>
+              <span class="anchor" id="variable-self~99"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2340,7 +2469,7 @@ parameter
 
               <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-double_precision_num_inputs"></span> <h3>module procedure /home/runner/work/fiats/fiats/doc/html/module/neural_network_s.html <a href='../proc/double_precision_num_inputs.html'>double_precision_num_inputs</a> <small>elemental module function double_precision_num_inputs(self) result(input_count)</small>  
-    <a href="../interface/double_precision_num_inputs.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
+    <a href="../interface/double_precision_num_inputs~2.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
 </h3></div>
     <div class="card-body">
           
@@ -2359,7 +2488,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~37"></span>
+              <span class="anchor" id="variable-self~101"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2405,7 +2534,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~33"></span>
+              <span class="anchor" id="variable-self~97"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2451,7 +2580,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~43"></span>
+              <span class="anchor" id="variable-self~107"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2478,7 +2607,7 @@ parameter
 
               <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-double_precision_to_json~2"></span> <h3>module procedure /home/runner/work/fiats/fiats/doc/html/module/neural_network_s.html <a href='../proc/double_precision_to_json~2.html'>double_precision_to_json</a> <small>impure elemental module function double_precision_to_json(self) result(json_file)</small>  
-    <a href="../interface/double_precision_to_json~2.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
+    <a href="../interface/double_precision_to_json~5.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
 </h3></div>
     <div class="card-body">
           
@@ -2497,7 +2626,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~27"></span>
+              <span class="anchor" id="variable-self~93"></span>
               class(<a href='../type/neural_network_t.html'>neural_network_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -2541,7 +2670,7 @@ parameter
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2024-11-22 22:44 +0000             </p>
+ on 2024-11-24 16:19 +0000             </p>
           </div>
         </div>
         <br>

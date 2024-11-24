@@ -1,7 +1,10 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 submodule(metadata_m) metadata_s
-  use assert_m, only : assert
+  use assert_m
   implicit none
 
 contains
@@ -25,7 +28,7 @@ contains
   module procedure from_json
     integer l
 
-    call assert(lines(1)%get_json_key() == "metadata", "metadata_s(from_json): metadata found")
+    call_assert(lines(1)%get_json_key() == "metadata")
 
     do l = 2, size(lines)-1
       associate(key => lines(l)%get_json_key())
@@ -52,7 +55,7 @@ contains
   module procedure double_precision_from_json
     integer l
 
-    call assert(lines(1)%get_json_key() == "metadata", "metadata_s(double_precision_from_json): metadata found")
+    call_assert(lines(1)%get_json_key() == "metadata")
 
     do l = 2, size(lines)-1
       associate(key => lines(l)%get_json_key())

@@ -16,6 +16,7 @@ module neural_network_m
   public :: neural_network_t
   public :: unmapped_network_t
   public :: workspace_t
+  public :: assert_consistency
 
   type neural_network_t(k)
     !! Encapsulate the information needed to perform inference
@@ -35,12 +36,9 @@ module neural_network_m
     generic :: num_inputs               => default_real_num_inputs,              double_precision_num_inputs
     generic :: num_outputs              => default_real_num_outputs,             double_precision_num_outputs
     generic :: nodes_per_layer          => default_real_nodes_per_layer,         double_precision_nodes_per_layer
-    generic :: assert_conformable_with  => default_real_assert_conformable_with, double_precision_assert_conformable_with
     generic :: skip                     => default_real_skip,                    double_precision_skip
     generic :: activation_function_name => default_real_activation_name,         double_precision_activation_name
     generic :: learn                    => default_real_learn
-    generic :: assert_consistency       => default_real_consistency,             double_precision_consistency
-    procedure, private, non_overridable :: default_real_consistency,             double_precision_consistency
     procedure, private, non_overridable :: default_real_approximately_equal,     double_precision_approximately_equal
     procedure, private, non_overridable :: default_real_infer,                   double_precision_infer
     procedure, private, non_overridable :: default_real_learn
@@ -51,7 +49,6 @@ module neural_network_m
     procedure, private, non_overridable :: default_real_num_inputs,              double_precision_num_inputs
     procedure, private, non_overridable :: default_real_num_outputs,             double_precision_num_outputs
     procedure, private, non_overridable :: default_real_nodes_per_layer,         double_precision_nodes_per_layer
-    procedure, private, non_overridable :: default_real_assert_conformable_with, double_precision_assert_conformable_with
     procedure, private, non_overridable :: default_real_skip,                    double_precision_skip
     procedure, private, non_overridable :: default_real_activation_name,         double_precision_activation_name
   end type
@@ -190,18 +187,6 @@ module neural_network_m
       type(file_t) json_file
     end function
 
-    elemental module subroutine default_real_assert_conformable_with(self, neural_network)
-      implicit none
-      class(neural_network_t), intent(in) :: self
-      type(neural_network_t), intent(in) :: neural_network
-    end subroutine
-
-    elemental module subroutine double_precision_assert_conformable_with(self, neural_network)
-      implicit none
-      class(neural_network_t(double_precision)), intent(in) :: self
-      type(neural_network_t(double_precision)), intent(in) :: neural_network
-    end subroutine
-
     elemental module function default_real_infer(self, inputs) result(outputs)
       implicit none
       class(neural_network_t), intent(in) :: self
@@ -297,6 +282,10 @@ module neural_network_m
       real, intent(in) :: learning_rate
       type(workspace_t), intent(inout) :: workspace
     end subroutine
+
+  end interface
+
+  interface assert_consistency
 
     pure module subroutine default_real_consistency(self)
       implicit none
