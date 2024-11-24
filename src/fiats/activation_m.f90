@@ -1,3 +1,6 @@
+! Copyright (c), The Regents of the University of California
+! Terms of use are as specified in LICENSE.txt
+
 module activation_m
   use iso_c_binding, only :  c_int
   use julienne_m, only : string_t
