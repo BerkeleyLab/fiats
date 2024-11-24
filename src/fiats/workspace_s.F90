@@ -1,3 +1,5 @@
+#include "assert_macros.h"
+
 submodule(neural_network_m) workspace_s
   use assert_m
   implicit none
@@ -30,7 +32,7 @@ contains
       allocate(workspace%a(maxval(neural_network%nodes_), input_layer:output_layer)) ! Activations
     end associate
 
-    call assert(workspace%fully_allocated(), "workspace_s(defalt_real_workspace): workspace allocated")
+    call_assert(workspace%fully_allocated())
 
   end procedure
 
