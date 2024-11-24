@@ -1,7 +1,10 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 submodule(tensor_map_m) tensor_map_s
-  use assert_m, only : assert
+  use assert_m
   use julienne_m, only : separated_values
   use kind_parameters_m, only : default_real
   implicit none
@@ -9,7 +12,7 @@ submodule(tensor_map_m) tensor_map_s
 contains
 
   module procedure construct_default_real
-    call assert(size(minima)==size(maxima),"tensor_map_s(construct_default_real): size(minima)==size(maxima)")
+    call_assert(size(minima)==size(maxima))
     tensor_map%layer_ = layer
     tensor_map%intercept_ = minima
     tensor_map%slope_ = maxima - minima
@@ -32,7 +35,7 @@ contains
   end procedure
 
   module procedure construct_double_precision
-    call assert(size(minima)==size(maxima),"tensor_map_s(construct_double_precision): size(minima)==size(maxima)")
+    call_assert(size(minima)==size(maxima))
     tensor_map%layer_ = layer
     tensor_map%intercept_ = minima
     tensor_map%slope_ = maxima - minima
@@ -54,7 +57,7 @@ contains
       end if
     end do 
 
-    call assert(tensor_map_key_found, "tensor_map_s(from_json): 'tensor_map' key found")
+    call_assert(tensor_map_key_found)
   end procedure
 
   module procedure double_precision_from_json
@@ -73,22 +76,17 @@ contains
       end if
     end do
 
-    call assert(tensor_map_key_found, "tensor_map_s(from_json): 'tensor_map' key found")
+    call_assert(tensor_map_key_found)
   end procedure
 
   module procedure default_real_equals
     real, parameter :: tolerance = 1.E-08
 
-    call assert(allocated(lhs%layer_) .and. allocated(rhs%layer_), &
-      "tensor_map_s(default_real_equals): allocated layer_ components")
-    call assert(allocated(lhs%intercept_) .and. allocated(rhs%intercept_), &
-      "tensor_map_s(default_real_equals): allocated intercept_ components)")
-    call assert(allocated(lhs%slope_) .and.  allocated(rhs%slope_), &
-      "tensor_map_s(default_real_equals): allocated slope_ components)")
-    call assert(size(lhs%intercept_) == size(rhs%intercept_), &
-       "tensor_map_s(default_real_equals): size(lhs%intercept_) == size(rhs%intercept_)")
-    call assert(size(lhs%slope_) == size(rhs%slope_), &
-       "tensor_map_s(default_real_equals): size(lhs%slope_) == size(rhs%slope_)")
+    call_assert(allocated(lhs%layer_    ) .and. allocated(rhs%layer_    ))
+    call_assert(allocated(lhs%intercept_) .and. allocated(rhs%intercept_))
+    call_assert(allocated(lhs%slope_    ) .and. allocated(rhs%slope_    ))
+    call_assert(size(lhs%intercept_) == size(rhs%intercept_))
+    call_assert(size(lhs%slope_    ) == size(rhs%slope_    ))
 
     lhs_equals_rhs = &
       lhs%layer_ == rhs%layer_ .and. &
@@ -99,16 +97,11 @@ contains
   module procedure double_precision_equals
     double precision, parameter :: tolerance = 1.D-015
 
-    call assert(allocated(lhs%layer_) .and. allocated(rhs%layer_), &
-      "tensor_map_s(double_precision_equals): allocated layer_ components")
-    call assert(allocated(lhs%intercept_) .and. allocated(rhs%intercept_), &
-      "tensor_map_s(double_precision_equals): allocated intercept_ components)")
-    call assert(allocated(lhs%slope_) .and.  allocated(rhs%slope_), &
-      "tensor_map_s(double_precision_equals): allocated slope_ components)")
-    call assert(size(lhs%intercept_) == size(rhs%intercept_), &
-      "tensor_map_s(double_precision_equals): size(lhs%intercept_) == size(rhs%intercept_)")
-    call assert(size(lhs%slope_) == size(rhs%slope_), &
-      "tensor_map_s(double_precision_equals): size(lhs%slope_) == size(rhs%slope_)")
+    call_assert(allocated(lhs%layer_    ) .and. allocated(rhs%layer_    ))
+    call_assert(allocated(lhs%intercept_) .and. allocated(rhs%intercept_))
+    call_assert(allocated(lhs%slope_    ) .and. allocated(rhs%slope_    ))
+    call_assert(size(lhs%intercept_) == size(rhs%intercept_))
+    call_assert(size(lhs%slope_    ) == size(rhs%slope_    ))
 
     lhs_equals_rhs = &
       lhs%layer_ == rhs%layer_ .and. &
@@ -121,10 +114,8 @@ contains
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
     character(len=:), allocatable :: csv_format, intercept_string, slope_string
 
-    call assert(allocated(self%layer_), &
-      "tensor_map_s(default_real_to_json): allocated layer_")
-    call assert(allocated(self%intercept_) .and. allocated(self%slope_), &
-      "tensor_map_s(default_real_to_json): allocated intercept_/slope_")
+    call_assert(allocated(self%layer_))
+    call_assert(allocated(self%intercept_) .and. allocated(self%slope_))
 
     csv_format = separated_values(separator=",", mold=[real(default_real)::])
     allocate(character(len=size(self%intercept_)*(characters_per_value+1)-1)::intercept_string)
@@ -150,10 +141,8 @@ contains
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
     character(len=:), allocatable :: csv_format, intercept_string, slope_string
 
-    call assert(allocated(self%layer_), &
-      "tensor_map_s(default_real_to_json): allocated layer_")
-    call assert(allocated(self%intercept_) .and. allocated(self%slope_), &
-      "tensor_map_s(default_real_to_json): allocated intercept_/slope_")
+    call_assert(allocated(self%layer_))
+    call_assert(allocated(self%intercept_) .and. allocated(self%slope_))
 
     csv_format = separated_values(separator=",", mold=[double precision::])
     allocate(character(len=size(self%intercept_)*(characters_per_value+1)-1)::intercept_string)

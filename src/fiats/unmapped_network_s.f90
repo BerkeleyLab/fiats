@@ -1,6 +1,11 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+#include "compound_assertions.h"
+
 submodule(neural_network_m) unmapped_network_s
+  use assert_m
   implicit none
 
   integer, parameter :: input_layer = 0 
@@ -18,7 +23,7 @@ contains
 
     associate(neural_network => self%neural_network_)
 
-      call neural_network%assert_consistency()
+      call_assert_consistency(neural_network)
 
       associate( &
         w => neural_network%weights_ &
@@ -55,7 +60,7 @@ contains
 
     associate(neural_network => self%neural_network_)
 
-      call neural_network%assert_consistency()
+      call_assert_consistency(neural_network)
 
       associate( &
         w => neural_network%weights_ &

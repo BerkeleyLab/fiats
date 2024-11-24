@@ -1,7 +1,11 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+#include "compound_assertions.h"
+
 submodule(neural_network_m) neural_network_s
-  use assert_m, only : assert, intrinsic_array_t
+  use assert_m
   use double_precision_string_m, only : double_precision_string_t
   use kind_parameters_m, only : double_precision
   use layer_m, only : layer_t
@@ -10,6 +14,22 @@ submodule(neural_network_m) neural_network_s
 
   character(len=*), parameter :: minimum_acceptable_tag = "0.15.0" ! git tag capable of reading the current json file format
   integer, parameter :: input_layer = 0 
+
+  interface assert_conformable
+   
+    elemental module subroutine default_real_assert_conformable_with(self, neural_network)
+      implicit none
+      class(neural_network_t), intent(in) :: self
+      type(neural_network_t), intent(in) :: neural_network
+    end subroutine
+
+    elemental module subroutine double_precision_assert_conformable_with(self, neural_network)
+      implicit none
+      class(neural_network_t(double_precision)), intent(in) :: self
+      type(neural_network_t(double_precision)), intent(in) :: neural_network
+    end subroutine
+
+  end interface
 
 contains
 
@@ -34,7 +54,7 @@ contains
     real, allocatable :: a(:,:)
     integer l
 
-    call self%assert_consistency()
+    call_assert_consistency(self)
 
     associate(w => self%weights_, b => self%biases_, n => self%nodes_, output_layer => ubound(self%nodes_,1))
 
@@ -80,7 +100,7 @@ contains
     double precision, allocatable :: a(:,:)
     integer l
 
-    call self%assert_consistency()
+    call_assert_consistency(self)
 
     associate(w => self%weights_, b => self%biases_, n => self%nodes_, output_layer => ubound(self%nodes_,1))
 
@@ -198,7 +218,7 @@ contains
 
     neural_network%activation_ = activation_t(metadata(4)%string())
 
-    call neural_network%assert_consistency()
+    call_assert_consistency(neural_network)
 
   end procedure default_real_construct_from_components
 
@@ -237,7 +257,7 @@ contains
       neural_network%activation_ = activation_t(function_name%string())
     end associate
 
-    call neural_network%assert_consistency()
+    call_assert_consistency(neural_network)
 
   end procedure double_precision_construct_from_components
 
@@ -252,7 +272,7 @@ contains
     proto_neuron = neuron_t([0.],1.)
 #endif
 
-    call self%assert_consistency()
+    call_assert_consistency(self)
 
     associate( &
        num_hidden_layers => self%num_hidden_layers() &
@@ -368,7 +388,7 @@ contains
     proto_neuron = neuron_t([0D0],1D0)
 #endif
 
-    call self%assert_consistency()
+    call_assert_consistency(self)
 
     associate( &
        num_hidden_layers => self%num_hidden_layers() &
@@ -571,7 +591,7 @@ contains
       end associate
     end associate read_metadata
 
-    call neural_network%assert_consistency()
+    call_assert_consistency(neural_network)
 
   end procedure default_real_from_json
 
@@ -671,39 +691,39 @@ contains
       end associate
     end associate read_metadata
 
-    call neural_network%assert_consistency()
+    call_assert_consistency(neural_network)
 
   end procedure double_precision_from_json
 
   module procedure default_real_assert_conformable_with
 
-    call self%assert_consistency()
+    call_assert_consistency(self)
 
     associate(equal_shapes => [ &
       shape(self%weights_) == shape(neural_network%weights_), &
       shape(self%biases_) == shape(neural_network%biases_), &
       shape(self%nodes_) == shape(neural_network%nodes_)  &
      ])
-      call assert(all(equal_shapes), "assert_conformable_with: all(equal_shapes)", intrinsic_array_t(equal_shapes))
+      call assert(all(equal_shapes), "assert_conformable: all(equal_shapes)", intrinsic_array_t(equal_shapes))
     end associate
 
-    call assert(self%activation_ == neural_network%activation_, "assert_conformable_with: activation_")
+    call assert(self%activation_ == neural_network%activation_, "assert_conformable: activation_")
     
   end procedure
 
   module procedure double_precision_assert_conformable_with
 
-    call self%assert_consistency()
+    call_assert_consistency(self)
 
     associate(equal_shapes => [ &
       shape(self%weights_) == shape(neural_network%weights_), &
       shape(self%biases_) == shape(neural_network%biases_), &
       shape(self%nodes_) == shape(neural_network%nodes_)  &
      ])
-      call assert(all(equal_shapes), "assert_conformable_with: all(equal_shapes)", intrinsic_array_t(equal_shapes))
+      call assert(all(equal_shapes), "assert_conformable: all(equal_shapes)", intrinsic_array_t(equal_shapes))
     end associate
 
-    call assert(self%activation_ == neural_network%activation_, "assert_conformable_with: activation_")
+    call assert(self%activation_ == neural_network%activation_, "assert_conformable: activation_")
     
   end procedure
 
@@ -713,9 +733,9 @@ contains
 
     nodes_eq = all(lhs%nodes_ == rhs%nodes_)
 
-    call lhs%assert_consistency()
-    call rhs%assert_consistency()
-    call lhs%assert_conformable_with(rhs)
+    call_assert_consistency(lhs)
+    call_assert_consistency(rhs)
+    call_assert_conformable(lhs, rhs)
 
     block
       integer l
@@ -754,9 +774,9 @@ contains
 
     nodes_eq = all(lhs%nodes_ == rhs%nodes_)
 
-    call lhs%assert_consistency()
-    call rhs%assert_consistency()
-    call lhs%assert_conformable_with(rhs)
+    call_assert_consistency(lhs)
+    call_assert_consistency(rhs)
+    call_assert_conformable(lhs, rhs)
 
     block
       integer l
@@ -790,18 +810,18 @@ contains
   end procedure
 
   module procedure default_real_num_outputs
-    call self%assert_consistency()
+    call_assert_consistency(self)
     output_count = self%nodes_(ubound(self%nodes_,1))
   end procedure
 
   module procedure double_precision_num_outputs
-    call self%assert_consistency()
+    call_assert_consistency(self)
     output_count = self%nodes_(ubound(self%nodes_,1))
   end procedure
 
   module procedure default_real_num_hidden_layers
     integer, parameter :: num_non_hidden_layers = 2
-    call self%assert_consistency()
+    call_assert_consistency(self)
     associate(num_layers => size(self%nodes_))
       hidden_layer_count =  num_layers - num_non_hidden_layers
     end associate
@@ -809,29 +829,29 @@ contains
 
   module procedure double_precision_num_hidden_layers
     integer, parameter :: num_non_hidden_layers = 2
-    call self%assert_consistency()
+    call_assert_consistency(self)
     associate(num_layers => size(self%nodes_))
       hidden_layer_count =  num_layers - num_non_hidden_layers
     end associate
   end procedure
 
   module procedure default_real_num_inputs
-    call self%assert_consistency()
+    call_assert_consistency(self)
     input_count = self%nodes_(lbound(self%nodes_,1))
   end procedure
 
   module procedure double_precision_num_inputs
-    call self%assert_consistency()
+    call_assert_consistency(self)
     input_count = self%nodes_(lbound(self%nodes_,1))
   end procedure
 
   module procedure default_real_nodes_per_layer
-    call self%assert_consistency()
+    call_assert_consistency(self)
     node_count = self%nodes_
   end procedure
 
   module procedure double_precision_nodes_per_layer
-    call self%assert_consistency()
+    call_assert_consistency(self)
     node_count = self%nodes_
   end procedure
 
@@ -863,7 +883,7 @@ contains
     integer l, batch, mini_batch_size, pair
     type(tensor_t), allocatable :: inputs(:), expected_outputs(:)
 
-    call self%assert_consistency()
+    call_assert_consistency(self)
     call assert(workspace%fully_allocated(), "neural_network_s(default_real_learn): workspace%fully_allocated()")
 
     associate(output_layer => ubound(self%nodes_,1))

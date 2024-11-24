@@ -1,7 +1,10 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 submodule(tensor_names_m) tensor_names_s
-  use assert_m, only : assert
+  use assert_m
   use julienne_m, only : operator(.csv.), operator(.cat.)
   implicit none
 
@@ -16,8 +19,7 @@ contains
   end procedure 
 
   module procedure equals
-    call assert( all([allocated(lhs%inputs_), allocated(rhs%inputs_), allocated(lhs%outputs_), allocated(rhs%outputs_)]) &
-      ,"tensor_names_s(equals): all components allocated")
+    call_assert(all([allocated(lhs%inputs_), allocated(rhs%inputs_), allocated(lhs%outputs_), allocated(rhs%outputs_)]))
     lhs_equals_rhs = all(lhs%inputs_ == rhs%inputs_) .and. all(lhs%outputs_ == rhs%outputs_)
   end procedure 
 
@@ -36,7 +38,7 @@ contains
       end if
     end do
 
-    call assert(tensor_names_key_found, "tensor_names_s(from_json): tensor_names_found")
+    call_assert(tensor_names_key_found)
   end procedure
 
   module procedure to_json
