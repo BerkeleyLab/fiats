@@ -1,6 +1,8 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
+#include "assert_macros.h"
+
 submodule(activation_m) activation_s
   use assert_m
   implicit none
@@ -19,12 +21,8 @@ contains
     end procedure
 
     module procedure function_name
-
-      call assert( lbound(activation_name,1) <= self%selection_ .and. self%selection_ <= ubound(activation_name,1), &
-        "activation_s(function_name): bounds")
-
+      call_assert(lbound(activation_name,1) <= self%selection_ .and. self%selection_ <= ubound(activation_name,1))
       string = string_t(trim(activation_name(self%selection_)))
-
     end procedure
 
     module procedure construct_from_name
