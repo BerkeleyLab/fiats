@@ -49,7 +49,7 @@ contains
       end associate
     end do
 
-    call assert(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]), "metadata_s(from_json): metadata object end found")
+    call_assert_describe(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]), "metadata_s(from_json): metadata object end found")
   end procedure
 
   module procedure double_precision_from_json
@@ -76,8 +76,7 @@ contains
       end associate
     end do
 
-    call assert(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]), &
-      "metadata_s(double_precision_from_json): metadata object end found")
+    call_assert_describe(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]), "metadata_s(double_precision_from_json): metadata object end found")
   end procedure
 
   module procedure to_json
