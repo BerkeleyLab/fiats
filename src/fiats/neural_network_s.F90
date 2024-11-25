@@ -145,42 +145,32 @@ contains
 
   module procedure default_real_consistency
 
-    associate( &
-      all_allocated=>[allocated(self%weights_),allocated(self%biases_),allocated(self%nodes_)]&
-    )   
-      call assert(all(all_allocated),"neural_network_s(default_real_consistency): fully_allocated", &
-        intrinsic_array_t(all_allocated))
+    associate(allocated_=>[allocated(self%weights_),allocated(self%biases_),allocated(self%nodes_)])
+      call_assert_diagnose(all(allocated_),"neural_network_s(default_real_consistency): all(allocated_)",intrinsic_array_t(allocated_))
     end associate
 
-    associate(max_width=>maxval(self%nodes_), component_dims=>[size(self%biases_,1), size(self%weights_,1), size(self%weights_,2)])
-      call assert(all(component_dims == max_width), "neural_network_s(default_real_consistency): conformable arrays", &
-        intrinsic_array_t([max_width,component_dims]))
+    associate(max_width=>maxval(self%nodes_), component_sizes=>[size(self%biases_,1), size(self%weights_,1), size(self%weights_,2)])
+      call_assert_diagnose(all(component_sizes == max_width), "neural_network_s(default_real_consistency): all(component_sizes == max_width)", intrinsic_array_t([max_width, component_sizes]))
     end associate
 
     associate(input_subscript => lbound(self%nodes_,1))
-      call assert(input_subscript == input_layer, "neural_network_s(default_real_consistency): n base subsscript", &
-        input_subscript)
+      call_assert_diagnose(input_subscript == input_layer, "neural_network_s(default_real_consistency): n base subsscript", input_subscript)
     end associate
 
   end procedure
 
   module procedure double_precision_consistency
 
-    associate( &
-      all_allocated=>[allocated(self%weights_),allocated(self%biases_),allocated(self%nodes_)]&
-    )   
-      call assert(all(all_allocated),"neural_network_s(default_real_consistency): fully_allocated", &
-        intrinsic_array_t(all_allocated))
+    associate(allocated_=>[allocated(self%weights_),allocated(self%biases_),allocated(self%nodes_)])
+      call_assert_diagnose(all(allocated_),"neural_network_s(default_real_consistency): all(allocated_)",intrinsic_array_t(allocated_))
     end associate
 
-    associate(max_width=>maxval(self%nodes_), component_dims=>[size(self%biases_,1), size(self%weights_,1), size(self%weights_,2)])
-      call assert(all(component_dims == max_width), "neural_network_s(default_real_consistency): conformable arrays", &
-        intrinsic_array_t([max_width,component_dims]))
+    associate(max_width=>maxval(self%nodes_), component_sizes=>[size(self%biases_,1), size(self%weights_,1), size(self%weights_,2)])
+      call_assert_diagnose(all(component_sizes == max_width), "neural_network_s(default_real_consistency): all(component_sizes == max_width)", intrinsic_array_t([max_width, component_sizes]))
     end associate
 
     associate(input_subscript => lbound(self%nodes_,1))
-      call assert(input_subscript == input_layer, "neural_network_s(default_real_consistency): n base subsscript", &
-        input_subscript)
+      call_assert_diagnose(input_subscript == input_layer, "neural_network_s(default_real_consistency): n base subsscript", input_subscript)
     end associate
 
   end procedure
@@ -369,7 +359,7 @@ contains
             lines(line) = string_t('         ]')
             line = line + 1
             lines(line) = string_t('}')
-            call assert(line == json_lines, "neural_network_t%to_json: all lines defined", intrinsic_array_t([json_lines, line]))
+            call_assert_diagnose(line == json_lines, "neural_network_t%to_json: all lines defined", intrinsic_array_t([json_lines, line]))
           end associate
           json_file = file_t(lines)
         end block
@@ -485,7 +475,7 @@ contains
             lines(line) = string_t('         ]')
             line = line + 1
             lines(line) = string_t('}')
-            call assert(line == json_lines, "neural_network_t%to_json: all lines defined", intrinsic_array_t([json_lines, line]))
+            call_assert_diagnose(line == json_lines, "neural_network_t%to_json: all lines defined", intrinsic_array_t([json_lines, line]))
           end associate
           json_file = file_t(lines)
         end block
@@ -502,18 +492,14 @@ contains
     type(layer_t) hidden_layers, output_layer
 
     lines = file_%lines()
-    call assert(adjustl(lines(1)%string())=="{", "neural_network_s(default_real_from_json): expected outermost object '{'")
+    call_assert_describe(adjustl(lines(1)%string())=="{", "neural_network_s(default_real_from_json): expected outermost object '{'")
  
     check_git_tag: &
     block 
       character(len=:), allocatable :: tag
 
       tag = lines(2)%get_json_value("minimum_acceptable_tag", mold="")
-      call assert( &
-        tag == minimum_acceptable_tag &
-        ,"neural_network_s(default_real_from_json): minimum_acceptable_tag" &
-        ,tag //"(expected " //minimum_acceptable_tag // ")" &
-      )
+      call_assert_diagnose(tag == minimum_acceptable_tag, "neural_network_s(default_real_from_json): minimum_acceptable_tag", tag //"(expected " //minimum_acceptable_tag // ")")
     end block check_git_tag
       
     num_file_lines = size(lines)
@@ -528,7 +514,7 @@ contains
            if (justified_line == '"inputs_map": {') exit
          end do find_inputs_map
 
-         call assert(justified_line =='"inputs_map": {', 'default_real_from_json: expecting "inputs_map": {', justified_line)
+         call_assert_diagnose(justified_line =='"inputs_map": {', 'default_real_from_json: expecting "inputs_map": {', justified_line)
          input_map = tensor_map_t(lines(l:l+num_map_lines-1))
 
          find_outputs_map: &
@@ -537,7 +523,7 @@ contains
            if (justified_line == '"outputs_map": {') exit
          end do find_outputs_map
 
-         call assert(justified_line =='"outputs_map": {', 'default_real_from_json: expecting "outputs_map": {', justified_line)
+         call_assert_diagnose(justified_line =='"outputs_map": {', 'default_real_from_json: expecting "outputs_map": {', justified_line)
          output_map = tensor_map_t(lines(l:l+num_map_lines-1))
 
       end associate
@@ -548,7 +534,7 @@ contains
       justified_line = adjustl(lines(l)%string())
       if (justified_line == '"hidden_layers": [') exit
     end do find_hidden_layers
-    call assert(justified_line=='"hidden_layers": [', 'default_real_from_json: expecting "hidden_layers": [', justified_line)
+    call_assert_diagnose(justified_line=='"hidden_layers": [', 'default_real_from_json: expecting "hidden_layers": [', justified_line)
 
     read_hidden_layers: &
     block
@@ -559,14 +545,9 @@ contains
 
       read_layers_of_neurons: &
       associate(proto_neuron => neuron_t(weights=[0.], bias=0.))
-        associate(output_layer_line_number => l + 1 + size(proto_neuron%to_json())*sum(hidden_layers%count_neurons()) &
-          + bracket_lines_per_layer*hidden_layers%count_layers() + 1)
-
+        associate(output_layer_line_number => l + 1 + size(proto_neuron%to_json())*sum(hidden_layers%count_neurons()) + bracket_lines_per_layer*hidden_layers%count_layers() + 1)
           output_layer_line = lines(output_layer_line_number)%string()
-
-          call assert(adjustl(output_layer_line)=='"output_layer": [', 'default_real_from_json: expecting "output_layer": [', &
-            lines(output_layer_line_number)%string())
-
+          call_assert_diagnose(adjustl(output_layer_line)=='"output_layer": [', 'default_real_from_json: expecting "output_layer": [', lines(output_layer_line_number)%string())
           output_layer = layer_t(lines, start=output_layer_line_number)
         end associate
       end associate read_layers_of_neurons
@@ -577,7 +558,7 @@ contains
       justified_line = adjustl(lines(l)%string())
       if (justified_line == '"metadata": {') exit
     end do find_metadata
-    call assert(justified_line=='"metadata": {', 'default_real_from_json: expecting "metadata": {', justified_line)
+    call_assert_diagnose(justified_line=='"metadata": {', 'default_real_from_json: expecting "metadata": {', justified_line)
 
     read_metadata: &
     associate(proto_meta => metadata_t(string_t(""),string_t(""),string_t(""),string_t(""),string_t("")))
@@ -604,18 +585,14 @@ contains
     type(layer_t(double_precision)) hidden_layers, output_layer
 
     lines = file%double_precision_lines()
-    call assert(adjustl(lines(1)%string())=="{", "neural_network_s(double_precision_from_json): expected outermost object '{'")
+    call_assert_describe(adjustl(lines(1)%string())=="{", "neural_network_s(double_precision_from_json): expected outermost object '{'")
 
     check_git_tag: &
     block
       character(len=:), allocatable :: tag
 
       tag = lines(2)%get_json_value("minimum_acceptable_tag", mold="")
-      call assert( &
-        tag == minimum_acceptable_tag &
-        ,"neural_network_s(double_precision_from_json): minimum_acceptable_tag" &
-        ,tag //"(expected " //minimum_acceptable_tag // ")" &
-      )
+      call_assert_diagnose(tag == minimum_acceptable_tag, "neural_network_s(double_precision_from_json): minimum_acceptable_tag", tag//"(expected "//minimum_acceptable_tag //")")
     end block check_git_tag
 
     num_file_lines = size(lines)
@@ -630,7 +607,7 @@ contains
            if (justified_line == '"inputs_map": {') exit
          end do find_inputs_map
 
-         call assert(justified_line =='"inputs_map": {', 'double_precision_from_json: expecting "inputs_map": {', justified_line)
+         call_assert_diagnose(justified_line =='"inputs_map": {', 'double_precision_from_json: expecting "inputs_map": {', justified_line)
          input_map = tensor_map_t(lines(l:l+num_map_lines-1))
 
          find_outputs_map: &
@@ -639,7 +616,7 @@ contains
            if (justified_line == '"outputs_map": {') exit
          end do find_outputs_map
 
-         call assert(justified_line =='"outputs_map": {', 'double_precision_from_json: expecting "outputs_map": {', justified_line)
+         call_assert_diagnose(justified_line =='"outputs_map": {', 'double_precision_from_json: expecting "outputs_map": {', justified_line)
          output_map = tensor_map_t(lines(l:l+num_map_lines-1))
 
       end associate
@@ -650,7 +627,7 @@ contains
       justified_line = adjustl(lines(l)%string())
       if (justified_line == '"hidden_layers": [') exit
     end do find_hidden_layers
-    call assert(justified_line=='"hidden_layers": [', 'double_precision_from_json: expecting "hidden_layers": [', justified_line)
+    call_assert_diagnose(justified_line=='"hidden_layers": [', 'double_precision_from_json: expecting "hidden_layers": [', justified_line)
 
     read_hidden_layers: &
     block
@@ -661,14 +638,9 @@ contains
 
       read_layers_of_neurons: &
       associate(proto_neuron => neuron_t(weights=[0D0], bias=0D0))
-        associate(output_layer_line_number => l + 1 + size(proto_neuron%to_json())*sum(hidden_layers%count_neurons()) &
-          + bracket_lines_per_layer*hidden_layers%count_layers() + 1)
-
+        associate(output_layer_line_number => l + 1 + size(proto_neuron%to_json())*sum(hidden_layers%count_neurons()) + bracket_lines_per_layer*hidden_layers%count_layers() + 1)
           output_layer_line = lines(output_layer_line_number)%string()
-
-          call assert(adjustl(output_layer_line)=='"output_layer": [', 'double_precision_from_json: expecting "output_layer": [', &
-            lines(output_layer_line_number)%string())
-
+          call_assert_diagnose(adjustl(output_layer_line)=='"output_layer": [', 'double_precision_from_json: expecting "output_layer": [', lines(output_layer_line_number)%string())
           output_layer = layer_t(lines, start=output_layer_line_number)
         end associate
       end associate read_layers_of_neurons
@@ -679,7 +651,7 @@ contains
       justified_line = adjustl(lines(l)%string())
       if (justified_line == '"metadata": {') exit
     end do find_metadata
-    call assert(justified_line=='"metadata": {', 'double_precision_from_json: expecting "metadata": {', justified_line)
+    call_assert_diagnose(justified_line=='"metadata": {', 'double_precision_from_json: expecting "metadata": {', justified_line)
 
     read_metadata: &
     associate(proto_meta => metadata_t(string_t(""),string_t(""),string_t(""),string_t(""),string_t("")))
@@ -704,10 +676,10 @@ contains
       shape(self%biases_) == shape(neural_network%biases_), &
       shape(self%nodes_) == shape(neural_network%nodes_)  &
      ])
-      call assert(all(equal_shapes), "assert_conformable: all(equal_shapes)", intrinsic_array_t(equal_shapes))
+      call_assert_diagnose(all(equal_shapes), "assert_conformable: all(equal_shapes)", intrinsic_array_t(equal_shapes))
     end associate
 
-    call assert(self%activation_ == neural_network%activation_, "assert_conformable: activation_")
+    call_assert(self%activation_ == neural_network%activation_)
     
   end procedure
 
@@ -720,10 +692,10 @@ contains
       shape(self%biases_) == shape(neural_network%biases_), &
       shape(self%nodes_) == shape(neural_network%nodes_)  &
      ])
-      call assert(all(equal_shapes), "assert_conformable: all(equal_shapes)", intrinsic_array_t(equal_shapes))
+      call_assert_diagnose(all(equal_shapes), "assert_conformable: all(equal_shapes)", intrinsic_array_t(equal_shapes))
     end associate
 
-    call assert(self%activation_ == neural_network%activation_, "assert_conformable: activation_")
+    call_assert(self%activation_ == neural_network%activation_)
     
   end procedure
 
@@ -884,7 +856,7 @@ contains
     type(tensor_t), allocatable :: inputs(:), expected_outputs(:)
 
     call_assert_consistency(self)
-    call assert(workspace%fully_allocated(), "neural_network_s(default_real_learn): workspace%fully_allocated()")
+    call_assert(workspace%fully_allocated())
 
     associate(output_layer => ubound(self%nodes_,1))
 

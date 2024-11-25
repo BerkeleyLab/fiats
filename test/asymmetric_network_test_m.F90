@@ -1,10 +1,13 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 module asymmetric_network_test_m
   !! Define tests in which the desired output depends asymmetrically on the inputs 
 
   ! External dependencies
-  use assert_m, only : assert
+  use assert_m
   use julienne_m, only : &
     test_t, test_result_t, vector_test_description_t, test_description_substring, string_t, vector_function_strategy_t
 
@@ -74,7 +77,7 @@ contains
     allocate(biases(n_max, layers))
 
     l = 1
-    call assert(n(l-1)==2, "l=1: n(l-1)==2")
+    call_assert(n(l-1)==2)
       j = 1
       weights(j,1:n(l-1),l) = [1,0]
       j = 2
@@ -84,10 +87,10 @@ contains
       j = 4
       weights(j,1:n(l-1),l) = [0,1]
       biases(1:n(l),l) = [0., -1.99, 0., 0.]
-    call assert(j == n(l), "l=1; j=4: j == n(l)")
+    call_assert(j == n(l))
   
     l = 2
-    call assert(n(l-1)==4, "l=2: n(l-1)==2")
+    call_assert(n(l-1)==4)
       j = 1
       weights(j,1:n(l-1),l) = [0,0,0,0]
       j = 2
@@ -97,15 +100,15 @@ contains
       j = 4
       weights(j,1:n(l-1),l) = [0,0,0,1]
       biases(1:n(l),l) = [0,0,0,0]
-    call assert(j == n(l), "l=1; j=4: j == n(l)")
+    call_assert(j == n(l))
 
 
     l = 3
-    call assert(n(l-1)==4, "l=3: n(l-1)==2")
+    call_assert(n(l-1)==4)
       j = 1
       weights(j,1:n(l-1),l) = [0,1,0,1]
       biases(1:n(l),l) = [-1]
-    call assert(j == n(l), "l=3; j=1: j == n(l)")
+    call_assert(j == n(l))
 
     neural_network = neural_network_t(metadata, weights, biases, nodes = n)
 

@@ -4,7 +4,6 @@ module neural_network_test_m
   !! Define inference tests and procedures required for reporting results
 
   ! External dependencies
-  use assert_m, only : assert
   use kind_parameters_m, only : double_precision
   use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, file_t
 #ifdef __GFORTRAN__

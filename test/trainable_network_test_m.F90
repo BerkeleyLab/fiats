@@ -1,10 +1,13 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 module trainable_network_test_m
   !! Define inference tests and procedures required for reporting results
 
   ! External dependencies
-  use assert_m, only : assert, intrinsic_array_t
+  use assert_m
   use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, bin_t, &
     vector_test_description_t, vector_function_strategy_t
 #ifdef __GFORTRAN__
@@ -162,8 +165,7 @@ contains
     type(tensor_t) expected_outputs
     integer i
 
-    call assert( size(test_inputs) == size(actual_outputs), &
-      "trainable_network_test_m(print_truth_table): size(test_inputs) == size(actual_outputs)")
+    call_assert(size(test_inputs) == size(actual_outputs))
 
     print *,"_______" // gate_name // "_______"
 
@@ -443,9 +445,7 @@ contains
 
     associate(num_inputs => trainable_network%num_inputs(), num_outputs => trainable_network%num_outputs())
 
-      call assert(num_inputs == num_outputs,"trainable_network_test_m(identity_mapping): # inputs == # outputs", &
-        intrinsic_array_t([num_inputs, num_outputs]) &
-      )
+      call_assert(num_inputs == num_outputs)
 #ifdef _CRAYFTN
       allocate(inputs(num_pairs))
       do i = 1, num_pairs
@@ -504,9 +504,7 @@ contains
 
     associate(num_inputs => trainable_network%num_inputs(), num_outputs => trainable_network%num_outputs())
 
-      call assert(num_inputs == num_outputs,"trainable_network_test_m(identity_mapping): # inputs == # outputs", &
-        intrinsic_array_t([num_inputs, num_outputs]) &
-      )
+      call_assert(num_inputs == num_outputs)
 #ifdef _CRAYFTN
       allocate(inputs(num_pairs))
       do i = 1, num_pairs

@@ -55,11 +55,11 @@ contains
     character(len=:), allocatable :: line
     integer i
 
-    call assert(adjustl(neuron_lines(start)%string())=='{', "neuron_s(construct): neuron object start",neuron_lines(start)%string())
+    call_assert_diagnose(adjustl(neuron_lines(start)%string())=='{', "neuron_s(construct): neuron object start", neuron_lines(start)%string())
 
     line = neuron_lines(start+1)%string()
     associate(colon => index(line, ":"))
-      call assert(adjustl(line(:colon-1))=='"weights"', "neuron_s(construct): neuron weights", line)
+      call_assert_diagnose(adjustl(line(:colon-1))=='"weights"', "neuron_s(construct): neuron weights", line)
       associate(opening_bracket => colon + index(line(colon+1:), "["))
         associate(closing_bracket => opening_bracket + index(line(opening_bracket+1:), "]"))
           associate(commas => count("," == [(line(i:i), i=opening_bracket+1,closing_bracket-1)]))
@@ -74,12 +74,12 @@ contains
 
     line = neuron_lines(start+2)%string()
     associate(colon => index(line, ":"))
-      call assert(adjustl(line(:colon-1))=='"bias"', "neuron_s(construct): neuron bias", line)
+      call_assert_diagnose(adjustl(line(:colon-1))=='"bias"', "neuron_s(construct): neuron bias", line)
       read(line(colon+1:), fmt=*) neuron%bias_
     end associate
 
     line = adjustl(neuron_lines(start+3)%string())
-    call assert(line(1:1)=='}', "neuron_s(construct): neuron object end", line)
+    call_assert_diagnose(line(1:1)=='}', "neuron_s(construct): neuron object end", line)
     line = adjustr(neuron_lines(start+3)%string())
     if (line(len(line):len(line)) == ",") neuron%next = from_json(neuron_lines, start+4)
 
@@ -90,12 +90,10 @@ contains
     character(len=:), allocatable :: line
     integer i
 
-    call assert(adjustl(neuron_lines(start)%string())=='{', &
-      "neuron_s(double_precison_from_json): neuron object start",neuron_lines(start)%string())
-
+    call_assert_diagnose(adjustl(neuron_lines(start)%string())=='{', "neuron_s(double_precison_from_json): neuron object start", neuron_lines(start)%string())
     line = neuron_lines(start+1)%string()
     associate(colon => index(line, ":"))
-      call assert(adjustl(line(:colon-1))=='"weights"', "neuron_s(double_precision_from_json): neuron weights", line)
+      call_assert_diagnose(adjustl(line(:colon-1))=='"weights"', "neuron_s(double_precision_from_json): neuron weights", line)
       associate(opening_bracket => colon + index(line(colon+1:), "["))
         associate(closing_bracket => opening_bracket + index(line(opening_bracket+1:), "]"))
           associate(commas => count("," == [(line(i:i), i=opening_bracket+1,closing_bracket-1)]))
@@ -110,12 +108,12 @@ contains
 
     line = neuron_lines(start+2)%string()
     associate(colon => index(line, ":"))
-      call assert(adjustl(line(:colon-1))=='"bias"', "neuron_s(double_precision_from_json): neuron bias", line)
+      call_assert_diagnose(adjustl(line(:colon-1))=='"bias"', "neuron_s(double_precision_from_json): neuron bias", line)
       read(line(colon+1:), fmt=*) neuron%bias_
     end associate
 
     line = adjustl(neuron_lines(start+3)%string())
-    call assert(line(1:1)=='}', "neuron_s(double_precision_from_json): neuron object end", line)
+    call_assert_diagnose(line(1:1)=='}', "neuron_s(double_precision_from_json): neuron object end", line)
     line = adjustr(neuron_lines(start+3)%string())
     if (line(len(line):len(line)) == ",") neuron%next = double_precision_from_json(neuron_lines, start+4)
 

@@ -4,7 +4,6 @@ module tensor_map_test_m
   !! Test tensor_map_t object input/output, construction, and linear mappings
 
   ! External dependencies
-  use assert_m, only : assert
   use julienne_m, only : string_t, test_t, test_result_t, test_description_t, test_description_substring, file_t
   use fiats_m, only : tensor_map_t, tensor_t
 #ifdef __GFORTRAN__
