@@ -30,9 +30,9 @@ if [ ! -d "$assert_dir" ] || [ ! -d $julienne_dir ]; then
 fi
 
 if [ -d ../build/dependencies/assert ] && [ -d ../build/dependencies/julienne ]; then
-  echo "------------- Dependencies assert and julienne are in ../build/dependencies ------------------"
+  echo "Dependencies Assert and Julienne are in ../build/dependencies"
 else
-  echo "Dependencies assert and julienne are not in ../build/dependencies. Something went wrong."
+  echo "Dependencies Assert and Julienne are not in ../build/dependencies. Something went wrong."
   exit 1
 fi
 
@@ -56,5 +56,5 @@ cp "$assert_dir/include/assert_macros.h" "$destination_dir"
 cat "$julienne_dir/include/language-support.F90" "$fiats_dir/include/language-support.F90" > "$destination_dir"/language-support.F90
 cp "$fiats_dir/include/compound_assertions.h" "$destination_dir"
 
-echo "Concatenating Assert, Julienne, Fiats, and example/concurrent-inferences.f90 into $destination_dir"
+echo "Concatenating Assert, Julienne, Fiats, and example/concurrent-inferences.f90 into $destination_dir/concurrent-inferences-single-file.F90"
 cat "$destination_dir"/assert.F90 "$destination_dir"/julienne.F90 "$destination_dir"/fiats.F90 "$fiats_dir/example/concurrent-inferences.f90" > $destination_dir/concurrent-inferences-single-file.F90
