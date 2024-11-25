@@ -63,7 +63,6 @@ program concurrent_inferences
           end do
         end do
       end do
-      !$omp end parallel do
       call system_clock(t_finish)
       print *,"Elapsed system clock: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
 
@@ -89,19 +88,19 @@ program concurrent_inferences
       neural_network = neural_network_t(double_precision_file_t(network_file_name))
 
       print *,"Defining an array of tensor_t input objects with random normalized components"
-      allocate(outputs(lat,lon,lev))
-      allocate( inputs(lat,lon,lev))
-      allocate(input_components(lat,lon,lev,neural_network%num_inputs()))
+      allocate(outputs(lat,lev,lon))
+      allocate( inputs(lat,lev,lon))
+      allocate(input_components(lat,lev,lon,neural_network%num_inputs()))
       call random_number(input_components)
 
-      do concurrent(i=1:lat, j=1:lon, k=1:lev)
-        inputs(i,j,k) = tensor_t(input_components(i,j,k,:))
+      do concurrent(i=1:lat, k=1:lev, j=1:lon)
+        inputs(i,k,j) = tensor_t(input_components(i,k,j,:))
       end do
 
       print *,"Performing double-precision concurrent inference"
       call system_clock(t_start, clock_rate)
-      do concurrent(i=1:lat, j=1:lon, k=1:lev)
-        outputs(i,j,k) = neural_network%infer(inputs(i,j,k))
+      do concurrent(i=1:lat, k=1:lev, j=1:lon)
+        outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
       end do
       call system_clock(t_finish)
       print *,"Double-precision concurrent inference time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
