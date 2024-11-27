@@ -14,9 +14,9 @@ module training_configuration_m
   private
   public :: training_configuration_t
 
-  type, extends(double_precision_file_t) :: training_configuration_t(k)
-    integer, kind :: k = default_real
-    type(hyperparameters_t(k)),    private :: hyperparameters_
+  type, extends(double_precision_file_t) :: training_configuration_t(m)
+    integer, kind :: m = default_real
+    type(hyperparameters_t(m)),    private :: hyperparameters_
     type(network_configuration_t), private :: network_configuration_
     type(tensor_names_t), private :: tensor_names_
   contains
