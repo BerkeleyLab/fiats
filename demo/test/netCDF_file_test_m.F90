@@ -8,7 +8,7 @@ module NetCDF_file_test_m
 
   ! External dependencies
   use assert_m
-  use julienne_m, only : string_t, test_t, test_result_t
+  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t
   use netcdf, only : &
      nf90_create, nf90_def_dim, nf90_def_var, nf90_enddef, nf90_put_var, nf90_inquire_dimension, & ! functions
      nf90_close, nf90_open, nf90_inq_varid, nf90_get_var, nf90_inquire_variable, &
@@ -41,24 +41,22 @@ contains
 
   function results() result(test_results)
     type(test_result_t), allocatable :: test_results(:)
+    type(test_description_t), allocatable :: test_descriptions(:)
 
     character(len=*), parameter :: longest_description = &
           "writing and then reading gives input matching the output for a 1D double precision array"
 
+    test_descriptions = &
+      [ test_description_t("writing and then reading gives input matching the output for a 2D integer array", write_then_read_2D_integer), &
+        test_description_t("writing and then reading gives input matching the output for a 1D double precision array", write_then_read_1D_double) &
+      ]
     associate( &
-      descriptions => &
-        [ character(len=len(longest_description)) :: &
-          "writing and then reading gives input matching the output for a 2D integer array", &
-          "writing and then reading gives input matching the output for a 1D double precision array" &
-        ], &
-      outcomes => &
-        [ write_then_read_2D_integer(), & 
-          write_then_read_1D_double() &
-        ] & 
+      substring_in_subject => index(subject(), test_description_substring) /= 0, &
+      substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
     )
-      call_assert(size(descriptions) == size(outcomes))
-      test_results = test_result_t(descriptions, outcomes)
+      test_descriptions = pack(test_descriptions, substring_in_subject .or. substring_in_description)
     end associate
+    test_results = test_descriptions%run()
        
   end function
 
@@ -118,7 +116,7 @@ contains
   end subroutine
 
   function write_then_read_2D_integer() result(test_passes)
-    logical, allocatable :: test_passes(:)
+    logical test_passes
     integer i, j
     integer, parameter :: ny = 12,  nx = 6
     integer, parameter :: data_written(*,*) = reshape([((i*j, i=1,nx), j=1,ny)], [ny,nx])
@@ -131,12 +129,12 @@ contains
       call NetCDF_file%input("data", data_read)
     end associate
 
-    test_passes = [all(data_written == data_read)]
+    test_passes = all(data_written == data_read)
 
   end function
 
   function write_then_read_1D_double() result(test_passes)
-    logical, allocatable :: test_passes(:)
+    logical test_passes
     integer i
     integer, parameter :: nx = 6
     double precision, parameter :: data_written(*) = dble([(i, i=1,nx)]), tolerance = 1.E-15
@@ -149,7 +147,7 @@ contains
       call NetCDF_file%input("data", data_read)
     end associate
 
-    test_passes = [all(abs(data_written - data_read)<tolerance)]
+    test_passes = all(abs(data_written - data_read)<tolerance)
 
   end function
 
