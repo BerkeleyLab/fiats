@@ -1,16 +1,18 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
-program train_cloud_microphysics
-  !! Train a neural network to represent the simplest cloud microphysics model from
-  !! the Intermediate Complexity Atmospheric Research Model (ICAR) at
-  !! https://github.com/BerkeleyLab/icar.
 
-  !! Intrinic modules :
+# include "assert_macros.h"
+
+program train_cloud_microphysics
+  !! Train a neural network to represent a cloud microphysics model from
+  !! [ICAR](https://go.lbl.gov/icar))
+
+  !! Intrinsic modules :
   use iso_fortran_env, only : int64, real64
 
   !! External dependencies:
   use julienne_m, only : string_t, file_t, command_line_t, bin_t
-  use assert_m, only : assert, intrinsic_array_t
+  use assert_m
   use fiats_m, only : &
     neural_network_t, mini_batch_t, input_output_pair_t, tensor_t, trainable_network_t, tensor_map_t, training_configuration_t, &
     shuffle
@@ -20,16 +22,18 @@ program train_cloud_microphysics
   use NetCDF_file_m, only: NetCDF_file_t
   use NetCDF_variable_m, only: NetCDF_variable_t, tensors
   use occupancy_m, only : occupancy_t
+  use default_m, only: default_or_internal_read
+
   implicit none
 
-  character(len=*), parameter :: usage =                                                        new_line('a') // new_line('a') // &
-    'Usage: ' //                                                                                new_line('a') // new_line('a') // &
-    './build/run-fpm.sh run train-cloud-microphysics -- \'                                                    // new_line('a') // &
-    '  --base <string> --epochs <integer> \'                                                                  // new_line('a') // &
+  character(len=*), parameter :: usage =                                                          new_line('') // new_line('') // &
+    'Usage: ' //                                                                                  new_line('') // new_line('') // &
+    './build/run-fpm.sh run train-cloud-microphysics -- \'                                                     // new_line('') // &
+    '  --base <string> --epochs <integer> \'                                                                   // new_line('') // &
     '  [--start <integer>] [--end <integer>] [--stride <integer>] [--bins <integer>] [--report <integer>] [--tolerance <real>]'// &
-                                                                                                new_line('a') // new_line('a') // &
-    'where angular brackets denote user-provided values and square brackets denote optional arguments.'       // new_line('a') // &
-    'The presence of a file named "stop" halts execution gracefully.'
+                                                                                                  new_line('') // new_line('') // &
+    'where angular brackets denote user-provided values and square brackets denote optional arguments.'        // new_line('') // &
+    'The presence of a file named "stop" halts execution gracefully.'                                          // new_line('')
 
   type command_line_arguments_t 
     integer num_epochs, start_step, stride, num_bins, report_step
@@ -108,7 +112,7 @@ contains
     integer, allocatable :: end_step
     integer num_epochs, num_bins, start_step, stride, report_step
 
-    base_name = command_line%flag_value("--base") ! gfortran 13 seg faults if this is an association
+    base_name = command_line%flag_value("--base")
     epochs_string = command_line%flag_value("--epochs")
     start_string = command_line%flag_value("--start")
     end_string = command_line%flag_value("--end")
@@ -123,11 +127,11 @@ contains
 
     read(epochs_string,*) num_epochs
 
-    stride         = default_integer_or_read(1,    stride_string)
-    start_step     = default_integer_or_read(1,     start_string)
-    report_step    = default_integer_or_read(1,    report_string)
-    num_bins       = default_integer_or_read(3,      bins_string)
-    cost_tolerance = default_real_or_read(5E-8, tolerance_string)
+    stride         = default_or_internal_read(1,    stride_string)
+    start_step     = default_or_internal_read(1,     start_string)
+    report_step    = default_or_internal_read(1,    report_string)
+    num_bins       = default_or_internal_read(3,      bins_string)
+    cost_tolerance = default_or_internal_read(5E-8, tolerance_string)
 
     if (len(end_string)/=0) then
       allocate(end_step)
@@ -183,7 +187,7 @@ contains
           end do
 
           do v = 2, size(input_variable)
-            call assert(input_variable(v)%conformable_with(input_variable(1)), "train_cloud_microphysics: input variable conformance")
+            call_assert(input_variable(v)%conformable_with(input_variable(1)))
           end do
 
           print *,"- reading time"
@@ -212,13 +216,13 @@ contains
           end do
 
           do v = 1, size(output_variable)
-            call assert(output_variable(v)%conformable_with(input_variable(1)), "train_cloud_microphysics: output variable conformance")
+            call_assert(output_variable(v)%conformable_with(input_variable(1)))
           end do
 
           print *,"- reading time"
           call output_time%input("time", output_file, rank=1)
 
-          call assert(output_time%conformable_with(input_time), "train_cloud_microphysics: input/output time conformance")
+          call_assert(output_time%conformable_with(input_time))
 
         end associate output_file
       end associate output_file_name
@@ -234,7 +238,7 @@ contains
           associate(derivative_name => "d" // output_names(v)%string() // "/dt")
             print *,"- " // derivative_name
             derivative(v) = NetCDF_variable_t( (input_variable(v) - output_variable(v)) / dt, derivative_name)
-            call assert(.not. derivative(v)%any_nan(), "train_cloud_microhphysics: non NaN's")
+            call_assert(.not. derivative(v)%any_nan())
           end associate derivative_name
         end do
       end associate dt
@@ -435,31 +439,5 @@ contains
     close(plot_file%plot_unit)
 
   end subroutine read_train_write
-
-  pure function default_integer_or_read(default, string) result(set_value)
-    integer, intent(in) :: default
-    character(len=*), intent(in) :: string
-    integer set_value
-    
-    if (len(string)==0) then
-      set_value = default
-    else
-      read(string,*) set_value
-    end if
-
-  end function
-
-  pure function default_real_or_read(default, string) result(set_value)
-    real, intent(in) :: default
-    character(len=*), intent(in) :: string
-    real set_value
-    
-    if (len(string)==0) then
-      set_value = default
-    else
-      read(string,*) set_value
-    end if
-
-  end function
 
 end program train_cloud_microphysics

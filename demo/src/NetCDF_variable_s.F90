@@ -1,9 +1,13 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 submodule(NetCDF_variable_m) NetCDF_variable_s
   use ieee_arithmetic, only : ieee_is_nan
   use kind_parameters_m, only : default_real
-  use assert_m, only : assert, intrinsic_array_t
+  use assert_m
+  use default_m, only : default_or_present_value
   implicit none
 
   interface components_allocated
@@ -19,11 +23,6 @@ submodule(NetCDF_variable_m) NetCDF_variable_s
   interface upper_bounds
     module procedure default_real_upper_bounds
     module procedure double_precision_upper_bounds
-  end interface
-
-  interface default_if_not_present
-    module procedure default_integer_if_not_present
-    module procedure default_real_if_not_present
   end interface
 
 contains
@@ -142,14 +141,14 @@ contains
 
   module procedure default_real_rank
     associate(allocation_vector => components_allocated(self))
-      call assert(count(allocation_vector) == 1, "NetCDF_variable_s(default_real_rank): allocation count")
+      call_assert(count(allocation_vector) == 1)
       my_rank = findloc(allocation_vector, .true., dim=1)
     end associate
   end procedure
 
   module procedure double_precision_rank
     associate(allocation_vector => components_allocated(self))
-      call assert(count(allocation_vector) == 1, "NetCDF_variable_s(double_precision_rank): allocation count")
+      call_assert(count(allocation_vector) == 1)
       my_rank = findloc(allocation_vector, .true., dim=1)
     end associate
   end procedure
@@ -266,8 +265,8 @@ contains
 
   module procedure default_real_subtract
 
-    call assert(lhs%conformable_with(rhs), "NetCDF_variable_s(default_real_subtract): lhs%conformable_with(rhs)")
-    call assert(lhs%name_==rhs%name_, "NetCDF_variable_s(default_real_subtract): lhs%name_==rhs%name_", lhs%name_//"/="//rhs%name_)
+    call_assert(lhs%conformable_with(rhs))
+    call_assert_diagnose(lhs%name_==rhs%name_, "NetCDF_variable_s(default_real_subtract): lhs%name_==rhs%name_", lhs%name_//"/="//rhs%name_)
 
     difference%name_ = lhs%name_
 
@@ -287,8 +286,8 @@ contains
 
   module procedure double_precision_subtract
 
-    call assert(lhs%conformable_with(rhs), "NetCDF_variable_s(double_precision_subtract): lhs%conformable_with(rhs)")
-    call assert(lhs%name_ == rhs%name_, "NetCDF_variable_s(double_precision_subtract): lhs%name_==rhs%name_",lhs%name_//"/="//rhs%name_)
+    call_assert(lhs%conformable_with(rhs))
+    call_assert_diagnose(lhs%name_ == rhs%name_, "NetCDF_variable_s(double_precision_subtract): lhs%name_==rhs%name_",lhs%name_//"/="//rhs%name_)
 
     difference%name_ = lhs%name_
 
@@ -310,14 +309,14 @@ contains
 
     integer t
 
-    call assert(rhs%rank()==1, "NetCDF_variable_s(default_real_divide): rhs%rank()==1")
+    call_assert(rhs%rank()==1)
 
     associate(t_end => size(rhs%values_1D_))
 
       select case(lhs%rank())
       case(4)
 
-        call assert(size(rhs%values_1D_) == size(lhs%values_4D_,4), "NetCDF_variable_s(default_real_divide): conformable numerator/denominator")
+        call_assert_describe(size(rhs%values_1D_) == size(lhs%values_4D_,4), "NetCDF_variable_s(default_real_divide): conformable numerator/denominator")
         allocate(ratio%values_4D_, mold = lhs%values_4D_)
 
         do concurrent(t = 1:t_end)
@@ -336,14 +335,14 @@ contains
 
     integer t
 
-    call assert(rhs%rank()==1, "NetCDF_variable_s(double_precision_divide): rhs%rank()==1")
+    call_assert(rhs%rank()==1)
 
     associate(t_end => size(rhs%values_1D_))
 
       select case(lhs%rank())
       case(4)
 
-        call assert(size(rhs%values_1D_) == size(lhs%values_4D_,4), "NetCDF_variable_s(double_precision_divide): conformable numerator/denominator")
+        call_assert_describe(size(rhs%values_1D_) == size(lhs%values_4D_,4), "NetCDF_variable_s(double_precision_divide): conformable numerator/denominator")
         allocate(ratio%values_4D_, mold = lhs%values_4D_)
 
         do concurrent(t = 1:t_end)
@@ -371,7 +370,7 @@ contains
     case default
       error stop "NetCDF_variable_s(default_real_assign): unsupported rank)"
     end select
-    call assert(lhs%rank()==rhs%rank(), "NetCDF_variable_s(default_real_assign): ranks match)")
+    call_assert(lhs%rank()==rhs%rank())
   end procedure
 
   module procedure double_precision_assign
@@ -387,7 +386,7 @@ contains
     case default
       error stop "NetCDF_variable_s(double_precision_assign): unsupported rank)"
     end select
-    call assert(lhs%rank()==rhs%rank(), "NetCDF_variable_s(double_precision_assign): ranks match)")
+    call_assert(lhs%rank()==rhs%rank())
   end procedure
 
   module procedure default_real_any_nan
@@ -429,9 +428,9 @@ contains
     select case(NetCDF_variables(1)%rank())
     case(4)
 
-      t_start  = default_if_not_present(1, step_start )
-      t_stride = default_if_not_present(1, step_stride)
-      t_end    = default_if_not_present(size(NetCDF_variables(1)%values_4D_,4), step_end)
+      t_start  = default_or_present_value(1, step_start )
+      t_stride = default_or_present_value(1, step_stride)
+      t_end    = default_or_present_value(size(NetCDF_variables(1)%values_4D_,4), step_end)
 
       associate( longitudes => size(NetCDF_variables(1)%values_4D_,1) &
                 ,latitudes  => size(NetCDF_variables(1)%values_4D_,2) &
@@ -540,29 +539,5 @@ contains
       error stop 'NetCDF_variable_s(double_precision_maximum): unsupported rank'
     end select 
   end procedure
-
-  pure function default_integer_if_not_present(default_value, optional_argument) result(set_value)
-    integer, intent(in) :: default_value
-    integer, intent(in), optional :: optional_argument
-    integer set_value
-    
-    if (present(optional_argument)) then
-      set_value = optional_argument
-    else
-      set_value = default_value
-    end if
-  end function
-
-  pure function default_real_if_not_present(default_value, optional_argument) result(set_value)
-    real, intent(in) :: default_value
-    real, intent(in), optional :: optional_argument
-    real set_value
-    
-    if (present(optional_argument)) then
-      set_value = optional_argument
-    else
-      set_value = default_value
-    end if
-  end function
 
 end submodule NetCDF_variable_s

@@ -4,7 +4,7 @@ author     = "(Please see fiats/fpm.toml.)"
 maintainer = "(Please see fiats/fpm.toml.)"
 
 [dependencies]
-assert = {git = "https://github.com/sourceryinstitute/assert", tag = "1.7.0"}
+assert = {git = "https://github.com/sourceryinstitute/assert", tag = "2.0.0"}
 julienne = {git = "https://github.com/berkeleylab/julienne", tag = "1.5.3"}
 fiats = {path = "../"}
 netcdf-interfaces = {git = "https://github.com/LKedward/netcdf-interfaces.git", rev = "d2bbb71ac52b4e346b62572b1ca1620134481096"}

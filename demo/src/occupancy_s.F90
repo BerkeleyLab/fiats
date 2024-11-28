@@ -1,5 +1,10 @@
+! Copyright (c), The Regents of the University of California
+! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 submodule(occupancy_m) occupancy_s
-  use assert_m, only : assert, intrinsic_array_t
+  use assert_m
   implicit none
 
 contains
@@ -81,7 +86,7 @@ contains
       error stop "occupancy_s(vacate): unsupported rank"
     end select
 
-    call assert(self%allocated_dim()==size(dims), "occupancy_s(vacate): count(self%allocations()) == 1")
+    call_assert(self%allocated_dim()==size(dims))
   
   end procedure vacate
 
@@ -171,7 +176,7 @@ contains
 
   module procedure num_occupied
 
-      call assert(count(allocations(self))==1, "occupancy_s(allocated_dim): count(self%allocations()) == 1")
+      call_assert(count(allocations(self))==1)
 
       select case(self%allocated_dim())
       case(1)
@@ -252,7 +257,7 @@ contains
   module procedure allocated_dim
 
     associate(my_allocations => allocations(self))
-      call assert(count(my_allocations)==1, "occupancy_s(allocated_dim): count(self%allocations()) == 1")
+      call_assert(count(my_allocations)==1)
       my_dim = findloc(my_allocations, .true., dim=1)
     end associate
 

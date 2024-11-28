@@ -1,7 +1,10 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 submodule(histogram_m) histogram_s
-  use assert_m, only : assert, intrinsic_array_t
+  use assert_m
   use julienne_m, only : string_t, operator(.cat.)
   implicit none
 
@@ -73,10 +76,9 @@ contains
         block 
           integer h, b ! histogram number, bin number
 
-          call assert(num_bins > 0, "histogram_s(to_file): num_bins > 0")
-          call assert(all(histograms(1)%num_bins() == [(histograms(h)%num_bins() , h=1,size(histograms))]), &
-            "histogram_s(to_file): uniform number of bins")
-
+          call_assert(num_bins > 0)
+          call_assert_describe(all(histograms(1)%num_bins() == [(histograms(h)%num_bins() , h=1,size(histograms))]), "histogram_s(to_file): uniform number of bins")
+            
           allocate(columns(num_bins))
           do b = 1, num_bins
             columns(b) =  string_t(histograms(1)%bin_value_(b)) // &
@@ -95,7 +97,7 @@ contains
   pure function normalize(x, x_min, x_max) result(x_normalized)
     real, intent(in) :: x(:,:,:,:), x_min, x_max
     real, allocatable :: x_normalized(:,:,:,:)
-    call assert(x_min/=x_max, "histogram_m(normalize): x_min/=x_max", intrinsic_array_t([x_min, x_max]))
+    call_assert_diagnose(x_min/=x_max, "histogram_m(normalize): x_min/=x_max", intrinsic_array_t([x_min, x_max]))
     x_normalized = (x - x_min)/(x_max - x_min)
   end function
 
@@ -150,7 +152,7 @@ contains
         end associate
       end associate
       associate(binned => sum(bin_count))
-        call assert(cardinality == binned, "histogram_s(construct): lossless binning", intrinsic_array_t([cardinality, binned]))
+        call_assert_diagnose(cardinality == binned, "histogram_s(construct): lossless binning", intrinsic_array_t([cardinality, binned]))
       end associate
     end associate
 

@@ -1,6 +1,8 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
+#include "assert_macros.h"
+
 module ubounds_m
   !! This module serves only to support array bounds checking in the main program below
   implicit none
@@ -25,29 +27,29 @@ end module
 program tensor_statistics
   !! This program
   !! 1. Computes the ranges and histograms of input and output tensors saved by
-  !!    the neural-net branch of the Berkeley Lab fork of [ICAR](https://berkeleylab.github/icar).
+  !!    the neural-net branch of the Berkeley Lab fork of [ICAR](https://go.lbl.gov/icar).
   !! 2. Saves the resulting statistics to text files with space-separated columns and column labels.
 
   ! External dependencies:
   use julienne_m, only : command_line_t, file_t, string_t
-  use assert_m, only : assert, intrinsic_array_t
+  use assert_m
   use ubounds_m, only : ubounds_t
   use ieee_arithmetic, only : ieee_is_nan
   use iso_fortran_env, only : int64, real64
     
   ! Internal dependencies:
   use NetCDF_file_m, only: NetCDF_file_t
-  use histogram_m, only : histogram_t, to_file
+  use histogram_m, only: histogram_t, to_file
   implicit none
 
-  character(len=*), parameter :: usage = &
-    new_line('a') // new_line('a') // &
-    'Usage: ' // new_line('a') // new_line('a') // &
-    './build/run-fpm.sh run tensor-statistics -- \' // new_line('a') // &
-    '  --base <string> --bins <integer> \' // new_line('a') // &
+  character(len=*), parameter :: usage =    new_line('a') // new_line('a') // & 
+    'Usage: '                            // new_line('a') // new_line('a') // &
+    './build/run-fpm.sh run tensor-statistics -- \'       // new_line('a') // &
+    '  --base <string> --bins <integer> \'                // new_line('a') // &
     '  [--raw] [--start <integer>] [--end <integer>] [--stride <integer>]' // &
-    new_line('a') // new_line('a') // &
-    'where angular brackets denote user-provided values and square brackets denote optional arguments.' // new_line('a')
+                                            new_line('a') // new_line('a') // &
+    'where angular brackets denote user-provided values and square brackets denote optional arguments.' &
+                                                          // new_line('a')
 
   integer(int64) t_start, t_finish, clock_rate
   integer num_bins, start_step, stride
@@ -85,7 +87,7 @@ contains
     type(command_line_t) command_line
     character(len=:), allocatable :: stride_string, bins_string, start_string, end_string
 
-    base_name = command_line%flag_value("--base") ! gfortran 13 seg faults if this is an association
+    base_name = command_line%flag_value("--base")
     bins_string = command_line%flag_value("--bins")
     start_string = command_line%flag_value("--start")
     end_string = command_line%flag_value("--end")
@@ -204,9 +206,9 @@ contains
         lbounds = [lbounds, lbound(qv_out), lbound(qc_out), lbound(qr_out), lbound(qs_out)]
         ubounds = [ubounds, ubounds_t(ubound(qv_out)), ubounds_t(ubound(qc_out)), &
           ubounds_t(ubound(qr_out)), ubounds_t(ubound(qs_out))]
-        call assert(all(lbounds == 1), "main: default input/output lower bounds", intrinsic_array_t(lbounds))
-        call assert(all(ubounds == ubounds(1)), "main: matching input/output upper bounds")
-        call assert(all(abs(time_in(2:t_end) - time_out(1:t_end-1))<tolerance), "main: matching time stamps")
+        call_assert_diagnose(all(lbounds == 1), "main: default input/output lower bounds", intrinsic_array_t(lbounds))
+        call_assert_describe(all(ubounds == ubounds(1)), "main: matching input/output upper bounds")
+        call_assert_describe(all(abs(time_in(2:t_end) - time_out(1:t_end-1))<tolerance), "main: matching time stamps")
       end associate
 
       print *,"Calculating time derivatives"
@@ -227,11 +229,11 @@ contains
         end do
       end associate
 
-      call assert(.not. any(ieee_is_nan(dpt_dt)), ".not. any(ieee_is_nan(dpt_dt)")
-      call assert(.not. any(ieee_is_nan(dqv_dt)), ".not. any(ieee_is_nan(dqv_dt)")
-      call assert(.not. any(ieee_is_nan(dqc_dt)), ".not. any(ieee_is_nan(dqc_dt)")
-      call assert(.not. any(ieee_is_nan(dqr_dt)), ".not. any(ieee_is_nan(dqr_dt)")
-      call assert(.not. any(ieee_is_nan(dqs_dt)), ".not. any(ieee_is_nan(dqs_dt)")
+      call_assert(.not. any(ieee_is_nan(dpt_dt)))
+      call_assert(.not. any(ieee_is_nan(dqv_dt)))
+      call_assert(.not. any(ieee_is_nan(dqc_dt)))
+      call_assert(.not. any(ieee_is_nan(dqr_dt)))
+      call_assert(.not. any(ieee_is_nan(dqs_dt)))
 
       print *,"Calculating output tensor histograms."
       call system_clock(t_histo_start, clock_rate)
