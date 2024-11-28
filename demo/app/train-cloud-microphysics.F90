@@ -19,7 +19,7 @@ program train_cloud_microphysics
   use NetCDF_file_m, only: NetCDF_file_t
   use NetCDF_variable_m, only: NetCDF_variable_t, tensors
   use occupancy_m, only : occupancy_t
-  use default_value_or_internal_read_m, only : default_value_or_internal_read
+  use default_m, only: default_or_internal_read
 
   implicit none
 
@@ -124,11 +124,11 @@ contains
 
     read(epochs_string,*) num_epochs
 
-    stride         = default_value_or_internal_read(1,    stride_string)
-    start_step     = default_value_or_internal_read(1,     start_string)
-    report_step    = default_value_or_internal_read(1,    report_string)
-    num_bins       = default_value_or_internal_read(3,      bins_string)
-    cost_tolerance = default_value_or_internal_read(5E-8, tolerance_string)
+    stride         = default_or_internal_read(1,    stride_string)
+    start_step     = default_or_internal_read(1,     start_string)
+    report_step    = default_or_internal_read(1,    report_string)
+    num_bins       = default_or_internal_read(3,      bins_string)
+    cost_tolerance = default_or_internal_read(5E-8, tolerance_string)
 
     if (len(end_string)/=0) then
       allocate(end_step)
