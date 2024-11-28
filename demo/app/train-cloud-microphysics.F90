@@ -1,5 +1,8 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+# include "assert_macros.h"
+
 program train_cloud_microphysics
   !! Train a neural network to represent a cloud microphysics model from
   !! [ICAR](https://go.lbl.gov/icar))
@@ -9,7 +12,7 @@ program train_cloud_microphysics
 
   !! External dependencies:
   use julienne_m, only : string_t, file_t, command_line_t, bin_t
-  use assert_m, only : assert, intrinsic_array_t
+  use assert_m
   use fiats_m, only : &
     neural_network_t, mini_batch_t, input_output_pair_t, tensor_t, trainable_network_t, tensor_map_t, training_configuration_t, &
     shuffle
@@ -184,7 +187,7 @@ contains
           end do
 
           do v = 2, size(input_variable)
-            call assert(input_variable(v)%conformable_with(input_variable(1)), "train_cloud_microphysics: input variable conformance")
+            call_assert(input_variable(v)%conformable_with(input_variable(1)))
           end do
 
           print *,"- reading time"
@@ -213,13 +216,13 @@ contains
           end do
 
           do v = 1, size(output_variable)
-            call assert(output_variable(v)%conformable_with(input_variable(1)), "train_cloud_microphysics: output variable conformance")
+            call_assert(output_variable(v)%conformable_with(input_variable(1)))
           end do
 
           print *,"- reading time"
           call output_time%input("time", output_file, rank=1)
 
-          call assert(output_time%conformable_with(input_time), "train_cloud_microphysics: input/output time conformance")
+          call_assert(output_time%conformable_with(input_time))
 
         end associate output_file
       end associate output_file_name
@@ -235,7 +238,7 @@ contains
           associate(derivative_name => "d" // output_names(v)%string() // "/dt")
             print *,"- " // derivative_name
             derivative(v) = NetCDF_variable_t( (input_variable(v) - output_variable(v)) / dt, derivative_name)
-            call assert(.not. derivative(v)%any_nan(), "train_cloud_microhphysics: non NaN's")
+            call_assert(.not. derivative(v)%any_nan())
           end associate derivative_name
         end do
       end associate dt
