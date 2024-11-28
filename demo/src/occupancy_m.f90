@@ -1,3 +1,5 @@
+! Copyright (c), The Regents of the University of California
+! Terms of use are as specified in LICENSE.txt
 module occupancy_m
   use iso_fortran_env, only : int64
   implicit none

@@ -181,29 +181,26 @@ contains
         end associate
       rank(2)
         associate(array_shape => get_shape(ncid, varname))
-          call assert(size(array_shape)==rank(values), "netCDF_file_s(input_real): size(array_shape)==rank(values)", &
-            intrinsic_array_t([size(array_shape),rank(values)]))
+          call_assert_diagnose(size(array_shape)==rank(values), "netCDF_file_s(input_real): size(array_shape)==rank(values)", intrinsic_array_t([size(array_shape),rank(values)]))
           allocate(values(array_shape(1), array_shape(2)))
           associate( nf_status => nf90_get_var(ncid, varid, values)) ! read data
-            call assert(nf_status == nf90_noerr, "nf90_get_var(ncid, varid, array)", trim(nf90_strerror(nf_status)))
+            call_assert_diagnose(nf_status == nf90_noerr, "nf90_get_var(ncid, varid, array)", trim(nf90_strerror(nf_status)))
           end associate
         end associate
       rank(3)
         associate(array_shape => get_shape(ncid, varname))
-          call assert(size(array_shape)==rank(values), "netCDF_file_s(input_real): size(array_shape)==rank(values)", &
-            intrinsic_array_t([size(array_shape),rank(values)]))
+          call_assert_diagnose(size(array_shape)==rank(values), "netCDF_file_s(input_real): size(array_shape)==rank(values)", intrinsic_array_t([size(array_shape),rank(values)]))
           allocate(values(array_shape(1), array_shape(2), array_shape(3)))
           associate( nf_status => nf90_get_var(ncid, varid, values)) ! read data
-            call assert(nf_status == nf90_noerr, "nf90_get_var(ncid, varid, array)", trim(nf90_strerror(nf_status)))
+            call_assert_diagnose(nf_status == nf90_noerr, "nf90_get_var(ncid, varid, array)", trim(nf90_strerror(nf_status)))
           end associate
         end associate
       rank(4)
         associate(array_shape => get_shape(ncid, varname))
-          call assert(size(array_shape)==rank(values), "netCDF_file_s(input_real): size(array_shape)==rank(values)", &
-            intrinsic_array_t([size(array_shape),rank(values)]))
+          call_assert_diagnose(size(array_shape)==rank(values), "netCDF_file_s(input_real): size(array_shape)==rank(values)", intrinsic_array_t([size(array_shape),rank(values)]))
           allocate(values(array_shape(1), array_shape(2), array_shape(3), array_shape(4)))
           associate( nf_status => nf90_get_var(ncid, varid, values)) ! read data
-            call assert(nf_status == nf90_noerr, "nf90_get_var(ncid, varid, array)", trim(nf90_strerror(nf_status)))
+            call_assert_diagnose(nf_status == nf90_noerr, "nf90_get_var(ncid, varid, array)", trim(nf90_strerror(nf_status)))
           end associate
         end associate
       rank default

@@ -1,3 +1,5 @@
+! Copyright (c), The Regents of the University of California
+! Terms of use are as specified in LICENSE.txt
 module default_m
   !! Define functions to choose between default values and alternative values
   implicit none     
