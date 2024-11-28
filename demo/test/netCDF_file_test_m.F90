@@ -1,10 +1,13 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "assert_macros.h"
+
 module NetCDF_file_test_m
   !! Define asymmetric tests for the NetCDF file interface
 
   ! External dependencies
-  use assert_m, only : assert
+  use assert_m
   use julienne_m, only : string_t, test_t, test_result_t
   use netcdf, only : &
      nf90_create, nf90_def_dim, nf90_def_var, nf90_enddef, nf90_put_var, nf90_inquire_dimension, & ! functions
@@ -53,7 +56,7 @@ contains
           write_then_read_1D_double() &
         ] & 
     )
-      call assert(size(descriptions) == size(outcomes),"asymmetric_engine_test_m(results): size(descriptions) == size(outcomes)")
+      call_assert(size(descriptions) == size(outcomes))
       test_results = test_result_t(descriptions, outcomes)
     end associate
        
@@ -66,26 +69,25 @@ contains
     integer ncid, varid, x_dimid, y_dimid
 
     associate(nf_status => nf90_create(file_name, nf90_clobber, ncid)) ! create or ovewrite file
-      call assert(nf_status == nf90_noerr, "nf90_create(file_name, nf90_clobber, ncid) succeeds",trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr, "nf90_create(file_name, nf90_clobber, ncid) succeeds",trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_dim(ncid, "x", size(data_out,2), x_dimid)) ! define x dimension & get its ID
-      call assert(nf_status == nf90_noerr,'nf90_def_dim(ncid,"x",size(data_out,2),x_dimid) succeeds',trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr,'nf90_def_dim(ncid,"x",size(data_out,2),x_dimid) succeeds',trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_dim(ncid, "y", size(data_out,1), y_dimid)) ! define y dimension & get its ID
-      call assert(nf_status==nf90_noerr, 'nf90_def_dim(ncid,"y",size(data_out,2),y_dimid) succeeds', trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status==nf90_noerr, 'nf90_def_dim(ncid,"y",size(data_out,2),y_dimid) succeeds', trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_var(ncid, "data", nf90_int, [y_dimid, x_dimid], varid))!define integer 'data' variable & get ID
-      call assert(nf_status == nf90_noerr, 'nf90_def_var(ncid,"data",nf90_int,[y_dimid,x_dimid],varid) succeds', &
-        trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr, 'nf90_def_var(ncid,"data",nf90_int,[y_dimid,x_dimid],varid) succeds', trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_enddef(ncid)) ! exit define mode: tell NetCDF we are done defining metadata
-      call assert(nf_status == nf90_noerr, 'nff90_noerr == nf90_enddef(ncid)', trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_enddef(ncid)', trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_put_var(ncid, varid, data_out)) ! write all data to file
-      call assert(nf_status == nf90_noerr, 'nff90_noerr == nf90_put_var(ncid, varid, data_out)', trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_put_var(ncid, varid, data_out)', trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_close(ncid)) ! close file to free associated NetCDF resources and flush buffers
-      call assert(nf_status == nf90_noerr, 'nff90_noerr == nf90_close(ncid)', trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_close(ncid)', trim(nf90_strerror(nf_status)))
     end associate
   end subroutine
 
@@ -96,23 +98,22 @@ contains
     integer ncid, varid, x_dimid, y_dimid
 
     associate(nf_status => nf90_create(file_name, nf90_clobber, ncid)) ! create or ovewrite file
-      call assert(nf_status == nf90_noerr, "nf90_create(file_name, nf90_clobber, ncid) succeeds",trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr, "nf90_create(file_name, nf90_clobber, ncid) succeeds",trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_dim(ncid, "x", size(data_out,1), x_dimid)) ! define x dimension & get its ID
-      call assert(nf_status == nf90_noerr,'nf90_def_dim(ncid,"x",size(data_out,2),x_dimid) succeeds',trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr,'nf90_def_dim(ncid,"x",size(data_out,2),x_dimid) succeeds',trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_var(ncid, "data", nf90_int, [x_dimid], varid))!define integer 'data' variable & get ID
-      call assert(nf_status == nf90_noerr, 'nf90_def_var(ncid,"data",nf90_int,[y_dimid,x_dimid],varid) succeds', &
-        trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr, 'nf90_def_var(ncid,"data",nf90_int,[y_dimid,x_dimid],varid) succeds', trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_enddef(ncid)) ! exit define mode: tell NetCDF we are done defining metadata
-      call assert(nf_status == nf90_noerr, 'nff90_noerr == nf90_enddef(ncid)', trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_enddef(ncid)', trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_put_var(ncid, varid, data_out)) ! write all data to file
-      call assert(nf_status == nf90_noerr, 'nff90_noerr == nf90_put_var(ncid, varid, data_out)', trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_put_var(ncid, varid, data_out)', trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_close(ncid)) ! close file to free associated NetCDF resources and flush buffers
-      call assert(nf_status == nf90_noerr, 'nff90_noerr == nf90_close(ncid)', trim(nf90_strerror(nf_status)))
+      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_close(ncid)', trim(nf90_strerror(nf_status)))
     end associate
   end subroutine
 
