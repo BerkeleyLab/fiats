@@ -14,8 +14,8 @@ module trainable_network_m
   private
   public :: trainable_network_t 
 
-  type, extends(neural_network_t) ::  trainable_network_t(k)
-    integer, kind :: k = default_real 
+  type, extends(neural_network_t) ::  trainable_network_t(m)
+    integer, kind :: m = default_real
     private
     type(workspace_t), private :: workspace_
   contains

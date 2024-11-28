@@ -45,13 +45,13 @@ contains
   end procedure
 
   module procedure default_real_from_file
-#if defined __INTEL_COMPILER || _CRAYFTN
+#if defined _CRAYFTN
     type(string_t), allocatable :: lines(:)
 #endif
 
     training_configuration%file_t = file_object
 
-#if defined __INTEL_COMPILER || _CRAYFTN
+#if defined _CRAYFTN
     lines = training_configuration%file_t%lines()
 #else
     associate(lines => training_configuration%file_t%lines())
@@ -61,20 +61,20 @@ contains
       training_configuration%network_configuration_= network_configuration_t(lines)
       training_configuration%tensor_names_ = tensor_names_t(lines)
 
-#if ! defined __INTEL_COMPILER || _CRAYFTN
+#if ! defined _CRAYFTN
     end associate
 #endif
 
   end procedure
 
   module procedure double_precision_from_file
-#if defined __INTEL_COMPILER || _CRAYFTN
+#if defined _CRAYFTN
     type(double_precision_string_t), allocatable :: lines(:)
 #endif
 
     training_configuration%double_precision_file_t = file_object
 
-#if defined __INTEL_COMPILER || _CRAYFTN
+#if defined _CRAYFTN
     lines = training_configuration%double_precision_file_t%double_precision_lines()
 #else
     associate(lines => training_configuration%double_precision_file_t%double_precision_lines())
@@ -84,7 +84,7 @@ contains
       training_configuration%network_configuration_= network_configuration_t(lines)
       training_configuration%tensor_names_ = tensor_names_t(lines)
 
-#if ! defined __INTEL_COMPILER || _CRAYFTN
+#if ! defined _CRAYFTN
     end associate
 #endif
   end procedure
@@ -152,7 +152,7 @@ contains
   end procedure
 
   module procedure default_real_activation
-#if defined __INTEL_COMPILER || _CRAYFTN
+#if defined _CRAYFTN
     type(string_t) :: activation_name
     activation_name = self%network_configuration_%activation_name()
 #else
@@ -170,13 +170,13 @@ contains
         case default
           error stop 'activation_factory_s(factory): unrecognized activation name "' // activation_name%string() // '"' 
       end select
-#if ! (defined __INTEL_COMPILER || _CRAYFTN)
+#if ! (defined _CRAYFTN)
     end associate
 #endif
   end procedure
 
   module procedure double_precision_activation
-#if defined __INTEL_COMPILER || _CRAYFTN
+#if defined _CRAYFTN
     type(string_t) :: activation_name
     activation_name = self%network_configuration_%activation_name()
 #else
@@ -194,7 +194,7 @@ contains
         case default
           error stop 'activation_factory_s(factory): unrecognized activation name "' // activation_name%string() // '"' 
       end select
-#if ! (defined __INTEL_COMPILER || _CRAYFTN)
+#if ! (defined _CRAYFTN)
     end associate
 #endif
   end procedure
