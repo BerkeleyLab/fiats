@@ -1,7 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-# include "assert_macros.h"
+#include "assert_macros.h"
 
 program train_cloud_microphysics
   !! Train a neural network to represent a cloud microphysics model from

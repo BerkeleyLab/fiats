@@ -53,6 +53,10 @@ if [ $(uname) = "Darwin" ]; then
       echo "$FPM_CC appears to be an Apple compiler.  Please set FPM_CC to the location of LLVM clang."
       exit 1
     fi
+    if [[ -z ${LC_RPATH:-} ]]; then
+      printf "Please set LC_RPATH=\$DYLD_LIBRARY_PATH path and restart this script.\n\n"
+      exit 1
+    fi
   else
     cat <<'EOF'
 
@@ -72,11 +76,16 @@ elif [ $(uname) = "Linux" ]; then
   fi
   if [[ -z ${NETCDFF_LIB_PATH:-} ]]; then
     printf "Please set NETCDFF_LIB_PATH to the NetCDF-Fortran library path and restart this script.\n\n"
-     exit 1
+    exit 1
+  fi
+  if [[ -z ${LC_RPATH:-} ]]; then
+    printf "Please set LC_RPATH=\$LD_LIBRARY_PATH path and restart this script.\n\n"
+    exit 1
   fi
 fi
 
-FPM_LD_FLAG=" -L$NETCDF_LIB_PATH -L$HDF5_LIB_PATH -L$NETCDFF_LIB_PATH"
+
+FPM_LD_FLAG=" -L$NETCDF_LIB_PATH -L$HDF5_LIB_PATH -L$NETCDFF_LIB_PATH -rpath $LC_RPATH"
 
 PREFIX=`realpath $PREFIX`
 
