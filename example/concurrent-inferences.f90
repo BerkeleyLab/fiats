@@ -15,23 +15,78 @@ program concurrent_inferences
   type(neural_network_t) neural_network
   type(tensor_t), allocatable :: inputs(:,:,:), outputs(:,:,:)
   integer, parameter :: lat=263, lev=15, lon=317 ! latitudes, levels (elevations), longitudes
+  integer i, num_trials
 
   network_file_name = string_t(command_line%flag_value("--network"))
 
   if (len(network_file_name%string())==0) then
     error stop new_line('a') // new_line('a') // &
-      'Usage: fpm run --example concurrent-inferences --profile release --flag "-fopenmp" -- --network "<file-name>"'
+      'Usage: ' // &
+      '  fpm run --example concurrent-inferences --profile release --flag "-fopenmp" \' // &
+      '    [--do-concurrent] [--openmp] [--elemental] [--double-precision] [--trials <integer>]\' // &
+      '    -- --network "<file-name>"'
   end if
 
   inputs = random_inputs()
   allocate(outputs, mold=inputs)
 
-  call do_concurrent_inference
-  call openmp_inference
-  call elemental_inference
-  call double_precision_do_concurrent_inference
+
+  associate( &
+    run_do_concurrent    => command_line%argument_present(["--do-concurrent"   ]), &
+    run_openmp           => command_line%argument_present(["--opennmp"         ]), &
+    run_elemental        => command_line%argument_present(["--elemental"       ]), &
+    run_double_precision => command_line%argument_present(["--double-precision"])  &
+  )
+    num_trials = trials()
+
+    block
+      real(real64) t_dc(num_trials), t_omp(num_trials), t_elem(num_trials), t_dp_dc(num_trials)
+
+      associate(run_all => merge(.false., .true., any([run_do_concurrent,run_openmp,run_elemental,run_double_precision])))
+
+        do i = 1, num_trials
+          if (run_all .or. run_do_concurrent   ) t_dc(i)    = do_concurrent_time()
+          if (run_all .or. run_openmp          ) t_omp(i)   = openmp_time()
+          if (run_all .or. run_elemental       ) t_elem(i)  = elemental_time()
+          if (run_all .or. run_double_precision) t_dp_dc(i) = double_precision_do_concurrent_time()
+        end do
+
+        print *,"variable          mean           stdev"
+
+        if (run_all .or. run_do_concurrent   ) call print_stats("t_dc    ", t_dc)
+        if (run_all .or. run_openmp          ) call print_stats("t_omp   ", t_omp)
+        if (run_all .or. run_elemental       ) call print_stats("t_elem  ", t_elem)
+        if (run_all .or. run_double_precision) call print_stats("t_dp_dc ", t_dp_dc)
+
+      end associate
+    end block
+  end associate
 
 contains
+
+  subroutine print_stats(label, x)
+    character(len=*), intent(in) :: label
+    real(real64), intent(in) :: x(:)
+    associate(n => size(x))
+      associate(mean => sum(x)/real(n))
+        associate(stdev => sum((x-mean)**2)/real(n))
+          print *, label, mean, stdev
+        end associate
+      end associate
+    end associate
+  end subroutine
+
+  integer function trials()
+
+    associate(trials_string => command_line%flag_value("--trials"))
+      if (len(trials_string)==0) then
+        trials = 1
+      else
+        read(trials_string,*) trials 
+      end if
+    end associate
+
+  end function
 
   function random_inputs()
     real, allocatable :: input_components(:,:,:,:)
@@ -51,7 +106,7 @@ contains
     end do
   end function
 
-  subroutine do_concurrent_inference
+  real(real64) function do_concurrent_time()
     integer(int64) t_start, t_finish, clock_rate
     integer i, k, j
 
@@ -61,10 +116,11 @@ contains
       outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
     end do
     call system_clock(t_finish)
-    print *,"Elapsed system clock during inference: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
-  end subroutine
+    do_concurrent_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
+    print *,"Elapsed system clock during `do concurrent` inference: ", do_concurrent_time
+  end function
 
-  subroutine openmp_inference
+  real(real64) function openmp_time()
     integer(int64) t_start, t_finish, clock_rate
     integer i, k, j
 
@@ -79,10 +135,11 @@ contains
       end do
     end do
     call system_clock(t_finish)
-    print *,"Elapsed system clock during inference: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
-  end subroutine
+    openmp_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
+    print *,"Elapsed system clock during `OpenMP` inference: ", openmp_time
+  end function
 
-  subroutine elemental_inference
+  real(real64) function elemental_time
     integer(int64) t_start, t_finish, clock_rate
 
     print *,"Performing elemental inferences inside `omp workshare`"
@@ -91,10 +148,11 @@ contains
     outputs = neural_network%infer(inputs)
     !$omp end workshare
     call system_clock(t_finish)
-    print *,"Elapsed system clock during inference: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
-  end subroutine
+    elemental_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
+    print *,"Elapsed system clock during `elemental` inference: ", elemental_time
+  end function
 
-  subroutine double_precision_do_concurrent_inference
+  real(real64) function double_precision_do_concurrent_time()
     integer(int64) t_start, t_finish, clock_rate
     integer i, k, j
     type(neural_network_t(double_precision)) neural_network
@@ -120,7 +178,8 @@ contains
       outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
     end do
     call system_clock(t_finish)
-    print *,"Elapsed system clock during inference: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
-  end subroutine
+    double_precision_do_concurrent_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
+    print *,"Elapsed system clock during double precision concurrent inference: ", double_precision_do_concurrent_time
+  end function
 
 end program
