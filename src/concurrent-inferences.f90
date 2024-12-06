@@ -12,101 +12,174 @@ program concurrent_inferences
 
   type(string_t) network_file_name
   type(command_line_t) command_line
+  type(neural_network_t) neural_network
+  type(tensor_t), allocatable :: inputs(:,:,:), outputs(:,:,:)
+  integer, parameter :: lat=263, lev=15, lon=317 ! latitudes, levels (elevations), longitudes
+  integer i, num_trials
 
   network_file_name = string_t(command_line%flag_value("--network"))
 
   if (len(network_file_name%string())==0) then
     error stop new_line('a') // new_line('a') // &
-      'Usage: fpm run --example concurrent-inferences --profile release --flag "-fopenmp" -- --network "<file-name>"'
+      'Usage: ' // &
+      '  fpm run --example concurrent-inferences --profile release --flag "-fopenmp" \' // &
+      '    [--do-concurrent] [--openmp] [--elemental] [--double-precision] [--trials <integer>]\' // &
+      '    -- --network "<file-name>"'
   end if
 
-  block
-    integer, parameter :: lat=263, lon=317, lev=15 ! latitudes, longitudes, levels (elevations)
-    integer i, j, k
+  inputs = random_inputs()
+  allocate(outputs, mold=inputs)
 
-    single_precision_inference: &
+
+  associate( &
+    run_do_concurrent    => command_line%argument_present(["--do-concurrent"   ]), &
+    run_openmp           => command_line%argument_present(["--opennmp"         ]), &
+    run_elemental        => command_line%argument_present(["--elemental"       ]), &
+    run_double_precision => command_line%argument_present(["--double-precision"])  &
+  )
+    num_trials = trials()
+
     block
-      integer(int64) t_start, t_finish, clock_rate
+      real(real64) t_dc(num_trials), t_omp(num_trials), t_elem(num_trials), t_dp_dc(num_trials)
 
-      type(neural_network_t) neural_network
-      type(tensor_t), allocatable :: inputs(:,:,:), outputs(:,:,:)
-      real, allocatable :: input_components(:,:,:,:)
+      associate(run_all => merge(.false., .true., any([run_do_concurrent,run_openmp,run_elemental,run_double_precision])))
 
-      print *, "Constructing a new neural_network_t object from the file " // network_file_name%string()
-      neural_network = neural_network_t(file_t(network_file_name))
+        do i = 1, num_trials
+          if (run_all .or. run_do_concurrent   ) t_dc(i)    = do_concurrent_time()
+          if (run_all .or. run_openmp          ) t_omp(i)   = openmp_time()
+          if (run_all .or. run_elemental       ) t_elem(i)  = elemental_time()
+          if (run_all .or. run_double_precision) t_dp_dc(i) = double_precision_do_concurrent_time()
+        end do
 
-      print *,"Defining an array of tensor_t input objects with random normalized components"
-      allocate(outputs(lat,lev,lon))
-      allocate( inputs(lat,lev,lon))
-      allocate(input_components(lat,lev,lon,neural_network%num_inputs()))
-      call random_number(input_components)
+        print *,"variable          mean           stdev"
 
-      do concurrent(i=1:lat, k=1:lev, j=1:lon)
-        inputs(i,k,j) = tensor_t(input_components(i,k,j,:))
-      end do
+        if (run_all .or. run_do_concurrent   ) call print_stats("t_dc    ", t_dc)
+        if (run_all .or. run_openmp          ) call print_stats("t_omp   ", t_omp)
+        if (run_all .or. run_elemental       ) call print_stats("t_elem  ", t_elem)
+        if (run_all .or. run_double_precision) call print_stats("t_dp_dc ", t_dp_dc)
 
-      print *,"Performing",lat*lev*lon," inferences inside `do concurrent`."
-      call system_clock(t_start, clock_rate)
-      do concurrent(i=1:lat, k=1:lev, j=1:lon)
-        outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
-      end do
-      call system_clock(t_finish)
-      print *,"Elapsed system clock: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
+      end associate
+    end block
+  end associate
 
-      print *,"Performing",lat*lev*lon," inferences inside `omp parallel do`."
-      call system_clock(t_start, clock_rate)
-      !$omp parallel do default(none) shared(neural_network,inputs,outputs) collapse(3)
-      do j=1,lon
-        do k=1,lev
-          do i=1,lat
-            outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
-          end do
+contains
+
+  subroutine print_stats(label, x)
+    character(len=*), intent(in) :: label
+    real(real64), intent(in) :: x(:)
+    associate(n => size(x))
+      associate(mean => sum(x)/real(n))
+        associate(stdev => sum((x-mean)**2)/real(n))
+          print *, label, mean, stdev
+        end associate
+      end associate
+    end associate
+  end subroutine
+
+  integer function trials()
+
+    associate(trials_string => command_line%flag_value("--trials"))
+      if (len(trials_string)==0) then
+        trials = 1
+      else
+        read(trials_string,*) trials 
+      end if
+    end associate
+
+  end function
+
+  function random_inputs()
+    real, allocatable :: input_components(:,:,:,:)
+    type(tensor_t), allocatable :: random_inputs(:,:,:)
+    integer i, k, j
+
+    print *, "Constructing a new neural_network_t object from the file " // network_file_name%string()
+    neural_network = neural_network_t(file_t(network_file_name))
+
+    print *,"Defining an array of tensor_t input objects with random normalized components"
+    allocate(random_inputs(lat,lev,lon))
+    allocate(input_components(lat,lev,lon,neural_network%num_inputs()))
+    call random_number(input_components)
+
+    do concurrent(i=1:lat, k=1:lev, j=1:lon)
+      random_inputs(i,k,j) = tensor_t(input_components(i,k,j,:))
+    end do
+  end function
+
+  real(real64) function do_concurrent_time()
+    integer(int64) t_start, t_finish, clock_rate
+    integer i, k, j
+
+    print *,"Performing",lat*lev*lon," inferences inside `do concurrent`."
+    call system_clock(t_start, clock_rate)
+    do concurrent(i=1:lat, k=1:lev, j=1:lon)
+      outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
+    end do
+    call system_clock(t_finish)
+    do_concurrent_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
+    print *,"Elapsed system clock during `do concurrent` inference: ", do_concurrent_time
+  end function
+
+  real(real64) function openmp_time()
+    integer(int64) t_start, t_finish, clock_rate
+    integer i, k, j
+
+    print *,"Performing",lat*lev*lon," inferences inside `omp parallel do`."
+    call system_clock(t_start, clock_rate)
+    !$omp parallel do default(none) shared(neural_network,inputs,outputs) collapse(3)
+    do j=1,lon
+      do k=1,lev
+        do i=1,lat
+          outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
         end do
       end do
-      call system_clock(t_finish)
-      print *,"Elapsed system clock: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
+    end do
+    call system_clock(t_finish)
+    openmp_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
+    print *,"Elapsed system clock during `OpenMP` inference: ", openmp_time
+  end function
 
-      print *,"Performing elemental inferences inside `omp workshare`"
-      call system_clock(t_start, clock_rate)
-      !$omp workshare
-      outputs = neural_network%infer(inputs)
-      !$omp end workshare
-      call system_clock(t_finish)
-      print *,"Elapsed system clock: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
+  real(real64) function elemental_time
+    integer(int64) t_start, t_finish, clock_rate
 
-    end block single_precision_inference
+    print *,"Performing elemental inferences inside `omp workshare`"
+    call system_clock(t_start, clock_rate)
+    !$omp workshare
+    outputs = neural_network%infer(inputs)
+    !$omp end workshare
+    call system_clock(t_finish)
+    elemental_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
+    print *,"Elapsed system clock during `elemental` inference: ", elemental_time
+  end function
 
-    double_precision_inference: &
-    block
-      integer(int64) t_start, t_finish, clock_rate
+  real(real64) function double_precision_do_concurrent_time()
+    integer(int64) t_start, t_finish, clock_rate
+    integer i, k, j
+    type(neural_network_t(double_precision)) neural_network
+    type(tensor_t(double_precision)), allocatable :: inputs(:,:,:), outputs(:,:,:)
+    double precision, allocatable :: input_components(:,:,:,:)
 
-      type(neural_network_t(double_precision)) neural_network
-      type(tensor_t(double_precision)), allocatable :: inputs(:,:,:), outputs(:,:,:)
-      double precision, allocatable :: input_components(:,:,:,:)
+    print *, "Constructing a new neural_network_t object from the file " // network_file_name%string()
+    neural_network = neural_network_t(double_precision_file_t(network_file_name))
 
-      print *, "Constructing a new neural_network_t object from the file " // network_file_name%string()
-      neural_network = neural_network_t(double_precision_file_t(network_file_name))
+    print *,"Defining an array of tensor_t input objects with random normalized components"
+    allocate(outputs(lat,lev,lon))
+    allocate( inputs(lat,lev,lon))
+    allocate(input_components(lat,lev,lon,neural_network%num_inputs()))
+    call random_number(input_components)
 
-      print *,"Defining an array of tensor_t input objects with random normalized components"
-      allocate(outputs(lat,lev,lon))
-      allocate( inputs(lat,lev,lon))
-      allocate(input_components(lat,lev,lon,neural_network%num_inputs()))
-      call random_number(input_components)
+    do concurrent(i=1:lat, k=1:lev, j=1:lon)
+      inputs(i,k,j) = tensor_t(input_components(i,k,j,:))
+    end do
 
-      do concurrent(i=1:lat, k=1:lev, j=1:lon)
-        inputs(i,k,j) = tensor_t(input_components(i,k,j,:))
-      end do
-
-      print *,"Performing double-precision concurrent inference"
-      call system_clock(t_start, clock_rate)
-      do concurrent(i=1:lat, k=1:lev, j=1:lon)
-        outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
-      end do
-      call system_clock(t_finish)
-      print *,"Double-precision concurrent inference time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
-
-    end block double_precision_inference
-
-  end block
+    print *,"Performing double-precision inference inside `do concurrent`"
+    call system_clock(t_start, clock_rate)
+    do concurrent(i=1:lat, k=1:lev, j=1:lon)
+      outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
+    end do
+    call system_clock(t_finish)
+    double_precision_do_concurrent_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
+    print *,"Elapsed system clock during double precision concurrent inference: ", double_precision_do_concurrent_time
+  end function
 
 end program
