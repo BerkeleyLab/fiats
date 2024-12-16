@@ -1,5 +1,0 @@
-rm             workspace_s.F90
-rm                 fiats_m.f90
-rm                 layer_s.F90
-rm        neural_network_s.F90
-rm     trainable_network_s.f90
