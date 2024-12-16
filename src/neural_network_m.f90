@@ -5,7 +5,7 @@ module kind_parameters_m
 end module kind_parameters_m
 
 module double_precision_file_m
-  use julienne_m, only : file_t, string_t
+  use julienne_file_m, only : file_t
   implicit none
   type, extends(file_t) :: double_precision_file_t
   end type
