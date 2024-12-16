@@ -1,9 +1,7 @@
 module neural_network_m
   use double_precision_file_m, only : double_precision_file_t
   use kind_parameters_m, only : default_real, double_precision
-  use julienne_m, only : file_t, string_t
   use metadata_m, only : metadata_t
-  use tensor_map_m, only : tensor_map_t
   implicit none
 
   private
@@ -11,7 +9,6 @@ module neural_network_m
 
   type neural_network_t(k)
     integer, kind :: k = default_real 
-    type(tensor_map_t(k)), private :: input_map_, output_map_
     type(metadata_t), private :: metadata_
     real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
   end type
