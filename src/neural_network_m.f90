@@ -14,7 +14,6 @@ module neural_network_m
 
   private
   public :: neural_network_t
-  public :: unmapped_network_t
   public :: workspace_t
   public :: assert_consistency
 
@@ -303,9 +302,6 @@ module neural_network_m
     integer, kind :: k = default_real
     private
     type(neural_network_t(k)) neural_network_
-  contains
-    generic :: infer                    => default_real_infer_unmapped, double_precision_infer_unmapped
-    procedure, private, non_overridable :: default_real_infer_unmapped, double_precision_infer_unmapped
   end type
 
   interface unmapped_network_t
@@ -314,24 +310,6 @@ module neural_network_m
       implicit none
       type(double_precision_file_t), intent(in) :: file
       type(unmapped_network_t(double_precision)) unmapped_network
-    end function
-
-  end interface
-
-  interface
-
-    elemental module function default_real_infer_unmapped(self, inputs) result(outputs)
-      implicit none
-      class(unmapped_network_t), intent(in) :: self
-      type(tensor_t), intent(in) :: inputs
-      type(tensor_t) outputs
-    end function
-
-    elemental module function double_precision_infer_unmapped(self, inputs) result(outputs)
-      implicit none
-      class(unmapped_network_t(double_precision)), intent(in) :: self
-      type(tensor_t(double_precision)), intent(in) :: inputs
-      type(tensor_t(double_precision)) outputs
     end function
 
   end interface
