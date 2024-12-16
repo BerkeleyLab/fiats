@@ -25,31 +25,6 @@ module neural_network_m
     real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
     integer, allocatable, private :: nodes_(:)
     type(activation_t), private :: activation_
-  contains
-    generic :: operator(==)             => default_real_approximately_equal,     double_precision_approximately_equal
-    generic :: infer                    => default_real_infer,                   double_precision_infer
-    generic :: to_json                  => default_real_to_json,                 double_precision_to_json
-    generic :: map_to_input_range       => default_real_map_to_input_range,      double_precision_map_to_input_range
-    generic :: map_from_output_range    => default_real_map_from_output_range,   double_precision_map_from_output_range
-    generic :: num_hidden_layers        => default_real_num_hidden_layers,       double_precision_num_hidden_layers
-    generic :: num_inputs               => default_real_num_inputs,              double_precision_num_inputs
-    generic :: num_outputs              => default_real_num_outputs,             double_precision_num_outputs
-    generic :: nodes_per_layer          => default_real_nodes_per_layer,         double_precision_nodes_per_layer
-    generic :: skip                     => default_real_skip,                    double_precision_skip
-    generic :: activation_function_name => default_real_activation_name,         double_precision_activation_name
-    generic :: learn                    => default_real_learn
-    procedure, private, non_overridable :: default_real_approximately_equal,     double_precision_approximately_equal
-    procedure, private, non_overridable :: default_real_infer,                   double_precision_infer
-    procedure, private, non_overridable :: default_real_learn
-    procedure, private, non_overridable :: default_real_to_json,                 double_precision_to_json
-    procedure, private, non_overridable :: default_real_map_to_input_range,      double_precision_map_to_input_range
-    procedure, private, non_overridable :: default_real_map_from_output_range,   double_precision_map_from_output_range
-    procedure, private, non_overridable :: default_real_num_hidden_layers,       double_precision_num_hidden_layers
-    procedure, private, non_overridable :: default_real_num_inputs,              double_precision_num_inputs
-    procedure, private, non_overridable :: default_real_num_outputs,             double_precision_num_outputs
-    procedure, private, non_overridable :: default_real_nodes_per_layer,         double_precision_nodes_per_layer
-    procedure, private, non_overridable :: default_real_skip,                    double_precision_skip
-    procedure, private, non_overridable :: default_real_activation_name,         double_precision_activation_name
   end type
 
   type workspace_t(k)
