@@ -1,5 +1,4 @@
 module neural_network_m
-  use activation_m, only : activation_t
   use double_precision_file_m, only : double_precision_file_t
   use kind_parameters_m, only : default_real, double_precision
   use julienne_m, only : file_t, string_t
@@ -15,8 +14,6 @@ module neural_network_m
     type(tensor_map_t(k)), private :: input_map_, output_map_
     type(metadata_t), private :: metadata_
     real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
-    integer, allocatable, private :: nodes_(:)
-    type(activation_t), private :: activation_
   end type
 
   interface neural_network_t
