@@ -1,26 +1,15 @@
-! Copyright (c) 2024, The Regents of the University of California and Sourcery Institute
-! Terms of use are as specified in LICENSE.txt
 module julienne_string_m
   implicit none
   
   type string_t
     character(len=:), allocatable :: string_
   contains
-    procedure :: as_character
-    generic :: string => as_character
     generic :: assignment(= ) => assign_string_t_to_character, assign_character_to_string_t
     procedure, private :: assign_character_to_string_t
     procedure, private, pass(rhs) :: assign_string_t_to_character
   end type
 
   interface
-
-    pure module function as_character(self) result(raw_string)
-      implicit none
-      class(string_t), intent(in) :: self
-      character(len=:), allocatable :: raw_string
-    end function
-
     pure module subroutine assign_character_to_string_t(lhs, rhs)
       implicit none
       class(string_t), intent(inout) :: lhs
@@ -32,7 +21,5 @@ module julienne_string_m
       class(string_t), intent(in) :: rhs
       character(len=:), intent(out), allocatable :: lhs
     end subroutine
-
   end interface
-  
-end module julienne_string_m
+end module 
