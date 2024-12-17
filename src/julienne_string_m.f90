@@ -9,6 +9,10 @@ module julienne_string_m
     procedure, private, pass(rhs) :: assign_string_t_to_character
   end type
 
+  type file_t
+    type(string_t), allocatable :: lines_(:)
+  end type
+
   interface
     pure module subroutine assign_character_to_string_t(lhs, rhs)
       implicit none
@@ -22,4 +26,5 @@ module julienne_string_m
       character(len=:), intent(out), allocatable :: lhs
     end subroutine
   end interface
+
 end module 
