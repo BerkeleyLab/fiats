@@ -5,7 +5,7 @@ module stuff_m
     character(len=:), allocatable :: string_
   contains
     generic :: assignment(=) => assign_string_t_to_character
-    procedure, private, pass(rhs) :: assign_string_t_to_character
+    procedure, pass(rhs) :: assign_string_t_to_character
   end type
 
   type file_t
@@ -37,8 +37,8 @@ module neural_network_m
 
   type neural_network_t(k)
     integer, kind :: k = default_real 
-    type(metadata_t), private :: metadata_
-    real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
+    type(metadata_t) metadata_
+    real(k), allocatable :: weights_(:,:,:), biases_(:,:)
   end type
 
   interface neural_network_t
@@ -51,7 +51,6 @@ module neural_network_m
 
   type unmapped_network_t(k)
     integer, kind :: k = default_real
-    private
     type(neural_network_t(k)) neural_network_
   end type
 
