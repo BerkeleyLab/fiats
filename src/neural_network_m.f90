@@ -1,4 +1,4 @@
-module julienne_string_m
+module stuff_m
   implicit none
   
   type string_t
@@ -20,24 +20,12 @@ module julienne_string_m
     end subroutine
   end interface
 
-end module 
-
-module kind_parameters_m
-  implicit none
   integer, parameter :: default_real = kind(1.)
   integer, parameter :: double_precision = kind(1D0)
-end module kind_parameters_m
 
-module double_precision_file_m
-  use julienne_string_m, only : file_t
-  implicit none
   type, extends(file_t) :: double_precision_file_t
   end type
-end module
 
-module metadata_m
-  use julienne_string_m, only : string_t
-  implicit none
   type metadata_t
     private
     type(string_t) modelName_, modelAuthor_, compilationDate_, activationFunction_, usingSkipConnections_
@@ -45,9 +33,7 @@ module metadata_m
 end module
 
 module neural_network_m
-  use double_precision_file_m, only : double_precision_file_t
-  use kind_parameters_m, only : default_real, double_precision
-  use metadata_m, only : metadata_t
+  use stuff_m
   implicit none
 
   type neural_network_t(k)
@@ -78,7 +64,7 @@ module neural_network_m
     end function
   end interface
 
-end module neural_network_m
+end module
 
 submodule(neural_network_m) unmapped_network_s
   implicit none
