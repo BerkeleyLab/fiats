@@ -8,10 +8,6 @@ module stuff_m
     procedure, pass(rhs) :: assign_string_t_to_character
   end type
 
-  type file_t
-    type(string_t), allocatable :: lines_(:)
-  end type
-
   interface
     module subroutine assign_string_t_to_character(lhs, rhs)
       implicit none
@@ -22,7 +18,7 @@ module stuff_m
 
   integer, parameter :: default_real = kind(1.), double_precision = kind(1D0)
 
-  type, extends(file_t) :: double_precision_file_t
+  type double_precision_file_t
   end type
 
   type metadata_t
