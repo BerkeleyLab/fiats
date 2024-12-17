@@ -13,7 +13,7 @@ module stuff_m
   end type
 
   interface
-    pure module subroutine assign_string_t_to_character(lhs, rhs)
+    module subroutine assign_string_t_to_character(lhs, rhs)
       implicit none
       class(string_t), intent(in) :: rhs
       character(len=:), intent(out), allocatable :: lhs
@@ -29,11 +29,6 @@ module stuff_m
   type metadata_t
     type(string_t) modelName_, modelAuthor_, compilationDate_, activationFunction_, usingSkipConnections_
   end type
-end module
-
-module neural_network_m
-  use stuff_m
-  implicit none
 
   type neural_network_t(k)
     integer, kind :: k = default_real 
