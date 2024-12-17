@@ -4,14 +4,14 @@ module stuff_m
   type string_t
   contains
     generic :: assignment(=) => assign_string_t_to_character
-    procedure, pass(rhs) :: assign_string_t_to_character
+    procedure assign_string_t_to_character
   end type
 
   interface
     module subroutine assign_string_t_to_character(lhs, rhs)
       implicit none
-      class(string_t), intent(in) :: rhs
-      character(len=:), intent(out), allocatable :: lhs
+      class(string_t), intent(out) :: lhs
+      character(len=*), intent(in) :: rhs
     end subroutine
   end interface
 
