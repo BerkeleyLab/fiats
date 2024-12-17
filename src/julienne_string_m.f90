@@ -4,53 +4,13 @@ module julienne_string_m
   use characterizable_m, only : characterizable_t
   implicit none
   
-  private
-  public :: string_t
-  public :: array_of_strings
-  public :: operator(.cat.) ! element-wise concatenation unary operator
-  public :: operator(.csv.) ! comma-separated values unary operator
-  public :: operator(.sv.)  ! separated-values binary operator
-
   type, extends(characterizable_t) :: string_t
-    private
     character(len=:), allocatable :: string_
   contains
     procedure :: as_character
     generic :: string => as_character
-    procedure :: is_allocated
-    procedure :: get_json_key
-    procedure :: file_extension
-    procedure :: base_name
-    procedure :: bracket
-    generic :: operator(//)   => string_t_cat_string_t, string_t_cat_character, character_cat_string_t
-    generic :: operator(/=)   => string_t_ne_string_t, string_t_ne_character, character_ne_string_t
-    generic :: operator(==)   => string_t_eq_string_t, string_t_eq_character, character_eq_string_t
     generic :: assignment(= ) => assign_string_t_to_character, assign_character_to_string_t
-    generic :: get_json_value => get_string, get_string_t_array &
-                                ,get_real, get_real_with_character_key &
-                                ,get_character, get_character_with_character_key &
-                                ,get_logical, get_logical_with_character_key  &
-                                ,get_real_array ,get_real_array_with_character_key &
-                                ,get_integer_array, get_integer_array_with_character_key &
-                                ,get_integer, get_integer_with_character_key &
-                                ,get_double_precision, get_double_precision_with_character_key &
-                                ,get_double_precision_array, get_double_precision_array_with_character_key
-    procedure, private :: get_real, get_real_with_character_key
-    procedure, private :: get_string, get_string_t_array
-    procedure, private :: get_logical, get_logical_with_character_key
-    procedure, private :: get_integer, get_integer_with_character_key
-    procedure, private :: get_real_array, get_real_array_with_character_key
-    procedure, private :: get_integer_array, get_integer_array_with_character_key
-    procedure, private :: get_character, get_character_with_character_key
-    procedure, private :: get_double_precision, get_double_precision_with_character_key
-    procedure, private :: get_double_precision_array, get_double_precision_array_with_character_key
-    procedure, private :: string_t_ne_string_t, string_t_ne_character
-    procedure, private :: string_t_eq_string_t, string_t_eq_character
     procedure, private :: assign_character_to_string_t
-    procedure, private :: string_t_cat_string_t, string_t_cat_character
-    procedure, private, pass(rhs) :: character_cat_string_t
-    procedure, private, pass(rhs) :: character_ne_string_t
-    procedure, private, pass(rhs) :: character_eq_string_t
     procedure, private, pass(rhs) :: assign_string_t_to_character
   end type
 
