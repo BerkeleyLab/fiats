@@ -17,9 +17,6 @@ module stuff_m
 
   integer, parameter :: default_real = kind(1.), double_precision = kind(1D0)
 
-  type double_precision_file_t
-  end type
-
   type metadata_t
     type(string_t) modelName_
   end type
@@ -30,7 +27,10 @@ module stuff_m
     real(k), allocatable :: weight_
   end type
 
-  interface neural_network_t
+  type double_precision_file_t
+  end type
+
+  interface
     module function double_precision_from_json(file)
       implicit none
       type(double_precision_file_t) file
@@ -43,7 +43,7 @@ module stuff_m
     type(neural_network_t(k)) neural_network_
   end type
 
-  interface unmapped_network_t
+  interface
     module function double_precision_unmapped_from_json(file)
       implicit none
       type(double_precision_file_t) file
@@ -52,9 +52,7 @@ module stuff_m
   end interface
 
 contains
-
   module procedure double_precision_unmapped_from_json
     double_precision_unmapped_from_json%neural_network_ = double_precision_from_json(file)
   end procedure
-
 end module
