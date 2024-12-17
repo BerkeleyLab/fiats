@@ -2,7 +2,6 @@ module stuff_m
   implicit none
   
   type string_t
-    character(len=:), allocatable :: string_
   contains
     generic :: assignment(=) => assign_string_t_to_character
     procedure, pass(rhs) :: assign_string_t_to_character
@@ -28,7 +27,7 @@ module stuff_m
   type neural_network_t(k)
     integer, kind :: k = default_real 
     type(metadata_t) metadata_
-    real(k), allocatable :: weights_(:,:,:)
+    real(k), allocatable :: weight_
   end type
 
   interface neural_network_t
