@@ -27,7 +27,6 @@ module stuff_m
   end type
 
   type metadata_t
-    private
     type(string_t) modelName_, modelAuthor_, compilationDate_, activationFunction_, usingSkipConnections_
   end type
 end module
@@ -64,12 +63,10 @@ module neural_network_m
     end function
   end interface
 
-end module
-
-submodule(neural_network_m) unmapped_network_s
-  implicit none
 contains
+
   module procedure double_precision_unmapped_from_json
     unmapped_network%neural_network_ = double_precision_from_json(file)
   end procedure
-end submodule
+
+end module
