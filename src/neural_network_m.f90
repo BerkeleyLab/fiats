@@ -31,10 +31,10 @@ module stuff_m
   end type
 
   interface neural_network_t
-    module function double_precision_from_json(file) result(neural_network)
+    module function double_precision_from_json(file)
       implicit none
       type(double_precision_file_t) file
-      type(neural_network_t(double_precision)) neural_network
+      type(neural_network_t(double_precision)) double_precision_from_json
     end function
   end interface
 
@@ -44,17 +44,17 @@ module stuff_m
   end type
 
   interface unmapped_network_t
-    module function double_precision_unmapped_from_json(file) result(unmapped_network)
+    module function double_precision_unmapped_from_json(file)
       implicit none
       type(double_precision_file_t) file
-      type(unmapped_network_t(double_precision)) unmapped_network
+      type(unmapped_network_t(double_precision)) double_precision_unmapped_from_json
     end function
   end interface
 
 contains
 
   module procedure double_precision_unmapped_from_json
-    unmapped_network%neural_network_ = double_precision_from_json(file)
+    double_precision_unmapped_from_json%neural_network_ = double_precision_from_json(file)
   end procedure
 
 end module
