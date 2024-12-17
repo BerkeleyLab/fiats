@@ -42,9 +42,9 @@ module neural_network_m
   end type
 
   interface neural_network_t
-    impure elemental module function double_precision_from_json(file) result(neural_network)
+    module function double_precision_from_json(file) result(neural_network)
       implicit none
-      type(double_precision_file_t), intent(in) :: file
+      type(double_precision_file_t) file
       type(neural_network_t(double_precision)) neural_network
     end function
   end interface
@@ -55,9 +55,9 @@ module neural_network_m
   end type
 
   interface unmapped_network_t
-    impure elemental module function double_precision_unmapped_from_json(file) result(unmapped_network)
+    module function double_precision_unmapped_from_json(file) result(unmapped_network)
       implicit none
-      type(double_precision_file_t), intent(in) :: file
+      type(double_precision_file_t) file
       type(unmapped_network_t(double_precision)) unmapped_network
     end function
   end interface
