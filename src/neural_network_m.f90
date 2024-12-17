@@ -4,8 +4,7 @@ module julienne_string_m
   type string_t
     character(len=:), allocatable :: string_
   contains
-    generic :: assignment(= ) => assign_string_t_to_character, assign_character_to_string_t
-    procedure, private :: assign_character_to_string_t
+    generic :: assignment(=) => assign_string_t_to_character
     procedure, private, pass(rhs) :: assign_string_t_to_character
   end type
 
@@ -14,12 +13,6 @@ module julienne_string_m
   end type
 
   interface
-    pure module subroutine assign_character_to_string_t(lhs, rhs)
-      implicit none
-      class(string_t), intent(inout) :: lhs
-      character(len=*), intent(in) :: rhs
-    end subroutine
-
     pure module subroutine assign_string_t_to_character(lhs, rhs)
       implicit none
       class(string_t), intent(in) :: rhs
