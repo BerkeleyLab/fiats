@@ -1,10 +1,9 @@
 ! Copyright (c) 2024, The Regents of the University of California and Sourcery Institute
 ! Terms of use are as specified in LICENSE.txt
 module julienne_string_m
-  use characterizable_m, only : characterizable_t
   implicit none
   
-  type, extends(characterizable_t) :: string_t
+  type string_t
     character(len=:), allocatable :: string_
   contains
     procedure :: as_character
