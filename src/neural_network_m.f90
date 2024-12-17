@@ -20,20 +20,19 @@ module stuff_m
     end subroutine
   end interface
 
-  integer, parameter :: default_real = kind(1.)
-  integer, parameter :: double_precision = kind(1D0)
+  integer, parameter :: default_real = kind(1.), double_precision = kind(1D0)
 
   type, extends(file_t) :: double_precision_file_t
   end type
 
   type metadata_t
-    type(string_t) modelName_, modelAuthor_, compilationDate_, activationFunction_, usingSkipConnections_
+    type(string_t) modelName_
   end type
 
   type neural_network_t(k)
     integer, kind :: k = default_real 
     type(metadata_t) metadata_
-    real(k), allocatable :: weights_(:,:,:), biases_(:,:)
+    real(k), allocatable :: weights_(:,:,:)
   end type
 
   interface neural_network_t
