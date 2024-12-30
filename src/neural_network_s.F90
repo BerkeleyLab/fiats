@@ -996,7 +996,6 @@ contains
             end block sum_cost
           
             if (adam) then
-              adam: &
               block
                 ! Adam parameters  
                 real, parameter :: beta(*) = [.9, .999]
@@ -1022,7 +1021,7 @@ contains
                     b(1:n(l),l) = b(1:n(l),l) - alpha*vdbc(1:n(l),l)/(sqrt(sdbc(1:n(l),l))+epsilon) ! Adjust weights
                   end do adam_adjust_weights_and_biases
                 end associate
-              end block adam
+              end block
             else
               associate(eta => learning_rate)
                 adjust_weights_and_biases: &
