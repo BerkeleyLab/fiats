@@ -715,24 +715,10 @@ contains
       real, parameter :: tolerance = 1.E-06
 
       associate(n => lhs%nodes_)
-#ifndef __INTEL_COMPILER
         do concurrent(l = 1:ubound(n,1))
-            layer_eq(l) = all(abs(lhs%weights_(1:n(l),1:n(l-1),l) - rhs%weights_(1:n(l),1:n(l-1),l)) < tolerance) .and. &
-                          all(abs(lhs%biases_(1:n(l),l)           - rhs%biases_(1:n(l),l)) < tolerance)
+          layer_eq(l) = all(abs(lhs%weights_(1:n(l),1:n(l-1),l) - rhs%weights_(1:n(l),1:n(l-1),l)) < tolerance) .and. &
+                        all(abs(lhs%biases_(1:n(l),l)           - rhs%biases_(1:n(l),l)) < tolerance)
         end do
-#else
-        block
-          integer j, k
-          do l = 1, ubound(n,1)
-            do j = 1, n(l)
-              do k = 1, n(l-1)
-                layer_eq(l) = all(abs(lhs%weights_(j,k,l) - rhs%weights_(j,k,l)) < tolerance) .and. &
-                              all(abs(lhs%biases_(j,l)    - rhs%biases_(j,l)) < tolerance)
-              end do
-            end do
-          end do
-        end block
-#endif
       end associate
 
       lhs_eq_rhs = nodes_eq .and. all(layer_eq)
@@ -756,24 +742,10 @@ contains
       real, parameter :: tolerance = 1.D-12
 
       associate(n => lhs%nodes_)
-#ifndef __INTEL_COMPILER
         do concurrent(l = 1:ubound(n,1))
-            layer_eq(l) = all(abs(lhs%weights_(1:n(l),1:n(l-1),l) - rhs%weights_(1:n(l),1:n(l-1),l)) < tolerance) .and. &
-                          all(abs(lhs%biases_(1:n(l),l)           - rhs%biases_(1:n(l),l)) < tolerance)
+          layer_eq(l) = all(abs(lhs%weights_(1:n(l),1:n(l-1),l) - rhs%weights_(1:n(l),1:n(l-1),l)) < tolerance) .and. &
+                        all(abs(lhs%biases_(1:n(l),l)           - rhs%biases_(1:n(l),l)) < tolerance)
         end do
-#else
-        block
-          integer j, k
-          do l = 1, ubound(n,1)
-            do j = 1, n(l)
-              do k = 1, n(l-1)
-                layer_eq(l) = all(abs(lhs%weights_(j,k,l) - rhs%weights_(j,k,l)) < tolerance) .and. &
-                              all(abs(lhs%biases_(j,l)    - rhs%biases_(j,l)) < tolerance)
-              end do
-            end do
-          end do
-        end block
-#endif
       end associate
 
       lhs_eq_rhs = nodes_eq .and. all(layer_eq)
