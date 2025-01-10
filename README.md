@@ -108,7 +108,7 @@ fpm test --compiler gfortran --profile release
 Compiler bugs related to generic name resolution currently prevent `ifx` from building Fiats versions 0.15.0 or later.
 Test and build earlier versions of Fiats build with the following command:
 ```
-fpm test --compiler ifx --profile release --flag -O3
+fpm test --compiler ifx --flag -fpp --profile release
 ```
 
 ##### _Experimental:_ Automatic offloading of `do concurrent` to GPUs
