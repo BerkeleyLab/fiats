@@ -105,7 +105,7 @@ fpm test --compiler gfortran --profile release
 ```
 
 ##### Intel (`ifx`)
-Compiler bugs related to generic name resolution currently prevent `ifx` from building Fiats versions 0.15.0 or later.
+Compiler bugs related to generic name resolution currently prevent `ifx` from building Fiats versions 0.15.0 or later. An upcoming release in 2025 is expected to fix these bugs.
 Test and build earlier versions of Fiats build with the following command:
 ```
 fpm test --compiler ifx --flag -fpp --profile release
