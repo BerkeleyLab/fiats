@@ -3,7 +3,7 @@ module neural_network_m
 
   type neural_network_t(k)
     integer, kind :: k = kind(1.)
-    real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
+    real(k), allocatable, private :: weights_
   end type
 
   type, extends(neural_network_t) ::  trainable_network_t(m)
