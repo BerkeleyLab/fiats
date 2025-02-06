@@ -1,7 +1,4 @@
-! Copyright (c), The Regents of the University of California
-! Terms of use are as specified in LICENSE.txt
 module neural_network_m
-  !! Define an abstraction that supports inference operations on a neural network
   use activation_m, only : activation_t
   use double_precision_file_m, only : double_precision_file_t
   use kind_parameters_m, only : default_real, double_precision
@@ -13,7 +10,6 @@ module neural_network_m
   implicit none
 
   type neural_network_t(k)
-    !! Encapsulate the information needed to perform inference
     integer, kind :: k = default_real 
     type(tensor_map_t(k)), private :: input_map_, output_map_
     type(metadata_t), private :: metadata_
@@ -62,5 +58,80 @@ module neural_network_m
     end function
 
   end interface
+
+
+contains
+
+  module procedure default_real_construct_from_components
+
+    neural_network%metadata_ = metadata_t(metadata(1),metadata(2),metadata(3),metadata(4),metadata(5))
+    neural_network%weights_ = weights
+    neural_network%biases_ = biases
+    neural_network%nodes_ = nodes
+
+    block
+      integer i
+
+      if (present(input_map)) then
+        neural_network%input_map_ = input_map
+      else
+        associate(num_inputs => nodes(lbound(nodes,1)))
+          associate(default_minima => [(0., i=1,num_inputs)], default_maxima => [(1., i=1,num_inputs)])
+            neural_network%input_map_ = tensor_map_t("inputs", default_minima, default_maxima)
+          end associate
+        end associate
+      end if
+
+      if (present(output_map)) then
+        neural_network%output_map_ = output_map
+      else
+        associate(num_outputs => nodes(ubound(nodes,1)))
+          associate(default_minima => [(0., i=1,num_outputs)], default_maxima => [(1., i=1,num_outputs)])
+            neural_network%output_map_ = tensor_map_t("outputs", default_minima, default_maxima)
+          end associate
+        end associate
+      end if
+    end block
+
+    neural_network%activation_ = activation_t(metadata(4)%string())
+
+  end procedure default_real_construct_from_components
+
+  module procedure double_precision_construct_from_components
+
+    neural_network%metadata_ = metadata
+    neural_network%weights_ = weights
+    neural_network%biases_ = biases
+    neural_network%nodes_ = nodes
+
+    block
+      integer i
+
+      if (present(input_map)) then
+        neural_network%input_map_ = input_map
+      else
+        associate(num_inputs => nodes(lbound(nodes,1)))
+          associate(default_intercept => [(0D0, i=1,num_inputs)], default_slope => [(1D0, i=1,num_inputs)])
+            neural_network%input_map_ = tensor_map_t("inputs", default_intercept, default_slope)
+          end associate
+        end associate
+      end if
+
+      if (present(output_map)) then
+        neural_network%output_map_ = output_map
+      else
+        associate(num_outputs => nodes(ubound(nodes,1)))
+          associate(default_intercept => [(0D0, i=1,num_outputs)], default_slope => [(1D0, i=1,num_outputs)])
+            neural_network%output_map_ = tensor_map_t("outputs", default_intercept, default_slope)
+          end associate
+        end associate
+      end if
+    end block
+
+    associate(function_name => metadata%activation_name())
+      neural_network%activation_ = activation_t(function_name%string())
+    end associate
+
+  end procedure double_precision_construct_from_components
 
 end module neural_network_m
