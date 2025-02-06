@@ -12,7 +12,6 @@ module fiats_m
  use neural_network_m, only : neural_network_t, unmapped_network_t
  use network_configuration_m, only : network_configuration_t
  use tensor_m, only : tensor_t
- use tensor_map_m, only : tensor_map_t
  use tensor_names_m, only : tensor_names_t
  use trainable_network_m, only : trainable_network_t
  use training_configuration_m, only : training_configuration_t
