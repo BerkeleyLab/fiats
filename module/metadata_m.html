@@ -123,8 +123,8 @@
       <div id="inters-0" class="collapse">
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../module/metadata_m.html#interface-metadata_t">metadata_t</a>
-            <a class="list-group-item" href="../module/metadata_m.html#interface-activation_name~2">activation_name</a>
-            <a class="list-group-item" href="../module/metadata_m.html#interface-equals~2">equals</a>
+            <a class="list-group-item" href="../module/metadata_m.html#interface-activation_name">activation_name</a>
+            <a class="list-group-item" href="../module/metadata_m.html#interface-equals~3">equals</a>
             <a class="list-group-item" href="../module/metadata_m.html#interface-strings">strings</a>
             <a class="list-group-item" href="../module/metadata_m.html#interface-to_json~2">to_json</a>
         </div>
@@ -865,7 +865,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private pure module function double_precision_from_json(lines) result(metadata)  
-    <a href="../proc/double_precision_from_json.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_from_json~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -883,7 +883,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-lines~6"></span>
+              <span class="anchor" id="variable-lines~12"></span>
               type(<a href='../type/double_precision_string_t.html'>double_precision_string_t</a>),
             </td>
 <td>intent(in)</td>
@@ -909,7 +909,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private pure module function from_components(modelName, modelAuthor, compilationDate, activationFunction, usingSkipConnections) result(metadata)  
-    <a href="../proc/from_components~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/from_components.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1013,7 +1013,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private pure module function from_json(lines) result(metadata)  
-    <a href="../proc/from_json~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/from_json~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1031,7 +1031,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-lines~5"></span>
+              <span class="anchor" id="variable-lines~11"></span>
               type(string_t),
             </td>
 <td>intent(in)</td>
@@ -1059,7 +1059,7 @@ large graphs.</div>
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-activation_name~2"></span>
+      <span class="anchor" id="interface-activation_name"></span>
       <h3>        interface
       </h3>
     </div>
@@ -1067,7 +1067,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private pure module function activation_name(self) result(function_name)  
-    <a href="../proc/activation_name~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/activation_name.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1085,7 +1085,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~15"></span>
+              <span class="anchor" id="variable-self~95"></span>
               class(<a href='../type/metadata_t.html'>metadata_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1113,7 +1113,7 @@ large graphs.</div>
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-equals~2"></span>
+      <span class="anchor" id="interface-equals~3"></span>
       <h3>        interface
       </h3>
     </div>
@@ -1121,7 +1121,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private elemental module function equals(lhs, rhs) result(lhs_equals_rhs)  
-    <a href="../proc/equals~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/equals.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1139,7 +1139,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-lhs~2"></span>
+              <span class="anchor" id="variable-lhs~8"></span>
               class(<a href='../type/metadata_t.html'>metadata_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1154,7 +1154,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-rhs~2"></span>
+              <span class="anchor" id="variable-rhs~9"></span>
               class(<a href='../type/metadata_t.html'>metadata_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1208,7 +1208,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~14"></span>
+              <span class="anchor" id="variable-self~94"></span>
               class(<a href='../type/metadata_t.html'>metadata_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1244,7 +1244,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private pure module function to_json(self) result(lines)  
-    <a href="../proc/to_json~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/to_json.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1262,7 +1262,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~16"></span>
+              <span class="anchor" id="variable-self~96"></span>
               class(<a href='../type/metadata_t.html'>metadata_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1452,12 +1452,12 @@ large graphs.</div>
           <tbody>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='../type/metadata_t.html#boundprocedure-activation_name~3'>activation_name</a></strong></td>
+  <strong><a href='../type/metadata_t.html#boundprocedure-activation_name~5'>activation_name</a></strong></td>
                 <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
-  <strong><a href='../type/metadata_t.html#boundprocedure-operator%28%3D%3D%29~2'>operator(==)</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/metadata_t.html#boundprocedure-equals~2'>equals</a></td>
+  <strong><a href='../type/metadata_t.html#boundprocedure-operator%28%3D%3D%29~6'>operator(==)</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/metadata_t.html#boundprocedure-equals~3'>equals</a></td>
                 <td></td>
               </tr>
               <tr>
@@ -1467,12 +1467,12 @@ large graphs.</div>
               </tr>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='../type/metadata_t.html#boundprocedure-to_json~2'>to_json</a></strong></td>
+  <strong><a href='../type/metadata_t.html#boundprocedure-to_json~6'>to_json</a></strong></td>
                 <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
-  <strong><a href='../type/metadata_t.html#boundprocedure-equals~2'>equals</a></strong></td>
+  <strong><a href='../type/metadata_t.html#boundprocedure-equals~3'>equals</a></strong></td>
                 <td></td>
               </tr>
           </tbody>
@@ -1505,7 +1505,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-02-05 21:56 +0000             </p>
+ on 2025-02-06 06:15 +0000             </p>
           </div>
         </div>
         <br>

@@ -21,7 +21,7 @@ module neural_network_m
   type neural_network_t(k)
     !! Encapsulate the information needed to perform inference
     integer, kind :: k = default_real 
-    type(tensor_map_t(k)) :: input_map_, output_map_
+    type(tensor_map_t(k)), private :: input_map_, output_map_
     type(metadata_t), private :: metadata_
     real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
     integer, allocatable, private :: nodes_(:)
