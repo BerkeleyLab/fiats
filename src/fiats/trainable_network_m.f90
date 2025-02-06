@@ -1,6 +1,3 @@
-! Copyright (c), The Regents of the University of California
-! Terms of use are as specified in LICENSE.txt
-
 module trainable_network_m
   use neural_network_m
   use julienne_m, only : string_t
@@ -8,8 +5,7 @@ module trainable_network_m
   use training_configuration_m, only : training_configuration_t
   implicit none
 
-  type, extends(neural_network_t) ::  trainable_network_t(m)
-    integer, kind :: m = default_real
+  type, extends(neural_network_t) ::  trainable_network_t
   end type
 
 contains
