@@ -4,7 +4,6 @@ module neural_network_m
   type neural_network_t(k)
     integer, kind :: k = kind(1.)
     real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
-    integer, allocatable, private :: nodes_(:)
   end type
 
   type, extends(neural_network_t) ::  trainable_network_t(m)
@@ -13,13 +12,8 @@ module neural_network_m
 
 contains
 
-  function default_real_construct_from_components(weights, biases, nodes) result(neural_network)
-    real, intent(in) :: weights(:,:,:), biases(:,:)
-    integer, intent(in) :: nodes(0:)
+  function default_real_construct_from_components() result(neural_network)
     type(neural_network_t) neural_network
-    neural_network%weights_ = weights
-    neural_network%biases_ = biases
-    neural_network%nodes_ = nodes
   end function
 
   function default_real_network(neural_network) result(trainable_network)
@@ -31,9 +25,7 @@ contains
 
   function perturbed_identity_network() result(trainable_network)
     type(trainable_network_t) trainable_network
-    integer i
     trainable_network = default_real_network( default_real_construct_from_components ( &
-      nodes=[1,3,1], weights=reshape([(0.,i=1,18)],[3,3,2]), biases=reshape([(0.,i=1,18)],[3,2]) &
     ) )
   end function
 
