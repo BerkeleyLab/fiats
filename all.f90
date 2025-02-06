@@ -7,6 +7,10 @@ module neural_network_m
     integer, allocatable, private :: nodes_(:)
   end type
 
+  type, extends(neural_network_t) ::  trainable_network_t(m)
+    integer, kind :: m = kind(1.)
+  end type
+
 contains
 
   function default_real_construct_from_components(weights, biases, nodes) result(neural_network)
@@ -17,17 +21,6 @@ contains
     neural_network%biases_ = biases
     neural_network%nodes_ = nodes
   end function
-
-end module
-module trainable_network_m
-  use neural_network_m
-  implicit none
-
-  type, extends(neural_network_t) ::  trainable_network_t(m)
-    integer, kind :: m = kind(1.)
-  end type
-
-contains
 
   function default_real_network(neural_network) result(trainable_network)
     implicit none
@@ -44,4 +37,4 @@ contains
     ) )
   end function
 
-end module trainable_network_m
+end module
