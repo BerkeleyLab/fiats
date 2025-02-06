@@ -18,8 +18,9 @@ contains
   module procedure default_real_map_to_training_ranges
     associate(inputs => input_output_pair%inputs(), expected_outputs => input_output_pair%expected_outputs())
       associate( &
-         normalized_inputs  => self%input_map_%map_to_training_range(inputs), &
-         normalized_outputs => self%output_map_%map_to_training_range(expected_outputs) &
+         normalized_inputs  => self%map_to_input_range(inputs), &
+         normalized_outputs => self%map_from_output_range(expected_outputs) &
+
       )
         normalized_input_output_pair = input_output_pair_t(normalized_inputs, normalized_outputs)
       end associate
