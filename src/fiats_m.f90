@@ -8,7 +8,7 @@ module fiats_m
  use input_output_pair_m, only : input_output_pair_t, shuffle, write_to_stdout
  use kind_parameters_m, only : default_real, double_precision
  use mini_batch_m, only : mini_batch_t
- use neural_network_m, only : neural_network_t, unmapped_network_t
+ use neural_network_m, only : neural_network_t
  use network_configuration_m, only : network_configuration_t
  use tensor_m, only : tensor_t
  use tensor_names_m, only : tensor_names_t
