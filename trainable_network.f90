@@ -1,4 +1,3 @@
-module neural_network_m
   implicit none
 
   type neural_network_t(k)
@@ -20,4 +19,4 @@ contains
     perturbed_identity_network = default_real_network()
   end function
 
-end module
+end
