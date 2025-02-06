@@ -23,7 +23,7 @@ contains
     type(trainable_network_t) trainable_network
     integer i
     trainable_network = default_real_network( default_real_construct_from_components ( &
-      nodes=[1,3,1], weights=reshape([(0.,i=1,18)],[3,3,2]), biases=reshape([(0.,i=1,18)],[3,2]), metadata=[(string_t(""),i=1,5)] &
+      nodes=[1,3,1], weights=reshape([(0.,i=1,18)],[3,3,2]), biases=reshape([(0.,i=1,18)],[3,2]) &
     ) )
   end function
 
