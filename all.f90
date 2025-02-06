@@ -3,7 +3,7 @@ module neural_network_m
 
   type neural_network_t(k)
     integer, kind :: k = kind(1.)
-    real(k), allocatable, private :: weights_
+    real(k), allocatable :: weights_
   end type
 
   type, extends(neural_network_t) ::  trainable_network_t(m)
@@ -12,21 +12,17 @@ module neural_network_m
 
 contains
 
-  function default_real_construct_from_components() result(neural_network)
-    type(neural_network_t) neural_network
+  type(neural_network_t) function neural_network()
+    neural_network = neural_network_t(weights_=0.)
   end function
 
-  function default_real_network(neural_network) result(trainable_network)
-    implicit none
+  type(trainable_network_t) function default_real_network(neural_network)
     type(neural_network_t) neural_network
-    type(trainable_network_t) trainable_network
-    trainable_network%neural_network_t = neural_network
+    default_real_network%neural_network_t = neural_network
   end function 
 
-  function perturbed_identity_network() result(trainable_network)
-    type(trainable_network_t) trainable_network
-    trainable_network = default_real_network( default_real_construct_from_components ( &
-    ) )
+  type(trainable_network_t) function perturbed_identity_network()
+    perturbed_identity_network = default_real_network(neural_network())
   end function
 
 end module
