@@ -10,7 +10,6 @@ module trainable_network_m
 
   type, extends(neural_network_t) ::  trainable_network_t(m)
     integer, kind :: m = default_real
-    private
   end type
 
 contains

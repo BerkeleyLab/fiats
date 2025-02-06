@@ -1,10 +1,8 @@
 module neural_network_m
   use activation_m, only : activation_t
-  use double_precision_file_m, only : double_precision_file_t
   use kind_parameters_m, only : default_real, double_precision
-  use julienne_m, only : file_t, string_t
+  use julienne_m, only : string_t
   use metadata_m, only : metadata_t
-  use mini_batch_m, only : mini_batch_t
   use tensor_m, only : tensor_t
   use tensor_map_m, only : tensor_map_t
   implicit none
@@ -28,40 +26,16 @@ module neural_network_m
       type(neural_network_t) neural_network
     end function
 
-    module function double_precision_construct_from_components(metadata, weights, biases, nodes) &
-      result(neural_network)
-      implicit none
-      type(metadata_t), intent(in) :: metadata
-      double precision, intent(in) :: weights(:,:,:), biases(:,:)
-      integer, intent(in) :: nodes(0:)
-      type(neural_network_t(double_precision)) neural_network
-    end function
-
   end interface
-
 
 contains
 
   module procedure default_real_construct_from_components
-
     neural_network%metadata_ = metadata_t(metadata(1),metadata(2),metadata(3),metadata(4),metadata(5))
     neural_network%weights_ = weights
     neural_network%biases_ = biases
     neural_network%nodes_ = nodes
     neural_network%activation_ = activation_t(metadata(4)%string())
-
   end procedure default_real_construct_from_components
-
-  module procedure double_precision_construct_from_components
-
-    neural_network%metadata_ = metadata
-    neural_network%weights_ = weights
-    neural_network%biases_ = biases
-    neural_network%nodes_ = nodes
-    associate(function_name => metadata%activation_name())
-      neural_network%activation_ = activation_t(function_name%string())
-    end associate
-
-  end procedure double_precision_construct_from_components
 
 end module neural_network_m
