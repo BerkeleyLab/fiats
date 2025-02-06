@@ -2,7 +2,7 @@
 ! Terms of use are as specified in LICENSE.txt
 
 module trainable_network_m
-  use neural_network_m, only : neural_network_t
+  use neural_network_m
   use julienne_m, only : string_t
   use kind_parameters_m, only : default_real
   use training_configuration_m, only : training_configuration_t
@@ -36,7 +36,7 @@ contains
         allocate(w(n_max,n_max,layers-1), source = 0.)
         allocate(b(size(w,1), size(w,3)), source = 0.)
         trainable_network = default_real_network( &
-          neural_network_t(nodes=n, weights=w, biases=b, metadata=metadata) &
+          default_real_construct_from_components(nodes=n, weights=w, biases=b, metadata=metadata) &
         )
       end associate
     end associate
