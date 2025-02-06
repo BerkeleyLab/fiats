@@ -2,7 +2,7 @@
 ! Terms of use are as specified in LICENSE.txt
 
 module trainable_network_m
-  use neural_network_m, only : neural_network_t, workspace_t
+  use neural_network_m, only : neural_network_t
   use input_output_pair_m, only : input_output_pair_t
   use julienne_m, only : string_t
   use kind_parameters_m, only : default_real
@@ -17,7 +17,6 @@ module trainable_network_m
   type, extends(neural_network_t) ::  trainable_network_t(m)
     integer, kind :: m = default_real
     private
-    type(workspace_t), private :: workspace_
   end type
 
   interface trainable_network_t 
@@ -41,7 +40,6 @@ contains
       type(neural_network_t), intent(in) :: neural_network
       type(trainable_network_t) trainable_network
       trainable_network%neural_network_t = neural_network
-      trainable_network%workspace_ = workspace_t(neural_network)
     end function 
 
   module procedure perturbed_identity_network
