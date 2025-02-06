@@ -1,10 +1,8 @@
 module neural_network_m
-  use kind_parameters_m, only : default_real
-  use julienne_m, only : string_t
   implicit none
 
   type neural_network_t(k)
-    integer, kind :: k = default_real 
+    integer, kind :: k = kind(1.)
     real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
     integer, allocatable, private :: nodes_(:)
   end type
