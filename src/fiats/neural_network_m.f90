@@ -11,7 +11,6 @@ module neural_network_m
 
   type neural_network_t(k)
     integer, kind :: k = default_real 
-    type(tensor_map_t(k)), private :: input_map_, output_map_
     type(metadata_t), private :: metadata_
     real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
     integer, allocatable, private :: nodes_(:)
@@ -20,23 +19,21 @@ module neural_network_m
 
   interface neural_network_t
 
-    module function default_real_construct_from_components(metadata, weights, biases, nodes, input_map, output_map) &
+    module function default_real_construct_from_components(metadata, weights, biases, nodes) &
       result(neural_network)
       implicit none
       type(string_t), intent(in) :: metadata(:)
       real, intent(in) :: weights(:,:,:), biases(:,:)
       integer, intent(in) :: nodes(0:)
-      type(tensor_map_t), intent(in), optional :: input_map, output_map
       type(neural_network_t) neural_network
     end function
 
-    module function double_precision_construct_from_components(metadata, weights, biases, nodes, input_map, output_map) &
+    module function double_precision_construct_from_components(metadata, weights, biases, nodes) &
       result(neural_network)
       implicit none
       type(metadata_t), intent(in) :: metadata
       double precision, intent(in) :: weights(:,:,:), biases(:,:)
       integer, intent(in) :: nodes(0:)
-      type(tensor_map_t(double_precision)), intent(in), optional :: input_map, output_map
       type(neural_network_t(double_precision)) neural_network
     end function
 
@@ -51,31 +48,6 @@ contains
     neural_network%weights_ = weights
     neural_network%biases_ = biases
     neural_network%nodes_ = nodes
-
-    block
-      integer i
-
-      if (present(input_map)) then
-        neural_network%input_map_ = input_map
-      else
-        associate(num_inputs => nodes(lbound(nodes,1)))
-          associate(default_minima => [(0., i=1,num_inputs)], default_maxima => [(1., i=1,num_inputs)])
-            neural_network%input_map_ = tensor_map_t("inputs", default_minima, default_maxima)
-          end associate
-        end associate
-      end if
-
-      if (present(output_map)) then
-        neural_network%output_map_ = output_map
-      else
-        associate(num_outputs => nodes(ubound(nodes,1)))
-          associate(default_minima => [(0., i=1,num_outputs)], default_maxima => [(1., i=1,num_outputs)])
-            neural_network%output_map_ = tensor_map_t("outputs", default_minima, default_maxima)
-          end associate
-        end associate
-      end if
-    end block
-
     neural_network%activation_ = activation_t(metadata(4)%string())
 
   end procedure default_real_construct_from_components
@@ -86,31 +58,6 @@ contains
     neural_network%weights_ = weights
     neural_network%biases_ = biases
     neural_network%nodes_ = nodes
-
-    block
-      integer i
-
-      if (present(input_map)) then
-        neural_network%input_map_ = input_map
-      else
-        associate(num_inputs => nodes(lbound(nodes,1)))
-          associate(default_intercept => [(0D0, i=1,num_inputs)], default_slope => [(1D0, i=1,num_inputs)])
-            neural_network%input_map_ = tensor_map_t("inputs", default_intercept, default_slope)
-          end associate
-        end associate
-      end if
-
-      if (present(output_map)) then
-        neural_network%output_map_ = output_map
-      else
-        associate(num_outputs => nodes(ubound(nodes,1)))
-          associate(default_intercept => [(0D0, i=1,num_outputs)], default_slope => [(1D0, i=1,num_outputs)])
-            neural_network%output_map_ = tensor_map_t("outputs", default_intercept, default_slope)
-          end associate
-        end associate
-      end if
-    end block
-
     associate(function_name => metadata%activation_name())
       neural_network%activation_ = activation_t(function_name%string())
     end associate
