@@ -18,20 +18,9 @@ module trainable_network_m
     integer, kind :: m = default_real
     private
     type(workspace_t), private :: workspace_
-  contains
-    generic :: train           => default_real_train                   
-    procedure, private, non_overridable :: default_real_train
-    generic ::   map_to_training_ranges => default_real_map_to_training_ranges
-    procedure, private, non_overridable :: default_real_map_to_training_ranges
   end type
 
   interface trainable_network_t 
-
-    pure module function default_real_network(neural_network) result(trainable_network)
-      implicit none
-      type(neural_network_t), intent(in) :: neural_network
-      type(trainable_network_t) trainable_network
-    end function 
 
     module function perturbed_identity_network(training_configuration, perturbation_magnitude, metadata, input_map, output_map) &
       result(trainable_network)
@@ -45,24 +34,50 @@ module trainable_network_m
 
   end interface
 
-  interface
+contains
 
-    pure module subroutine default_real_train(self, mini_batches_arr, cost, adam, learning_rate)
+    pure function default_real_network(neural_network) result(trainable_network)
       implicit none
-      class(trainable_network_t), intent(inout) :: self
-      type(mini_batch_t), intent(in) :: mini_batches_arr(:)
-      real, intent(out), allocatable, optional :: cost(:)
-      logical, intent(in) :: adam
-      real, intent(in) :: learning_rate
-    end subroutine
+      type(neural_network_t), intent(in) :: neural_network
+      type(trainable_network_t) trainable_network
+      trainable_network%neural_network_t = neural_network
+      trainable_network%workspace_ = workspace_t(neural_network)
+    end function 
 
-    elemental module function default_real_map_to_training_ranges(self, input_output_pair) result(normalized_input_output_pair)
-      implicit none
-      class(trainable_network_t), intent(in) :: self
-      type(input_output_pair_t), intent(in) :: input_output_pair
-      type(input_output_pair_t) normalized_input_output_pair
+  module procedure perturbed_identity_network
+
+    integer k, l
+    real, allocatable :: identity(:,:,:), w_harvest(:,:,:), b_harvest(:,:)
+
+    associate(n=>training_configuration%nodes_per_layer())
+      associate(n_max => maxval(n), layers => size(n))
+
+        identity = reshape( [( [(e(k,n_max), k=1,n_max)], l = 1, layers-1 )], [n_max, n_max, layers-1])
+        allocate(w_harvest, mold = identity)
+        allocate(b_harvest(size(identity,1), size(identity,3)))
+        call random_number(w_harvest)
+        call random_number(b_harvest)
+
+        associate( &
+          w => identity + perturbation_magnitude*(w_harvest-0.5)/0.5, &
+          b => perturbation_magnitude*(b_harvest-0.5)/0.5 &
+        )
+          trainable_network = default_real_network( &
+            neural_network_t(nodes=n, weights=w, biases=b, metadata=metadata, input_map=input_map, output_map=output_map) &
+          )
+        end associate
+      end associate
+    end associate
+
+  contains
+
+    pure function e(j,n) result(unit_vector)
+      integer, intent(in) :: j, n
+      integer k
+      real, allocatable :: unit_vector(:)
+      unit_vector = real([(merge(1,0,j==k),k=1,n)])
     end function
 
-  end interface
+  end procedure
 
 end module trainable_network_m
