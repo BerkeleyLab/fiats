@@ -12,17 +12,13 @@ module neural_network_m
 
 contains
 
-  type(neural_network_t) function neural_network()
-    neural_network = neural_network_t(weights_=0.)
-  end function
-
   type(trainable_network_t) function default_real_network(neural_network)
     type(neural_network_t) neural_network
     default_real_network%neural_network_t = neural_network
   end function 
 
   type(trainable_network_t) function perturbed_identity_network()
-    perturbed_identity_network = default_real_network(neural_network())
+    perturbed_identity_network = default_real_network(neural_network_t(weights_=0.))
   end function
 
 end module
