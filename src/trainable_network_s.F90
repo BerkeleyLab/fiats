@@ -45,9 +45,20 @@ contains
           w => identity + perturbation_magnitude*(w_harvest-0.5)/0.5, &
           b => perturbation_magnitude*(b_harvest-0.5)/0.5 &
         )
+#ifndef NAGFOR
           trainable_network = trainable_network_t( &
             neural_network_t(nodes=n, weights=w, biases=b, metadata=metadata, input_map=input_map, output_map=output_map) &
           )
+#else
+          ! manually inline the default_real_network() function invoked by the above user-defined trainable_network_t constructor
+          associate(  &
+           neural_network =>  &
+           neural_network_t(nodes=n, weights=w, biases=b, metadata=metadata, input_map=input_map, output_map=output_map) &
+          )
+            trainable_network%neural_network_t = neural_network
+            trainable_network%workspace_ = workspace_t(neural_network)
+          end associate
+#endif
         end associate
       end associate
     end associate
