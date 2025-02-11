@@ -33,6 +33,20 @@ module time_data_m
       type(time_data_t) time_data
     end function
 
+    pure module function default_real_from_strings(date, time, dt) result(time_data)
+      implicit none
+      type(string_t), intent(in) :: date(:), time(:)
+      real, intent(in) :: dt(:)
+      type(time_data_t) time_data
+    end function
+
+    pure module function default_real_from_characters(date, time, dt) result(time_data)
+      implicit none
+      character(len=*), intent(in) :: date(:), time(:)
+      real, intent(in) :: dt(:)
+      type(time_data_t) time_data
+    end function
+
     pure module function from_icar_output(icar_output_file) result(time_data)
       implicit none
       type(icar_output_file_t), intent(in) :: icar_output_file 
@@ -56,7 +70,7 @@ module time_data_m
     pure module function default_real_to_json(self) result(file)
       implicit none
       class(time_data_t), intent(in) :: self
-      type(file_t), allocatable :: file
+      type(file_t) file
     end function
 
     pure module function default_real_dt(self) result(dt_values)
