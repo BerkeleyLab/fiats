@@ -15,24 +15,23 @@ contains
 
   module procedure default_real_from_json
 
-    character(len=:), allocatable :: line
     integer i
 
-    !associate(lines => self%lines())
-
-    !i = 1
-    !call_assert_diagnose(adjustl(lines(i)%string())=='{'," default_real_json(time_data_s): object start", lines(i)%string())
-    !call_assert(allocated(self%date_))
-    !call_assert(allocated(self%time_))
-    !call_assert(allocated(self%dt_))
-    !call_assert(all(size(self%date_) == [size(self%time_), size(self%dt_)]))
-
-    !i = 3
-    !time_data%date_ = lines(i)%get_json_value(key="dates", mold=[character(len=1]::]))
-    !i = 4
-    !time_data%time_ = lines(i)%get_json_value(key="times", mold=[character(len=1]::]))
-    !i = 5
-    !time_data%dt_= lines(i)%get_json_value(key="dt", mold=[real::])
+    associate(lines => file%lines())
+      i = 1
+      call_assert_diagnose(adjustl(lines(i)%string())=='{'," default_real_json(time_data_s): object start", lines(i)%string())
+      call_assert(allocated(file%date_))
+      call_assert(allocated(file%time_))
+      call_assert(allocated(file%dt_))
+      call_assert(all(size(file%date_) == [size(file%time_), size(file%dt_)]))
+      call_assert(.false.)
+      i = 3
+      time_data%date_ = lines(i)%get_json_value(key="dates", mold=[string_t::])
+      i = 4
+      time_data%date_ = lines(i)%get_json_value(key="times", mold=[string_t::])
+      i = 5
+      time_data%dt_= lines(i)%get_json_value(key="dt", mold=[real::])
+    end associate
 
   end procedure
 
@@ -107,7 +106,7 @@ contains
        write(  dt_string, fmt = csv_format) csv_dt%string()
        file = file_t([ &
          string_t('{'), &
-         string_t('"time_data" : {'), &
+         string_t('    "time_data" : {'), &
          string_t(indent // '  "dates": [' // trim(adjustl(date_string)) // '],'), &
          string_t(indent // '  "times": [' // trim(adjustl(time_string)) // '],'), &
          string_t(indent // '  "dt": [' // trim(adjustl(dt_string)) // ']'), &

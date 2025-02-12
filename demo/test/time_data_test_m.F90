@@ -87,6 +87,7 @@ contains
   function write_then_read_json() result(test_diagnosis)
     type(test_diagnosis_t) test_diagnosis
     type(time_data_t) time_data
+    real, parameter :: expected_dt = 120.000000, tolerance = 1.E-08
 
     associate(time_data => time_data_t( &
        date = string_t(["2010/10/01", "2010/10/01", "2010/10/01"]) &
@@ -94,12 +95,13 @@ contains
       ,dt   = [120.000000, 120.000000, 120.000000] &
     ) )
       associate(json_file => time_data%to_json())
-        call json_file%write_lines(string_t("time_data.json"))
         associate(from_json => time_data_t(json_file))
-          test_diagnosis = test_diagnosis_t( &
-             test_passed = .false.  &! all(abs( - ) < tolerance) &
-            ,diagnostics_string = "" &
-          )
+          associate(actual_dt => from_json%dt())
+            test_diagnosis = test_diagnosis_t( &
+               test_passed = all(abs(actual_dt - expected_dt) < tolerance) &
+              ,diagnostics_string = "expected " & // string_t(expected_dt)  // ", actual " & // string_t(actual_dt) &
+            )
+          end associate
         end associate
       end associate
     end associate
