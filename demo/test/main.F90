@@ -5,12 +5,14 @@
 
 program main
   use netCDF_file_test_m, only : netCDF_file_test_t
+  use time_data_test_m, only : time_data_test_t
   use iso_fortran_env, only : int64, real64
   use julienne_m, only : command_line_t
   implicit none
 
   integer(int64) t_start, t_finish, clock_rate
   type(netCDF_file_test_t) netCDF_file_test
+  type(time_data_test_t) time_data_test
   integer :: passes=0, tests=0
 
   print_usage_if_help_requested: &
@@ -28,6 +30,7 @@ program main
 
   call system_clock(t_start, clock_rate)
   call netCDF_file_test%report(passes, tests)
+  call time_data_test%report(passes, tests)
   call system_clock(t_finish)
 
   print *
