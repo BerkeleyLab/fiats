@@ -57,9 +57,9 @@ module time_data_m
 
   interface icar_output_file_t
 
-    pure module function from_string_array(lines) result(icar_output_file)
+    pure module function from_file_object(file) result(icar_output_file)
       implicit none
-      type(string_t), intent(in) :: lines(:)
+      type(file_t), intent(in) :: file
       type(icar_output_file_t) icar_output_file
     end function
 
