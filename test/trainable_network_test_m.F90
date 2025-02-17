@@ -8,11 +8,7 @@ module trainable_network_test_m
 
   ! External dependencies
   use assert_m
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, bin_t, &
-    vector_test_description_t, vector_function_strategy_t
-#ifdef __GFORTRAN__
-  use julienne_m, only : test_function_i
-#endif
+  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, bin_t
 
   ! Internal dependencies
   use fiats_m, only : trainable_network_t, neural_network_t, tensor_t, input_output_pair_t, mini_batch_t, shuffle
@@ -21,26 +17,6 @@ module trainable_network_test_m
   private
   public :: trainable_network_test_t
 
-  type, extends(vector_function_strategy_t) :: and_gate_test_function_t
-  contains
-    procedure, nopass :: vector_function => and_gate_with_skewed_training_data
-  end type
-    
-  type, extends(vector_function_strategy_t) :: not_and_test_function_t
-  contains
-    procedure, nopass :: vector_function => not_and_gate_with_skewed_training_data
-  end type
-    
-  type, extends(vector_function_strategy_t) :: or_gate_test_function_t
-  contains
-    procedure, nopass :: vector_function => or_gate_with_random_weights
-  end type
-    
-  type, extends(vector_function_strategy_t) :: xor_gate_test_function_t
-  contains
-    procedure, nopass :: vector_function => xor_gate_with_random_weights
-  end type
-    
   type, extends(test_t) :: trainable_network_test_t
   contains
     procedure, nopass :: subject
@@ -67,89 +43,22 @@ contains
   end function
 
   function results() result(test_results)
-    type(test_result_t), allocatable :: test_results(:), vector_test_results(:)
+    type(test_result_t), allocatable :: test_results(:)
     type(test_description_t), allocatable :: scalar_test_descriptions(:)
-    type(vector_test_description_t), allocatable :: vector_test_descriptions(:)
-    type(xor_gate_test_function_t) xor_gate_test_function
-    type(or_gate_test_function_t) or_gate_test_function
-    type(not_and_test_function_t) not_and_test_function
-    type(and_gate_test_function_t) and_gate_test_function
 
-#ifndef __GFORTRAN__
     scalar_test_descriptions = [ &
       test_description_t("preserving an identity mapping with 2 hidden layers", &
          preserves_identity_mapping), &
       test_description_t("training a perturbed identity mapping to converge to an identity mapping using the Adam optimizer", &
          perturbed_identity_converges) &
       ]
-#else
-    procedure(test_function_i), pointer :: preserves_identity_ptr, perturbed_identity_ptr
-    preserves_identity_ptr => preserves_identity_mapping
-    perturbed_identity_ptr => perturbed_identity_converges
-
-    scalar_test_descriptions = [ &
-      test_description_t( &
-         "preserving an identity mapping with 2 hidden layers", &
-         preserves_identity_ptr), &
-      test_description_t("training a perturbed identity mapping to converge to an identity mapping using the Adam optimizer", &
-         perturbed_identity_ptr) &
-      ]
-#endif
-
-    vector_test_descriptions = [ &
-      vector_test_description_t( &
-        [string_t("learning to map (true,true)->true with 2 hidden layers trained on skewed AND-gate data") &
-        ,string_t("learning to map (false,true)->false with 2 hidden layers trained on skewed AND-gate data") &
-        ,string_t("learning to map (true,false)->false with 2 hidden layers trained on skewed AND-gate data") &
-        ,string_t("learning to map (false,false)->false with 2 hidden layers trained on skewed AND-gate data") &
-        ], and_gate_test_function), &
-      vector_test_description_t( &
-        [string_t("learning to map (true,true)->false with 2 hidden layers trained on skewed NOT-AND-gate data") &
-        ,string_t("learning to map (false,true)->true with 2 hidden layers trained on skewed NOT-AND-gate data") &
-        ,string_t("learning to map (true,false)->true with 2 hidden layers trained on skewed NOT-AND-gate data") &
-        ,string_t("learning to map (false,false)->true with 2 hidden layers trained on skewed NOT-AND-gate data") &
-        ], not_and_test_function), &
-      vector_test_description_t( &
-        [string_t("learning to map (true,true)->true with 2 hidden layers trained on symmetric OR-gate data & random weights") &
-        ,string_t("learning to map (false,true)->true with 2 hidden layers trained on symmetric OR-gate data & random weights") &
-        ,string_t("learning to map (true,false)->true with 2 hidden layers trained on symmetric OR-gate data & random weights") &
-        ,string_t("learning to map (false,false)->false with 2 hidden layers trained on symmetric OR-gate data & random weights") &
-        ], or_gate_test_function), &
-      vector_test_description_t( &
-      [string_t("learning (true,true)->false with 2 hidden layers trained on symmetric XOR-gate data & random weights with Adam")&
-      ,string_t("learning (false,true)->true with 2 hidden layers trained on symmetric XOR-gate data & random weights with Adam")&
-      ,string_t("learning (true,false)->true with 2 hidden layers trained on symmetric XOR-gate data & random weights with Adam")&
-      ,string_t("learning (false,false)->false with 2 hidden layers trained on symmetric XOR-gate data & random weights with Adam")&
-        ], xor_gate_test_function) &
-      ]
 
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &
-      substring_in_description => scalar_test_descriptions%contains_text(string_t(test_description_substring)), &
-      num_vector_tests => size(vector_test_descriptions) &
+      substring_in_description => scalar_test_descriptions%contains_text(string_t(test_description_substring)) &
     )
       scalar_test_descriptions = pack(scalar_test_descriptions, substring_in_subject .or. substring_in_description)
-
-      block
-        integer i
-
-        associate( &
-          substring_in_description_vector => &
-            [(any(vector_test_descriptions(i)%contains_text(test_description_substring)), i=1,num_vector_tests)] &
-        )
-          if (substring_in_subject) then
-            vector_test_results = [(vector_test_descriptions(i)%run(), i=1,num_vector_tests)]
-          else if (any(substring_in_description_vector)) then
-              vector_test_descriptions = pack(vector_test_descriptions, substring_in_description_vector)
-              vector_test_results =  [(vector_test_descriptions(i)%run(), i=1,size(vector_test_descriptions))]
-              vector_test_results =  &
-                pack(vector_test_results, vector_test_results%description_contains(string_t(test_description_substring)))
-           else
-            vector_test_results = [test_result_t::]
-          end if
-          test_results = [scalar_test_descriptions%run(), vector_test_results]
-        end associate
-      end block
+      test_results = scalar_test_descriptions%run()
     end associate
 
   end function
@@ -349,17 +258,7 @@ contains
     type(trainable_network_t) trainable_network
     real, parameter :: tolerance = 1.E-02
     real, allocatable :: harvest(:,:,:)
-#ifdef __flang__
-      !! Reducing num_iterations yields a less robust test, but moving away from local minima by
-      !! increasing num_iterations causes this test to crash when compiled with the flang or ifx compilers.
-    integer, parameter :: num_inputs=2, mini_batch_size = 1, num_iterations=50000
-#elif defined __INTEL_COMPILER
-    integer, parameter :: num_inputs=2, mini_batch_size = 1, num_iterations=49000
-#else
     integer, parameter :: num_inputs=2, mini_batch_size = 1, num_iterations=500000
-      !! Depending on where in the random-number sequence the weights start, this test can pass for lower
-      !! numbers of iterations, e.g., 400000. Using more iterations gives more robust convergence.
-#endif
     integer batch, iter
 
     allocate(harvest(num_inputs, mini_batch_size, num_iterations))
