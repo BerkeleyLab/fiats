@@ -1,16 +1,5 @@
-! Copyright (c), The Regents of the University of California
-! Terms of use are as specified in LICENSE.txt
-
-#include "assert_macros.h"
-
 module trainable_network_test_m
-  !! Define inference tests and procedures required for reporting results
-
-  ! External dependencies
-  use assert_m
   use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, bin_t
-
-  ! Internal dependencies
   use fiats_m, only : trainable_network_t, neural_network_t, tensor_t, input_output_pair_t, mini_batch_t, shuffle
   implicit none
 
@@ -55,17 +44,9 @@ contains
     real, intent(in) :: perturbation_magnitude
     integer, parameter :: nodes_per_layer(*) = [2, 2, 2, 2]
     integer, parameter :: max_n = maxval(nodes_per_layer), layers = size(nodes_per_layer)
-#ifndef _CRAYFTN
     real, parameter :: identity(*,*,*) = &
       reshape([real:: [1,0], [0,1] ,[1,0], [0,1], [1,0], [0,1]], [max_n, max_n, layers-1])
-#else
-    real, allocatable :: identity(:,:,:)
-#endif
     real harvest(size(identity,1), size(identity,2), size(identity,3))
-
-#ifdef _CRAYFTN
-    identity = reshape([real:: [1,0], [0,1] ,[1,0], [0,1], [1,0], [0,1]], [max_n, max_n, layers-1])
-#endif
 
     call random_number(harvest)
     harvest = perturbation_magnitude*harvest
@@ -93,15 +74,7 @@ contains
 
     associate(num_inputs => trainable_network%num_inputs(), num_outputs => trainable_network%num_outputs())
 
-      call_assert(num_inputs == num_outputs)
-#ifdef _CRAYFTN
-      allocate(inputs(num_pairs))
-      do i = 1, num_pairs
-         inputs(i) = tensor_t(real([i,2*i])/num_pairs)
-      end do
-#else
       inputs = [(tensor_t(real([i,2*i])/num_pairs), i = 1, num_pairs)]
-#endif
       associate(outputs => inputs)
         input_output_pairs = input_output_pair_t(inputs, outputs)
       end associate
@@ -114,17 +87,9 @@ contains
 
       block
         real, parameter :: tolerance = 1.E-06
-#if defined _CRAYFTN || __GFORTRAN__
-        type(tensor_t), allocatable :: network_outputs(:)
-        network_outputs = trainable_network%infer(inputs)
-#else
         associate(network_outputs => trainable_network%infer(inputs))
-#endif
           test_passes = maxval(abs([(network_outputs(i)%values() - inputs(i)%values(), i=1,num_pairs)])) < tolerance
-#if defined _CRAYFTN || __GFORTRAN__
-#else
         end associate
-#endif
       end block
 
    end associate
