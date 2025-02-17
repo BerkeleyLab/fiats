@@ -3,41 +3,8 @@ module trainable_network_test_m
   use fiats_m, only : trainable_network_t, neural_network_t, tensor_t, input_output_pair_t, mini_batch_t, shuffle
   implicit none
 
-  private
-  public :: trainable_network_test_t
-
-  type, extends(test_t) :: trainable_network_test_t
-  contains
-    procedure, nopass :: subject
-    procedure, nopass :: results
-  end type
-
-  real, parameter :: false = 0., true = 1.
-
-  abstract interface
-
-    function map_i(inputs) result(expected_outputs)
-      import tensor_t
-      type(tensor_t), intent(in) :: inputs
-      type(tensor_t) expected_outputs
-    end function
-
-  end interface
-
 contains
 
-  pure function subject() result(specimen)
-    character(len=:), allocatable :: specimen
-    specimen = "A trainable_network_t object"
-  end function
-
-  function results() result(test_results)
-    type(test_result_t), allocatable :: test_results(:)
-    type(test_description_t), allocatable :: scalar_test_descriptions(:)
-
-    scalar_test_descriptions = [test_description_t("preserving an identity mapping with 2 hidden layers", preserves_identity_mapping)]
-    test_results = scalar_test_descriptions%run()
-  end function
 
   function perturbed_identity_network(perturbation_magnitude) result(trainable_network)
     type(trainable_network_t) trainable_network
@@ -98,11 +65,18 @@ contains
 
 end module trainable_network_test_m
 
-  use trainable_network_test_m, only : trainable_network_test_t
+  use trainable_network_test_m
+  use julienne_m, only : test_result_t, test_description_t
   implicit none
 
-  type(trainable_network_test_t) trainable_network_test
-  integer :: passes=0, tests=0
+contains
 
-  call trainable_network_test%report(passes, tests)
+  function results() result(test_results)
+    type(test_result_t), allocatable :: test_results(:)
+    type(test_description_t), allocatable :: scalar_test_descriptions(:)
+
+    scalar_test_descriptions = [test_description_t("preserving an identity mapping with 2 hidden layers", preserves_identity_mapping)]
+    test_results = scalar_test_descriptions%run()
+  end function
+
 end 
