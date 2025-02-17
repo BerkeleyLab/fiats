@@ -1,10 +1,9 @@
 module trainable_network_test_m
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, bin_t
-  use fiats_m, only : trainable_network_t, neural_network_t, tensor_t, input_output_pair_t, mini_batch_t, shuffle
+  use julienne_m, only : string_t, bin_t
+  use fiats_m, only : trainable_network_t, neural_network_t, tensor_t, input_output_pair_t, mini_batch_t
   implicit none
 
 contains
-
 
   function perturbed_identity_network(perturbation_magnitude) result(trainable_network)
     type(trainable_network_t) trainable_network
