@@ -1,4 +1,3 @@
-module neural_network_m
   implicit none
 
   type neural_network_t(k)
@@ -9,6 +8,10 @@ module neural_network_m
   type, extends(neural_network_t) ::  trainable_network_t(m)
     integer, kind :: m = kind(1.)
   end type
+
+  type(trainable_network_t) trainable_network
+
+  trainable_network = default_real_trainable_network(default_real_neural_network(biases = 0.))
 
 contains
 
@@ -24,10 +27,4 @@ contains
     trainable_network%neural_network_t = neural_network
   end function
 
-end module
-
-  use neural_network_m
-  implicit none
-  type(trainable_network_t) trainable_network
-  trainable_network = default_real_trainable_network(default_real_neural_network(biases = 0.))
 end 
