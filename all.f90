@@ -12,17 +12,16 @@ module neural_network_m
   type neural_network_t(k)
     integer, kind :: k = kind(1.)
     type(metadata_t), private :: metadata_
-    real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
+    real(k), allocatable, private :: biases_(:,:)
     integer, allocatable, private :: nodes_(:)
   end type
 
   interface neural_network_t
 
-    module function default_real_construct_from_components(metadata, weights, biases, nodes) &
-      result(neural_network)
+    module function neural_network(metadata, biases, nodes)
       implicit none
       type(string_t), intent(in) :: metadata(:)
-      real, intent(in) :: weights(:,:,:), biases(:,:)
+      real, intent(in) :: biases(:,:)
       integer, intent(in) :: nodes(0:)
       type(neural_network_t) neural_network
     end function
@@ -58,7 +57,6 @@ contains
 
     trainable_network = trainable_network_t( neural_network_t( &
       nodes = nodes_per_layer, &
-      weights = identity , & 
       biases = reshape([real:: [0,0], [0,0], [0,0]], [max_n, layers-1]), &
       metadata = [string_t("Identity"), string_t("Damian Rouson"), string_t("2023-09-18"), string_t("relu"), string_t("false")] &
     ))
