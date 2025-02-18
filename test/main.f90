@@ -64,18 +64,4 @@ contains
 
 end module trainable_network_test_m
 
-  use trainable_network_test_m
-  use julienne_m, only : test_result_t, test_description_t
-  implicit none
-
-contains
-
-  function results() result(test_results)
-    type(test_result_t), allocatable :: test_results(:)
-    type(test_description_t), allocatable :: scalar_test_descriptions(:)
-
-    scalar_test_descriptions = [test_description_t("preserving an identity mapping with 2 hidden layers", preserves_identity_mapping)]
-    test_results = scalar_test_descriptions%run()
-  end function
-
 end 
