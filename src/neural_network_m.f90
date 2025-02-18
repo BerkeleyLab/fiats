@@ -10,23 +10,6 @@ module neural_network_m
     integer, allocatable, private :: nodes_(:)
   end type
 
-  type workspace_t(k)
-    integer, kind :: k = kind(1.)
-    real(k), allocatable, dimension(:,:) :: a
-    real(k), allocatable, dimension(:,:,:) :: dcdw, vdw, sdw, vdwc, sdwc
-    real(k), allocatable, dimension(:,:) :: z, delta, dcdb, vdb, sdb, vdbc, sdbc
-  end type
-
-  interface workspace_t
-
-    pure module function default_real_workspace(neural_network) result(workspace)
-      implicit none
-      type(neural_network_t), intent(in) :: neural_network
-      type(workspace_t) workspace
-    end function
-
-  end interface
-
   interface neural_network_t
 
     module function default_real_construct_from_components(metadata, weights, biases, nodes) &

@@ -1,10 +1,9 @@
 module trainable_network_m
-  use neural_network_m, only : neural_network_t, workspace_t
+  use neural_network_m, only : neural_network_t
   implicit none
 
   type, extends(neural_network_t) ::  trainable_network_t(m)
     integer, kind :: m = kind(1.) 
-    type(workspace_t), private :: workspace_
   end type
 
   interface trainable_network_t 
@@ -18,6 +17,5 @@ module trainable_network_m
 contains
   module procedure default_real_network
     trainable_network%neural_network_t = neural_network
-    trainable_network%workspace_ = workspace_t(neural_network)
   end procedure
 end module
