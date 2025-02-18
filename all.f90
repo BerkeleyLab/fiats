@@ -1,10 +1,6 @@
 module neural_network_m
   implicit none
 
-  type string_t
-    character(len=:), allocatable :: string_
-  end type
-
   type metadata_t
   end type
 
@@ -50,8 +46,6 @@ contains
     type(trainable_network_t) trainable_network
     integer, parameter :: nodes_per_layer(*) = [2, 2, 2, 2]
     integer, parameter :: max_n = maxval(nodes_per_layer), layers = size(nodes_per_layer)
-    real, parameter :: identity(*,*,*) = &
-      reshape([real:: [1,0], [0,1] ,[1,0], [0,1], [1,0], [0,1]], [max_n, max_n, layers-1])
 
     trainable_network = trainable_network_t( neural_network_t( &
       nodes = nodes_per_layer, &
