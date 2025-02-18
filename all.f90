@@ -11,22 +11,22 @@ module neural_network_m
   end type
 
   interface neural_network_t
-    module procedure neural_network
+    module procedure default_real_neural_network
   end interface
 
   interface trainable_network_t
-    module procedure default_real_network
+    module procedure default_real_trainable_network
   end interface
 
 contains
 
-  function neural_network(biases)
+  function default_real_neural_network(biases)
     real biases
-    type(neural_network_t) neural_network
-    neural_network%biases = biases
+    type(neural_network_t) default_real_neural_network
+    default_real_neural_network%biases = biases
   end function
 
-  function default_real_network(neural_network) result(trainable_network)
+  function default_real_trainable_network(neural_network) result(trainable_network)
     type(neural_network_t) neural_network
     type(trainable_network_t) trainable_network
     trainable_network%neural_network_t = neural_network
