@@ -3,8 +3,8 @@ module neural_network_m
 
   type neural_network_t(k)
     integer, kind :: k = kind(1.)
-    real(k), allocatable, private :: biases_(:)
-    integer, allocatable, private :: nodes_(:)
+    real(k), allocatable :: biases_(:)
+    integer, allocatable :: nodes_(:)
   end type
 
   type, extends(neural_network_t) ::  trainable_network_t(m)
@@ -25,7 +25,7 @@ module neural_network_m
   interface trainable_network_t
     module function default_real_network(neural_network) result(trainable_network)
       implicit none
-      type(neural_network_t), intent(in) :: neural_network
+      type(neural_network_t) :: neural_network
       type(trainable_network_t) trainable_network
     end function
   end interface
