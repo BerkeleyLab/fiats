@@ -6,12 +6,12 @@ program convert_time_data_to_json
   use time_data_m, only : time_data_t, icar_output_file_t
   implicit none
 
-  character(len=*), parameter :: usage_info = & 
+  character(len=*), parameter :: usage_info = &
     new_line('') // &
     'Usage:  ./build/run-fpm.sh run convert-time-data-to-json --  --input-file <string> --output-file <string>' // &
     'where angular brackets (<>) denote user-provided input.' // &
     new_line('')
-  
+
   associate(time_data => time_data_t(icar_output_file_t(file_t(file_path("--input-file")))))
     associate(json_file => time_data%to_json())
       call json_file%write_lines(file_path("--output-file"))
