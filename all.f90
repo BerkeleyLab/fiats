@@ -21,10 +21,10 @@ contains
     default_real_neural_network%biases = biases
   end function
 
-  function default_real_trainable_network(neural_network) result(trainable_network)
+  function default_real_trainable_network(neural_network)
     type(neural_network_t) neural_network
-    type(trainable_network_t) trainable_network
-    trainable_network%neural_network_t = neural_network
+    type(trainable_network_t) default_real_trainable_network
+    default_real_trainable_network%neural_network_t = neural_network
   end function
 
 end 
