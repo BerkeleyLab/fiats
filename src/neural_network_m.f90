@@ -1,5 +1,4 @@
 module neural_network_m
-  use activation_m, only : activation_t
   use julienne_m, only : string_t
   use metadata_m, only : metadata_t
   implicit none
@@ -9,7 +8,6 @@ module neural_network_m
     type(metadata_t), private :: metadata_
     real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
     integer, allocatable, private :: nodes_(:)
-    type(activation_t), private :: activation_
   end type
 
   type workspace_t(k)
