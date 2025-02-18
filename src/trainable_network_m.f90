@@ -14,4 +14,10 @@ module trainable_network_m
       type(trainable_network_t) trainable_network
     end function 
   end interface
-end module 
+
+contains
+  module procedure default_real_network
+    trainable_network%neural_network_t = neural_network
+    trainable_network%workspace_ = workspace_t(neural_network)
+  end procedure
+end module
