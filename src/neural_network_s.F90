@@ -1,8 +1,6 @@
 submodule(neural_network_m) neural_network_s
   use double_precision_string_m, only : double_precision_string_t
   use kind_parameters_m, only : double_precision
-  use layer_m, only : layer_t
-  use neuron_m, only : neuron_t
   implicit none
 
   integer, parameter :: input_layer = 0 
