@@ -4,7 +4,6 @@ module neural_network_m
   type neural_network_t(k)
     integer, kind :: k = kind(1.)
     real(k), allocatable :: biases_(:)
-    integer, allocatable :: nodes_(:)
   end type
 
   type, extends(neural_network_t) ::  trainable_network_t(m)
@@ -13,10 +12,9 @@ module neural_network_m
 
   interface neural_network_t
 
-    module function neural_network(biases, nodes)
+    module function neural_network(biases)
       implicit none
       real biases(:)
-      integer nodes(0:)
       type(neural_network_t) neural_network
     end function
 
@@ -40,6 +38,6 @@ end module
 contains
   function trainable_network()
     type(trainable_network_t) trainable_network
-    trainable_network = trainable_network_t(neural_network_t(nodes = [2], biases = [0.]))
+    trainable_network = trainable_network_t(neural_network_t(biases = [0.]))
   end function
 end 
