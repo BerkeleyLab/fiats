@@ -9,7 +9,6 @@ contains
     integer, parameter :: max_n = maxval(nodes_per_layer), layers = size(nodes_per_layer)
     real, parameter :: identity(*,*,*) = &
       reshape([real:: [1,0], [0,1] ,[1,0], [0,1], [1,0], [0,1]], [max_n, max_n, layers-1])
-    real harvest(size(identity,1), size(identity,2), size(identity,3))
 
     trainable_network = trainable_network_t( neural_network_t( &
       nodes = nodes_per_layer, &
