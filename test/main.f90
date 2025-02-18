@@ -1,6 +1,5 @@
   use julienne_m, only : string_t
-  use trainable_network_m, only : trainable_network_t
-  use neural_network_m, only : neural_network_t
+  use neural_network_m
   implicit none
 contains
   function trainable_network()

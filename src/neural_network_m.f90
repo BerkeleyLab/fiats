@@ -26,11 +26,6 @@ module neural_network_m
 
   end interface
 
-end module
-module trainable_network_m
-  use neural_network_m
-  implicit none
-
   type, extends(neural_network_t) ::  trainable_network_t(m)
     integer, kind :: m = kind(1.)
   end type
