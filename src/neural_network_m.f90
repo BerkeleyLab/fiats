@@ -1,13 +1,12 @@
 module neural_network_m
   use activation_m, only : activation_t
-  use kind_parameters_m, only : default_real
   use julienne_m, only : string_t
   use metadata_m, only : metadata_t
   use tensor_map_m, only : tensor_map_t
   implicit none
 
   type neural_network_t(k)
-    integer, kind :: k = default_real 
+    integer, kind :: k = kind(1.)
     type(tensor_map_t(k)), private :: input_map_, output_map_
     type(metadata_t), private :: metadata_
     real(k), allocatable, private :: weights_(:,:,:), biases_(:,:)
@@ -16,7 +15,7 @@ module neural_network_m
   end type
 
   type workspace_t(k)
-    integer, kind :: k = default_real
+    integer, kind :: k = kind(1.)
     real(k), allocatable, dimension(:,:) :: a
     real(k), allocatable, dimension(:,:,:) :: dcdw, vdw, sdw, vdwc, sdwc
     real(k), allocatable, dimension(:,:) :: z, delta, dcdb, vdb, sdb, vdbc, sdbc
