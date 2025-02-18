@@ -1,10 +1,7 @@
-module trainable_network_test_m
   use julienne_m, only : string_t
   use fiats_m, only : trainable_network_t, neural_network_t
   implicit none
-
 contains
-
   function perturbed_identity_network(perturbation_magnitude) result(trainable_network)
     type(trainable_network_t) trainable_network
     real, intent(in) :: perturbation_magnitude
@@ -24,7 +21,4 @@ contains
       metadata = [string_t("Identity"), string_t("Damian Rouson"), string_t("2023-09-18"), string_t("relu"), string_t("false")] &
     ))
   end function
-
-end module trainable_network_test_m
-
 end 
