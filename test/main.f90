@@ -25,43 +25,6 @@ contains
     ))
   end function
 
-  function preserves_identity_mapping() result(test_passes)
-    logical test_passes
-    type(mini_batch_t), allocatable :: mini_batches(:)
-    type(input_output_pair_t), allocatable :: input_output_pairs(:)
-    type(tensor_t), allocatable :: inputs(:)
-    type(trainable_network_t)  trainable_network
-    type(bin_t), allocatable :: bins(:)
-    real, allocatable :: cost(:)
-    integer, parameter :: num_pairs = 100, num_epochs = 100, n_bins = 3
-    integer i, bin, epoch
-
-    trainable_network = perturbed_identity_network(perturbation_magnitude=0.)
-
-    associate(num_inputs => trainable_network%num_inputs(), num_outputs => trainable_network%num_outputs())
-
-      inputs = [(tensor_t(real([i,2*i])/num_pairs), i = 1, num_pairs)]
-      associate(outputs => inputs)
-        input_output_pairs = input_output_pair_t(inputs, outputs)
-      end associate
-      bins = [(bin_t(num_items=num_pairs, num_bins=n_bins, bin_number=bin), bin = 1, n_bins)]
-
-      do epoch = 1,num_epochs
-        mini_batches = [(mini_batch_t(input_output_pairs(bins(bin)%first():bins(bin)%last())), bin = 1, size(bins))]
-        call trainable_network%train(mini_batches, cost, adam=.false., learning_rate=1.5)
-      end do
-
-      block
-        real, parameter :: tolerance = 1.E-06
-        associate(network_outputs => trainable_network%infer(inputs))
-          test_passes = maxval(abs([(network_outputs(i)%values() - inputs(i)%values(), i=1,num_pairs)])) < tolerance
-        end associate
-      end block
-
-   end associate
-
-  end function
-
 end module trainable_network_test_m
 
 end 
