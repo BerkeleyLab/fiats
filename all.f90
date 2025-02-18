@@ -10,14 +10,6 @@ module neural_network_m
     integer, kind :: m = kind(1.)
   end type
 
-  interface neural_network_t
-    module procedure default_real_neural_network
-  end interface
-
-  interface trainable_network_t
-    module procedure default_real_trainable_network
-  end interface
-
 contains
 
   function default_real_neural_network(biases)
@@ -39,6 +31,6 @@ end module
 contains
   function trainable_network()
     type(trainable_network_t) trainable_network
-    trainable_network = trainable_network_t(neural_network_t(biases = 0.))
+    trainable_network = default_real_trainable_network(default_real_neural_network(biases = 0.))
   end function
 end 
