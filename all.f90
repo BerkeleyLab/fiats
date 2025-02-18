@@ -1,14 +1,14 @@
 module neural_network_m
   implicit none
 
-  type metadata_t
-  end type
-
   type neural_network_t(k)
     integer, kind :: k = kind(1.)
-    type(metadata_t), private :: metadata_
     real(k), allocatable, private :: biases_(:,:)
     integer, allocatable, private :: nodes_(:)
+  end type
+
+  type, extends(neural_network_t) ::  trainable_network_t(m)
+    integer, kind :: m = kind(1.)
   end type
 
   interface neural_network_t
@@ -22,12 +22,8 @@ module neural_network_m
 
   end interface
 
-  type, extends(neural_network_t) ::  trainable_network_t(m)
-    integer, kind :: m = kind(1.)
-  end type
-
   interface trainable_network_t
-    pure module function default_real_network(neural_network) result(trainable_network)
+    module function default_real_network(neural_network) result(trainable_network)
       implicit none
       type(neural_network_t), intent(in) :: neural_network
       type(trainable_network_t) trainable_network
