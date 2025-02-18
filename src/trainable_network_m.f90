@@ -1,5 +1,5 @@
 module trainable_network_m
-  use neural_network_m, only : neural_network_t
+  use neural_network_m
   implicit none
 
   type, extends(neural_network_t) ::  trainable_network_t(m)

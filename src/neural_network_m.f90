@@ -1,7 +1,10 @@
 module neural_network_m
-  use julienne_m, only : string_t
-  use metadata_m, only : metadata_t
+  use julienne_string_m
   implicit none
+
+  type metadata_t
+    type(string_t) modelName_, modelAuthor_, compilationDate_, activationFunction_, usingSkipConnections_
+  end type
 
   type neural_network_t(k)
     integer, kind :: k = kind(1.)
@@ -23,4 +26,4 @@ module neural_network_m
 
   end interface
 
-end module neural_network_m
+end module
