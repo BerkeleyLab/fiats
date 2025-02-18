@@ -21,13 +21,15 @@ module neural_network_m
 contains
 
   function neural_network(biases)
-    real biases(:)
+    real biases
     type(neural_network_t) neural_network
+    neural_network%biases = biases
   end function
 
   function default_real_network(neural_network) result(trainable_network)
     type(neural_network_t) neural_network
     type(trainable_network_t) trainable_network
+    trainable_network%neural_network_t = neural_network
   end function
 
 end module
