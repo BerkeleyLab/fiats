@@ -28,9 +28,6 @@ end module
 
   use neural_network_m
   implicit none
-contains
-  function trainable_network()
-    type(trainable_network_t) trainable_network
-    trainable_network = default_real_trainable_network(default_real_neural_network(biases = 0.))
-  end function
+  type(trainable_network_t) trainable_network
+  trainable_network = default_real_trainable_network(default_real_neural_network(biases = 0.))
 end 
