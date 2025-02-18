@@ -1,4 +1,3 @@
-  use julienne_m, only : string_t
   use neural_network_m
   implicit none
 contains

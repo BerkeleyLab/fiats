@@ -1,6 +1,9 @@
 module neural_network_m
-  use julienne_string_m
   implicit none
+
+  type string_t
+    character(len=:), allocatable :: string_
+  end type
 
   type metadata_t
     type(string_t) modelName_, modelAuthor_, compilationDate_, activationFunction_, usingSkipConnections_
