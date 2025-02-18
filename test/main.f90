@@ -1,6 +1,6 @@
 module trainable_network_test_m
-  use julienne_m, only : string_t, bin_t
-  use fiats_m, only : trainable_network_t, neural_network_t, tensor_t, input_output_pair_t, mini_batch_t
+  use julienne_m, only : string_t
+  use fiats_m, only : trainable_network_t, neural_network_t
   implicit none
 
 contains
