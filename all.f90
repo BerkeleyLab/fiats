@@ -11,28 +11,27 @@ module neural_network_m
   end type
 
   interface neural_network_t
-
-    module function neural_network(biases)
-      implicit none
-      real biases(:)
-      type(neural_network_t) neural_network
-    end function
-
+    module procedure neural_network
   end interface
 
   interface trainable_network_t
-    module function default_real_network(neural_network) result(trainable_network)
-      implicit none
-      type(neural_network_t) :: neural_network
-      type(trainable_network_t) trainable_network
-    end function
+    module procedure default_real_network
   end interface
 
 contains
-  module procedure default_real_network
-    trainable_network%neural_network_t = neural_network
-  end procedure
+
+  function neural_network(biases)
+    real biases(:)
+    type(neural_network_t) neural_network
+  end function
+
+  function default_real_network(neural_network) result(trainable_network)
+    type(neural_network_t) neural_network
+    type(trainable_network_t) trainable_network
+  end function
+
 end module
+
   use neural_network_m
   implicit none
 contains
