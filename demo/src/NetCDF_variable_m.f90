@@ -3,6 +3,7 @@
 module NetCDF_variable_m
   use NetCDF_file_m, only : NetCDF_file_t
   use kind_parameters_m, only : default_real, double_precision
+  use histogram_m, only : histogram_t
   use julienne_m, only : string_t
   use fiats_m, only : tensor_t
   implicit none
@@ -37,6 +38,8 @@ module NetCDF_variable_m
     procedure, private, non_overridable :: default_real_divide          , double_precision_divide
     generic :: assignment(=)            => default_real_assign          , double_precision_assign
     procedure, private, non_overridable :: default_real_assign          , double_precision_assign
+    generic :: histogram                => default_real_histogram       , double_precision_histogram
+    procedure, private, non_overridable :: default_real_histogram       , double_precision_histogram
   end type
 
   interface NetCDF_variable_t
@@ -230,6 +233,22 @@ module NetCDF_variable_m
       implicit none
       class(NetCDF_variable_t), intent(inout) :: self
       integer end_time
+    end function
+
+    elemental module function default_real_histogram(self, num_bins, raw) result(histogram)
+      implicit none
+      class(NetCDF_variable_t), intent(inout) :: self
+      integer, intent(in) :: num_bins
+      logical, intent(in) :: raw
+      type(histogram_t) histogram
+    end function
+
+    elemental module function double_precision_histogram(self, num_bins, raw) result(histogram)
+      implicit none
+      class(NetCDF_variable_t(double_precision)), intent(inout) :: self
+      integer, intent(in) :: num_bins
+      logical, intent(in) :: raw
+      type(histogram_t) histogram
     end function
 
   end interface
