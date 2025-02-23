@@ -27,6 +27,19 @@ submodule(NetCDF_variable_m) NetCDF_variable_s
 
 contains
 
+  module procedure default_real_histogram
+    select case(self%rank())
+    case (4)
+      histogram = histogram_t(self%values_4D_ , self%name_, num_bins, raw)
+    case default
+      error stop 'NetCDF_variable_s(default_real_histogram): unsupported rank'
+    end select 
+  end procedure 
+
+  module procedure double_precision_histogram
+      error stop 'NetCDF_variable_s(double_precision_histogram): unsupported rank'
+  end procedure 
+
   module procedure default_real_copy
 
     if (present(rename)) then
