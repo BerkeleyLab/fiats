@@ -14,7 +14,7 @@ unset multiplot
 
 set output "output-tensor-histograms.png"
 set multiplot layout 3,2
-do for [name in "dptdt dqcdt dqrdt dqsdt dqvdt"] {
+do for [name in "dpotential_temperature_dt dqc_dt dqr_dt dqs_dt dqv_dt"] {
   filename = name . ".plt"
   set title sprintf("Histogram for %s",name)
   plot filename using 1:2 with linespoints title columnheader

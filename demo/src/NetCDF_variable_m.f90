@@ -11,6 +11,7 @@ module NetCDF_variable_m
   private
   public :: NetCDF_variable_t
   public :: tensors
+  public :: time_derivative_t
 
   type NetCDF_variable_t(k)
     integer, kind :: k = default_real
@@ -34,13 +35,23 @@ module NetCDF_variable_m
     procedure, private, non_overridable :: default_real_maximum         , double_precision_maximum
     generic :: operator(-)              => default_real_subtract        , double_precision_subtract
     procedure, private, non_overridable :: default_real_subtract        , double_precision_subtract
-    generic :: operator(/)              => default_real_divide          , double_precision_divide
-    procedure, private, non_overridable :: default_real_divide          , double_precision_divide
-    generic :: assignment(=)            => default_real_assign          , double_precision_assign
-    procedure, private, non_overridable :: default_real_assign          , double_precision_assign
     generic :: histogram                => default_real_histogram       , double_precision_histogram
     procedure, private, non_overridable :: default_real_histogram       , double_precision_histogram
   end type
+
+  type, extends(NetCDF_variable_t) :: time_derivative_t(k)
+    integer, kind :: k = default_real
+  end type
+
+  interface time_derivative_t
+
+    impure elemental module function default_real_time_derivative(old, new, dt) result(time_derivative)
+      implicit none
+      type(NetCDF_variable_t), intent(in) :: old, new, dt
+      type(time_derivative_t) time_derivative
+    end function
+
+  end interface
 
   interface NetCDF_variable_t
 
@@ -156,30 +167,6 @@ module NetCDF_variable_m
       type(NetCDF_variable_t(double_precision)) difference
     end function
 
-    elemental module function default_real_divide(lhs, rhs) result(ratio)
-      implicit none
-      class(NetCDF_variable_t), intent(in) :: lhs, rhs
-      type(NetCDF_variable_t) ratio
-    end function
-
-    elemental module function double_precision_divide(lhs, rhs) result(ratio)
-      implicit none
-      class(NetCDF_variable_t(double_precision)), intent(in) :: lhs, rhs
-      type(NetCDF_variable_t(double_precision)) ratio
-    end function
-
-    elemental module subroutine default_real_assign(lhs, rhs)
-      implicit none
-      class(NetCDF_variable_t), intent(inout) :: lhs
-      type(NetCDF_variable_t), intent(in) :: rhs
-    end subroutine
-
-    elemental module subroutine double_precision_assign(lhs, rhs)
-      implicit none
-      class(NetCDF_variable_t(double_precision)), intent(inout) :: lhs
-      type(NetCDF_variable_t(double_precision)), intent(in) :: rhs
-    end subroutine
-
     elemental module function default_real_any_nan(self) result(any_nan)
       implicit none
       class(NetCDF_variable_t), intent(in) :: self
@@ -218,7 +205,7 @@ module NetCDF_variable_m
 
     module function tensors(NetCDF_variables, step_start, step_end, step_stride)
       implicit none
-      type(NetCDF_variable_t), intent(in) :: NetCDF_variables(:)
+      class(NetCDF_variable_t), intent(in) :: NetCDF_variables(:)
       type(tensor_t), allocatable :: tensors(:)
       integer, optional :: step_start, step_end, step_stride
     end function

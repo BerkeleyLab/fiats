@@ -27,6 +27,45 @@ submodule(NetCDF_variable_m) NetCDF_variable_s
 
 contains
 
+  module procedure default_real_time_derivative
+
+    call_assert(dt%rank()==1)
+    call_assert(new%conformable_with(old))
+    call_assert(old%name_==new%name_)
+
+    time_derivative%name_ = "d" // old%name_ // "_dt"
+
+    block
+      integer t
+
+      select case(old%rank())
+      case(1)
+        allocate(time_derivative%values_1D_, mold = old%values_1D_)
+        do concurrent(t = 1:size(old%values_1D_))
+          time_derivative%values_1D_(t) = (new%values_1D_(t) - old%values_1D_(t))/ dt%values_1D_(t)
+        end do
+      case(2)
+        allocate(time_derivative%values_2D_, mold = old%values_2D_)
+        do concurrent(t = 1:size(old%values_2D_,2))
+          time_derivative%values_2D_(:,t) = (new%values_2D_(:,t) - old%values_2D_(:,t))/ dt%values_1D_(t)
+        end do
+      case(3)
+        allocate(time_derivative%values_3D_, mold = old%values_3D_)
+        do concurrent(t = 1:size(old%values_3D_,3))
+          time_derivative%values_3D_(:,:,t) = (new%values_3D_(:,:,t) - old%values_3D_(:,:,t))/ dt%values_1D_(t)
+        end do
+      case(4)
+        allocate(time_derivative%values_4D_, mold = old%values_4D_)
+        do concurrent(t = 1:size(old%values_4D_,4))
+          time_derivative%values_4D_(:,:,:,t) = (new%values_4D_(:,:,:,t) - old%values_4D_(:,:,:,t))/ dt%values_1D_(t)
+        end do
+      case default
+        error stop "NetCDF_variable_s(default_real_time_derivative): unsupported rank)"
+      end select
+    end block
+
+   end procedure
+
   module procedure default_real_histogram
     select case(self%rank())
     case (4)
@@ -316,90 +355,6 @@ contains
     case default
       error stop "NetCDF_variable_s(double_precision_subtract): unsupported rank)"
     end select
-  end procedure
-
-  module procedure default_real_divide
-
-    integer t
-
-    call_assert(rhs%rank()==1)
-
-    associate(t_end => size(rhs%values_1D_))
-
-      select case(lhs%rank())
-      case(4)
-
-        call_assert_describe(size(rhs%values_1D_) == size(lhs%values_4D_,4), "NetCDF_variable_s(default_real_divide): conformable numerator/denominator")
-        allocate(ratio%values_4D_, mold = lhs%values_4D_)
-
-        do concurrent(t = 1:t_end)
-          ratio%values_4D_(:,:,:,t) = lhs%values_4D_(:,:,:,t) / rhs%values_1D_(t)
-        end do
-
-      case default
-        error stop "NetCDF_variable_s(default_real_divide): unsupported lhs rank)"
-      end select
-
-    end associate
-
-  end procedure
-
-  module procedure double_precision_divide
-
-    integer t
-
-    call_assert(rhs%rank()==1)
-
-    associate(t_end => size(rhs%values_1D_))
-
-      select case(lhs%rank())
-      case(4)
-
-        call_assert_describe(size(rhs%values_1D_) == size(lhs%values_4D_,4), "NetCDF_variable_s(double_precision_divide): conformable numerator/denominator")
-        allocate(ratio%values_4D_, mold = lhs%values_4D_)
-
-        do concurrent(t = 1:t_end)
-          ratio%values_4D_(:,:,:,t) = lhs%values_4D_(:,:,:,t) / rhs%values_1D_(t)
-        end do
-
-      case default
-        error stop "NetCDF_variable_s(double_precision_divide): unsupported lhs rank)"
-      end select
-
-    end associate
-
-  end procedure
-
-  module procedure default_real_assign
-    select case(rhs%rank())
-    case(1)
-      lhs%values_1D_ = rhs%values_1D_
-    case(2)
-      lhs%values_2D_ = rhs%values_2D_
-    case(3)
-      lhs%values_3D_ = rhs%values_3D_
-    case(4)
-      lhs%values_4D_ = rhs%values_4D_
-    case default
-      error stop "NetCDF_variable_s(default_real_assign): unsupported rank)"
-    end select
-    call_assert(lhs%rank()==rhs%rank())
-  end procedure
-
-  module procedure double_precision_assign
-    select case(rhs%rank())
-    case(1)
-      lhs%values_1D_ = rhs%values_1D_
-    case(2)
-      lhs%values_2D_ = rhs%values_2D_
-    case(3)
-      lhs%values_3D_ = rhs%values_3D_
-    case(4)
-      lhs%values_4D_ = rhs%values_4D_
-    case default
-      error stop "NetCDF_variable_s(double_precision_assign): unsupported rank)"
-    end select
-    call_assert(lhs%rank()==rhs%rank())
   end procedure
 
   module procedure default_real_any_nan
