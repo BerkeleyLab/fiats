@@ -20,7 +20,7 @@ program train_cloud_microphysics
   !! Internal dependencies:
   use phase_space_bin_m, only : phase_space_bin_t
   use NetCDF_file_m, only: NetCDF_file_t
-  use NetCDF_variable_m, only: NetCDF_variable_t, tensors
+  use NetCDF_variable_m, only: NetCDF_variable_t, tensors, time_derivative_t
   use occupancy_m, only : occupancy_t
   use default_m, only: default_or_internal_read
 
@@ -154,7 +154,8 @@ contains
     type(training_configuration_t), intent(in) :: training_configuration
     type(command_line_arguments_t), intent(in) :: args
     type(plot_file_t), intent(in), optional :: plot_file 
-    type(NetCDF_variable_t), allocatable :: input_variable(:), output_variable(:), derivative(:)
+    type(NetCDF_variable_t), allocatable :: input_variable(:), output_variable(:)
+    type(time_derivative_t), allocatable :: derivative(:)
     type(NetCDF_variable_t) input_time, output_time
 
     ! local variables:
@@ -229,7 +230,7 @@ contains
 
       print *,"Calculating desired neural-network model outputs"
 
-      allocate(derivative, mold=output_variable)
+      allocate(derivative(size(output_variable)))
 
       dt: &
       associate(dt => NetCDF_variable_t(output_time - input_time, "dt"))
@@ -237,7 +238,7 @@ contains
           derivative_name: &
           associate(derivative_name => "d" // output_names(v)%string() // "/dt")
             print *,"- " // derivative_name
-            derivative(v) = NetCDF_variable_t( (input_variable(v) - output_variable(v)) / dt, derivative_name)
+            derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=dt)
             call_assert(.not. derivative(v)%any_nan())
           end associate derivative_name
         end do

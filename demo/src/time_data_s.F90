@@ -9,8 +9,8 @@ submodule(time_data_m) time_data_s
   implicit none
 contains
 
-  module procedure from_string_array
-     icar_output_file%file_t = file_t(lines)
+  module procedure from_file_object
+    icar_output_file%file_t = file
   end procedure
 
   module procedure default_real_from_json
