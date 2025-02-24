@@ -3,7 +3,7 @@ set term png size 2600, 1200
 
 set output "input-tensor-histograms.png"
 set multiplot layout 3,3
-do for [name in "potential-temperature pressure qc qr qs qv temperature"] {
+do for [name in "potential_temperature pressure qc qr qs qv temperature"] {
   filename = name . ".plt"
   set title sprintf("Histogram for %s",name)
   plot filename using 1:2 with linespoints title columnheader
