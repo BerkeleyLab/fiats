@@ -20,11 +20,12 @@ program concurrent_inferences
   network_file_name = string_t(command_line%flag_value("--network"))
 
   if (len(network_file_name%string())==0) then
-    error stop new_line('a') // new_line('a') // &
-      'Usage: ' // &
-      '  fpm run --example concurrent-inferences --profile release --flag "-fopenmp" \' // &
-      '    [--do-concurrent] [--openmp] [--elemental] [--double-precision] [--trials <integer>]\' // &
-      '    -- --network "<file-name>"'
+    error stop new_line('') // new_line('') &
+      //  'Usage: ' // new_line('') &
+      // '  fpm run --example concurrent-inferences --profile release --flag "-fopenmp" \' // new_line('') &
+      // '    -- --network "<file-name>" \' //  new_line('') &
+      // '    [--do-concurrent] [--openmp] [--elemental] [--double-precision] [--trials <integer>]' // new_line('') &
+      // ' where <> indicates user input and [] indicates an optional argument.' // new_line('')
   end if
 
   inputs = random_inputs()
@@ -33,7 +34,7 @@ program concurrent_inferences
 
   associate( &
     run_do_concurrent    => command_line%argument_present(["--do-concurrent"   ]), &
-    run_openmp           => command_line%argument_present(["--opennmp"         ]), &
+    run_openmp           => command_line%argument_present(["--openmp"         ]), &
     run_elemental        => command_line%argument_present(["--elemental"       ]), &
     run_double_precision => command_line%argument_present(["--double-precision"])  &
   )
