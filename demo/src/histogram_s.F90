@@ -145,8 +145,8 @@ contains
                     end do
                   end do
                 end do
-                histogram%bin_frequency_ = real(bin_count) / real(cardinality)
               end if
+              histogram%bin_frequency_ = real(bin_count) / real(cardinality)
             end associate
           end associate
         end associate
