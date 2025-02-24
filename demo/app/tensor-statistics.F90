@@ -17,7 +17,7 @@ program tensor_statistics
     
   ! Internal dependencies:
   use NetCDF_file_m, only: NetCDF_file_t
-  use NetCDF_variable_m, only: NetCDF_variable_t
+  use NetCDF_variable_m, only: NetCDF_variable_t, time_derivative_t
   use histogram_m, only: histogram_t, to_file
   use training_configuration_m, only : training_configuration_t
   implicit none
@@ -50,18 +50,18 @@ program tensor_statistics
   end associate
   call system_clock(t_finish)
 
-  print *,"System clock time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
+  print '(a,g0)',"System clock time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
   print *
-  print *,"______________________________________________________"
-  print *,"The *.plt files contain tensor ranges and histograms."
-  print *,"If you have gnuplot installed, please execute the"
-  print *,"following command to produce histogram visualizations:" 
+  print '(a)',"______________________________________________________"
+  print '(a)',"The *.plt files contain tensor ranges and histograms."
+  print '(a)',"If you have gnuplot installed, please execute the"
+  print '(a)',"following command to produce histogram visualizations:"
   print *
   associate(file_name => trim(merge("plot-raw-histograms       ", "plot-normalized-histograms", raw)) // ".gnu")
    print*,"  gnuplot app/" // file_name
   end associate
   print *
-  print *,"_______________ tensor_statistics done________________"
+  print '(a)',"_______________ tensor_statistics done________________"
 
 contains
 
@@ -112,7 +112,8 @@ contains
     logical, intent(in) :: raw
     type(string_t), intent(in) :: input_names(:), output_names(:)
 
-    type(NetCDF_variable_t), allocatable :: input_variable(:), output_variable(:), derivative(:)
+    type(time_derivative_t), allocatable :: derivative(:)
+    type(NetCDF_variable_t), allocatable :: input_variable(:), output_variable(:)
     type(NetCDF_variable_t) input_time, output_time
     double precision, allocatable, dimension(:) :: time_in, time_out
     double precision, parameter :: tolerance = 1.E-07
@@ -121,32 +122,34 @@ contains
 
     allocate(input_variable(size(input_names)))
 
-    print *,"Reading physics-based model inputs from " // input_tensors_file_name 
+    print '(a)',"Reading physics-based model inputs from " // input_tensors_file_name
 
     input_file: &
     associate(NetCDF_file => netCDF_file_t(input_tensors_file_name))
 
       do v=1, size(input_variable) 
-        print *,"- reading ", input_names(v)%string()
+        print '(a)',"- reading " // input_names(v)%string()
         call input_variable(v)%input(input_names(v), NetCDF_file, rank=4)
       end do
 
+#ifdef ASSERTIONS
       do v = 2, size(input_variable)
         call_assert(input_variable(v)%conformable_with(input_variable(1)))
       end do
+#endif
 
-      print *,"- reading time"
+      print '(a)',"- reading time"
       call input_time%input("time", NetCDF_file, rank=1)
 
     end associate input_file
 
-    print *,"Calculating input tensor histograms."
+    print '(a)',"Calculating input tensor histograms."
     call system_clock(t_histo_start)
     associate(histograms => [(input_variable(v)%histogram(num_bins, raw), v = 1, size(input_variable))])
       call system_clock(t_histo_finish)
-      print *,size(histograms), " input histograms done in ", real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
+      print '(i0,a,g0,a)',size(histograms), " input histograms done in ", real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
 
-      print *,"Writing input tensor histograms file"
+      print '(a)',"Writing input tensor histograms file"
       block
         type(file_t) histograms_file
         integer h
@@ -154,48 +157,88 @@ contains
         if (raw) then
           do h = 1, size(histograms)
             histograms_file = to_file(histograms(h))
-            call histograms_file%write_lines(string_t(histograms(h)%variable_name() // ".plt"))
+            associate(gnuplot_file_name => histograms(h)%variable_name() // ".plt")
+              print '(a)',"- writing " // gnuplot_file_name
+              call histograms_file%write_lines(gnuplot_file_name)
+            end associate
           end do
         else
-            histograms_file = to_file(histograms)
-            call histograms_file%write_lines(string_t(base_name // "_inputs_stats.plt"))
+          histograms_file = to_file(histograms)
+          associate(gnuplot_file_name => base_name // "_inputs_stats.plt")
+            print '(a)',"- writing " // gnuplot_file_name
+            call histograms_file%write_lines(gnuplot_file_name)
+          end associate
         end if
       end block
     end associate
 
-    ! print *,"Calculating time derivatives"
-  
-    !  allocate(dpt_dt, mold = potential_temperature_out)
-    !  allocate(dqv_dt, mold = qv_out)
-    !  allocate(dqc_dt, mold = qc_out)
-    !  allocate(dqr_dt, mold = qr_out)
-    !  allocate(dqs_dt, mold = qs_out)
+    allocate(output_variable(size(output_names)))
 
-    !  associate(dt => real(time_out - time_in))
-    !    do concurrent(t = 1:t_end)
-    !      dpt_dt(:,:,:,t) = (potential_temperature_out(:,:,:,t) - potential_temperature_in(:,:,:,t))/dt(t)
-    !      dqv_dt(:,:,:,t) = (qv_out(:,:,:,t)- qv_in(:,:,:,t))/dt(t)
-    !      dqc_dt(:,:,:,t) = (qc_out(:,:,:,t)- qc_in(:,:,:,t))/dt(t)
-    !      dqr_dt(:,:,:,t) = (qr_out(:,:,:,t)- qr_in(:,:,:,t))/dt(t)
-    !      dqs_dt(:,:,:,t) = (qs_out(:,:,:,t)- qs_in(:,:,:,t))/dt(t)
-    !    end do
-    !  end associate
+    print '(a)',"Reading physics-based model outputs from " // output_tensors_file_name
 
-    !  call_assert(.not. any(ieee_is_nan(dpt_dt)))
-    !  call_assert(.not. any(ieee_is_nan(dqv_dt)))
-    !  call_assert(.not. any(ieee_is_nan(dqc_dt)))
-    !  call_assert(.not. any(ieee_is_nan(dqr_dt)))
-    !  call_assert(.not. any(ieee_is_nan(dqs_dt)))
+    output_file: &
+    associate(NetCDF_file => netCDF_file_t(output_tensors_file_name))
 
-    !  print *,"Calculating output tensor histograms."
-    !  histograms = [ &
-    !     histogram_t(dpt_dt, "dptdt", num_bins, raw) &
-    !    ,histogram_t(dqv_dt, "dqvdt", num_bins, raw) &
-    !    ,histogram_t(dqc_dt, "dqcdt", num_bins, raw) &
-    !    ,histogram_t(dqr_dt, "dqrdt", num_bins, raw) &
-    !    ,histogram_t(dqs_dt, "dqsdt", num_bins, raw) &
-    !  ]
-    !  call system_clock(t_histo_finish)
+      do v=1, size(output_variable)
+        print '(a)', "- reading " // output_names(v)%string()
+        call output_variable(v)%input(output_names(v), NetCDF_file, rank=4)
+      end do
+
+#ifdef ASSERTIONS
+      do v = 2, size(output_variable)
+        call_assert(output_variable(v)%conformable_with(output_variable(1)))
+      end do
+#endif
+
+      print '(a)',"- reading time"
+      call output_time%input("time", NetCDF_file, rank=1)
+
+    end associate output_file
+
+    print '(a)',"Calculating the desired neural-network model outputs: time derivatives of a subset of the inputs"
+
+    allocate(derivative(size(output_variable)))
+
+    dt: &
+    associate(dt => NetCDF_variable_t(output_time - input_time, "dt"))
+      do v = 1, size(derivative)
+        derivative_name: &
+        associate(derivative_name => "d" // output_names(v)%string() // "_dt")
+          print '(a)',"- " // derivative_name
+          derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=dt)
+          call_assert(.not. derivative(v)%any_nan())
+        end associate derivative_name
+      end do
+    end associate dt
+
+    print '(a)',"Calculating histograms for the desired neural-network outputs."
+    call system_clock(t_histo_start)
+    associate(histograms => [(derivative(v)%histogram(num_bins, raw), v = 1, size(derivative))])
+      call system_clock(t_histo_finish)
+      print '(i0,a,g0,a)',size(histograms), " output histograms done in ", real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
+
+      print '(a)',"Writing desired-output tensor histograms file"
+      block
+        type(file_t) histograms_file
+        integer h
+
+        if (raw) then
+          do h = 1, size(histograms)
+            histograms_file = to_file(histograms(h))
+            associate(gnuplot_file_name => histograms(h)%variable_name() // ".plt")
+              print '(a)',"- writing " // gnuplot_file_name
+              call histograms_file%write_lines(gnuplot_file_name)
+            end associate
+          end do
+        else
+          histograms_file = to_file(histograms)
+          associate(gnuplot_file_name => base_name // "_outputs_stats.plt")
+            print '(a)',"- writing " // gnuplot_file_name
+            call histograms_file%write_lines(gnuplot_file_name)
+          end associate
+        end if
+      end block
+    end associate
 
   end subroutine
 
