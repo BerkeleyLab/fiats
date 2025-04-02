@@ -12,14 +12,29 @@
 
     <title>double_precision_from_json &ndash; Fiats</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
-      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="../css/pygments.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -76,20 +91,20 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.2% of total for procedures.">15 statements</a>
+                 title=" 0.2% of total for procedures.">23 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
-              <a href="../src/tensor_map_s.F90"> Source File</a>
+              <a href="../src/metadata_s.F90"> Source File</a>
             </li>
         </ul>
       </div>
       <div class="col">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='../sourcefile/tensor_map_s.f90.html'>tensor_map_s.F90</a></li>
-                <li class="breadcrumb-item"><a href='../module/tensor_map_s.html'>tensor_map_s</a></li>
+                <li class="breadcrumb-item"><a href='../sourcefile/metadata_s.f90.html'>metadata_s.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/metadata_s.html'>metadata_s</a></li>
             <li class="breadcrumb-item active" aria-current="page">double_precision_from_json</li>
           </ol>
         </nav>
@@ -97,9 +112,11 @@
     </div>
   </div>
   <script>
-    $(function () {
-    $('[data-bs-toggle="tooltip"]').tooltip()
-    })
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
   </script>
 
   </div>
@@ -135,7 +152,7 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>module procedure double_precision_from_json <small>module function double_precision_from_json(lines) result(tensor_map)</small>  
+    <h2>module procedure double_precision_from_json <small>pure module function double_precision_from_json(lines) result(metadata)</small>  
 </h2>
     
 
@@ -154,7 +171,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-lines~14"></span>
+              <span class="anchor" id="variable-lines~18"></span>
               type(<a href='../type/double_precision_string_t.html'>double_precision_string_t</a>),
             </td>
 <td>intent(in)</td>
@@ -172,8 +189,8 @@
 
       <h3>Return Value
         <small>
-          <span class="anchor" id="variable-tensor_map~4"></span>
-          type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>(double_precision))
+          <span class="anchor" id="variable-metadata~7"></span>
+          type(<a href='../type/metadata_t.html'>metadata_t</a>)
         </small>
       </h3>
       
@@ -189,64 +206,88 @@
 <!-- Generated by graphviz version 12.2.1 (20241206.2353)
  -->
 <!-- Title: proc~~double_precision_from_json~4~~CallsGraph Pages: 1 -->
-<svg id="procdouble_precision_from_json4CallsGraph" width="293pt" height="158pt"
- viewBox="0.00 0.00 292.79 158.27" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~double_precision_from_json~4~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 154.27)">
+<svg id="procdouble_precision_from_json4CallsGraph" width="321pt" height="242pt"
+ viewBox="0.00 0.00 321.29 242.27" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~double_precision_from_json~4~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 238.27)">
 <title>proc~~double_precision_from_json~4~~CallsGraph</title>
-<polygon fill="white" stroke="none" points="-4,4 -4,-154.27 288.79,-154.27 288.79,4 -4,4"/>
+<polygon fill="white" stroke="none" points="-4,4 -4,-238.27 317.29,-238.27 317.29,4 -4,4"/>
 <!-- proc~double_precision_from_json~4 -->
 <g id="proc~~double_precision_from_json~4~~CallsGraph_node1" class="node">
 <title>proc~double_precision_from_json~4</title>
-<polygon fill="none" stroke="black" points="158.52,-87.27 0,-87.27 0,-63 158.52,-63 158.52,-87.27"/>
-<text text-anchor="middle" x="79.26" y="-71.54" font-family="Helvetica,sans-Serif" font-size="10.50">double_precision_from_json</text>
+<polygon fill="none" stroke="black" points="158.52,-129.27 0,-129.27 0,-105 158.52,-105 158.52,-129.27"/>
+<text text-anchor="middle" x="79.26" y="-113.54" font-family="Helvetica,sans-Serif" font-size="10.50">double_precision_from_json</text>
 </g>
 <!-- call_assert -->
 <g id="proc~~double_precision_from_json~4~~CallsGraph_node2" class="node">
 <title>call_assert</title>
-<polygon fill="#777777" stroke="#777777" points="273.54,-150.27 205.77,-150.27 205.77,-126 273.54,-126 273.54,-150.27"/>
-<text text-anchor="middle" x="239.66" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">call_assert</text>
+<polygon fill="#777777" stroke="#777777" points="287.79,-234.27 220.02,-234.27 220.02,-210 287.79,-210 287.79,-234.27"/>
+<text text-anchor="middle" x="253.9" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">call_assert</text>
 </g>
 <!-- proc~double_precision_from_json~4&#45;&gt;call_assert -->
 <g id="proc~~double_precision_from_json~4~~CallsGraph_edge1" class="edge">
 <title>proc~double_precision_from_json~4&#45;&gt;call_assert</title>
-<path fill="none" stroke="#ff0000" d="M111.93,-87.73C136.21,-97.39 169.95,-110.81 196.51,-121.37"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="195.05,-124.56 205.63,-125 197.63,-118.05 195.05,-124.56"/>
+<path fill="none" stroke="#ff0000" d="M94.5,-129.74C115.26,-147.6 155.63,-180.41 194.52,-201.13 199.2,-203.63 204.25,-205.95 209.34,-208.05"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="207.76,-211.19 218.35,-211.54 210.29,-204.67 207.76,-211.19"/>
+</g>
+<!-- call_assert_describe -->
+<g id="proc~~double_precision_from_json~4~~CallsGraph_node3" class="node">
+<title>call_assert_describe</title>
+<polygon fill="#777777" stroke="#777777" points="313.29,-192.27 194.52,-192.27 194.52,-168 313.29,-168 313.29,-192.27"/>
+<text text-anchor="middle" x="253.9" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">call_assert_describe</text>
+</g>
+<!-- proc~double_precision_from_json~4&#45;&gt;call_assert_describe -->
+<g id="proc~~double_precision_from_json~4~~CallsGraph_edge2" class="edge">
+<title>proc~double_precision_from_json~4&#45;&gt;call_assert_describe</title>
+<path fill="none" stroke="#ff0000" d="M114.23,-129.69C136.95,-138.07 167.51,-149.31 194.52,-159.13 198.62,-160.62 202.88,-162.17 207.15,-163.71"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="205.68,-166.9 216.27,-167 208.05,-160.32 205.68,-166.9"/>
 </g>
 <!-- get_json_key -->
-<g id="proc~~double_precision_from_json~4~~CallsGraph_node3" class="node">
+<g id="proc~~double_precision_from_json~4~~CallsGraph_node4" class="node">
 <title>get_json_key</title>
-<polygon fill="#777777" stroke="#777777" points="279.54,-108.27 199.77,-108.27 199.77,-84 279.54,-84 279.54,-108.27"/>
-<text text-anchor="middle" x="239.66" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_json_key</text>
+<polygon fill="#777777" stroke="#777777" points="293.79,-150.27 214.02,-150.27 214.02,-126 293.79,-126 293.79,-150.27"/>
+<text text-anchor="middle" x="253.9" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_json_key</text>
 </g>
 <!-- proc~double_precision_from_json~4&#45;&gt;get_json_key -->
-<g id="proc~~double_precision_from_json~4~~CallsGraph_edge2" class="edge">
+<g id="proc~~double_precision_from_json~4~~CallsGraph_edge3" class="edge">
 <title>proc~double_precision_from_json~4&#45;&gt;get_json_key</title>
-<path fill="none" stroke="#ff0000" d="M158.99,-85.57C169.04,-86.91 179.1,-88.24 188.52,-89.49"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="187.77,-92.92 198.15,-90.76 188.69,-85.98 187.77,-92.92"/>
+<path fill="none" stroke="#ff0000" d="M159,-126.71C173.87,-128.52 189.04,-130.37 202.73,-132.03"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="201.99,-135.47 212.34,-133.2 202.84,-128.52 201.99,-135.47"/>
 </g>
 <!-- get_json_value -->
-<g id="proc~~double_precision_from_json~4~~CallsGraph_node4" class="node">
+<g id="proc~~double_precision_from_json~4~~CallsGraph_node5" class="node">
 <title>get_json_value</title>
-<polygon fill="#777777" stroke="#777777" points="284.79,-66.27 194.52,-66.27 194.52,-42 284.79,-42 284.79,-66.27"/>
-<text text-anchor="middle" x="239.66" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_json_value</text>
+<polygon fill="#777777" stroke="#777777" points="299.04,-108.27 208.77,-108.27 208.77,-84 299.04,-84 299.04,-108.27"/>
+<text text-anchor="middle" x="253.9" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_json_value</text>
 </g>
 <!-- proc~double_precision_from_json~4&#45;&gt;get_json_value -->
-<g id="proc~~double_precision_from_json~4~~CallsGraph_edge3" class="edge">
+<g id="proc~~double_precision_from_json~4~~CallsGraph_edge4" class="edge">
 <title>proc~double_precision_from_json~4&#45;&gt;get_json_value</title>
-<path fill="none" stroke="#ff0000" d="M158.99,-64.7C167.13,-63.62 175.28,-62.54 183.08,-61.5"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="183.29,-65.01 192.74,-60.22 182.37,-58.07 183.29,-65.01"/>
+<path fill="none" stroke="#ff0000" d="M159,-107.56C171.94,-105.98 185.11,-104.38 197.33,-102.89"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="197.72,-106.37 207.22,-101.69 196.87,-99.42 197.72,-106.37"/>
+</g>
+<!-- string -->
+<g id="proc~~double_precision_from_json~4~~CallsGraph_node6" class="node">
+<title>string</title>
+<polygon fill="#777777" stroke="#777777" points="280.9,-66.27 226.9,-66.27 226.9,-42 280.9,-42 280.9,-66.27"/>
+<text text-anchor="middle" x="253.9" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">string</text>
+</g>
+<!-- proc~double_precision_from_json~4&#45;&gt;string -->
+<g id="proc~~double_precision_from_json~4~~CallsGraph_edge5" class="edge">
+<title>proc~double_precision_from_json~4&#45;&gt;string</title>
+<path fill="none" stroke="#ff0000" d="M114.23,-104.58C136.95,-96.2 167.51,-84.96 194.52,-75.14 201.36,-72.65 208.66,-70.01 215.7,-67.47"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="216.79,-70.8 225.02,-64.12 214.42,-64.21 216.79,-70.8"/>
 </g>
 <!-- string_t -->
-<g id="proc~~double_precision_from_json~4~~CallsGraph_node5" class="node">
+<g id="proc~~double_precision_from_json~4~~CallsGraph_node7" class="node">
 <title>string_t</title>
-<polygon fill="#777777" stroke="#777777" points="266.66,-24.27 212.66,-24.27 212.66,0 266.66,0 266.66,-24.27"/>
-<text text-anchor="middle" x="239.66" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">string_t</text>
+<polygon fill="#777777" stroke="#777777" points="280.9,-24.27 226.9,-24.27 226.9,0 280.9,0 280.9,-24.27"/>
+<text text-anchor="middle" x="253.9" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">string_t</text>
 </g>
 <!-- proc~double_precision_from_json~4&#45;&gt;string_t -->
-<g id="proc~~double_precision_from_json~4~~CallsGraph_edge4" class="edge">
+<g id="proc~~double_precision_from_json~4~~CallsGraph_edge6" class="edge">
 <title>proc~double_precision_from_json~4&#45;&gt;string_t</title>
-<path fill="none" stroke="#ff0000" d="M111.93,-62.54C137.8,-52.25 174.4,-37.69 201.62,-26.86"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="202.88,-30.13 210.88,-23.18 200.29,-23.63 202.88,-30.13"/>
+<path fill="none" stroke="#ff0000" d="M94.5,-104.53C115.26,-86.67 155.63,-53.86 194.52,-33.13 201.21,-29.57 208.64,-26.38 215.89,-23.62"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="216.97,-26.95 225.21,-20.29 214.62,-20.36 216.97,-26.95"/>
 </g>
 </g>
 </svg>
@@ -362,33 +403,11 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-02-24 23:43 +0000             </p>
+ on 2025-04-02 21:03 +0000             </p>
           </div>
         </div>
         <br>
       </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
-
-    <!-- MathJax JavaScript
-             ================================================== -->
-             <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-          });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-          <script src="../tipuesearch/tipuesearch_content.js"></script>
-          <script src="../tipuesearch/tipuesearch_set.js"></script>
-          <script src="../tipuesearch/tipuesearch.js"></script>
-
   </body>
 </html>

@@ -12,14 +12,29 @@
 
     <title>default_real_from_json &ndash; Fiats</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
-      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="../css/pygments.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -76,20 +91,20 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.2% of total for procedures.">15 statements</a>
+                 title=" 0.7% of total for procedures.">64 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
-              <a href="../src/hyperparameters_s.F90"> Source File</a>
+              <a href="../src/neural_network_s.F90"> Source File</a>
             </li>
         </ul>
       </div>
       <div class="col">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='../sourcefile/hyperparameters_s.f90.html'>hyperparameters_s.F90</a></li>
-                <li class="breadcrumb-item"><a href='../module/hyperparameters_s.html'>hyperparameters_s</a></li>
+                <li class="breadcrumb-item"><a href='../sourcefile/neural_network_s.f90.html'>neural_network_s.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/neural_network_s.html'>neural_network_s</a></li>
             <li class="breadcrumb-item active" aria-current="page">default_real_from_json</li>
           </ol>
         </nav>
@@ -97,9 +112,11 @@
     </div>
   </div>
   <script>
-    $(function () {
-    $('[data-bs-toggle="tooltip"]').tooltip()
-    })
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
   </script>
 
   </div>
@@ -135,7 +152,7 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>module procedure default_real_from_json <small>pure module function default_real_from_json(lines) result(hyperparameters)</small>  
+    <h2>module procedure default_real_from_json <small>impure elemental module function default_real_from_json(file_) result(neural_network)</small>  
 </h2>
     
 
@@ -154,15 +171,15 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-lines~6"></span>
-              type(string_t),
+              <span class="anchor" id="variable-file_"></span>
+              type(file_t),
             </td>
 <td>intent(in)</td>
               <td></td>            <td>
               
             </td>
             <td>::</td>
-            <td><strong>lines</strong>(:)</td>
+            <td><strong>file_</strong></td>
             <td>
                 
             </td>
@@ -172,8 +189,8 @@
 
       <h3>Return Value
         <small>
-          <span class="anchor" id="variable-hyperparameters"></span>
-          type(<a href='../type/hyperparameters_t.html'>hyperparameters_t</a>)
+          <span class="anchor" id="variable-neural_network~17"></span>
+          type(<a href='../type/neural_network_t.html'>neural_network_t</a>)
         </small>
       </h3>
       
@@ -189,64 +206,310 @@
 <!-- Generated by graphviz version 12.2.1 (20241206.2353)
  -->
 <!-- Title: proc~~default_real_from_json~2~~CallsGraph Pages: 1 -->
-<svg id="procdefault_real_from_json2CallsGraph" width="266pt" height="158pt"
- viewBox="0.00 0.00 265.79 158.27" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~default_real_from_json~2~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 154.27)">
+<svg id="procdefault_real_from_json2CallsGraph" width="617pt" height="536pt"
+ viewBox="0.00 0.00 617.06 536.27" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~default_real_from_json~2~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 532.27)">
 <title>proc~~default_real_from_json~2~~CallsGraph</title>
-<polygon fill="white" stroke="none" points="-4,4 -4,-154.27 261.79,-154.27 261.79,4 -4,4"/>
+<polygon fill="white" stroke="none" points="-4,4 -4,-532.27 613.06,-532.27 613.06,4 -4,4"/>
 <!-- proc~default_real_from_json~2 -->
 <g id="proc~~default_real_from_json~2~~CallsGraph_node1" class="node">
 <title>proc~default_real_from_json~2</title>
-<polygon fill="none" stroke="black" points="131.52,-87.27 0,-87.27 0,-63 131.52,-63 131.52,-87.27"/>
-<text text-anchor="middle" x="65.76" y="-71.54" font-family="Helvetica,sans-Serif" font-size="10.50">default_real_from_json</text>
+<polygon fill="none" stroke="black" points="131.52,-276.27 0,-276.27 0,-252 131.52,-252 131.52,-276.27"/>
+<text text-anchor="middle" x="65.76" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50">default_real_from_json</text>
 </g>
-<!-- call_assert -->
+<!-- call_assert_consistency -->
 <g id="proc~~default_real_from_json~2~~CallsGraph_node2" class="node">
-<title>call_assert</title>
-<polygon fill="#777777" stroke="#777777" points="246.54,-150.27 178.77,-150.27 178.77,-126 246.54,-126 246.54,-150.27"/>
-<text text-anchor="middle" x="212.66" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">call_assert</text>
+<title>call_assert_consistency</title>
+<polygon fill="#777777" stroke="#777777" points="320.41,-528.27 185.14,-528.27 185.14,-504 320.41,-504 320.41,-528.27"/>
+<text text-anchor="middle" x="252.78" y="-512.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">call_assert_consistency</text>
 </g>
-<!-- proc~default_real_from_json~2&#45;&gt;call_assert -->
+<!-- proc~default_real_from_json~2&#45;&gt;call_assert_consistency -->
 <g id="proc~~default_real_from_json~2~~CallsGraph_edge1" class="edge">
-<title>proc~default_real_from_json~2&#45;&gt;call_assert</title>
-<path fill="none" stroke="#ff0000" d="M95.73,-87.73C117.75,-97.3 148.26,-110.57 172.45,-121.09"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="170.78,-124.18 181.34,-124.96 173.57,-117.76 170.78,-124.18"/>
+<title>proc~default_real_from_json~2&#45;&gt;call_assert_consistency</title>
+<path fill="none" stroke="#ff0000" d="M68.35,-276.68C73.96,-315.57 96.52,-435.11 167.52,-495.13 169.87,-497.12 172.38,-498.92 175,-500.56"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="173.15,-503.54 183.63,-505.08 176.4,-497.34 173.15,-503.54"/>
 </g>
-<!-- get_json_key -->
+<!-- call_assert_describe -->
 <g id="proc~~default_real_from_json~2~~CallsGraph_node3" class="node">
-<title>get_json_key</title>
-<polygon fill="#777777" stroke="#777777" points="252.54,-108.27 172.77,-108.27 172.77,-84 252.54,-84 252.54,-108.27"/>
-<text text-anchor="middle" x="212.66" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_json_key</text>
+<title>call_assert_describe</title>
+<polygon fill="#777777" stroke="#777777" points="312.16,-486.27 193.39,-486.27 193.39,-462 312.16,-462 312.16,-486.27"/>
+<text text-anchor="middle" x="252.78" y="-470.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">call_assert_describe</text>
 </g>
-<!-- proc~default_real_from_json~2&#45;&gt;get_json_key -->
+<!-- proc~default_real_from_json~2&#45;&gt;call_assert_describe -->
 <g id="proc~~default_real_from_json~2~~CallsGraph_edge2" class="edge">
-<title>proc~default_real_from_json~2&#45;&gt;get_json_key</title>
-<path fill="none" stroke="#ff0000" d="M132,-84.59C141.83,-86.01 151.83,-87.46 161.28,-88.83"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="160.59,-92.27 170.99,-90.24 161.59,-85.34 160.59,-92.27"/>
+<title>proc~default_real_from_json~2&#45;&gt;call_assert_describe</title>
+<path fill="none" stroke="#ff0000" d="M69.63,-276.56C78.14,-310.52 106.54,-405.55 167.52,-453.13 172.08,-456.7 177.17,-459.66 182.53,-462.13"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="181.09,-465.32 191.68,-465.73 183.66,-458.81 181.09,-465.32"/>
+</g>
+<!-- call_assert_diagnose -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node4" class="node">
+<title>call_assert_diagnose</title>
+<polygon fill="#777777" stroke="#777777" points="313.66,-444.27 191.89,-444.27 191.89,-420 313.66,-420 313.66,-444.27"/>
+<text text-anchor="middle" x="252.78" y="-428.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">call_assert_diagnose</text>
+</g>
+<!-- proc~default_real_from_json~2&#45;&gt;call_assert_diagnose -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge3" class="edge">
+<title>proc~default_real_from_json~2&#45;&gt;call_assert_diagnose</title>
+<path fill="none" stroke="#ff0000" d="M71.64,-276.66C83.46,-305.27 116.44,-375.66 167.52,-411.13 171.67,-414.02 176.18,-416.51 180.88,-418.65"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="179.43,-421.84 190.02,-422.27 182.01,-415.34 179.43,-421.84"/>
 </g>
 <!-- get_json_value -->
-<g id="proc~~default_real_from_json~2~~CallsGraph_node4" class="node">
+<g id="proc~~default_real_from_json~2~~CallsGraph_node5" class="node">
 <title>get_json_value</title>
-<polygon fill="#777777" stroke="#777777" points="257.79,-66.27 167.52,-66.27 167.52,-42 257.79,-42 257.79,-66.27"/>
-<text text-anchor="middle" x="212.66" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_json_value</text>
+<polygon fill="#777777" stroke="#777777" points="297.91,-402.27 207.64,-402.27 207.64,-378 297.91,-378 297.91,-402.27"/>
+<text text-anchor="middle" x="252.78" y="-386.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_json_value</text>
 </g>
 <!-- proc~default_real_from_json~2&#45;&gt;get_json_value -->
-<g id="proc~~default_real_from_json~2~~CallsGraph_edge3" class="edge">
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge4" class="edge">
 <title>proc~default_real_from_json~2&#45;&gt;get_json_value</title>
-<path fill="none" stroke="#ff0000" d="M132,-65.68C139.98,-64.52 148.07,-63.35 155.88,-62.22"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="156.2,-65.71 165.6,-60.81 155.2,-58.78 156.2,-65.71"/>
+<path fill="none" stroke="#ff0000" d="M75.12,-276.67C90.6,-298.89 125.98,-345.07 167.52,-369.13 176.43,-374.3 186.58,-378.2 196.68,-381.15"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="195.53,-384.46 206.09,-383.6 197.3,-377.69 195.53,-384.46"/>
+</g>
+<!-- interface~activation_name -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node6" class="node">
+<title>interface~activation_name</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node6"><a xlink:href="../interface/activation_name.html" xlink:title="metadata_t%activation_name">
+<polygon fill="#a7506f" stroke="#a7506f" points="338.04,-360.27 167.52,-360.27 167.52,-336 338.04,-336 338.04,-360.27"/>
+<text text-anchor="middle" x="252.78" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">metadata_t%activation_name</text>
+</a>
+</g>
+</g>
+<!-- proc~default_real_from_json~2&#45;&gt;interface~activation_name -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge5" class="edge">
+<title>proc~default_real_from_json~2&#45;&gt;interface~activation_name</title>
+<path fill="none" stroke="#ff0000" d="M82.98,-276.55C102.19,-290.69 135.62,-313.59 167.52,-327.13 171.81,-328.96 176.3,-330.65 180.87,-332.21"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="179.6,-335.48 190.19,-335.16 181.71,-328.8 179.6,-335.48"/>
+</g>
+<!-- interface~strings -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node7" class="node">
+<title>interface~strings</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node7"><a xlink:href="../interface/strings.html" xlink:title="metadata_t%strings">
+<polygon fill="#a7506f" stroke="#a7506f" points="311.41,-318.27 194.14,-318.27 194.14,-294 311.41,-294 311.41,-318.27"/>
+<text text-anchor="middle" x="252.78" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">metadata_t%strings</text>
+</a>
+</g>
+</g>
+<!-- proc~default_real_from_json~2&#45;&gt;interface~strings -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge6" class="edge">
+<title>proc~default_real_from_json~2&#45;&gt;interface~strings</title>
+<path fill="none" stroke="#ff0000" d="M122.27,-276.74C142.03,-281.22 164.48,-286.32 185.08,-290.99"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="184.3,-294.41 194.83,-293.21 185.85,-287.58 184.3,-294.41"/>
+</g>
+<!-- lines -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node8" class="node">
+<title>lines</title>
+<polygon fill="#777777" stroke="#777777" points="279.78,-276.27 225.78,-276.27 225.78,-252 279.78,-252 279.78,-276.27"/>
+<text text-anchor="middle" x="252.78" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">lines</text>
+</g>
+<!-- proc~default_real_from_json~2&#45;&gt;lines -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge7" class="edge">
+<title>proc~default_real_from_json~2&#45;&gt;lines</title>
+<path fill="none" stroke="#ff0000" d="M131.99,-264.13C159.58,-264.13 190.73,-264.13 214.34,-264.13"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="214.1,-267.64 224.1,-264.14 214.1,-260.64 214.1,-267.64"/>
+</g>
+<!-- none~count_layers -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node9" class="node">
+<title>none~count_layers</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node9"><a xlink:href="../type/layer_t.html#boundprocedure-count_layers" xlink:title="layer_t%count_layers">
+<polygon fill="#a7506f" stroke="#a7506f" points="315.16,-234.27 190.39,-234.27 190.39,-210 315.16,-210 315.16,-234.27"/>
+<text text-anchor="middle" x="252.78" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">layer_t%count_layers</text>
+</a>
+</g>
+</g>
+<!-- proc~default_real_from_json~2&#45;&gt;none~count_layers -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge8" class="edge">
+<title>proc~default_real_from_json~2&#45;&gt;none~count_layers</title>
+<path fill="none" stroke="#ff0000" d="M122.27,-251.53C142.03,-247.05 164.48,-241.95 185.08,-237.28"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="185.85,-240.69 194.83,-235.06 184.3,-233.86 185.85,-240.69"/>
+</g>
+<!-- none~count_neurons -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node10" class="node">
+<title>none~count_neurons</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node10"><a xlink:href="../type/layer_t.html#boundprocedure-count_neurons" xlink:title="layer_t%count_neurons">
+<polygon fill="#a7506f" stroke="#a7506f" points="320.41,-192.27 185.14,-192.27 185.14,-168 320.41,-168 320.41,-192.27"/>
+<text text-anchor="middle" x="252.78" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">layer_t%count_neurons</text>
+</a>
+</g>
+</g>
+<!-- proc~default_real_from_json~2&#45;&gt;none~count_neurons -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge9" class="edge">
+<title>proc~default_real_from_json~2&#45;&gt;none~count_neurons</title>
+<path fill="none" stroke="#ff0000" d="M82.98,-251.72C102.19,-237.58 135.62,-214.68 167.52,-201.13 171.81,-199.31 176.3,-197.62 180.87,-196.06"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="181.71,-199.47 190.19,-193.11 179.6,-192.79 181.71,-199.47"/>
+</g>
+<!-- none~neural_network~7 -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node11" class="node">
+<title>none~neural_network~7</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node11"><a xlink:href="../type/layer_t.html#boundprocedure-neural_network~7" xlink:title="layer_t%neural_network">
+<polygon fill="#a7506f" stroke="#a7506f" points="322.66,-150.27 182.89,-150.27 182.89,-126 322.66,-126 322.66,-150.27"/>
+<text text-anchor="middle" x="252.78" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">layer_t%neural_network</text>
+</a>
+</g>
+</g>
+<!-- proc~default_real_from_json~2&#45;&gt;none~neural_network~7 -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge10" class="edge">
+<title>proc~default_real_from_json~2&#45;&gt;none~neural_network~7</title>
+<path fill="none" stroke="#ff0000" d="M75.12,-251.6C90.6,-229.38 125.98,-183.2 167.52,-159.13 170.03,-157.68 172.64,-156.33 175.32,-155.06"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="176.65,-158.3 184.54,-151.23 173.97,-151.84 176.65,-158.3"/>
+</g>
+<!-- none~to_json~3 -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node12" class="node">
+<title>none~to_json~3</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node12"><a xlink:href="../type/tensor_map_t.html#boundprocedure-to_json~3" xlink:title="tensor_map_t%to_json">
+<polygon fill="#a7506f" stroke="#a7506f" points="318.16,-108.27 187.39,-108.27 187.39,-84 318.16,-84 318.16,-108.27"/>
+<text text-anchor="middle" x="252.78" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">tensor_map_t%to_json</text>
+</a>
+</g>
+</g>
+<!-- proc~default_real_from_json~2&#45;&gt;none~to_json~3 -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge11" class="edge">
+<title>proc~default_real_from_json~2&#45;&gt;none~to_json~3</title>
+<path fill="none" stroke="#ff0000" d="M71.64,-251.61C83.46,-223 116.44,-152.61 167.52,-117.14 170.4,-115.14 173.45,-113.33 176.62,-111.69"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="177.98,-114.91 185.68,-107.64 175.13,-108.52 177.98,-114.91"/>
+</g>
+<!-- string -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node13" class="node">
+<title>string</title>
+<polygon fill="#777777" stroke="#777777" points="279.78,-66.27 225.78,-66.27 225.78,-42 279.78,-42 279.78,-66.27"/>
+<text text-anchor="middle" x="252.78" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">string</text>
+</g>
+<!-- proc~default_real_from_json~2&#45;&gt;string -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge12" class="edge">
+<title>proc~default_real_from_json~2&#45;&gt;string</title>
+<path fill="none" stroke="#ff0000" d="M69.63,-251.71C78.14,-217.75 106.54,-122.72 167.52,-75.14 180.81,-64.76 198.58,-59.44 214.36,-56.74"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="214.5,-60.26 223.92,-55.41 213.53,-53.33 214.5,-60.26"/>
 </g>
 <!-- string_t -->
-<g id="proc~~default_real_from_json~2~~CallsGraph_node5" class="node">
+<g id="proc~~default_real_from_json~2~~CallsGraph_node14" class="node">
 <title>string_t</title>
-<polygon fill="#777777" stroke="#777777" points="239.66,-24.27 185.66,-24.27 185.66,0 239.66,0 239.66,-24.27"/>
-<text text-anchor="middle" x="212.66" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">string_t</text>
+<polygon fill="#777777" stroke="#777777" points="279.78,-24.27 225.78,-24.27 225.78,0 279.78,0 279.78,-24.27"/>
+<text text-anchor="middle" x="252.78" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">string_t</text>
 </g>
 <!-- proc~default_real_from_json~2&#45;&gt;string_t -->
-<g id="proc~~default_real_from_json~2~~CallsGraph_edge4" class="edge">
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge13" class="edge">
 <title>proc~default_real_from_json~2&#45;&gt;string_t</title>
-<path fill="none" stroke="#ff0000" d="M95.73,-62.54C118.47,-52.65 150.26,-38.83 174.8,-28.16"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="176.01,-31.45 183.78,-24.25 173.22,-25.03 176.01,-31.45"/>
+<path fill="none" stroke="#ff0000" d="M68.35,-251.59C73.96,-212.7 96.52,-93.16 167.52,-33.13 180.49,-22.17 198.36,-16.79 214.31,-14.2"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="214.51,-17.7 223.98,-12.96 213.62,-10.76 214.51,-17.7"/>
+</g>
+<!-- interface~default_real_count_layers -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node15" class="node">
+<title>interface~default_real_count_layers</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node15"><a xlink:href="../interface/default_real_count_layers.html" xlink:title="layer_t%default_real_count_layers">
+<polygon fill="#a7506f" stroke="#a7506f" points="588.06,-318.27 395.04,-318.27 395.04,-294 588.06,-294 588.06,-318.27"/>
+<text text-anchor="middle" x="491.55" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">layer_t%default_real_count_layers</text>
+</a>
+</g>
+</g>
+<!-- none~count_layers&#45;&gt;interface~default_real_count_layers -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge14" class="edge">
+<title>none~count_layers&#45;&gt;interface~default_real_count_layers</title>
+<path fill="none" stroke="#00c4ff" stroke-dasharray="5,2" d="M315.44,-232.74C323.36,-235.45 331.11,-238.86 338.04,-243.13 358.96,-256.05 352.71,-272.91 374.04,-285.13 377.29,-287 380.68,-288.71 384.15,-290.26"/>
+<polygon fill="#00c4ff" stroke="#00c4ff" points="382.84,-293.51 393.42,-293.96 385.43,-287 382.84,-293.51"/>
+</g>
+<!-- interface~double_precision_count_layers -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node19" class="node">
+<title>interface~double_precision_count_layers</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node19"><a xlink:href="../interface/double_precision_count_layers.html" xlink:title="layer_t%double_precision_count_layers">
+<polygon fill="#a7506f" stroke="#a7506f" points="601.56,-276.27 381.54,-276.27 381.54,-252 601.56,-252 601.56,-276.27"/>
+<text text-anchor="middle" x="491.55" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">layer_t%double_precision_count_layers</text>
+</a>
+</g>
+</g>
+<!-- none~count_layers&#45;&gt;interface~double_precision_count_layers -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge15" class="edge">
+<title>none~count_layers&#45;&gt;interface~double_precision_count_layers</title>
+<path fill="none" stroke="#00c4ff" stroke-dasharray="5,2" d="M315.37,-233.06C343.8,-238.1 377.97,-244.16 408.54,-249.59"/>
+<polygon fill="#00c4ff" stroke="#00c4ff" points="407.68,-252.99 418.14,-251.29 408.9,-246.1 407.68,-252.99"/>
+</g>
+<!-- interface~default_real_count_neurons -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node16" class="node">
+<title>interface~default_real_count_neurons</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node16"><a xlink:href="../interface/default_real_count_neurons.html" xlink:title="layer_t%default_real_count_neurons">
+<polygon fill="#a7506f" stroke="#a7506f" points="593.31,-234.27 389.79,-234.27 389.79,-210 593.31,-210 593.31,-234.27"/>
+<text text-anchor="middle" x="491.55" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">layer_t%default_real_count_neurons</text>
+</a>
+</g>
+</g>
+<!-- none~count_neurons&#45;&gt;interface~default_real_count_neurons -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge16" class="edge">
+<title>none~count_neurons&#45;&gt;interface~default_real_count_neurons</title>
+<path fill="none" stroke="#004eff" stroke-dasharray="5,2" d="M320.68,-192C347.96,-196.84 379.78,-202.49 408.45,-207.57"/>
+<polygon fill="#004eff" stroke="#004eff" points="407.73,-211 418.19,-209.3 408.96,-204.11 407.73,-211"/>
+</g>
+<!-- interface~double_precision_count_neurons -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node20" class="node">
+<title>interface~double_precision_count_neurons</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node20"><a xlink:href="../interface/double_precision_count_neurons.html" xlink:title="layer_t%double_precision_count_neurons">
+<polygon fill="#a7506f" stroke="#a7506f" points="606.81,-192.27 376.29,-192.27 376.29,-168 606.81,-168 606.81,-192.27"/>
+<text text-anchor="middle" x="491.55" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">layer_t%double_precision_count_neurons</text>
+</a>
+</g>
+</g>
+<!-- none~count_neurons&#45;&gt;interface~double_precision_count_neurons -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge17" class="edge">
+<title>none~count_neurons&#45;&gt;interface~double_precision_count_neurons</title>
+<path fill="none" stroke="#004eff" stroke-dasharray="5,2" d="M320.68,-180.13C334.54,-180.13 349.58,-180.13 364.78,-180.13"/>
+<polygon fill="#004eff" stroke="#004eff" points="364.35,-183.64 374.35,-180.14 364.35,-176.64 364.35,-183.64"/>
+</g>
+<!-- interface~default_real_neural_network -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node17" class="node">
+<title>interface~default_real_neural_network</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node17"><a xlink:href="../interface/default_real_neural_network.html" xlink:title="layer_t%default_real_neural_network">
+<polygon fill="#a7506f" stroke="#a7506f" points="595.56,-150.27 387.54,-150.27 387.54,-126 595.56,-126 595.56,-150.27"/>
+<text text-anchor="middle" x="491.55" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">layer_t%default_real_neural_network</text>
+</a>
+</g>
+</g>
+<!-- none~neural_network~7&#45;&gt;interface~default_real_neural_network -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge18" class="edge">
+<title>none~neural_network~7&#45;&gt;interface~default_real_neural_network</title>
+<path fill="none" stroke="#2700ff" stroke-dasharray="5,2" d="M322.9,-138.13C339.63,-138.13 357.96,-138.13 376.16,-138.13"/>
+<polygon fill="#2700ff" stroke="#2700ff" points="375.94,-141.64 385.94,-138.14 375.94,-134.64 375.94,-141.64"/>
+</g>
+<!-- interface~double_precision_neural_network -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node21" class="node">
+<title>interface~double_precision_neural_network</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node21"><a xlink:href="../interface/double_precision_neural_network.html" xlink:title="layer_t%double_precision_neural_network">
+<polygon fill="#a7506f" stroke="#a7506f" points="609.06,-108.27 374.04,-108.27 374.04,-84 609.06,-84 609.06,-108.27"/>
+<text text-anchor="middle" x="491.55" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">layer_t%double_precision_neural_network</text>
+</a>
+</g>
+</g>
+<!-- none~neural_network~7&#45;&gt;interface~double_precision_neural_network -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge19" class="edge">
+<title>none~neural_network~7&#45;&gt;interface~double_precision_neural_network</title>
+<path fill="none" stroke="#2700ff" stroke-dasharray="5,2" d="M322.9,-125.87C349.65,-121.13 380.49,-115.66 408.37,-110.71"/>
+<polygon fill="#2700ff" stroke="#2700ff" points="408.98,-114.16 418.21,-108.97 407.75,-107.27 408.98,-114.16"/>
+</g>
+<!-- interface~default_real_to_json~2 -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node18" class="node">
+<title>interface~default_real_to_json~2</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node18"><a xlink:href="../interface/default_real_to_json~2.html" xlink:title="tensor_map_t%default_real_to_json">
+<polygon fill="#a7506f" stroke="#a7506f" points="591.06,-66.27 392.04,-66.27 392.04,-42 591.06,-42 591.06,-66.27"/>
+<text text-anchor="middle" x="491.55" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">tensor_map_t%default_real_to_json</text>
+</a>
+</g>
+</g>
+<!-- none~to_json~3&#45;&gt;interface~default_real_to_json~2 -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge20" class="edge">
+<title>none~to_json~3&#45;&gt;interface~default_real_to_json~2</title>
+<path fill="none" stroke="#9c00ff" stroke-dasharray="5,2" d="M318.48,-84.66C346.28,-79.73 379.1,-73.91 408.57,-68.68"/>
+<polygon fill="#9c00ff" stroke="#9c00ff" points="408.97,-72.16 418.2,-66.97 407.74,-65.27 408.97,-72.16"/>
+</g>
+<!-- interface~double_precision_to_json~2 -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_node22" class="node">
+<title>interface~double_precision_to_json~2</title>
+<g id="a_proc~~default_real_from_json~2~~CallsGraph_node22"><a xlink:href="../interface/double_precision_to_json~2.html" xlink:title="tensor_map_t%double_precision_to_json">
+<polygon fill="#a7506f" stroke="#a7506f" points="604.56,-24.27 378.54,-24.27 378.54,0 604.56,0 604.56,-24.27"/>
+<text text-anchor="middle" x="491.55" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">tensor_map_t%double_precision_to_json</text>
+</a>
+</g>
+</g>
+<!-- none~to_json~3&#45;&gt;interface~double_precision_to_json~2 -->
+<g id="proc~~default_real_from_json~2~~CallsGraph_edge21" class="edge">
+<title>none~to_json~3&#45;&gt;interface~double_precision_to_json~2</title>
+<path fill="none" stroke="#9c00ff" stroke-dasharray="5,2" d="M318.51,-84.44C325.36,-81.92 332.01,-78.86 338.04,-75.14 358.96,-62.22 352.71,-45.36 374.04,-33.13 376.54,-31.7 379.11,-30.37 381.74,-29.12"/>
+<polygon fill="#9c00ff" stroke="#9c00ff" points="382.91,-32.43 390.76,-25.31 380.19,-25.98 382.91,-32.43"/>
 </g>
 </g>
 </svg>
@@ -362,33 +625,11 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-02-24 23:43 +0000             </p>
+ on 2025-04-02 21:03 +0000             </p>
           </div>
         </div>
         <br>
       </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
-
-    <!-- MathJax JavaScript
-             ================================================== -->
-             <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-          });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-          <script src="../tipuesearch/tipuesearch_content.js"></script>
-          <script src="../tipuesearch/tipuesearch_set.js"></script>
-          <script src="../tipuesearch/tipuesearch.js"></script>
-
   </body>
 </html>

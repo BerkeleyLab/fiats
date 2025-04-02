@@ -12,14 +12,29 @@
 
     <title>default_real_map_to_training_ranges &ndash; Fiats</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
-      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="../css/pygments.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -97,9 +112,11 @@
     </div>
   </div>
   <script>
-    $(function () {
-    $('[data-bs-toggle="tooltip"]').tooltip()
-    })
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
   </script>
 
   </div>
@@ -155,7 +172,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~65"></span>
+              <span class="anchor" id="variable-self~20"></span>
               class(<a href='../type/trainable_network_t.html'>trainable_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -216,33 +233,33 @@
 <polygon fill="none" stroke="black" points="208.02,-171.27 0,-171.27 0,-147 208.02,-147 208.02,-171.27"/>
 <text text-anchor="middle" x="104.01" y="-155.53" font-family="Helvetica,sans-Serif" font-size="10.50">default_real_map_to_training_ranges</text>
 </g>
-<!-- none~expected_outputs -->
+<!-- none~expected_outputs~2 -->
 <g id="proc~~default_real_map_to_training_ranges~~CallsGraph_node2" class="node">
-<title>none~expected_outputs</title>
-<g id="a_proc~~default_real_map_to_training_ranges~~CallsGraph_node2"><a xlink:href="../type/input_output_pair_t.html#boundprocedure-expected_outputs" xlink:title="input_output_pair_t%expected_outputs">
+<title>none~expected_outputs~2</title>
+<g id="a_proc~~default_real_map_to_training_ranges~~CallsGraph_node2"><a xlink:href="../type/input_output_pair_t.html#boundprocedure-expected_outputs~2" xlink:title="input_output_pair_t%expected_outputs">
 <polygon fill="#a7506f" stroke="#a7506f" points="480.91,-276.27 263.89,-276.27 263.89,-252 480.91,-252 480.91,-276.27"/>
 <text text-anchor="middle" x="372.4" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">input_output_pair_t%expected_outputs</text>
 </a>
 </g>
 </g>
-<!-- proc~default_real_map_to_training_ranges&#45;&gt;none~expected_outputs -->
+<!-- proc~default_real_map_to_training_ranges&#45;&gt;none~expected_outputs~2 -->
 <g id="proc~~default_real_map_to_training_ranges~~CallsGraph_edge1" class="edge">
-<title>proc~default_real_map_to_training_ranges&#45;&gt;none~expected_outputs</title>
+<title>proc~default_real_map_to_training_ranges&#45;&gt;none~expected_outputs~2</title>
 <path fill="none" stroke="#ff0000" d="M136.88,-171.7C184.81,-190.59 275.54,-226.35 329.01,-247.42"/>
 <polygon fill="#ff0000" stroke="#ff0000" points="327.5,-250.59 338.09,-251 330.07,-244.08 327.5,-250.59"/>
 </g>
-<!-- none~inputs~3 -->
+<!-- none~inputs~4 -->
 <g id="proc~~default_real_map_to_training_ranges~~CallsGraph_node3" class="node">
-<title>none~inputs~3</title>
-<g id="a_proc~~default_real_map_to_training_ranges~~CallsGraph_node3"><a xlink:href="../type/input_output_pair_t.html#boundprocedure-inputs~3" xlink:title="input_output_pair_t%inputs">
+<title>none~inputs~4</title>
+<g id="a_proc~~default_real_map_to_training_ranges~~CallsGraph_node3"><a xlink:href="../type/input_output_pair_t.html#boundprocedure-inputs~4" xlink:title="input_output_pair_t%inputs">
 <polygon fill="#a7506f" stroke="#a7506f" points="450.16,-192.27 294.64,-192.27 294.64,-168 450.16,-168 450.16,-192.27"/>
 <text text-anchor="middle" x="372.4" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">input_output_pair_t%inputs</text>
 </a>
 </g>
 </g>
-<!-- proc~default_real_map_to_training_ranges&#45;&gt;none~inputs~3 -->
+<!-- proc~default_real_map_to_training_ranges&#45;&gt;none~inputs~4 -->
 <g id="proc~~default_real_map_to_training_ranges~~CallsGraph_edge2" class="edge">
-<title>proc~default_real_map_to_training_ranges&#45;&gt;none~inputs~3</title>
+<title>proc~default_real_map_to_training_ranges&#45;&gt;none~inputs~4</title>
 <path fill="none" stroke="#ff0000" d="M208.39,-167.28C233.13,-169.23 259.33,-171.3 283.31,-173.19"/>
 <polygon fill="#ff0000" stroke="#ff0000" points="282.77,-176.66 293.01,-173.96 283.32,-169.68 282.77,-176.66"/>
 </g>
@@ -285,9 +302,9 @@
 </a>
 </g>
 </g>
-<!-- none~expected_outputs&#45;&gt;interface~default_real_expected_outputs -->
+<!-- none~expected_outputs~2&#45;&gt;interface~default_real_expected_outputs -->
 <g id="proc~~default_real_map_to_training_ranges~~CallsGraph_edge5" class="edge">
-<title>none~expected_outputs&#45;&gt;interface~default_real_expected_outputs</title>
+<title>none~expected_outputs~2&#45;&gt;interface~default_real_expected_outputs</title>
 <path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M471.02,-276.74C492.68,-279.52 515.51,-282.44 536.79,-285.13 554.77,-287.41 573.84,-289.81 592.42,-292.14"/>
 <polygon fill="#ff0000" stroke="#ff0000" points="591.75,-295.58 602.11,-293.35 592.62,-288.63 591.75,-295.58"/>
 </g>
@@ -300,9 +317,9 @@
 </a>
 </g>
 </g>
-<!-- none~expected_outputs&#45;&gt;interface~double_precision_expected_outputs -->
+<!-- none~expected_outputs~2&#45;&gt;interface~double_precision_expected_outputs -->
 <g id="proc~~default_real_map_to_training_ranges~~CallsGraph_edge6" class="edge">
-<title>none~expected_outputs&#45;&gt;interface~double_precision_expected_outputs</title>
+<title>none~expected_outputs~2&#45;&gt;interface~double_precision_expected_outputs</title>
 <path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M481.08,-264.13C499.34,-264.13 518.68,-264.13 538.04,-264.13"/>
 <polygon fill="#ff0000" stroke="#ff0000" points="537.92,-267.64 547.92,-264.14 537.92,-260.64 537.92,-267.64"/>
 </g>
@@ -315,9 +332,9 @@
 </a>
 </g>
 </g>
-<!-- none~inputs~3&#45;&gt;interface~default_real_inputs -->
+<!-- none~inputs~4&#45;&gt;interface~default_real_inputs -->
 <g id="proc~~default_real_map_to_training_ranges~~CallsGraph_edge7" class="edge">
-<title>none~inputs~3&#45;&gt;interface~default_real_inputs</title>
+<title>none~inputs~4&#45;&gt;interface~default_real_inputs</title>
 <path fill="none" stroke="#7fff00" stroke-dasharray="5,2" d="M450.28,-190.07C477.59,-193.59 508.56,-197.56 536.79,-201.13 554.77,-203.41 573.84,-205.81 592.42,-208.14"/>
 <polygon fill="#7fff00" stroke="#7fff00" points="591.75,-211.58 602.11,-209.35 592.62,-204.63 591.75,-211.58"/>
 </g>
@@ -330,9 +347,9 @@
 </a>
 </g>
 </g>
-<!-- none~inputs~3&#45;&gt;interface~double_precision_inputs -->
+<!-- none~inputs~4&#45;&gt;interface~double_precision_inputs -->
 <g id="proc~~default_real_map_to_training_ranges~~CallsGraph_edge8" class="edge">
-<title>none~inputs~3&#45;&gt;interface~double_precision_inputs</title>
+<title>none~inputs~4&#45;&gt;interface~double_precision_inputs</title>
 <path fill="none" stroke="#7fff00" stroke-dasharray="5,2" d="M450.32,-180.13C485.57,-180.13 528.42,-180.13 568.84,-180.13"/>
 <polygon fill="#7fff00" stroke="#7fff00" points="568.66,-183.64 578.66,-180.14 568.66,-176.64 568.66,-183.64"/>
 </g>
@@ -514,33 +531,11 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-02-24 23:43 +0000             </p>
+ on 2025-04-02 21:03 +0000             </p>
           </div>
         </div>
         <br>
       </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
-
-    <!-- MathJax JavaScript
-             ================================================== -->
-             <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-          });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-          <script src="../tipuesearch/tipuesearch_content.js"></script>
-          <script src="../tipuesearch/tipuesearch_set.js"></script>
-          <script src="../tipuesearch/tipuesearch.js"></script>
-
   </body>
 </html>

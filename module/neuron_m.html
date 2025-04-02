@@ -12,14 +12,29 @@
 
     <title>neuron_m &ndash; Fiats</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
-      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="../css/pygments.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -96,9 +111,11 @@
     </div>
   </div>
   <script>
-    $(function () {
-    $('[data-bs-toggle="tooltip"]').tooltip()
-    })
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
   </script>
 
   </div>
@@ -124,16 +141,16 @@
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../module/neuron_m.html#interface-neuron_t">neuron_t</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_bias">default_real_bias</a>
-            <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_next_allocated">default_real_next_allocated</a>
-            <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_next_pointer">default_real_next_pointer</a>
+            <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_next_allocated~2">default_real_next_allocated</a>
+            <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_next_pointer~2">default_real_next_pointer</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_num_inputs">default_real_num_inputs</a>
-            <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_to_json">default_real_to_json</a>
+            <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_to_json~3">default_real_to_json</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-default_real_weights">default_real_weights</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_bias">double_precision_bias</a>
-            <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_next_allocated">double_precision_next_allocated</a>
-            <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_next_pointer">double_precision_next_pointer</a>
+            <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_next_allocated~2">double_precision_next_allocated</a>
+            <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_next_pointer~2">double_precision_next_pointer</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_num_inputs">double_precision_num_inputs</a>
-            <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_to_json">double_precision_to_json</a>
+            <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_to_json~3">double_precision_to_json</a>
             <a class="list-group-item" href="../module/neuron_m.html#interface-double_precision_weights">double_precision_weights</a>
         </div>
       </div>
@@ -175,8 +192,8 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='kind_parameters_m.html'>kind_parameters_m</a></li>
                   <li class="list-inline-item">julienne_string_m</li>
+                  <li class="list-inline-item"><a href='kind_parameters_m.html'>kind_parameters_m</a></li>
                   <li class="list-inline-item"><a href='double_precision_string_m.html'>double_precision_string_m</a></li>
               </ul>
             </li>
@@ -521,7 +538,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private pure module function default_real_from_components(weights, bias) result(neuron)  
-    <a href="../proc/default_real_from_components.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_from_components~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   <p>construct single neuron_t object from an array of weights and a bias</p>
@@ -580,7 +597,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private pure module function double_precision_from_components(weights, bias) result(neuron)  
-    <a href="../proc/double_precision_from_components.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_from_components~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   <p>construct single neuron_t object from an array of weights and a bias</p>
@@ -639,7 +656,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private pure recursive module function double_precision_from_json(neuron_lines, start) result(neuron)  
-    <a href="../proc/double_precision_from_json~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_from_json~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   <p>construct linked list of neuron_t objects from an array of JSON-formatted text lines</p>
@@ -672,7 +689,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-start~2"></span>
+              <span class="anchor" id="variable-start~4"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -698,7 +715,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private pure recursive module function from_json(neuron_lines, start) result(neuron)  
-    <a href="../proc/from_json~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/from_json~4.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   <p>construct linked list of neuron_t objects from an array of JSON-formatted text lines</p>
@@ -731,7 +748,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-start"></span>
+              <span class="anchor" id="variable-start~3"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -785,7 +802,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~5"></span>
+              <span class="anchor" id="variable-self~45"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in)</td>
@@ -813,7 +830,7 @@ large graphs.</div>
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-default_real_next_allocated"></span>
+      <span class="anchor" id="interface-default_real_next_allocated~2"></span>
       <h3>        interface
       </h3>
     </div>
@@ -821,7 +838,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private module function default_real_next_allocated(self) result(next_is_allocated)  
-    <a href="../proc/default_real_next_allocated.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_next_allocated~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -839,7 +856,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~7"></span>
+              <span class="anchor" id="variable-self~47"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in)</td>
@@ -867,7 +884,7 @@ large graphs.</div>
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-default_real_next_pointer"></span>
+      <span class="anchor" id="interface-default_real_next_pointer~2"></span>
       <h3>        interface
       </h3>
     </div>
@@ -875,7 +892,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private module function default_real_next_pointer(self) result(next_ptr)  
-    <a href="../proc/default_real_next_pointer.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_next_pointer~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -893,7 +910,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~9"></span>
+              <span class="anchor" id="variable-self~49"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in),</td>
@@ -929,7 +946,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private pure module function default_real_num_inputs(self) result(size_weights)  
-    <a href="../proc/default_real_num_inputs.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_num_inputs~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -947,7 +964,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~11"></span>
+              <span class="anchor" id="variable-self~51"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in)</td>
@@ -975,7 +992,7 @@ large graphs.</div>
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-default_real_to_json"></span>
+      <span class="anchor" id="interface-default_real_to_json~3"></span>
       <h3>        interface
       </h3>
     </div>
@@ -983,7 +1000,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private pure module function default_real_to_json(self) result(lines)  
-    <a href="../proc/default_real_to_json.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_to_json~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1001,7 +1018,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self"></span>
+              <span class="anchor" id="variable-self~41"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1055,7 +1072,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~3"></span>
+              <span class="anchor" id="variable-self~43"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1109,7 +1126,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~6"></span>
+              <span class="anchor" id="variable-self~46"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1137,7 +1154,7 @@ large graphs.</div>
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-double_precision_next_allocated"></span>
+      <span class="anchor" id="interface-double_precision_next_allocated~2"></span>
       <h3>        interface
       </h3>
     </div>
@@ -1145,7 +1162,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private module function double_precision_next_allocated(self) result(next_is_allocated)  
-    <a href="../proc/double_precision_next_allocated.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_next_allocated~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1163,7 +1180,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~8"></span>
+              <span class="anchor" id="variable-self~48"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1191,7 +1208,7 @@ large graphs.</div>
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-double_precision_next_pointer"></span>
+      <span class="anchor" id="interface-double_precision_next_pointer~2"></span>
       <h3>        interface
       </h3>
     </div>
@@ -1199,7 +1216,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private module function double_precision_next_pointer(self) result(next_ptr)  
-    <a href="../proc/double_precision_next_pointer.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_next_pointer~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1217,7 +1234,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~10"></span>
+              <span class="anchor" id="variable-self~50"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in),</td>
@@ -1253,7 +1270,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private pure module function double_precision_num_inputs(self) result(size_weights)  
-    <a href="../proc/double_precision_num_inputs.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_num_inputs~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1271,7 +1288,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~12"></span>
+              <span class="anchor" id="variable-self~52"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1299,7 +1316,7 @@ large graphs.</div>
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-double_precision_to_json"></span>
+      <span class="anchor" id="interface-double_precision_to_json~3"></span>
       <h3>        interface
       </h3>
     </div>
@@ -1307,7 +1324,7 @@ large graphs.</div>
         <li class="list-group-item">
               <h3>
     private pure module function double_precision_to_json(self) result(lines)  
-    <a href="../proc/double_precision_to_json.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_to_json~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1325,7 +1342,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~2"></span>
+              <span class="anchor" id="variable-self~42"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1379,7 +1396,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~4"></span>
+              <span class="anchor" id="variable-self~44"></span>
               class(<a href='../type/neuron_t.html'>neuron_t</a>(double_precision)),
             </td>
 <td>intent(in)</td>
@@ -1436,7 +1453,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-k~3"></span>
+              <span class="anchor" id="variable-k~18"></span>
               integer,
             </td>
               <td>public,</td>
@@ -1470,7 +1487,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-next"></span>
+              <span class="anchor" id="variable-next~2"></span>
               type(<a href='../type/neuron_t.html'>neuron_t</a>(k)),
             </td>
               <td>private,</td>
@@ -1564,92 +1581,92 @@ large graphs.</div>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/neuron_t.html#boundprocedure-bias'>bias</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_bias'>default_real_bias</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_bias'>double_precision_bias</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-next_allocated'>next_allocated</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_next_allocated'>default_real_next_allocated</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_next_allocated'>double_precision_next_allocated</a></td>
-                <td></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-next_allocated~2'>next_allocated</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_next_allocated~2'>default_real_next_allocated</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_next_allocated~2'>double_precision_next_allocated</a></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-next_pointer'>next_pointer</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_next_pointer'>default_real_next_pointer</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_next_pointer'>double_precision_next_pointer</a></td>
-                <td></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-next_pointer~2'>next_pointer</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_next_pointer~2'>default_real_next_pointer</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_next_pointer~2'>double_precision_next_pointer</a></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-num_inputs'>num_inputs</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_num_inputs'>default_real_num_inputs</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_num_inputs'>double_precision_num_inputs</a></td>
-                <td></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-num_inputs~5'>num_inputs</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_num_inputs'>default_real_num_inputs</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_num_inputs'>double_precision_num_inputs</a></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-to_json'>to_json</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_to_json'>default_real_to_json</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_to_json'>double_precision_to_json</a></td>
-                <td></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-to_json~4'>to_json</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_to_json~3'>default_real_to_json</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_to_json~3'>double_precision_to_json</a></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/neuron_t.html#boundprocedure-weights'>weights</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-default_real_weights'>default_real_weights</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neuron_t.html#boundprocedure-double_precision_weights'>double_precision_weights</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
   <strong><a href='../type/neuron_t.html#boundprocedure-default_real_bias'>default_real_bias</a></strong></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-default_real_next_allocated'>default_real_next_allocated</a></strong></td>
-                <td></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-default_real_next_allocated~2'>default_real_next_allocated</a></strong></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-default_real_next_pointer'>default_real_next_pointer</a></strong></td>
-                <td></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-default_real_next_pointer~2'>default_real_next_pointer</a></strong></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
   <strong><a href='../type/neuron_t.html#boundprocedure-default_real_num_inputs'>default_real_num_inputs</a></strong></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-default_real_to_json'>default_real_to_json</a></strong></td>
-                <td></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-default_real_to_json~3'>default_real_to_json</a></strong></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
   <strong><a href='../type/neuron_t.html#boundprocedure-default_real_weights'>default_real_weights</a></strong></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
   <strong><a href='../type/neuron_t.html#boundprocedure-double_precision_bias'>double_precision_bias</a></strong></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-double_precision_next_allocated'>double_precision_next_allocated</a></strong></td>
-                <td></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-double_precision_next_allocated~2'>double_precision_next_allocated</a></strong></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-double_precision_next_pointer'>double_precision_next_pointer</a></strong></td>
-                <td></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-double_precision_next_pointer~2'>double_precision_next_pointer</a></strong></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
   <strong><a href='../type/neuron_t.html#boundprocedure-double_precision_num_inputs'>double_precision_num_inputs</a></strong></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
-  <strong><a href='../type/neuron_t.html#boundprocedure-double_precision_to_json'>double_precision_to_json</a></strong></td>
-                <td></td>
+  <strong><a href='../type/neuron_t.html#boundprocedure-double_precision_to_json~3'>double_precision_to_json</a></strong></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private ::
   <strong><a href='../type/neuron_t.html#boundprocedure-double_precision_weights'>double_precision_weights</a></strong></td>
-                <td></td>
+                  <td></td>
               </tr>
           </tbody>
         </table>
@@ -1681,33 +1698,11 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-02-24 23:43 +0000             </p>
+ on 2025-04-02 21:03 +0000             </p>
           </div>
         </div>
         <br>
       </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
-
-    <!-- MathJax JavaScript
-             ================================================== -->
-             <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-          });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-          <script src="../tipuesearch/tipuesearch_content.js"></script>
-          <script src="../tipuesearch/tipuesearch_set.js"></script>
-          <script src="../tipuesearch/tipuesearch.js"></script>
-
   </body>
 </html>

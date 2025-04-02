@@ -12,14 +12,29 @@
 
     <title>default_real_values &ndash; Fiats</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
-      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="../css/pygments.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -97,9 +112,11 @@
     </div>
   </div>
   <script>
-    $(function () {
-    $('[data-bs-toggle="tooltip"]').tooltip()
-    })
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
   </script>
 
   </div>
@@ -420,76 +437,76 @@
 <g id="interface~~default_real_values~~CalledByGraph_node19" class="node">
 <title>program~learn_addition</title>
 <g id="a_interface~~default_real_values~~CalledByGraph_node19"><a xlink:href="../program/learn_addition.html" xlink:title="learn_addition">
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="128.14,-108.27 40.12,-108.27 40.12,-84 128.14,-84 128.14,-108.27"/>
-<text text-anchor="middle" x="84.13" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_addition</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="128.14,-192.27 40.12,-192.27 40.12,-168 128.14,-168 128.14,-192.27"/>
+<text text-anchor="middle" x="84.13" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_addition</text>
 </a>
 </g>
 </g>
-<!-- program~learn_addition&#45;&gt;proc~y~4 -->
-<g id="interface~~default_real_values~~CalledByGraph_edge22" class="edge">
-<title>program~learn_addition&#45;&gt;proc~y~4</title>
-<path fill="none" stroke="#df00ff" d="M128.62,-96.14C173.97,-96.14 244.31,-96.14 287.43,-96.14"/>
-<polygon fill="#df00ff" stroke="#df00ff" points="287.32,-99.64 297.32,-96.14 287.32,-92.64 287.32,-99.64"/>
+<!-- program~learn_addition&#45;&gt;proc~y~2 -->
+<g id="interface~~default_real_values~~CalledByGraph_edge20" class="edge">
+<title>program~learn_addition&#45;&gt;proc~y~2</title>
+<path fill="none" stroke="#1f00ff" d="M128.62,-180.13C173.97,-180.13 244.31,-180.13 287.43,-180.13"/>
+<polygon fill="#1f00ff" stroke="#1f00ff" points="287.32,-183.64 297.32,-180.14 287.32,-176.64 287.32,-183.64"/>
 </g>
 <!-- program~learn_exponentiation -->
 <g id="interface~~default_real_values~~CalledByGraph_node20" class="node">
 <title>program~learn_exponentiation</title>
 <g id="a_interface~~default_real_values~~CalledByGraph_node20"><a xlink:href="../program/learn_exponentiation.html" xlink:title="learn_exponentiation">
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="146.14,-66.27 22.12,-66.27 22.12,-42 146.14,-42 146.14,-66.27"/>
-<text text-anchor="middle" x="84.13" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_exponentiation</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="146.14,-150.27 22.12,-150.27 22.12,-126 146.14,-126 146.14,-150.27"/>
+<text text-anchor="middle" x="84.13" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_exponentiation</text>
 </a>
 </g>
 </g>
-<!-- program~learn_exponentiation&#45;&gt;proc~y~5 -->
-<g id="interface~~default_real_values~~CalledByGraph_edge23" class="edge">
-<title>program~learn_exponentiation&#45;&gt;proc~y~5</title>
-<path fill="none" stroke="#ff00bf" d="M146.36,-54.13C190.87,-54.13 249.72,-54.13 287.54,-54.13"/>
-<polygon fill="#ff00bf" stroke="#ff00bf" points="287.53,-57.64 297.53,-54.14 287.53,-50.64 287.53,-57.64"/>
+<!-- program~learn_exponentiation&#45;&gt;proc~y~3 -->
+<g id="interface~~default_real_values~~CalledByGraph_edge21" class="edge">
+<title>program~learn_exponentiation&#45;&gt;proc~y~3</title>
+<path fill="none" stroke="#7f00ff" d="M146.36,-138.13C190.87,-138.13 249.72,-138.13 287.54,-138.13"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="287.53,-141.64 297.53,-138.14 287.53,-134.64 287.53,-141.64"/>
 </g>
 <!-- program~learn_multiplication -->
 <g id="interface~~default_real_values~~CalledByGraph_node21" class="node">
 <title>program~learn_multiplication</title>
 <g id="a_interface~~default_real_values~~CalledByGraph_node21"><a xlink:href="../program/learn_multiplication.html" xlink:title="learn_multiplication">
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="142.77,-192.27 25.5,-192.27 25.5,-168 142.77,-168 142.77,-192.27"/>
-<text text-anchor="middle" x="84.13" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_multiplication</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="142.77,-108.27 25.5,-108.27 25.5,-84 142.77,-84 142.77,-108.27"/>
+<text text-anchor="middle" x="84.13" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_multiplication</text>
 </a>
 </g>
 </g>
-<!-- program~learn_multiplication&#45;&gt;proc~y~2 -->
-<g id="interface~~default_real_values~~CalledByGraph_edge20" class="edge">
-<title>program~learn_multiplication&#45;&gt;proc~y~2</title>
-<path fill="none" stroke="#1f00ff" d="M143.27,-180.13C188.08,-180.13 248.74,-180.13 287.45,-180.13"/>
-<polygon fill="#1f00ff" stroke="#1f00ff" points="287.45,-183.64 297.45,-180.14 287.45,-176.64 287.45,-183.64"/>
+<!-- program~learn_multiplication&#45;&gt;proc~y~4 -->
+<g id="interface~~default_real_values~~CalledByGraph_edge22" class="edge">
+<title>program~learn_multiplication&#45;&gt;proc~y~4</title>
+<path fill="none" stroke="#df00ff" d="M143.27,-96.14C188.08,-96.14 248.74,-96.14 287.45,-96.14"/>
+<polygon fill="#df00ff" stroke="#df00ff" points="287.45,-99.64 297.45,-96.14 287.45,-92.64 287.45,-99.64"/>
 </g>
 <!-- program~learn_power_series -->
 <g id="interface~~default_real_values~~CalledByGraph_node22" class="node">
 <title>program~learn_power_series</title>
 <g id="a_interface~~default_real_values~~CalledByGraph_node22"><a xlink:href="../program/learn_power_series.html" xlink:title="learn_power_series">
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="141.27,-234.27 27,-234.27 27,-210 141.27,-210 141.27,-234.27"/>
-<text text-anchor="middle" x="84.13" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_power_series</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="141.27,-66.27 27,-66.27 27,-42 141.27,-42 141.27,-66.27"/>
+<text text-anchor="middle" x="84.13" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_power_series</text>
 </a>
 </g>
 </g>
-<!-- program~learn_power_series&#45;&gt;proc~y -->
-<g id="interface~~default_real_values~~CalledByGraph_edge19" class="edge">
-<title>program~learn_power_series&#45;&gt;proc~y</title>
-<path fill="none" stroke="#003fff" d="M141.74,-222.13C186.73,-222.13 248.4,-222.13 287.55,-222.13"/>
-<polygon fill="#003fff" stroke="#003fff" points="287.41,-225.64 297.41,-222.14 287.41,-218.64 287.41,-225.64"/>
+<!-- program~learn_power_series&#45;&gt;proc~y~5 -->
+<g id="interface~~default_real_values~~CalledByGraph_edge23" class="edge">
+<title>program~learn_power_series&#45;&gt;proc~y~5</title>
+<path fill="none" stroke="#ff00bf" d="M141.74,-54.13C186.73,-54.13 248.4,-54.13 287.55,-54.13"/>
+<polygon fill="#ff00bf" stroke="#ff00bf" points="287.41,-57.64 297.41,-54.14 287.41,-50.64 287.41,-57.64"/>
 </g>
 <!-- program~train_saturated_mixture_ratio -->
 <g id="interface~~default_real_values~~CalledByGraph_node23" class="node">
 <title>program~train_saturated_mixture_ratio</title>
 <g id="a_interface~~default_real_values~~CalledByGraph_node23"><a xlink:href="../program/train_saturated_mixture_ratio.html" xlink:title="train_saturated_mixture_ratio">
-<polygon fill="#f0ad4e" stroke="#f0ad4e" points="168.27,-150.27 0,-150.27 0,-126 168.27,-126 168.27,-150.27"/>
-<text text-anchor="middle" x="84.13" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">train_saturated_mixture_ratio</text>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="168.27,-234.27 0,-234.27 0,-210 168.27,-210 168.27,-234.27"/>
+<text text-anchor="middle" x="84.13" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">train_saturated_mixture_ratio</text>
 </a>
 </g>
 </g>
-<!-- program~train_saturated_mixture_ratio&#45;&gt;proc~y~3 -->
-<g id="interface~~default_real_values~~CalledByGraph_edge21" class="edge">
-<title>program~train_saturated_mixture_ratio&#45;&gt;proc~y~3</title>
-<path fill="none" stroke="#7f00ff" d="M168.45,-138.13C208.93,-138.13 255.58,-138.13 287.41,-138.13"/>
-<polygon fill="#7f00ff" stroke="#7f00ff" points="287.33,-141.64 297.33,-138.14 287.33,-134.64 287.33,-141.64"/>
+<!-- program~train_saturated_mixture_ratio&#45;&gt;proc~y -->
+<g id="interface~~default_real_values~~CalledByGraph_edge19" class="edge">
+<title>program~train_saturated_mixture_ratio&#45;&gt;proc~y</title>
+<path fill="none" stroke="#003fff" d="M168.45,-222.13C208.93,-222.13 255.58,-222.13 287.41,-222.13"/>
+<polygon fill="#003fff" stroke="#003fff" points="287.33,-225.64 297.33,-222.14 287.33,-218.64 287.33,-225.64"/>
 </g>
 <!-- program~write_read_infer -->
 <g id="interface~~default_real_values~~CalledByGraph_node24" class="node">
@@ -613,7 +630,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~13"></span>
+              <span class="anchor" id="variable-self~37"></span>
               class(<a href='../type/tensor_t.html'>tensor_t</a>),
             </td>
 <td>intent(in)</td>
@@ -651,33 +668,11 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-02-24 23:43 +0000             </p>
+ on 2025-04-02 21:03 +0000             </p>
           </div>
         </div>
         <br>
       </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
-
-    <!-- MathJax JavaScript
-             ================================================== -->
-             <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-          });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-          <script src="../tipuesearch/tipuesearch_content.js"></script>
-          <script src="../tipuesearch/tipuesearch_set.js"></script>
-          <script src="../tipuesearch/tipuesearch.js"></script>
-
   </body>
 </html>

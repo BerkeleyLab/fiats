@@ -12,14 +12,29 @@
 
     <title>training_configuration_t &ndash; Fiats </title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
-      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="../css/pygments.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -97,9 +112,11 @@
     </div>
   </div>
   <script>
-    $(function () {
-    $('[data-bs-toggle="tooltip"]').tooltip()
-    })
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
   </script>
 
   </div>
@@ -116,7 +133,7 @@
       </a>
       <div id="vars-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../type/training_configuration_t.html#variable-m~2">m</a>
+            <a class="list-group-item" href="../type/training_configuration_t.html#variable-m~3">m</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#variable-hyperparameters_">hyperparameters_</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#variable-network_configuration_">network_configuration_</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#variable-tensor_names_">tensor_names_</a>
@@ -157,37 +174,37 @@
       </a>
       <div id="boundprocs-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-activation~3">activation</a>
+            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-activation">activation</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_lines">double_precision_lines</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-input_names~2">input_names</a>
-            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-learning_rate~5">learning_rate</a>
+            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-learning_rate~6">learning_rate</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-mini_batches~4">mini_batches</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-nodes_per_layer~4">nodes_per_layer</a>
-            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-operator%28%3D%3D%29~7">operator(==)</a>
+            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-operator%28%3D%3D%29~5">operator(==)</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-optimizer_name~2">optimizer_name</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-output_names~2">output_names</a>
-            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-skip_connections~3">skip_connections</a>
-            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-to_json~7">to_json</a>
+            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-skip_connections">skip_connections</a>
+            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-to_json~6">to_json</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_activation">default_real_activation</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_equals~3">default_real_equals</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_input_names">default_real_input_names</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_learning_rate~2">default_real_learning_rate</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_mini_batches~2">default_real_mini_batches</a>
-            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_nodes_per_layer">default_real_nodes_per_layer</a>
+            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_nodes_per_layer~2">default_real_nodes_per_layer</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_optimizer_name~2">default_real_optimizer_name</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_output_names">default_real_output_names</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_skip_connections">default_real_skip_connections</a>
-            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_to_json~4">default_real_to_json</a>
+            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-default_real_to_json~5">default_real_to_json</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_activation">double_precision_activation</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_equals~3">double_precision_equals</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_input_names">double_precision_input_names</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_learning_rate~2">double_precision_learning_rate</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_mini_batches~2">double_precision_mini_batches</a>
-            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_nodes_per_layer">double_precision_nodes_per_layer</a>
+            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_nodes_per_layer~2">double_precision_nodes_per_layer</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_optimizer_name~2">double_precision_optimizer_name</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_output_names">double_precision_output_names</a>
             <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_skip_connections">double_precision_skip_connections</a>
-            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_to_json~4">double_precision_to_json</a>
+            <a class="list-group-item" href="../type/training_configuration_t.html#boundprocedure-double_precision_to_json~5">double_precision_to_json</a>
         </div>
       </div>
     </div>
@@ -383,7 +400,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-m~2"></span>
+              <span class="anchor" id="variable-m~3"></span>
               integer,
             </td>
               <td>public,</td>
@@ -500,7 +517,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-network_configuration~4"></span>
+              <span class="anchor" id="variable-network_configuration"></span>
               type(<a href='network_configuration_t.html'>network_configuration_t</a>),
             </td>
 <td>intent(in)</td>
@@ -618,7 +635,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-network_configuration~5"></span>
+              <span class="anchor" id="variable-network_configuration~2"></span>
               type(<a href='network_configuration_t.html'>network_configuration_t</a>),
             </td>
 <td>intent(in)</td>
@@ -712,16 +729,16 @@ large graphs.</div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-activation~3"></span>
+      <span class="anchor" id="boundprocedure-activation"></span>
       <h3>
           generic, public ::
   <strong>activation</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-default_real_activation'>default_real_activation</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-double_precision_activation'>double_precision_activation</a>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/default_real_activation.html'>default_real_activation</a>()  
 </h3>
     
@@ -731,9 +748,9 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-        <li class="list-group-item">
-                  <h3>
+          </li>
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/double_precision_activation.html'>double_precision_activation</a>()  
 </h3>
     
@@ -743,8 +760,8 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -758,10 +775,10 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     public pure module function double_precision_lines(self) result(lines)  
     <a href="../proc/double_precision_lines.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
@@ -803,8 +820,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -818,9 +835,9 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/default_real_input_names.html'>default_real_input_names</a>()  
 </h3>
     
@@ -830,9 +847,9 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-        <li class="list-group-item">
-                  <h3>
+          </li>
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/double_precision_input_names.html'>double_precision_input_names</a>()  
 </h3>
     
@@ -842,24 +859,24 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-learning_rate~5"></span>
+      <span class="anchor" id="boundprocedure-learning_rate~6"></span>
       <h3>
           generic, public ::
   <strong>learning_rate</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-default_real_learning_rate~2'>default_real_learning_rate</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-double_precision_learning_rate~2'>double_precision_learning_rate</a>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/default_real_learning_rate~2.html'>default_real_learning_rate</a>()  
 </h3>
     
@@ -869,9 +886,9 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-        <li class="list-group-item">
-                  <h3>
+          </li>
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/double_precision_learning_rate~2.html'>double_precision_learning_rate</a>()  
 </h3>
     
@@ -881,8 +898,8 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -896,9 +913,9 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/default_real_mini_batches~2.html'>default_real_mini_batches</a>()  
 </h3>
     
@@ -908,9 +925,9 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-        <li class="list-group-item">
-                  <h3>
+          </li>
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/double_precision_mini_batches~2.html'>double_precision_mini_batches</a>()  
 </h3>
     
@@ -920,8 +937,8 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -931,14 +948,14 @@ large graphs.</div>
       <span class="anchor" id="boundprocedure-nodes_per_layer~4"></span>
       <h3>
           generic, public ::
-  <strong>nodes_per_layer</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-default_real_nodes_per_layer'>default_real_nodes_per_layer</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-double_precision_nodes_per_layer'>double_precision_nodes_per_layer</a>
+  <strong>nodes_per_layer</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-default_real_nodes_per_layer~2'>default_real_nodes_per_layer</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-double_precision_nodes_per_layer~2'>double_precision_nodes_per_layer</a>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
-    private  interface <a href='../interface/default_real_nodes_per_layer.html'>default_real_nodes_per_layer</a>()  
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    private  interface <a href='../interface/default_real_nodes_per_layer~2.html'>default_real_nodes_per_layer</a>()  
 </h3>
     
 
@@ -947,10 +964,10 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-        <li class="list-group-item">
-                  <h3>
-    private  interface <a href='../interface/double_precision_nodes_per_layer.html'>double_precision_nodes_per_layer</a>()  
+          </li>
+          <li class="list-group-item">
+                    <h3>
+    private  interface <a href='../interface/double_precision_nodes_per_layer~2.html'>double_precision_nodes_per_layer</a>()  
 </h3>
     
 
@@ -959,24 +976,24 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-operator%28%3D%3D%29~7"></span>
+      <span class="anchor" id="boundprocedure-operator%28%3D%3D%29~5"></span>
       <h3>
           generic, public ::
   <strong>operator(==)</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-default_real_equals~3'>default_real_equals</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-double_precision_equals~3'>double_precision_equals</a>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/default_real_equals~3.html'>default_real_equals</a>()  
 </h3>
     
@@ -986,9 +1003,9 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-        <li class="list-group-item">
-                  <h3>
+          </li>
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/double_precision_equals~3.html'>double_precision_equals</a>()  
 </h3>
     
@@ -998,8 +1015,8 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1013,9 +1030,9 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/default_real_optimizer_name~2.html'>default_real_optimizer_name</a>()  
 </h3>
     
@@ -1025,9 +1042,9 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-        <li class="list-group-item">
-                  <h3>
+          </li>
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/double_precision_optimizer_name~2.html'>double_precision_optimizer_name</a>()  
 </h3>
     
@@ -1037,8 +1054,8 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1052,9 +1069,9 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/default_real_output_names.html'>default_real_output_names</a>()  
 </h3>
     
@@ -1064,9 +1081,9 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-        <li class="list-group-item">
-                  <h3>
+          </li>
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/double_precision_output_names.html'>double_precision_output_names</a>()  
 </h3>
     
@@ -1076,24 +1093,24 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-skip_connections~3"></span>
+      <span class="anchor" id="boundprocedure-skip_connections"></span>
       <h3>
           generic, public ::
   <strong>skip_connections</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-default_real_skip_connections'>default_real_skip_connections</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-double_precision_skip_connections'>double_precision_skip_connections</a>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/default_real_skip_connections.html'>default_real_skip_connections</a>()  
 </h3>
     
@@ -1103,9 +1120,9 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-        <li class="list-group-item">
-                  <h3>
+          </li>
+          <li class="list-group-item">
+                    <h3>
     private  interface <a href='../interface/double_precision_skip_connections.html'>double_precision_skip_connections</a>()  
 </h3>
     
@@ -1115,25 +1132,25 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-to_json~7"></span>
+      <span class="anchor" id="boundprocedure-to_json~6"></span>
       <h3>
           generic, public ::
-  <strong>to_json</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-default_real_to_json~4'>default_real_to_json</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-double_precision_to_json~4'>double_precision_to_json</a>
+  <strong>to_json</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-default_real_to_json~5'>default_real_to_json</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/training_configuration_t.html#boundprocedure-double_precision_to_json~5'>double_precision_to_json</a>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
-    private  interface <a href='../interface/default_real_to_json~4.html'>default_real_to_json</a>()  
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    private  interface <a href='../interface/default_real_to_json~5.html'>default_real_to_json</a>()  
 </h3>
     
 
@@ -1142,10 +1159,10 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-        <li class="list-group-item">
-                  <h3>
-    private  interface <a href='../interface/double_precision_to_json~4.html'>double_precision_to_json</a>()  
+          </li>
+          <li class="list-group-item">
+                    <h3>
+    private  interface <a href='../interface/double_precision_to_json~5.html'>double_precision_to_json</a>()  
 </h3>
     
 
@@ -1154,8 +1171,8 @@ large graphs.</div>
   <h4>Arguments</h4>
     <em>None</em>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1169,10 +1186,10 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private module function default_real_activation(self) result(activation)  
     <a href="../proc/default_real_activation.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
@@ -1214,8 +1231,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1229,12 +1246,12 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private elemental module function default_real_equals(lhs, rhs) result(lhs_eq_rhs)  
-    <a href="../proc/default_real_equals.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_equals~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -1289,8 +1306,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1304,10 +1321,10 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private pure module function default_real_input_names(self) result(input_names)  
     <a href="../proc/default_real_input_names.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
@@ -1349,8 +1366,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1364,12 +1381,12 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private elemental module function default_real_learning_rate(self) result(rate)  
-    <a href="../proc/default_real_learning_rate.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_learning_rate~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -1409,8 +1426,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1424,12 +1441,12 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private elemental module function default_real_mini_batches(self) result(num_mini_batches)  
-    <a href="../proc/default_real_mini_batches.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_mini_batches~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -1469,27 +1486,27 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-default_real_nodes_per_layer"></span>
+      <span class="anchor" id="boundprocedure-default_real_nodes_per_layer~2"></span>
       <h3>
           procedure, private ::
   <strong>default_real_nodes_per_layer</strong>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private pure module function default_real_nodes_per_layer(self) result(nodes)  
-    <a href="../proc/default_real_nodes_per_layer.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_nodes_per_layer~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -1529,8 +1546,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1544,12 +1561,12 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private elemental module function default_real_optimizer_name(self) result(identifier)  
-    <a href="../proc/default_real_optimizer_name.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_optimizer_name~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -1589,8 +1606,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1604,10 +1621,10 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private pure module function default_real_output_names(self) result(output_names)  
     <a href="../proc/default_real_output_names.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
@@ -1649,8 +1666,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1664,10 +1681,10 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private elemental module function default_real_skip_connections(self) result(using_skip)  
     <a href="../proc/default_real_skip_connections.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
@@ -1709,27 +1726,27 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-default_real_to_json~4"></span>
+      <span class="anchor" id="boundprocedure-default_real_to_json~5"></span>
       <h3>
           procedure, private ::
   <strong>default_real_to_json</strong>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private pure module function default_real_to_json(self) result(json_lines)  
-    <a href="../proc/default_real_to_json~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/default_real_to_json~4.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -1769,8 +1786,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1784,10 +1801,10 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private module function double_precision_activation(self) result(activation)  
     <a href="../proc/double_precision_activation.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
@@ -1829,8 +1846,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1844,12 +1861,12 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private elemental module function double_precision_equals(lhs, rhs) result(lhs_eq_rhs)  
-    <a href="../proc/double_precision_equals.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_equals~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -1904,8 +1921,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1919,10 +1936,10 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private pure module function double_precision_input_names(self) result(input_names)  
     <a href="../proc/double_precision_input_names.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
@@ -1964,8 +1981,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1979,12 +1996,12 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private elemental module function double_precision_learning_rate(self) result(rate)  
-    <a href="../proc/double_precision_learning_rate.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_learning_rate~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -2024,8 +2041,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -2039,12 +2056,12 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private elemental module function double_precision_mini_batches(self) result(num_mini_batches)  
-    <a href="../proc/double_precision_mini_batches.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_mini_batches~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -2084,27 +2101,27 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-double_precision_nodes_per_layer"></span>
+      <span class="anchor" id="boundprocedure-double_precision_nodes_per_layer~2"></span>
       <h3>
           procedure, private ::
   <strong>double_precision_nodes_per_layer</strong>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private pure module function double_precision_nodes_per_layer(self) result(nodes)  
-    <a href="../proc/double_precision_nodes_per_layer.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_nodes_per_layer~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -2144,8 +2161,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -2159,12 +2176,12 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private elemental module function double_precision_optimizer_name(self) result(identifier)  
-    <a href="../proc/double_precision_optimizer_name.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_optimizer_name~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -2204,8 +2221,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -2219,10 +2236,10 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private pure module function double_precision_output_names(self) result(output_names)  
     <a href="../proc/double_precision_output_names.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
@@ -2264,8 +2281,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -2279,10 +2296,10 @@ large graphs.</div>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private elemental module function double_precision_skip_connections(self) result(using_skip)  
     <a href="../proc/double_precision_skip_connections.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
@@ -2324,27 +2341,27 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-double_precision_to_json~4"></span>
+      <span class="anchor" id="boundprocedure-double_precision_to_json~5"></span>
       <h3>
           procedure, private ::
   <strong>double_precision_to_json</strong>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-              <h3>interface </h3>
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                <h3>interface </h3>
+                    <h3>
     private pure module function double_precision_to_json(self) result(json_lines)  
-    <a href="../proc/double_precision_to_json~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/double_precision_to_json~4.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3>
 
   
@@ -2384,8 +2401,8 @@ large graphs.</div>
     </h4>
     
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -2410,33 +2427,11 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-02-24 23:43 +0000             </p>
+ on 2025-04-02 21:03 +0000             </p>
           </div>
         </div>
         <br>
       </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
-
-    <!-- MathJax JavaScript
-             ================================================== -->
-             <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-          });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-          <script src="../tipuesearch/tipuesearch_content.js"></script>
-          <script src="../tipuesearch/tipuesearch_set.js"></script>
-          <script src="../tipuesearch/tipuesearch.js"></script>
-
   </body>
 </html>

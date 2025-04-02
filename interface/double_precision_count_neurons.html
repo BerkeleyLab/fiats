@@ -12,14 +12,29 @@
 
     <title>double_precision_count_neurons &ndash; Fiats</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
-      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="../css/pygments.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -97,9 +112,11 @@
     </div>
   </div>
   <script>
-    $(function () {
-    $('[data-bs-toggle="tooltip"]').tooltip()
-    })
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
   </script>
 
   </div>
@@ -176,18 +193,18 @@
 <path fill="none" stroke="#ff0000" d="M360.75,-75.14C368.54,-75.14 376.66,-75.14 384.93,-75.14"/>
 <polygon fill="#ff0000" stroke="#ff0000" points="384.75,-78.64 394.75,-75.14 384.75,-71.64 384.75,-78.64"/>
 </g>
-<!-- proc~default_real_from_json -->
+<!-- proc~default_real_from_json~2 -->
 <g id="interface~~double_precision_count_neurons~~CalledByGraph_node3" class="node">
-<title>proc~default_real_from_json</title>
-<g id="a_interface~~double_precision_count_neurons~~CalledByGraph_node3"><a xlink:href="../proc/default_real_from_json.html" xlink:title="default_real_from_json">
+<title>proc~default_real_from_json~2</title>
+<g id="a_interface~~double_precision_count_neurons~~CalledByGraph_node3"><a xlink:href="../proc/default_real_from_json~2.html" xlink:title="default_real_from_json">
 <polygon fill="#d94e8f" stroke="#d94e8f" points="160.39,-150.27 28.87,-150.27 28.87,-126 160.39,-126 160.39,-150.27"/>
 <text text-anchor="middle" x="94.63" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">default_real_from_json</text>
 </a>
 </g>
 </g>
-<!-- proc~default_real_from_json&#45;&gt;none~count_neurons -->
+<!-- proc~default_real_from_json~2&#45;&gt;none~count_neurons -->
 <g id="interface~~double_precision_count_neurons~~CalledByGraph_edge2" class="edge">
-<title>proc~default_real_from_json&#45;&gt;none~count_neurons</title>
+<title>proc~default_real_from_json~2&#45;&gt;none~count_neurons</title>
 <path fill="none" stroke="#ff0000" d="M158.73,-125.51C169.01,-123.02 179.5,-120.21 189.27,-117.14 211.33,-110.2 235.28,-100.53 254.49,-92.22"/>
 <polygon fill="#ff0000" stroke="#ff0000" points="255.79,-95.47 263.53,-88.24 252.97,-89.06 255.79,-95.47"/>
 </g>
@@ -206,18 +223,18 @@
 <path fill="none" stroke="#ff0000" d="M176.03,-87.53C188.43,-86.21 201.22,-84.84 213.58,-83.52"/>
 <polygon fill="#ff0000" stroke="#ff0000" points="213.7,-87.02 223.27,-82.48 212.96,-80.06 213.7,-87.02"/>
 </g>
-<!-- proc~double_precision_from_json~3 -->
+<!-- proc~double_precision_from_json~2 -->
 <g id="interface~~double_precision_count_neurons~~CalledByGraph_node5" class="node">
-<title>proc~double_precision_from_json~3</title>
-<g id="a_interface~~double_precision_count_neurons~~CalledByGraph_node5"><a xlink:href="../proc/double_precision_from_json~3.html" xlink:title="double_precision_from_json">
+<title>proc~double_precision_from_json~2</title>
+<g id="a_interface~~double_precision_count_neurons~~CalledByGraph_node5"><a xlink:href="../proc/double_precision_from_json~2.html" xlink:title="double_precision_from_json">
 <polygon fill="#d94e8f" stroke="#d94e8f" points="173.89,-66.27 15.37,-66.27 15.37,-42 173.89,-42 173.89,-66.27"/>
 <text text-anchor="middle" x="94.63" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">double_precision_from_json</text>
 </a>
 </g>
 </g>
-<!-- proc~double_precision_from_json~3&#45;&gt;none~count_neurons -->
+<!-- proc~double_precision_from_json~2&#45;&gt;none~count_neurons -->
 <g id="interface~~double_precision_count_neurons~~CalledByGraph_edge4" class="edge">
-<title>proc~double_precision_from_json~3&#45;&gt;none~count_neurons</title>
+<title>proc~double_precision_from_json~2&#45;&gt;none~count_neurons</title>
 <path fill="none" stroke="#ff0000" d="M174.33,-62.56C187.28,-63.94 200.71,-65.38 213.64,-66.76"/>
 <polygon fill="#ff0000" stroke="#ff0000" points="213.05,-70.22 223.36,-67.8 213.79,-63.26 213.05,-70.22"/>
 </g>
@@ -339,7 +356,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-layer~8"></span>
+              <span class="anchor" id="variable-layer~6"></span>
               class(<a href='../type/layer_t.html'>layer_t</a>(double_precision)),
             </td>
 <td>intent(in),</td>
@@ -377,33 +394,11 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-02-24 23:43 +0000             </p>
+ on 2025-04-02 21:03 +0000             </p>
           </div>
         </div>
         <br>
       </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
-
-    <!-- MathJax JavaScript
-             ================================================== -->
-             <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-          });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-          <script src="../tipuesearch/tipuesearch_content.js"></script>
-          <script src="../tipuesearch/tipuesearch_set.js"></script>
-          <script src="../tipuesearch/tipuesearch.js"></script>
-
   </body>
 </html>

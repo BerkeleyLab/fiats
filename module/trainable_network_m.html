@@ -12,14 +12,29 @@
 
     <title>trainable_network_m &ndash; Fiats</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
-      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="../css/pygments.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -96,9 +111,11 @@
     </div>
   </div>
   <script>
-    $(function () {
-    $('[data-bs-toggle="tooltip"]').tooltip()
-    })
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
   </script>
 
   </div>
@@ -165,13 +182,13 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='neural_network_m.html'>neural_network_m</a></li>
-                  <li class="list-inline-item"><a href='input_output_pair_m.html'>input_output_pair_m</a></li>
-                  <li class="list-inline-item">julienne_m</li>
                   <li class="list-inline-item"><a href='kind_parameters_m.html'>kind_parameters_m</a></li>
                   <li class="list-inline-item"><a href='training_configuration_m.html'>training_configuration_m</a></li>
-                  <li class="list-inline-item"><a href='mini_batch_m.html'>mini_batch_m</a></li>
+                  <li class="list-inline-item"><a href='neural_network_m.html'>neural_network_m</a></li>
+                  <li class="list-inline-item"><a href='input_output_pair_m.html'>input_output_pair_m</a></li>
                   <li class="list-inline-item"><a href='tensor_map_m.html'>tensor_map_m</a></li>
+                  <li class="list-inline-item"><a href='mini_batch_m.html'>mini_batch_m</a></li>
+                  <li class="list-inline-item">julienne_m</li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -1131,7 +1148,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-neural_network~11"></span>
+              <span class="anchor" id="variable-neural_network~5"></span>
               type(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1157,7 +1174,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private module function perturbed_identity_network(training_configuration, perturbation_magnitude, metadata, input_map, output_map) result(trainable_network)  
-    <a href="../proc/perturbed_identity_network~4.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/perturbed_identity_network~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1190,7 +1207,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-perturbation_magnitude~4"></span>
+              <span class="anchor" id="variable-perturbation_magnitude"></span>
               real,
             </td>
 <td>intent(in)</td>
@@ -1205,7 +1222,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-metadata~6"></span>
+              <span class="anchor" id="variable-metadata"></span>
               type(string_t),
             </td>
 <td>intent(in)</td>
@@ -1220,7 +1237,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-input_map~5"></span>
+              <span class="anchor" id="variable-input_map~3"></span>
               type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>)
             </td>
 <td></td>
@@ -1235,7 +1252,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-output_map~5"></span>
+              <span class="anchor" id="variable-output_map~3"></span>
               type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>)
             </td>
 <td></td>
@@ -1289,7 +1306,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~65"></span>
+              <span class="anchor" id="variable-self~20"></span>
               class(<a href='../type/trainable_network_t.html'>trainable_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1358,7 +1375,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~64"></span>
+              <span class="anchor" id="variable-self~19"></span>
               class(<a href='../type/trainable_network_t.html'>trainable_network_t</a>),
             </td>
 <td>intent(inout)</td>
@@ -1388,7 +1405,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-cost~3"></span>
+              <span class="anchor" id="variable-cost"></span>
               real,
             </td>
 <td>intent(out),</td>
@@ -1470,7 +1487,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-k~22"></span>
+              <span class="anchor" id="variable-k~19"></span>
               integer,
             </td>
               <td>public,</td>
@@ -1559,82 +1576,82 @@ large graphs.</div>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-activation_function_name~2'>activation_function_name</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_activation_name'>default_real_activation_name</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_activation_name'>double_precision_activation_name</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-infer~3'>infer</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_infer'>default_real_infer</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_infer'>double_precision_infer</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-learn~2'>learn</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_learn'>default_real_learn</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-map_from_output_range~2'>map_from_output_range</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_map_from_output_range'>default_real_map_from_output_range</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_map_from_output_range'>double_precision_map_from_output_range</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-map_to_input_range~2'>map_to_input_range</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_map_to_input_range'>default_real_map_to_input_range</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_map_to_input_range'>double_precision_map_to_input_range</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-map_to_training_ranges'>map_to_training_ranges</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/trainable_network_t.html#boundprocedure-default_real_map_to_training_ranges'>default_real_map_to_training_ranges</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
-  <strong><a href='../type/trainable_network_t.html#boundprocedure-nodes_per_layer~7'>nodes_per_layer</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_nodes_per_layer~2'>default_real_nodes_per_layer</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_nodes_per_layer~2'>double_precision_nodes_per_layer</a></td>
-                <td></td>
+  <strong><a href='../type/trainable_network_t.html#boundprocedure-nodes_per_layer~7'>nodes_per_layer</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_nodes_per_layer'>default_real_nodes_per_layer</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_nodes_per_layer'>double_precision_nodes_per_layer</a></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-num_hidden_layers~3'>num_hidden_layers</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_num_hidden_layers'>default_real_num_hidden_layers</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_num_hidden_layers'>double_precision_num_hidden_layers</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-num_inputs~7'>num_inputs</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_num_inputs~2'>default_real_num_inputs</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_num_inputs~2'>double_precision_num_inputs</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-num_outputs~2'>num_outputs</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_num_outputs'>default_real_num_outputs</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_num_outputs'>double_precision_num_outputs</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-operator%28%3D%3D%29~9'>operator(==)</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_approximately_equal'>default_real_approximately_equal</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_approximately_equal'>double_precision_approximately_equal</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-skip~2'>skip</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_skip'>default_real_skip</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_skip'>double_precision_skip</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
-  <strong><a href='../type/trainable_network_t.html#boundprocedure-to_json~9'>to_json</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_to_json~5'>default_real_to_json</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_to_json~5'>double_precision_to_json</a></td>
-                <td></td>
+  <strong><a href='../type/trainable_network_t.html#boundprocedure-to_json~9'>to_json</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_to_json~4'>default_real_to_json</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_to_json~4'>double_precision_to_json</a></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  generic, public ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-train'>train</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/trainable_network_t.html#boundprocedure-default_real_train'>default_real_train</a></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private, non_overridable ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-default_real_map_to_training_ranges'>default_real_map_to_training_ranges</a></strong></td>
-                <td></td>
+                  <td></td>
               </tr>
               <tr>
                 <td>  procedure, private, non_overridable ::
   <strong><a href='../type/trainable_network_t.html#boundprocedure-default_real_train'>default_real_train</a></strong></td>
-                <td></td>
+                  <td></td>
               </tr>
           </tbody>
         </table>
@@ -1666,33 +1683,11 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-02-24 23:43 +0000             </p>
+ on 2025-04-02 21:03 +0000             </p>
           </div>
         </div>
         <br>
       </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
-
-    <!-- MathJax JavaScript
-             ================================================== -->
-             <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-          });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-          <script src="../tipuesearch/tipuesearch_content.js"></script>
-          <script src="../tipuesearch/tipuesearch_set.js"></script>
-          <script src="../tipuesearch/tipuesearch.js"></script>
-
   </body>
 </html>
