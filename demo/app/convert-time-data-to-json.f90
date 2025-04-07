@@ -7,8 +7,8 @@ program convert_time_data_to_json
   implicit none
 
   character(len=*), parameter :: usage_info = &
-    new_line('') // &
-    'Usage:  ./build/run-fpm.sh run convert-time-data-to-json --  --input-file <string> --output-file <string>' // &
+    new_line('') // new_line('') // &
+    'Usage:  ./build/run-fpm.sh run convert-time-data-to-json --  --input-file <string> --output-file <string>' // new_line('') // &
     'where angular brackets (<>) denote user-provided input.' // &
     new_line('')
 
