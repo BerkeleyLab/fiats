@@ -63,6 +63,12 @@ module time_data_m
       type(icar_output_file_t) icar_output_file
     end function
 
+    pure module function from_lines(lines) result(icar_output_file)
+      implicit none
+      type(string_t), intent(in) :: lines(:)
+      type(icar_output_file_t) icar_output_file
+    end function
+
   end interface
 
   interface

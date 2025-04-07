@@ -13,6 +13,10 @@ contains
     icar_output_file%file_t = file
   end procedure
 
+  module procedure from_lines
+    icar_output_file%file_t = file_t(lines)
+  end procedure
+
   module procedure default_real_from_json
 
     integer i
