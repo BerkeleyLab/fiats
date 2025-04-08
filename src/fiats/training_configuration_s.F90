@@ -215,4 +215,20 @@ contains
     output_names = self%tensor_names_%output_names()
   end procedure
 
+  module procedure default_real_input_file_names
+    names = self%training_data_file_names_%fully_qualified_inputs_files()
+  end procedure
+
+  module procedure double_precision_input_file_names
+    names = self%training_data_file_names_%fully_qualified_inputs_files()
+  end procedure
+
+  module procedure default_real_output_file_names
+    names = self%training_data_file_names_%fully_qualified_outputs_files()
+  end procedure
+
+  module procedure double_precision_output_file_names
+    names = self%training_data_file_names_%fully_qualified_outputs_files()
+  end procedure
+
 end submodule training_configuration_s
