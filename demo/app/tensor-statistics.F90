@@ -25,7 +25,7 @@ program tensor_statistics
   character(len=*), parameter :: usage =    new_line('a') // new_line('a') // & 
     'Usage: '                            // new_line('a') // new_line('a') // &
     './build/run-fpm.sh run tensor-statistics -- \'       // new_line('a') // &
-    '  --base <string> --bins <integer> \'                // new_line('a') // &
+    '  --bins <integer> \'                // new_line('a') // &
     '  [--raw] [--start <integer>] [--end <integer>] [--stride <integer>]' // &
                                             new_line('a') // new_line('a') // &
     'where angular brackets denote user-provided values and square brackets denote optional arguments.' &
@@ -34,18 +34,20 @@ program tensor_statistics
   integer(int64) t_start, t_finish, clock_rate
   integer num_bins, start_step, stride
   integer, allocatable :: end_step
-  character(len=:), allocatable :: base_name
   logical raw
+  type(string_t), allocatable :: input_file_names(:), output_file_names(:)
 
   call system_clock(t_start, clock_rate)
-  call get_command_line_arguments(base_name, num_bins, start_step, end_step, stride, raw)
+  call get_command_line_arguments(num_bins, start_step, end_step, stride, raw)
+
   associate(training_configuration => training_configuration_t(file_t("training_configuration.json")))
+
     call compute_histograms( &
-        input_tensors_file_name = base_name // "_input.nc" &
-      ,output_tensors_file_name = base_name // "_output.nc" &
+       input_tensor_file_names  = training_configuration%input_file_names() &
+      ,output_tensor_file_names = training_configuration%output_file_names() &
+      ,input_component_names    = training_configuration%input_variable_names() &
+      ,output_component_names   = training_configuration%output_variable_names() &
       ,raw = raw &
-      , input_names = training_configuration%input_names() &
-      ,output_names = training_configuration%output_names() &
     )
   end associate
   call system_clock(t_finish)
@@ -65,8 +67,7 @@ program tensor_statistics
 
 contains
 
-  subroutine get_command_line_arguments(base_name, num_bins, start_step, end_step, stride, raw)
-    character(len=:), allocatable, intent(out) :: base_name
+  subroutine get_command_line_arguments(num_bins, start_step, end_step, stride, raw)
     integer, intent(out) :: num_bins, start_step, stride
     integer, intent(out), allocatable :: end_step
     logical, intent(out) :: raw
@@ -75,14 +76,13 @@ contains
     type(command_line_t) command_line
     character(len=:), allocatable :: stride_string, bins_string, start_string, end_string
 
-    base_name = command_line%flag_value("--base")
     bins_string = command_line%flag_value("--bins")
     start_string = command_line%flag_value("--start")
     end_string = command_line%flag_value("--end")
     stride_string = command_line%flag_value("--stride")
     raw = command_line%argument_present(["--raw"])
 
-    associate(required_arguments => len(base_name)/=0 .and. len(bins_string)/=0)
+    associate(required_arguments => len(bins_string)/=0)
        if (.not. required_arguments) error stop usage 
     end associate
 
@@ -107,10 +107,10 @@ contains
  
   end subroutine get_command_line_arguments
 
-  subroutine compute_histograms(input_tensors_file_name, output_tensors_file_name, raw, input_names, output_names)
-    character(len=*), intent(in) :: input_tensors_file_name, output_tensors_file_name
+  subroutine compute_histograms(input_tensor_file_names, output_tensor_file_names, input_component_names, output_component_names, raw)
+    type(string_t), intent(in) :: input_tensor_file_names(:), output_tensor_file_names(:)
+    type(string_t), intent(in) :: input_component_names(:),   output_component_names(:)
     logical, intent(in) :: raw
-    type(string_t), intent(in) :: input_names(:), output_names(:)
 
     type(time_derivative_t), allocatable :: derivative(:)
     type(NetCDF_variable_t), allocatable :: input_variable(:), output_variable(:)
@@ -120,23 +120,21 @@ contains
     integer(int64) t_histo_start, t_histo_finish 
     integer t, t_end, v
 
-    allocate(input_variable(size(input_names)))
+    allocate(input_variable(size(input_component_names)))
 
-    print '(a)',"Reading physics-based model inputs from " // input_tensors_file_name
+    print '(a)',"Reading physics-based model inputs from " // input_tensor_file_names(1)%string()
 
     input_file: &
-    associate(NetCDF_file => netCDF_file_t(input_tensors_file_name))
+    associate(NetCDF_file => netCDF_file_t(input_tensor_file_names(1)))
 
       do v=1, size(input_variable) 
-        print '(a)',"- reading " // input_names(v)%string()
-        call input_variable(v)%input(input_names(v), NetCDF_file, rank=4)
+        print '(a)',"- reading " // input_component_names(v)%string()
+        call input_variable(v)%input(input_component_names(v), NetCDF_file, rank=4)
       end do
 
-#ifdef ASSERTIONS
       do v = 2, size(input_variable)
         call_assert(input_variable(v)%conformable_with(input_variable(1)))
       end do
-#endif
 
       print '(a)',"- reading time"
       call input_time%input("time", NetCDF_file, rank=1)
@@ -159,36 +157,34 @@ contains
             histograms_file = to_file(histograms(h))
             associate(gnuplot_file_name => histograms(h)%variable_name() // ".plt")
               print '(a)',"- writing " // gnuplot_file_name
-              call histograms_file%write_lines(gnuplot_file_name)
+              call histograms_file%write_lines(string_t(gnuplot_file_name))
             end associate
           end do
         else
           histograms_file = to_file(histograms)
-          associate(gnuplot_file_name => base_name // "_inputs_stats.plt")
+          associate(gnuplot_file_name => "inputs_stats.plt")
             print '(a)',"- writing " // gnuplot_file_name
-            call histograms_file%write_lines(gnuplot_file_name)
+            call histograms_file%write_lines(string_t(gnuplot_file_name))
           end associate
         end if
       end block
     end associate
 
-    allocate(output_variable(size(output_names)))
+    allocate(output_variable(size(output_component_names)))
 
-    print '(a)',"Reading physics-based model outputs from " // output_tensors_file_name
+    print '(a)',"Reading physics-based model outputs from " // output_tensor_file_names(1)%string()
 
     output_file: &
-    associate(NetCDF_file => netCDF_file_t(output_tensors_file_name))
+    associate(NetCDF_file => netCDF_file_t(output_tensor_file_names(1)))
 
       do v=1, size(output_variable)
-        print '(a)', "- reading " // output_names(v)%string()
-        call output_variable(v)%input(output_names(v), NetCDF_file, rank=4)
+        print '(a)', "- reading " // output_component_names(v)%string()
+        call output_variable(v)%input(output_component_names(v), NetCDF_file, rank=4)
       end do
 
-#ifdef ASSERTIONS
       do v = 2, size(output_variable)
         call_assert(output_variable(v)%conformable_with(output_variable(1)))
       end do
-#endif
 
       print '(a)',"- reading time"
       call output_time%input("time", NetCDF_file, rank=1)
@@ -203,7 +199,7 @@ contains
     associate(dt => NetCDF_variable_t(output_time - input_time, "dt"))
       do v = 1, size(derivative)
         derivative_name: &
-        associate(derivative_name => "d" // output_names(v)%string() // "_dt")
+        associate(derivative_name => "d" // output_component_names(v)%string() // "_dt")
           print '(a)',"- " // derivative_name
           derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=dt)
           call_assert(.not. derivative(v)%any_nan())
@@ -227,14 +223,14 @@ contains
             histograms_file = to_file(histograms(h))
             associate(gnuplot_file_name => histograms(h)%variable_name() // ".plt")
               print '(a)',"- writing " // gnuplot_file_name
-              call histograms_file%write_lines(gnuplot_file_name)
+              call histograms_file%write_lines(string_t(gnuplot_file_name))
             end associate
           end do
         else
           histograms_file = to_file(histograms)
-          associate(gnuplot_file_name => base_name // "_outputs_stats.plt")
+          associate(gnuplot_file_name => "outputs_stats.plt")
             print '(a)',"- writing " // gnuplot_file_name
-            call histograms_file%write_lines(gnuplot_file_name)
+            call histograms_file%write_lines(string_t(gnuplot_file_name))
           end associate
         end if
       end block

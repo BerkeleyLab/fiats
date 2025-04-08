@@ -21,7 +21,7 @@ contains
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
 
     lines = [ &
-       string_t(indent // '"' //training_data_file_names_key //  '": {'                                               ) &
+       string_t(indent // '"' //training_data_file_names_key //  '": {'                                 ) &
       ,string_t(indent // indent // '"' // path_key           // '" : "' // self%path_           // '",') &
       ,string_t(indent // indent // '"' // inputs_prefix_key  // '" : "' // self%inputs_prefix_  // '",') &
       ,string_t(indent // indent // '"' // outputs_prefix_key // '" : "' // self%outputs_prefix_ // '",') &
