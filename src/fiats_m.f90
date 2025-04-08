@@ -16,5 +16,6 @@ module fiats_m
  use tensor_names_m, only : tensor_names_t
  use trainable_network_m, only : trainable_network_t
  use training_configuration_m, only : training_configuration_t
+ use training_data_file_names_m, only : training_data_file_names_t
  implicit none
 end module fiats_m
