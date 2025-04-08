@@ -170,7 +170,7 @@ contains
     logical stop_requested
 
     input_names: &
-    associate(input_names => training_configuration%input_names())
+    associate(input_names => training_configuration%input_variable_names())
 
       allocate(input_variable(size(input_names)))
 
@@ -199,7 +199,7 @@ contains
     end associate input_names
 
     output_names: &
-    associate(output_names => training_configuration%output_names())
+    associate(output_names => training_configuration%output_variable_names())
 
       allocate(output_variable(size(output_names)))
 
