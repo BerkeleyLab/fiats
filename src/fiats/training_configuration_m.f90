@@ -38,14 +38,14 @@ module training_configuration_m
     procedure, private          :: default_real_nodes_per_layer , double_precision_nodes_per_layer
     generic :: skip_connections => default_real_skip_connections, double_precision_skip_connections
     procedure, private ::          default_real_skip_connections, double_precision_skip_connections
-    generic :: input_names      => default_real_input_names     , double_precision_input_names
-    procedure, private ::          default_real_input_names     , double_precision_input_names
-    generic :: output_names     => default_real_output_names    , double_precision_output_names
-    procedure, private ::          default_real_output_names    , double_precision_output_names
-    generic :: input_file_names => default_real_input_file_names, double_precision_input_file_names
-    procedure, private ::          default_real_input_file_names, double_precision_input_file_names
-    generic :: output_file_names =>default_real_output_file_names, double_precision_output_file_names
-    procedure, private ::          default_real_output_file_names, double_precision_output_file_names
+    generic :: input_variable_names  => default_real_input_names     , double_precision_input_names
+    procedure, private ::               default_real_input_names     , double_precision_input_names
+    generic :: output_variable_names => default_real_output_names    , double_precision_output_names
+    procedure, private ::               default_real_output_names    , double_precision_output_names
+    generic :: input_file_names      => default_real_input_file_names, double_precision_input_file_names
+    procedure, private ::               default_real_input_file_names, double_precision_input_file_names
+    generic :: output_file_names     => default_real_output_file_names, double_precision_output_file_names
+    procedure, private ::               default_real_output_file_names, double_precision_output_file_names
   end type
   interface training_configuration_t
 
