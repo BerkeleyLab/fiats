@@ -42,8 +42,8 @@ contains
 
 #if HAVE_PROCEDURE_ACTUAL_FOR_POINTER_DUMMY
     test_descriptions = [ & 
-      test_description_t("constructing a instance from lines in the icar output format", construct_from_icar_file) &
-      test_description_t("writing and reading a JSON file returns the values written", write_then_read_json) &
+       test_description_t("constructing a instance from a file object in the icar output format", construct_from_icar_file) &
+      ,test_description_t("writing and reading a JSON file returns the values written", write_then_read_json) &
     ]   
 #else
     procedure(diagnosis_function_i), pointer :: construct_from_icar_file_ptr, write_then_read_json_ptr
