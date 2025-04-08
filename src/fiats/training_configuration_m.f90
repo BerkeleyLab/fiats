@@ -49,20 +49,24 @@ module training_configuration_m
   end type
   interface training_configuration_t
 
-    module function default_real_from_components(hyperparameters, network_configuration, tensor_names) result(training_configuration)
+    pure module function default_real_from_components(hyperparameters, network_configuration, tensor_names, training_data_file_names) &
+      result(training_configuration)
       implicit none
       type(hyperparameters_t), intent(in) :: hyperparameters
       type(network_configuration_t), intent(in) :: network_configuration
       type(training_configuration_t) training_configuration
       type(tensor_names_t), intent(in) :: tensor_names
+      type(training_data_file_names_t), intent(in) :: training_data_file_names
     end function
 
-    module function double_precision_from_components(hyperparameters, network_configuration, tensor_names) result(training_configuration)
+    pure module function double_precision_from_components(hyperparameters, network_configuration, tensor_names, training_data_file_names) &
+      result(training_configuration)
       implicit none
       type(hyperparameters_t(double_precision)), intent(in) :: hyperparameters
       type(network_configuration_t), intent(in) :: network_configuration
       type(tensor_names_t), intent(in) :: tensor_names
       type(training_configuration_t(double_precision)) training_configuration
+      type(training_data_file_names_t), intent(in) :: training_data_file_names
     end function
 
     module function default_real_from_file(file_object) result(training_configuration)

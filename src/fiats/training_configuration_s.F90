@@ -14,6 +14,7 @@ contains
     training_configuration%hyperparameters_ = hyperparameters
     training_configuration%network_configuration_ = network_configuration
     training_configuration%tensor_names_ = tensor_names
+    training_configuration%training_data_file_names_ = training_data_file_names
 
     training_configuration%file_t = file_t([ &
       string_t(header), &
@@ -22,6 +23,8 @@ contains
       training_configuration%network_configuration_%to_json(), &
       string_t(separator), &
       training_configuration%tensor_names_%to_json(), &
+      string_t(separator), &
+      training_configuration%training_data_file_names_%to_json(), &
       string_t(footer) &
     ])
 
@@ -32,6 +35,7 @@ contains
     training_configuration%hyperparameters_ = hyperparameters
     training_configuration%network_configuration_ = network_configuration
     training_configuration%tensor_names_ = tensor_names
+    training_configuration%training_data_file_names_ = training_data_file_names
 
     training_configuration%file_t = file_t([ &
       string_t(header), &
@@ -40,6 +44,8 @@ contains
       training_configuration%network_configuration_%to_json(), &
       string_t(separator), &
       training_configuration%tensor_names_%to_json(), &
+      string_t(separator), &
+      training_configuration%training_data_file_names_%to_json(), &
       string_t(footer) &
     ])
   end procedure
@@ -60,6 +66,7 @@ contains
       training_configuration%hyperparameters_ = hyperparameters_t(lines)
       training_configuration%network_configuration_= network_configuration_t(lines)
       training_configuration%tensor_names_ = tensor_names_t(lines)
+      training_configuration%training_data_file_names_ = training_data_file_names_t(lines)
 
 #if ! defined _CRAYFTN
     end associate
@@ -83,6 +90,7 @@ contains
       training_configuration%hyperparameters_ = hyperparameters_t(lines)
       training_configuration%network_configuration_= network_configuration_t(lines)
       training_configuration%tensor_names_ = tensor_names_t(lines)
+      training_configuration%training_data_file_names_ = training_data_file_names_t(lines)
 
 #if ! defined _CRAYFTN
     end associate
@@ -101,14 +109,16 @@ contains
     lhs_eq_rhs = &
       lhs%hyperparameters_ == rhs%hyperparameters_ .and. &
       lhs%network_configuration_ == rhs%network_configuration_ .and. &
-      lhs%tensor_names_ == rhs%tensor_names_
+      lhs%tensor_names_ == rhs%tensor_names_ .and. &
+      lhs%training_data_file_names_ == rhs%training_data_file_names_
   end procedure
 
   module procedure double_precision_equals
     lhs_eq_rhs = &
       lhs%hyperparameters_ == rhs%hyperparameters_ .and. &
       lhs%network_configuration_ == rhs%network_configuration_ .and. &
-      lhs%tensor_names_ == rhs%tensor_names_
+      lhs%tensor_names_ == rhs%tensor_names_ .and. &
+      lhs%training_data_file_names_ == rhs%training_data_file_names_
   end procedure
 
   module procedure default_real_mini_batches
