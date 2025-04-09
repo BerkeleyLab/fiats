@@ -20,7 +20,7 @@ The design of Fiats centers around functional programming patterns that facilita
 Towards these ends,
 
 * Most Fiats procedures are `pure` and thus satisfy a language requirement for invocation inside `do concurrent`,
-* The network training procedure use `do concurrent` to expose automatic parallelization opportunities to compilers, and
+* The network training procedure uses `do concurrent` to expose automatic parallelization opportunities to compilers, and
 * Exploiting multi-image execution to speedup training is under investigation.
 
 To broaden support for the native parallel features, the Fiats contributors also write compiler tests, bug reports, and patches; develop a parallel runtime library ([Caffeine]); participate in the language standardization process; and provide example inference and training code for exercising and evaluating compilers' automatic parallelization capabilities on processors and accelerators, including Graphics Processing Units (GPUs).
@@ -74,17 +74,21 @@ fpm test --compiler flang-new --flag "-mmlir -allow-assumed-rank -O3"
 ```
 
 ###### _Experimental:_ Automatic parallelization of `do concurrent` on CPUs
-With the `amd-trunk-dev` branch of the [ROCm fork] of LLVM, automatically parallelize inference calculations inside `do concurrent` constructs:
+A series of pull requests is currently being reviewed and merged to enable LLLVM Flang to automatically parallelize `do concurrent`.
+To try this feature, clone the Berkeley Lab [flang-testing-project] fork of llvm-project and build Flang from source
+```
+git clone git@github.com:BerkeleyLab/flang-testing-project
+git checkout paw-atm24-fiats
+```
+The following command will then run an example that parallelizes batch inference calculations:
 ```
 fpm run \
   --example concurrent-inferences \
   --compiler flang-new \
   --flag "-mmlir -allow-assumed-rank -O3 -fopenmp -fdo-concurrent-parallel=host" \
   -- --network model.json
-
 ```
 where `model.json` must be a neural network in the [JSON] format used by Fiats and the companion [nexport] package.
-
 Automatic parallelization for training neural networks is under development.
 
 #### Partially Supported Compilers
@@ -105,11 +109,11 @@ fpm test --compiler gfortran --profile release
 ```
 
 ##### Intel (`ifx`)
-Compiler bugs related to generic name resolution currently prevent `ifx` from building Fiats versions 0.15.0 or later. An upcoming release in 2025 is expected to fix these bugs.
-Test and build earlier versions of Fiats build with the following command:
+Building and testing Fiats with ifx` 2025.1 using the command
 ```
 fpm test --compiler ifx --flag -fpp --profile release
 ```
+results in all Fiats unit tests passing except for one test that converts a neural network with varying-width hidden layers to and from JSON.  The reason for this failure is under investigation.  If you would like to use Fiats with `ifx` and require hidden layers of varying width, please submit an issue requesting an alternative neural-network file format.
 
 ##### _Experimental:_ Automatic offloading of `do concurrent` to GPUs
 This capability is under development with the goal to facilitate automatic GPU offloading via the following command:
@@ -158,11 +162,17 @@ Project is up to date
     "tensor names": {
         "inputs"  : ["pressure","temperature"],
         "outputs" : ["saturated mixing ratio"]
-    }
+    },  
+     "training data file names": {
+         "path" : "dates-20101001-2011076",
+         "inputs prefix"  : "training_input-image-",
+         "outputs prefix" : "training_output-image-",
+         "infixes" : ["000001", "000002", "000003", "000004", "000005", "000006", "000007", "000008", "000009", "000010"]
+     }   
 }
 ```
 The Fiats JSON file format is fragile: splitting or combining lines breaks the file reader.
-Files with added or removed white space or reordered whole objects ("hyperparameters", "network configuration", or "tensor names") should work.
+It should be ok, however, to add or removed white space or to reordered whole objects such as placing the "network configuration" object above the  "hyperparameters" object.
 A future release will leverage the [rojff] JSON interface to allow for more flexible file formatting.
 
 ### Training a neural network

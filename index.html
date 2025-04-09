@@ -115,7 +115,7 @@ The design of Fiats centers around functional programming patterns that facilita
 Towards these ends,</p>
 <ul>
 <li>Most Fiats procedures are <code>pure</code> and thus satisfy a language requirement for invocation inside <code>do concurrent</code>,</li>
-<li>The network training procedure use <code>do concurrent</code> to expose automatic parallelization opportunities to compilers, and</li>
+<li>The network training procedure uses <code>do concurrent</code> to expose automatic parallelization opportunities to compilers, and</li>
 <li>Exploiting multi-image execution to speedup training is under investigation.</li>
 </ul>
 <p>To broaden support for the native parallel features, the Fiats contributors also write compiler tests, bug reports, and patches; develop a parallel runtime library (<a href="https://go.lbl.gov/caffeine">Caffeine</a>); participate in the language standardization process; and provide example inference and training code for exercising and evaluating compilers' automatic parallelization capabilities on processors and accelerators, including Graphics Processing Units (GPUs).</p>
@@ -157,7 +157,13 @@ The remainder of this section contains commands for building Fiats with a recent
 </code></pre></div>
 
 <h6 id="experimental-automatic-parallelization-of-do-concurrent-on-cpus"><em>Experimental:</em> Automatic parallelization of <code>do concurrent</code> on CPUs</h6>
-<p>With the <code>amd-trunk-dev</code> branch of the <a href="https://github.com/ROCm/llvm-project">ROCm fork</a> of LLVM, automatically parallelize inference calculations inside <code>do concurrent</code> constructs:</p>
+<p>A series of pull requests is currently being reviewed and merged to enable LLLVM Flang to automatically parallelize <code>do concurrent</code>.
+To try this feature, clone the Berkeley Lab [flang-testing-project] fork of llvm-project and build Flang from source</p>
+<div class="codehilite"><pre><span></span><code><span class="n">git</span><span class="w"> </span><span class="n">clone</span><span class="w"> </span><span class="n">git</span><span class="nv">@github</span><span class="p">.</span><span class="nl">com</span><span class="p">:</span><span class="n">BerkeleyLab</span><span class="o">/</span><span class="n">flang</span><span class="o">-</span><span class="n">testing</span><span class="o">-</span><span class="n">project</span>
+<span class="n">git</span><span class="w"> </span><span class="n">checkout</span><span class="w"> </span><span class="n">paw</span><span class="o">-</span><span class="n">atm24</span><span class="o">-</span><span class="n">fiats</span>
+</code></pre></div>
+
+<p>The following command will then run an example that parallelizes batch inference calculations:</p>
 <div class="codehilite"><pre><span></span><code>fpm run \
   --example concurrent-inferences \
   --compiler flang-new \
@@ -165,8 +171,8 @@ The remainder of this section contains commands for building Fiats with a recent
   -- --network model.json
 </code></pre></div>
 
-<p>where <code>model.json</code> must be a neural network in the <a href="https://www.json.org/json-en.html">JSON</a> format used by Fiats and the companion <a href="https://go.lbl.gov/nexport">nexport</a> package.</p>
-<p>Automatic parallelization for training neural networks is under development.</p>
+<p>where <code>model.json</code> must be a neural network in the <a href="https://www.json.org/json-en.html">JSON</a> format used by Fiats and the companion <a href="https://go.lbl.gov/nexport">nexport</a> package.
+Automatic parallelization for training neural networks is under development.</p>
 <h4 id="partially-supported-compilers">Partially Supported Compilers</h4>
 <p>Fiats release 0.14.0 and earlier support the use of the NAG, GNU, and Intel Fortran compilers.
 We are corresponding with these compilers' developers about addressing the compiler issues preventing building newer Fiats releases.</p>
@@ -181,11 +187,11 @@ Test and build earlier versions of Fiats build with the following command:</p>
 </code></pre></div>
 
 <h5 id="intel-ifx">Intel (<code>ifx</code>)</h5>
-<p>Compiler bugs related to generic name resolution currently prevent <code>ifx</code> from building Fiats versions 0.15.0 or later. An upcoming release in 2025 is expected to fix these bugs.
-Test and build earlier versions of Fiats build with the following command:</p>
+<p>Building and testing Fiats with ifx` 2025.1 using the command</p>
 <div class="codehilite"><pre><span></span><code>fpm test --compiler ifx --flag -fpp --profile release
 </code></pre></div>
 
+<p>results in all Fiats unit tests passing except for one test that converts a neural network with varying-width hidden layers to and from JSON.  The reason for this failure is under investigation.  If you would like to use Fiats with <code>ifx</code> and require hidden layers of varying width, please submit an issue requesting an alternative neural-network file format.</p>
 <h5 id="experimental-automatic-offloading-of-do-concurrent-to-gpus"><em>Experimental:</em> Automatic offloading of <code>do concurrent</code> to GPUs</h5>
 <p>This capability is under development with the goal to facilitate automatic GPU offloading via the following command:</p>
 <div class="codehilite"><pre><span></span><code><span class="nv">fpm</span><span class="w"> </span><span class="nv">test</span><span class="w"> </span><span class="o">--</span><span class="nv">compiler</span><span class="w"> </span><span class="nv">ifx</span><span class="w"> </span><span class="o">--</span><span class="nv">profile</span><span class="w"> </span><span class="nv">release</span><span class="w"> </span><span class="o">--</span><span class="nv">flag</span><span class="w"> </span><span class="s2">&quot;-fopenmp-target-do-concurrent -qopenmp -fopenmp-targets=spir64 -O3&quot;</span>
@@ -229,12 +235,18 @@ To see the expected file format, run the [print-training-configuration] example 
     &quot;tensor names&quot;: {
         &quot;inputs&quot;  : [&quot;pressure&quot;,&quot;temperature&quot;],
         &quot;outputs&quot; : [&quot;saturated mixing ratio&quot;]
-    }
+    },  
+     &quot;training data file names&quot;: {
+         &quot;path&quot; : &quot;dates-20101001-2011076&quot;,
+         &quot;inputs prefix&quot;  : &quot;training_input-image-&quot;,
+         &quot;outputs prefix&quot; : &quot;training_output-image-&quot;,
+         &quot;infixes&quot; : [&quot;000001&quot;, &quot;000002&quot;, &quot;000003&quot;, &quot;000004&quot;, &quot;000005&quot;, &quot;000006&quot;, &quot;000007&quot;, &quot;000008&quot;, &quot;000009&quot;, &quot;000010&quot;]
+     }   
 }
 </code></pre></div>
 
 <p>The Fiats JSON file format is fragile: splitting or combining lines breaks the file reader.
-Files with added or removed white space or reordered whole objects ("hyperparameters", "network configuration", or "tensor names") should work.
+It should be ok, however, to add or removed white space or to reordered whole objects such as placing the "network configuration" object above the  "hyperparameters" object.
 A future release will leverage the <a href="https://gitlab.com/everythingfunctional/rojff">rojff</a> JSON interface to allow for more flexible file formatting.</p>
 <h3 id="training-a-neural-network">Training a neural network</h3>
 <p>Running the following command will train a neural network to learn the saturated mixing ratio function that is one component of the ICAR SB04 cloud microphysics model (see the <a href="example/supporting-modules/saturated_mixing_ratio_m.f90">saturated_mixing_ratio_m</a> module for an implementation of the involved function):</p>
@@ -341,7 +353,7 @@ Examples of performing inference using a neural-network JSON file are in <a href
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-04-02 21:03 +0000             </p>
+ on 2025-04-09 04:24 +0000             </p>
           </div>
         </div>
         <br>
