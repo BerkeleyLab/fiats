@@ -37,6 +37,8 @@ module NetCDF_variable_m
     procedure, private, non_overridable :: default_real_subtract        , double_precision_subtract
     generic :: histogram                => default_real_histogram       , double_precision_histogram
     procedure, private, non_overridable :: default_real_histogram       , double_precision_histogram
+    generic :: compare                  => default_real_compare         , double_precision_compare
+    procedure, private, non_overridable :: default_real_compare         , double_precision_compare
   end type
 
   type, extends(NetCDF_variable_t) :: time_derivative_t(k)
@@ -45,9 +47,10 @@ module NetCDF_variable_m
 
   interface time_derivative_t
 
-    impure elemental module function default_real_time_derivative(old, new, dt) result(time_derivative)
+    module function default_real_time_derivative(old, new, dt) result(time_derivative)
       implicit none
-      type(NetCDF_variable_t), intent(in) :: old, new, dt
+      type(NetCDF_variable_t), intent(in) :: old, new
+      real, intent(in) :: dt(:)
       type(time_derivative_t) time_derivative
     end function
 
@@ -237,6 +240,18 @@ module NetCDF_variable_m
       logical, intent(in) :: raw
       type(histogram_t) histogram
     end function
+
+    module subroutine default_real_compare(self, values)
+      implicit none
+      class(NetCDF_variable_t), intent(in) :: self
+      type(string_t), intent(in) :: values(:)
+    end subroutine
+
+    module subroutine double_precision_compare(self, values)
+      implicit none
+      class(NetCDF_variable_t(double_precision)), intent(in) :: self
+      type(string_t), intent(in) :: values(:)
+    end subroutine
 
   end interface
 

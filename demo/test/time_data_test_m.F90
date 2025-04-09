@@ -92,7 +92,7 @@ contains
     associate(time_data => time_data_t( &
        date = string_t(["2010/10/01", "2010/10/01", "2010/10/01"]) &
       ,time = string_t([  "03:16:00",   "06:36:00",   "09:56:00"]) &
-      ,dt   = [120.000000, 120.000000, 120.000000] &
+      ,dt   = [expected_dt, expected_dt, expected_dt] &
     ) )
       associate(json_file => time_data%to_json())
         associate(from_json => time_data_t(json_file))

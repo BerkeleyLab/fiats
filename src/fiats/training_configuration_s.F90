@@ -241,4 +241,12 @@ contains
     names = self%training_data_file_names_%fully_qualified_outputs_files()
   end procedure
 
+  module procedure default_real_time_data_file_name
+    name = self%training_data_file_names_%fully_qualified_time_file()
+  end procedure
+
+  module procedure double_precision_time_data_file_name
+    name = self%training_data_file_names_%fully_qualified_time_file()
+  end procedure
+
 end submodule training_configuration_s

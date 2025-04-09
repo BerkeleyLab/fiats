@@ -23,6 +23,7 @@ program train_cloud_microphysics
   use NetCDF_variable_m, only: NetCDF_variable_t, tensors, time_derivative_t
   use occupancy_m, only : occupancy_t
   use default_m, only: default_or_internal_read
+  use time_data_m, only: time_data_t
 
   implicit none
 
@@ -232,17 +233,17 @@ contains
 
       allocate(derivative(size(output_variable)))
 
-      dt: &
-      associate(dt => NetCDF_variable_t(output_time - input_time, "dt"))
+      print '(a)',"- reading time from JSON file"
+      associate(time_data => time_data_t(file_t(training_configuration%time_data_file_name())))
         do v = 1, size(derivative)
           derivative_name: &
           associate(derivative_name => "d" // output_names(v)%string() // "/dt")
             print *,"- " // derivative_name
-            derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=dt)
+            derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=time_data%dt())
             call_assert(.not. derivative(v)%any_nan())
           end associate derivative_name
         end do
-      end associate dt
+      end associate
     end associate output_names
 
     if (allocated(args%end_step)) then
