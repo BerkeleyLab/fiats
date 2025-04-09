@@ -9,6 +9,7 @@ module training_configuration_m
   use kind_parameters_m, only  : default_real, double_precision
   use double_precision_file_m, only : double_precision_file_t
   use tensor_names_m, only : tensor_names_t
+  use training_data_file_names_m, only : training_data_file_names_t
   implicit none
 
   private
@@ -19,6 +20,7 @@ module training_configuration_m
     type(hyperparameters_t(m)),    private :: hyperparameters_
     type(network_configuration_t), private :: network_configuration_
     type(tensor_names_t), private :: tensor_names_
+    type(training_data_file_names_t), private :: training_data_file_names_
   contains
     generic :: operator(==)     => default_real_equals          , double_precision_equals
     procedure, private          :: default_real_equals          , double_precision_equals
@@ -36,28 +38,37 @@ module training_configuration_m
     procedure, private          :: default_real_nodes_per_layer , double_precision_nodes_per_layer
     generic :: skip_connections => default_real_skip_connections, double_precision_skip_connections
     procedure, private ::          default_real_skip_connections, double_precision_skip_connections
-    generic :: input_names      => default_real_input_names     , double_precision_input_names
-    procedure, private ::          default_real_input_names     , double_precision_input_names
-    generic :: output_names     => default_real_output_names    , double_precision_output_names
-    procedure, private ::          default_real_output_names    , double_precision_output_names
+    generic :: input_variable_names  => default_real_input_names        , double_precision_input_names
+    procedure, private ::               default_real_input_names        , double_precision_input_names
+    generic :: output_variable_names => default_real_output_names       , double_precision_output_names
+    procedure, private ::               default_real_output_names       , double_precision_output_names
+    generic :: input_file_names      => default_real_input_file_names   , double_precision_input_file_names
+    procedure, private ::               default_real_input_file_names   , double_precision_input_file_names
+    generic :: output_file_names     => default_real_output_file_names  , double_precision_output_file_names
+    procedure, private ::               default_real_output_file_names  , double_precision_output_file_names
+    generic :: time_data_file_name   => default_real_time_data_file_name, double_precision_time_data_file_name
+    procedure, private ::               default_real_time_data_file_name, double_precision_time_data_file_name
   end type
-
   interface training_configuration_t
 
-    module function default_real_from_components(hyperparameters, network_configuration, tensor_names) result(training_configuration)
+    pure module function default_real_from_components(hyperparameters, network_configuration, tensor_names, training_data_file_names) &
+      result(training_configuration)
       implicit none
       type(hyperparameters_t), intent(in) :: hyperparameters
       type(network_configuration_t), intent(in) :: network_configuration
       type(training_configuration_t) training_configuration
       type(tensor_names_t), intent(in) :: tensor_names
+      type(training_data_file_names_t), intent(in) :: training_data_file_names
     end function
 
-    module function double_precision_from_components(hyperparameters, network_configuration, tensor_names) result(training_configuration)
+    pure module function double_precision_from_components(hyperparameters, network_configuration, tensor_names, training_data_file_names) &
+      result(training_configuration)
       implicit none
       type(hyperparameters_t(double_precision)), intent(in) :: hyperparameters
       type(network_configuration_t), intent(in) :: network_configuration
       type(tensor_names_t), intent(in) :: tensor_names
       type(training_configuration_t(double_precision)) training_configuration
+      type(training_data_file_names_t), intent(in) :: training_data_file_names
     end function
 
     module function default_real_from_file(file_object) result(training_configuration)
@@ -194,6 +205,42 @@ module training_configuration_m
       implicit none
       class(training_configuration_t(double_precision)), intent(in) :: self
       type(string_t), allocatable :: output_names(:)
+    end function
+
+    pure module function default_real_input_file_names(self) result(names)
+      implicit none
+      class(training_configuration_t), intent(in) :: self
+      type(string_t), allocatable :: names(:)
+    end function
+
+    pure module function double_precision_input_file_names(self) result(names)
+      implicit none
+      class(training_configuration_t(double_precision)), intent(in) :: self
+      type(string_t), allocatable :: names(:)
+    end function
+
+    pure module function default_real_output_file_names(self) result(names)
+      implicit none
+      class(training_configuration_t), intent(in) :: self
+      type(string_t), allocatable :: names(:)
+    end function
+
+    pure module function double_precision_output_file_names(self) result(names)
+      implicit none
+      class(training_configuration_t(double_precision)), intent(in) :: self
+      type(string_t), allocatable :: names(:)
+    end function
+
+    pure module function default_real_time_data_file_name(self) result(name)
+      implicit none
+      class(training_configuration_t), intent(in) :: self
+      type(string_t) name
+    end function
+
+    pure module function double_precision_time_data_file_name(self) result(name)
+      implicit none
+      class(training_configuration_t(double_precision)), intent(in) :: self
+      type(string_t) name
     end function
 
   end interface

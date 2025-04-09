@@ -9,8 +9,12 @@ submodule(time_data_m) time_data_s
   implicit none
 contains
 
-  module procedure from_string_array
-     icar_output_file%file_t = file_t(lines)
+  module procedure from_file_object
+    icar_output_file%file_t = file
+  end procedure
+
+  module procedure from_lines
+    icar_output_file%file_t = file_t(lines)
   end procedure
 
   module procedure default_real_from_json
@@ -28,11 +32,10 @@ contains
       i = 3
       time_data%date_ = lines(i)%get_json_value(key="dates", mold=[string_t::])
       i = 4
-      time_data%date_ = lines(i)%get_json_value(key="times", mold=[string_t::])
+      time_data%time_ = lines(i)%get_json_value(key="times", mold=[string_t::])
       i = 5
       time_data%dt_= lines(i)%get_json_value(key="dt", mold=[real::])
     end associate
-
   end procedure
 
   module procedure default_real_from_strings
@@ -63,7 +66,7 @@ contains
           allocate(time_data%date_(num_lines))
           allocate(time_data%time_(num_lines))
           allocate(time_data%dt_(num_lines))
-           
+
           do line = 1, num_lines
             associate(raw_line => lines(line)%string())
               call_assert(raw_line(1:len(preface))==preface)
@@ -119,6 +122,10 @@ contains
 
   module procedure default_real_dt
     dt_values = self%dt_
+  end procedure
+
+  module procedure default_real_times
+    times = self%time_
   end procedure
 
 end submodule time_data_s

@@ -42,8 +42,8 @@ contains
 
 #if HAVE_PROCEDURE_ACTUAL_FOR_POINTER_DUMMY
     test_descriptions = [ & 
-      test_description_t("constructing a instance from a file object in the icar output format", construct_from_icar_file) &
-      test_description_t("writing and reading a JSON file returns the values written", write_then_read_json) &
+       test_description_t("constructing a instance from a file object in the icar output format", construct_from_icar_file) &
+      ,test_description_t("writing and reading a JSON file returns the values written", write_then_read_json) &
     ]   
 #else
     procedure(diagnosis_function_i), pointer :: construct_from_icar_file_ptr, write_then_read_json_ptr
@@ -71,9 +71,9 @@ contains
     real, allocatable :: dt(:)
     
     associate(time_data => time_data_t( icar_output_file_t( string_t( [ &
-       "training data dt= 2010/10/01 03:16:00   120.000000    " &
-      ,"training data dt= 2010/10/01 06:36:00   120.000000    " &
-      ,"training data dt= 2010/10/01 09:56:00   120.000000    " &
+       "training data dt= 2010/10/01 03:16:00   120.000000               1" &
+      ,"training data dt= 2010/10/01 06:36:00   120.000000               2" &
+      ,"training data dt= 2010/10/01 09:56:00   120.000000               3" &
     ] ) ) ) )
       associate(dt => time_data%dt())
         test_diagnosis = test_diagnosis_t( &
@@ -92,7 +92,7 @@ contains
     associate(time_data => time_data_t( &
        date = string_t(["2010/10/01", "2010/10/01", "2010/10/01"]) &
       ,time = string_t([  "03:16:00",   "06:36:00",   "09:56:00"]) &
-      ,dt   = [120.000000, 120.000000, 120.000000] &
+      ,dt   = [expected_dt, expected_dt, expected_dt] &
     ) )
       associate(json_file => time_data%to_json())
         associate(from_json => time_data_t(json_file))

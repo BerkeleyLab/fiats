@@ -1,6 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 module NetCDF_file_m
+  use julienne_m, only : string_t
   implicit none
 
   private
@@ -16,12 +17,18 @@ module NetCDF_file_m
 
   interface NetCDF_file_t
 
-    pure module function construct(file_name) result(NetCDF_file)
+    pure module function construct_from_character_name(file_name) result(NetCDF_file)
       implicit none
       character(len=*), intent(in) :: file_name
       type(NetCDF_file_t) NetCDF_file
     end function
       
+    pure module function construct_from_string_name(file_name) result(NetCDF_file)
+      implicit none
+      type(string_t), intent(in) :: file_name
+      type(NetCDF_file_t) NetCDF_file
+    end function
+
   end interface
 
   interface
