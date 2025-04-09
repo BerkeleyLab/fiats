@@ -19,17 +19,16 @@ program tensor_statistics
   use NetCDF_file_m, only: NetCDF_file_t
   use NetCDF_variable_m, only: NetCDF_variable_t, time_derivative_t
   use histogram_m, only: histogram_t, to_file
-  use training_configuration_m, only : training_configuration_t
+  use time_data_m, only: time_data_t, icar_output_file_t
+  use fiats_m, only : training_configuration_t
   implicit none
 
-  character(len=*), parameter :: usage =    new_line('a') // new_line('a') // & 
-    'Usage: '                            // new_line('a') // new_line('a') // &
-    './build/run-fpm.sh run tensor-statistics -- \'       // new_line('a') // &
-    '  --bins <integer> \'                // new_line('a') // &
-    '  [--raw] [--start <integer>] [--end <integer>] [--stride <integer>]' // &
-                                            new_line('a') // new_line('a') // &
-    'where angular brackets denote user-provided values and square brackets denote optional arguments.' &
-                                                          // new_line('a')
+  character(len=*), parameter :: usage =                new_line('') // new_line('') // & 
+    'Usage: '                                        // new_line('') // new_line('') // &
+    './build/run-fpm.sh run tensor-statistics -- --bins <integer> \' // new_line('') // &
+    '  [--raw] [--start <integer>] [--end <integer>] [--stride <integer>]'           // &
+                                                        new_line('') // new_line('') // &
+    'where angular brackets denote user-provided values and square brackets denote optional arguments.' // new_line('')
 
   integer(int64) t_start, t_finish, clock_rate
   integer num_bins, start_step, stride
@@ -47,6 +46,7 @@ program tensor_statistics
       ,output_tensor_file_names = training_configuration%output_file_names() &
       ,input_component_names    = training_configuration%input_variable_names() &
       ,output_component_names   = training_configuration%output_variable_names() &
+      ,time_data_file_name      = training_configuration%time_data_file_name() &
       ,raw = raw &
     )
   end associate
@@ -107,15 +107,17 @@ contains
  
   end subroutine get_command_line_arguments
 
-  subroutine compute_histograms(input_tensor_file_names, output_tensor_file_names, input_component_names, output_component_names, raw)
+  subroutine compute_histograms( &
+    input_tensor_file_names, output_tensor_file_names, input_component_names, output_component_names, time_data_file_name, raw &
+  )
     type(string_t), intent(in) :: input_tensor_file_names(:), output_tensor_file_names(:)
-    type(string_t), intent(in) :: input_component_names(:),   output_component_names(:)
+    type(string_t), intent(in) :: input_component_names(:),   output_component_names(:), time_data_file_name
     logical, intent(in) :: raw
 
     type(time_derivative_t), allocatable :: derivative(:)
     type(NetCDF_variable_t), allocatable :: input_variable(:), output_variable(:)
     type(NetCDF_variable_t) input_time, output_time
-    double precision, allocatable, dimension(:) :: time_in, time_out
+    double precision, allocatable, dimension(:) :: dt
     double precision, parameter :: tolerance = 1.E-07
     integer(int64) t_histo_start, t_histo_finish 
     integer t, t_end, v
@@ -136,7 +138,7 @@ contains
         call_assert(input_variable(v)%conformable_with(input_variable(1)))
       end do
 
-      print '(a)',"- reading time"
+      print '(a)',"- reading time from NetCDF file"
       call input_time%input("time", NetCDF_file, rank=1)
 
     end associate input_file
@@ -195,17 +197,17 @@ contains
 
     allocate(derivative(size(output_variable)))
 
-    dt: &
-    associate(dt => NetCDF_variable_t(output_time - input_time, "dt"))
+    print '(a)',"- reading time from JSON file"
+    associate(time_data => time_data_t(file_t(time_data_file_name)))
       do v = 1, size(derivative)
         derivative_name: &
         associate(derivative_name => "d" // output_component_names(v)%string() // "_dt")
           print '(a)',"- " // derivative_name
-          derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=dt)
+          derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=time_data%dt())
           call_assert(.not. derivative(v)%any_nan())
         end associate derivative_name
       end do
-    end associate dt
+    end associate
 
     print '(a)',"Calculating histograms for the desired neural-network outputs."
     call system_clock(t_histo_start)

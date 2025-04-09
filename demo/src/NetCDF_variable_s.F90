@@ -29,7 +29,6 @@ contains
 
   module procedure default_real_time_derivative
 
-    call_assert(dt%rank()==1)
     call_assert(new%conformable_with(old))
     call_assert(old%name_==new%name_)
 
@@ -42,22 +41,22 @@ contains
       case(1)
         allocate(time_derivative%values_1D_, mold = old%values_1D_)
         do concurrent(t = 1:size(old%values_1D_))
-          time_derivative%values_1D_(t) = (new%values_1D_(t) - old%values_1D_(t))/ dt%values_1D_(t)
+          time_derivative%values_1D_(t) = (new%values_1D_(t) - old%values_1D_(t))/ dt(t)
         end do
       case(2)
         allocate(time_derivative%values_2D_, mold = old%values_2D_)
         do concurrent(t = 1:size(old%values_2D_,2))
-          time_derivative%values_2D_(:,t) = (new%values_2D_(:,t) - old%values_2D_(:,t))/ dt%values_1D_(t)
+          time_derivative%values_2D_(:,t) = (new%values_2D_(:,t) - old%values_2D_(:,t))/ dt(t)
         end do
       case(3)
         allocate(time_derivative%values_3D_, mold = old%values_3D_)
         do concurrent(t = 1:size(old%values_3D_,3))
-          time_derivative%values_3D_(:,:,t) = (new%values_3D_(:,:,t) - old%values_3D_(:,:,t))/ dt%values_1D_(t)
+          time_derivative%values_3D_(:,:,t) = (new%values_3D_(:,:,t) - old%values_3D_(:,:,t))/ dt(t)
         end do
       case(4)
         allocate(time_derivative%values_4D_, mold = old%values_4D_)
         do concurrent(t = 1:size(old%values_4D_,4))
-          time_derivative%values_4D_(:,:,:,t) = (new%values_4D_(:,:,:,t) - old%values_4D_(:,:,:,t))/ dt%values_1D_(t)
+          time_derivative%values_4D_(:,:,:,t) = (new%values_4D_(:,:,:,t) - old%values_4D_(:,:,:,t))/ dt(t)
         end do
       case default
         error stop "NetCDF_variable_s(default_real_time_derivative): unsupported rank)"
@@ -506,6 +505,22 @@ contains
     case default
       error stop 'NetCDF_variable_s(double_precision_maximum): unsupported rank'
     end select 
+  end procedure
+
+  module procedure default_real_compare
+    integer i
+    print *, "Sizes = ", size(self%values_1D_), size(values) 
+    do i=1, min(size(self%values_1D_), size(values))
+      print *, self%values_1D_(i), values(i)%string()
+    end do
+  end procedure
+
+  module procedure double_precision_compare
+    integer i
+    print *, "Sizes = ", size(self%values_1D_), size(values) 
+    do i=1, min(size(self%values_1D_), size(values))
+      print *, self%values_1D_(i), ", ", values(i)%string()
+    end do
   end procedure
 
 end submodule NetCDF_variable_s

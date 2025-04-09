@@ -17,6 +17,14 @@ submodule(training_data_file_names_m) training_data_file_names_s
 
 contains
 
+  module procedure path
+     training_data_file_path = self%path_
+  end procedure
+
+  module procedure fully_qualified_time_file
+    name = self%path_ // "/dt.json"
+  end procedure
+
   module procedure to_json
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
 
@@ -39,7 +47,7 @@ contains
     do l=1,size(lines)
       if (lines(l)%get_json_key() == training_data_file_names_key) then
         training_data_file_names_key_found = .true.
-        training_data_file_names%path_ = lines(l+1)%get_json_value(string_t(path_key), mold=string_t(""))
+        training_data_file_names%path_ = lines(l+1)%get_json_value(string_t(path_key), mold=string_t("")) // "/"
         training_data_file_names%inputs_prefix_ = lines(l+2)%get_json_value(string_t(inputs_prefix_key), mold=string_t(""))
         training_data_file_names%outputs_prefix_ = lines(l+3)%get_json_value(string_t(outputs_prefix_key), mold=string_t(""))
         training_data_file_names%infixes_ = lines(l+4)%get_json_value(string_t(infixes_key), mold=[string_t("")])

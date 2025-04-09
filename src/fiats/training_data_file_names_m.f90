@@ -15,13 +15,15 @@ module training_data_file_names_m
     procedure :: to_json
     procedure :: fully_qualified_inputs_files
     procedure :: fully_qualified_outputs_files
+    procedure :: fully_qualified_time_file
+    procedure :: path
     generic :: operator(==) => equals
     procedure, private :: equals
   end type
 
   interface training_data_file_names_t
 
-    module function from_json(lines) result(training_data_file_names)
+    pure module function from_json(lines) result(training_data_file_names)
       implicit none
       class(string_t), intent(in) :: lines(:)
       type(training_data_file_names_t) training_data_file_names
@@ -37,6 +39,12 @@ module training_data_file_names_m
   end interface
 
   interface
+
+    pure module function path(self) result(training_data_file_path)
+      implicit none
+      class(training_data_file_names_t), intent(in) :: self
+      character(len=:), allocatable :: training_data_file_path
+    end function
 
     elemental module function equals(lhs, rhs) result(lhs_eq_rhs)
       implicit none
@@ -60,6 +68,12 @@ module training_data_file_names_m
       implicit none
       class(training_data_file_names_t), intent(in) :: self
       type(string_t), allocatable :: names(:)
+    end function
+
+    pure module function fully_qualified_time_file(self) result(name)
+      implicit none
+      class(training_data_file_names_t), intent(in) :: self
+      type(string_t) name
     end function
 
   end interface
