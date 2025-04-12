@@ -24,17 +24,13 @@ contains
     associate(lines => file%lines())
       i = 1
       call_assert_diagnose(adjustl(lines(i)%string())=='{'," default_real_json(time_data_s): object start", lines(i)%string())
-      call_assert(allocated(file%date_))
-      call_assert(allocated(file%time_))
-      call_assert(allocated(file%dt_))
-      call_assert(all(size(file%date_) == [size(file%time_), size(file%dt_)]))
-      call_assert(.false.)
       i = 3
       time_data%date_ = lines(i)%get_json_value(key="dates", mold=[string_t::])
       i = 4
       time_data%time_ = lines(i)%get_json_value(key="times", mold=[string_t::])
       i = 5
       time_data%dt_= lines(i)%get_json_value(key="dt", mold=[real::])
+      call_assert(all(size(time_data%date_) == [size(time_data%time_), size(time_data%dt_)]))
     end associate
   end procedure
 
