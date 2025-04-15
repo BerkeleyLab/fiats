@@ -1,4 +1,4 @@
-! Copyright (c), The Regents of the University of California
+! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 module double_precision_string_m
   use julienne_m, only : string_t

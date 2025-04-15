@@ -1,4 +1,4 @@
-! Copyright (c), The Regents of the University of California
+! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 module fiats_m
  !! Specify the user-facing modules, derived types, and type parameters
@@ -16,6 +16,6 @@ module fiats_m
  use tensor_names_m, only : tensor_names_t
  use trainable_network_m, only : trainable_network_t
  use training_configuration_m, only : training_configuration_t
- use training_data_file_names_m, only : training_data_file_names_t
+ use training_data_files_m, only : training_data_files_t
  implicit none
 end module fiats_m
