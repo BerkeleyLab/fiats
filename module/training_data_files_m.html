@@ -1,0 +1,1392 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Functional inference and training of surrogate models for computational science.">
+    <meta name="author" content="Berkeley Lab" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>training_data_files_m &ndash; Fiats</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">Fiats </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/programs.html">Programs</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>training_data_files_m
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.8% of total for modules and submodules.">64 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/training_data_files_m.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/training_data_files_m.f90.html'>training_data_files_m.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">training_data_files_m</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/training_data_files_m.html#interface-training_data_files_t">training_data_files_t</a>
+            <a class="list-group-item" href="../module/training_data_files_m.html#interface-equals~4">equals</a>
+            <a class="list-group-item" href="../module/training_data_files_m.html#interface-fully_qualified_inputs_files">fully_qualified_inputs_files</a>
+            <a class="list-group-item" href="../module/training_data_files_m.html#interface-fully_qualified_outputs_files">fully_qualified_outputs_files</a>
+            <a class="list-group-item" href="../module/training_data_files_m.html#interface-fully_qualified_time_file">fully_qualified_time_file</a>
+            <a class="list-group-item" href="../module/training_data_files_m.html#interface-path">path</a>
+            <a class="list-group-item" href="../module/training_data_files_m.html#interface-to_json~3">to_json</a>
+        </div>
+      </div>
+    </div>
+
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#types-0"
+         aria-expanded="false" aria-controls="types-0">
+         <h4 class="card-header bg-primary text-white">Derived Types</h4>
+      </a>
+      <div id="types-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/training_data_files_m.html#type-training_data_files_t">training_data_files_t</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item">julienne_string_m</li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 12.2.1 (20241206.2353)
+ -->
+<!-- Title: module~~training_data_files_m~~UsesGraph Pages: 1 -->
+<svg id="moduletraining_data_files_mUsesGraph" width="274pt" height="32pt"
+ viewBox="0.00 0.00 274.04 32.27" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~training_data_files_m~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>module~~training_data_files_m~~UsesGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 270.04,-28.27 270.04,4 -4,4"/>
+<!-- module~training_data_files_m -->
+<g id="module~~training_data_files_m~~UsesGraph_node1" class="node">
+<title>module~training_data_files_m</title>
+<polygon fill="none" stroke="black" points="266.04,-24.27 141.27,-24.27 141.27,0 266.04,0 266.04,-24.27"/>
+<text text-anchor="middle" x="203.65" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">training_data_files_m</text>
+</g>
+<!-- julienne_string_m -->
+<g id="module~~training_data_files_m~~UsesGraph_node2" class="node">
+<title>julienne_string_m</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="105.27,-24.27 0,-24.27 0,0 105.27,0 105.27,-24.27"/>
+<text text-anchor="middle" x="52.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">julienne_string_m</text>
+</g>
+<!-- module~training_data_files_m&#45;&gt;julienne_string_m -->
+<g id="module~~training_data_files_m~~UsesGraph_edge1" class="edge">
+<title>module~training_data_files_m&#45;&gt;julienne_string_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M141.18,-12.13C133.12,-12.13 124.84,-12.13 116.75,-12.13"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="116.99,-8.64 106.99,-12.14 116.99,-15.64 116.99,-8.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 12.2.1 (20241206.2353)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="511pt" height="32pt"
+ viewBox="0.00 0.00 510.88 32.27" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 506.88,-28.27 506.88,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24.27 0,-24.27 0,0 54,0 54,-24.27"/>
+<text text-anchor="middle" x="27" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="144.13,-24.27 71.87,-24.27 71.87,0 144.13,0 144.13,-24.27"/>
+<text text-anchor="middle" x="108" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="231.63,-24.27 162.37,-24.27 162.37,0 231.63,0 231.63,-24.27"/>
+<text text-anchor="middle" x="197" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="306.26,-24.27 249.74,-24.27 249.74,0 306.26,0 306.26,-24.27"/>
+<text text-anchor="middle" x="278" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="381.26,-24.27 324.74,-24.27 324.74,0 381.26,0 381.26,-24.27"/>
+<text text-anchor="middle" x="353" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="502.88,-24.27 399.12,-24.27 399.12,0 502.88,0 502.88,-24.27"/>
+<text text-anchor="middle" x="451" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+          <div class="card">
+      <h3 class="card-header card-title bg-light">Used by</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                <li class="list-inline-item"><h5>Descendants:</h5></li>
+                  <li class="list-inline-item"><a href='training_data_files_s.html'>training_data_files_s</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 12.2.1 (20241206.2353)
+ -->
+<!-- Title: module~~training_data_files_m~~UsedByGraph Pages: 1 -->
+<svg id="moduletraining_data_files_mUsedByGraph" width="641pt" height="559pt"
+ viewBox="0.00 0.00 641.00 559.46" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~training_data_files_m~~UsedByGraph" class="graph" transform="scale(0.931916 0.931916) rotate(0) translate(4 596.34)">
+<title>module~~training_data_files_m~~UsedByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-596.34 683.83,-596.34 683.83,4 -4,4"/>
+<!-- module~training_data_files_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_node1" class="node">
+<title>module~training_data_files_m</title>
+<polygon fill="none" stroke="black" points="124.77,-293.27 0,-293.27 0,-269 124.77,-269 124.77,-293.27"/>
+<text text-anchor="middle" x="62.38" y="-277.53" font-family="Helvetica,sans-Serif" font-size="10.50">training_data_files_m</text>
+</g>
+<!-- module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_node2" class="node">
+<title>module~fiats_m</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node2"><a xlink:href="../module/fiats_m.html" xlink:title="fiats_m">
+<polygon fill="#337ab7" stroke="#337ab7" points="247.53,-314.27 193.53,-314.27 193.53,-290 247.53,-290 247.53,-314.27"/>
+<text text-anchor="middle" x="220.53" y="-298.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fiats_m</text>
+</a>
+</g>
+</g>
+<!-- module~fiats_m&#45;&gt;module~training_data_files_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge1" class="edge">
+<title>module~fiats_m&#45;&gt;module~training_data_files_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M193.04,-298.57C177.33,-296.46 156.58,-293.67 136.29,-290.94"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="136.98,-287.5 126.6,-289.64 136.05,-294.44 136.98,-287.5"/>
+</g>
+<!-- module~training_data_files_s -->
+<g id="module~~training_data_files_m~~UsedByGraph_node3" class="node">
+<title>module~training_data_files_s</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node3"><a xlink:href="../module/training_data_files_s.html" xlink:title="training_data_files_s">
+<polygon fill="#5bc0de" stroke="#5bc0de" points="280.29,-272.27 160.77,-272.27 160.77,-248 280.29,-248 280.29,-272.27"/>
+<text text-anchor="middle" x="220.53" y="-256.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">training_data_files_s</text>
+</a>
+</g>
+</g>
+<!-- module~training_data_files_s&#45;&gt;module~training_data_files_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge2" class="edge">
+<title>module~training_data_files_s&#45;&gt;module~training_data_files_m</title>
+<path fill="none" stroke="#ff0000" d="M160.5,-268.07C152.63,-269.13 144.49,-270.23 136.42,-271.31"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="136.05,-267.83 126.6,-272.63 136.98,-274.77 136.05,-267.83"/>
+</g>
+<!-- module~addition_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_node4" class="node">
+<title>module~addition_m</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node4"><a xlink:href="../module/addition_m.html" xlink:title="addition_m">
+<polygon fill="#337ab7" stroke="#337ab7" points="431.31,-554.27 360.54,-554.27 360.54,-530 431.31,-530 431.31,-554.27"/>
+<text text-anchor="middle" x="395.92" y="-538.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">addition_m</text>
+</a>
+</g>
+</g>
+<!-- module~addition_m&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge3" class="edge">
+<title>module~addition_m&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M360.39,-537.18C345.35,-533.51 328.43,-527.15 316.29,-516.13 258.5,-463.73 234.09,-369.56 225.5,-325.75"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="228.97,-325.26 223.72,-316.06 222.09,-326.52 228.97,-325.26"/>
+</g>
+<!-- module~exponentiation_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_node5" class="node">
+<title>module~exponentiation_m</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node5"><a xlink:href="../module/exponentiation_m.html" xlink:title="exponentiation_m">
+<polygon fill="#337ab7" stroke="#337ab7" points="449.31,-474.27 342.54,-474.27 342.54,-450 449.31,-450 449.31,-474.27"/>
+<text text-anchor="middle" x="395.92" y="-458.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">exponentiation_m</text>
+</a>
+</g>
+</g>
+<!-- module~exponentiation_m&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge4" class="edge">
+<title>module~exponentiation_m&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M342.29,-449.92C333.11,-446.38 324.03,-441.87 316.29,-436.13 276.08,-406.37 246.46,-354.4 231.81,-324.69"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="235.05,-323.37 227.59,-315.85 228.74,-326.38 235.05,-323.37"/>
+</g>
+<!-- module~multiply_inputs -->
+<g id="module~~training_data_files_m~~UsedByGraph_node6" class="node">
+<title>module~multiply_inputs</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node6"><a xlink:href="../module/multiply_inputs.html" xlink:title="multiply_inputs">
+<polygon fill="#337ab7" stroke="#337ab7" points="441.81,-394.27 350.04,-394.27 350.04,-370 441.81,-370 441.81,-394.27"/>
+<text text-anchor="middle" x="395.92" y="-378.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">multiply_inputs</text>
+</a>
+</g>
+</g>
+<!-- module~multiply_inputs&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge5" class="edge">
+<title>module~multiply_inputs&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M351.9,-369.62C340.17,-365.75 327.59,-361.16 316.29,-356.13 293.48,-345.99 269.03,-331.97 250.68,-320.75"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="252.53,-317.78 242.18,-315.49 248.84,-323.73 252.53,-317.78"/>
+</g>
+<!-- module~power_series -->
+<g id="module~~training_data_files_m~~UsedByGraph_node7" class="node">
+<title>module~power_series</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node7"><a xlink:href="../module/power_series.html" xlink:title="power_series">
+<polygon fill="#337ab7" stroke="#337ab7" points="436.56,-314.27 355.29,-314.27 355.29,-290 436.56,-290 436.56,-314.27"/>
+<text text-anchor="middle" x="395.92" y="-298.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">power_series</text>
+</a>
+</g>
+</g>
+<!-- module~power_series&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge6" class="edge">
+<title>module~power_series&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M355.14,-302.13C326.36,-302.13 287.71,-302.13 259.38,-302.13"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="259.44,-298.64 249.44,-302.14 259.44,-305.64 259.44,-298.64"/>
+</g>
+<!-- module~saturated_mixing_ratio_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_node8" class="node">
+<title>module~saturated_mixing_ratio_m</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node8"><a xlink:href="../module/saturated_mixing_ratio_m.html" xlink:title="saturated_mixing_ratio_m">
+<polygon fill="#337ab7" stroke="#337ab7" points="470.68,-234.27 321.16,-234.27 321.16,-210 470.68,-210 470.68,-234.27"/>
+<text text-anchor="middle" x="395.92" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">saturated_mixing_ratio_m</text>
+</a>
+</g>
+</g>
+<!-- module~saturated_mixing_ratio_m&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge7" class="edge">
+<title>module~saturated_mixing_ratio_m&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M346.12,-234.71C335.91,-238.31 325.47,-242.75 316.29,-248.13 297.57,-259.12 298.88,-269.93 280.29,-281.13 273.62,-285.16 266.06,-288.58 258.64,-291.41"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="257.69,-288.04 249.41,-294.66 260.01,-294.64 257.69,-288.04"/>
+</g>
+<!-- program~concurrent_inferences -->
+<g id="module~~training_data_files_m~~UsedByGraph_node9" class="node">
+<title>program~concurrent_inferences</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node9"><a xlink:href="../program/concurrent_inferences.html" xlink:title="concurrent_inferences">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="460.93,-192.27 330.91,-192.27 330.91,-168 460.93,-168 460.93,-192.27"/>
+<text text-anchor="middle" x="395.92" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">concurrent_inferences</text>
+</a>
+</g>
+</g>
+<!-- program~concurrent_inferences&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge8" class="edge">
+<title>program~concurrent_inferences&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M330.65,-191.94C325.48,-194.45 320.6,-197.47 316.29,-201.13 286.58,-226.39 308.94,-254.68 280.29,-281.13 274.23,-286.73 266.58,-290.85 258.82,-293.89"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="257.76,-290.55 249.37,-297.01 259.96,-297.2 257.76,-290.55"/>
+</g>
+<!-- program~learn_addition -->
+<g id="module~~training_data_files_m~~UsedByGraph_node10" class="node">
+<title>program~learn_addition</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node10"><a xlink:href="../program/learn_addition.html" xlink:title="learn_addition">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="639.7,-564.27 551.68,-564.27 551.68,-540 639.7,-540 639.7,-564.27"/>
+<text text-anchor="middle" x="595.69" y="-548.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_addition</text>
+</a>
+</g>
+</g>
+<!-- program~learn_addition&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge9" class="edge">
+<title>program~learn_addition&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M563.29,-564.63C507.84,-584.44 391.36,-615.74 316.29,-563.13 237.16,-507.68 223.85,-379.07 221.8,-325.85"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="225.31,-326 221.54,-316.09 218.31,-326.18 225.31,-326"/>
+</g>
+<!-- program~learn_addition&#45;&gt;module~addition_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge18" class="edge">
+<title>program~learn_addition&#45;&gt;module~addition_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M551.29,-549.94C519.15,-548.32 475.45,-546.11 442.75,-544.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="443.35,-540.98 433.19,-543.97 443,-547.97 443.35,-540.98"/>
+</g>
+<!-- program~learn_exponentiation -->
+<g id="module~~training_data_files_m~~UsedByGraph_node11" class="node">
+<title>program~learn_exponentiation</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node11"><a xlink:href="../program/learn_exponentiation.html" xlink:title="learn_exponentiation">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="657.7,-503.27 533.68,-503.27 533.68,-479 657.7,-479 657.7,-503.27"/>
+<text text-anchor="middle" x="595.69" y="-487.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_exponentiation</text>
+</a>
+</g>
+</g>
+<!-- program~learn_exponentiation&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge10" class="edge">
+<title>program~learn_exponentiation&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M545.41,-503.73C486.19,-515.9 386.1,-526.77 316.29,-483.13 259.59,-447.7 235.01,-366.31 225.99,-325.86"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="229.45,-325.27 223.98,-316.2 222.59,-326.7 229.45,-325.27"/>
+</g>
+<!-- program~learn_exponentiation&#45;&gt;module~exponentiation_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge19" class="edge">
+<title>program~learn_exponentiation&#45;&gt;module~exponentiation_m</title>
+<path fill="none" stroke="#ff6600" stroke-dasharray="5,2" d="M533.2,-482.12C510.21,-478.75 484.05,-474.91 460.83,-471.51"/>
+<polygon fill="#ff6600" stroke="#ff6600" points="461.6,-468.08 451.2,-470.09 460.59,-475.01 461.6,-468.08"/>
+</g>
+<!-- program~learn_multiplication -->
+<g id="module~~training_data_files_m~~UsedByGraph_node12" class="node">
+<title>program~learn_multiplication</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node12"><a xlink:href="../program/learn_multiplication.html" xlink:title="learn_multiplication">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="654.33,-414.27 537.06,-414.27 537.06,-390 654.33,-390 654.33,-414.27"/>
+<text text-anchor="middle" x="595.69" y="-398.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_multiplication</text>
+</a>
+</g>
+</g>
+<!-- program~learn_multiplication&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge11" class="edge">
+<title>program~learn_multiplication&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M540.32,-414.73C482.26,-425.42 388.81,-434.54 316.29,-403.13 279.22,-387.08 250,-348.6 234.28,-324.04"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="237.41,-322.45 229.19,-315.77 231.45,-326.12 237.41,-322.45"/>
+</g>
+<!-- program~learn_multiplication&#45;&gt;module~multiply_inputs -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge20" class="edge">
+<title>program~learn_multiplication&#45;&gt;module~multiply_inputs</title>
+<path fill="none" stroke="#ffcc00" stroke-dasharray="5,2" d="M536.69,-396.27C510.38,-393.61 479.39,-390.47 453.28,-387.83"/>
+<polygon fill="#ffcc00" stroke="#ffcc00" points="453.84,-384.37 443.54,-386.85 453.14,-391.34 453.84,-384.37"/>
+</g>
+<!-- program~learn_power_series -->
+<g id="module~~training_data_files_m~~UsedByGraph_node13" class="node">
+<title>program~learn_power_series</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node13"><a xlink:href="../program/learn_power_series.html" xlink:title="learn_power_series">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="652.83,-334.27 538.56,-334.27 538.56,-310 652.83,-310 652.83,-334.27"/>
+<text text-anchor="middle" x="595.69" y="-318.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">learn_power_series</text>
+</a>
+</g>
+</g>
+<!-- program~learn_power_series&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge12" class="edge">
+<title>program~learn_power_series&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M538.24,-326.04C481.86,-329.08 392.81,-331.51 316.29,-323.13 297.05,-321.03 276.01,-316.59 258.64,-312.33"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="259.84,-309.02 249.29,-309.95 258.12,-315.81 259.84,-309.02"/>
+</g>
+<!-- program~learn_power_series&#45;&gt;module~power_series -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge21" class="edge">
+<title>program~learn_power_series&#45;&gt;module~power_series</title>
+<path fill="none" stroke="#cbff00" stroke-dasharray="5,2" d="M538.29,-316.43C509.92,-313.56 475.78,-310.11 448.17,-307.32"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="448.57,-303.84 438.27,-306.32 447.87,-310.8 448.57,-303.84"/>
+</g>
+<!-- program~print_training_configuration -->
+<g id="module~~training_data_files_m~~UsedByGraph_node14" class="node">
+<title>program~print_training_configuration</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node14"><a xlink:href="../program/print_training_configuration.html" xlink:title="print_training_configuration">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="475.56,-150.27 316.29,-150.27 316.29,-126 475.56,-126 475.56,-150.27"/>
+<text text-anchor="middle" x="395.92" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">print_training_configuration</text>
+</a>
+</g>
+</g>
+<!-- program~print_training_configuration&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge13" class="edge">
+<title>program~print_training_configuration&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M327.85,-150.56C323.65,-152.95 319.73,-155.78 316.29,-159.13 275.8,-198.59 319.12,-240.05 280.29,-281.13 274.46,-287.31 266.69,-291.67 258.72,-294.75"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="257.79,-291.37 249.32,-297.74 259.91,-298.04 257.79,-291.37"/>
+</g>
+<!-- program~read_query_infer -->
+<g id="module~~training_data_files_m~~UsedByGraph_node15" class="node">
+<title>program~read_query_infer</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node15"><a xlink:href="../program/read_query_infer.html" xlink:title="read_query_infer">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="446.68,-108.27 345.16,-108.27 345.16,-84 446.68,-84 446.68,-108.27"/>
+<text text-anchor="middle" x="395.92" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_query_infer</text>
+</a>
+</g>
+</g>
+<!-- program~read_query_infer&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge14" class="edge">
+<title>program~read_query_infer&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M344.79,-100.92C334.18,-104.11 323.91,-109.17 316.29,-117.13 264.72,-171.07 329.6,-225.12 280.29,-281.13 274.63,-287.56 266.86,-292.02 258.83,-295.12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="257.82,-291.77 249.32,-298.1 259.91,-298.45 257.82,-291.77"/>
+</g>
+<!-- program~train_and_write -->
+<g id="module~~training_data_files_m~~UsedByGraph_node16" class="node">
+<title>program~train_and_write</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node16"><a xlink:href="../program/train_and_write.html" xlink:title="train_and_write">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="442.56,-66.27 349.29,-66.27 349.29,-42 442.56,-42 442.56,-66.27"/>
+<text text-anchor="middle" x="395.92" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">train_and_write</text>
+</a>
+</g>
+</g>
+<!-- program~train_and_write&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge15" class="edge">
+<title>program~train_and_write&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M349.04,-57.44C336.87,-60.5 324.78,-65.86 316.29,-75.13 253.52,-143.68 340.19,-210.07 280.29,-281.13 274.66,-287.82 266.74,-292.37 258.54,-295.48"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="257.74,-292.06 249.21,-298.34 259.8,-298.75 257.74,-292.06"/>
+</g>
+<!-- program~train_saturated_mixture_ratio -->
+<g id="module~~training_data_files_m~~UsedByGraph_node17" class="node">
+<title>program~train_saturated_mixture_ratio</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node17"><a xlink:href="../program/train_saturated_mixture_ratio.html" xlink:title="train_saturated_mixture_ratio">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="679.83,-254.27 511.56,-254.27 511.56,-230 679.83,-230 679.83,-254.27"/>
+<text text-anchor="middle" x="595.69" y="-238.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">train_saturated_mixture_ratio</text>
+</a>
+</g>
+</g>
+<!-- program~train_saturated_mixture_ratio&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge16" class="edge">
+<title>program~train_saturated_mixture_ratio&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M511.28,-252.07C455.83,-259.11 381.49,-269.36 316.29,-281.13 297.25,-284.57 276.22,-289.15 258.82,-293.16"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="258.38,-289.67 249.44,-295.35 259.97,-296.48 258.38,-289.67"/>
+</g>
+<!-- program~train_saturated_mixture_ratio&#45;&gt;module~saturated_mixing_ratio_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge22" class="edge">
+<title>program~train_saturated_mixture_ratio&#45;&gt;module~saturated_mixing_ratio_m</title>
+<path fill="none" stroke="#65ff00" stroke-dasharray="5,2" d="M511.11,-233.68C501.67,-232.73 492.03,-231.75 482.56,-230.8"/>
+<polygon fill="#65ff00" stroke="#65ff00" points="482.93,-227.31 472.62,-229.79 482.22,-234.28 482.93,-227.31"/>
+</g>
+<!-- program~write_read_infer -->
+<g id="module~~training_data_files_m~~UsedByGraph_node18" class="node">
+<title>program~write_read_infer</title>
+<g id="a_module~~training_data_files_m~~UsedByGraph_node18"><a xlink:href="../program/write_read_infer.html" xlink:title="write_read_infer">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="444.43,-24.27 347.41,-24.27 347.41,0 444.43,0 444.43,-24.27"/>
+<text text-anchor="middle" x="395.92" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">write_read_infer</text>
+</a>
+</g>
+</g>
+<!-- program~write_read_infer&#45;&gt;module~fiats_m -->
+<g id="module~~training_data_files_m~~UsedByGraph_edge17" class="edge">
+<title>program~write_read_infer&#45;&gt;module~fiats_m</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M347.23,-15.71C335.62,-18.83 324.27,-24.16 316.29,-33.13 242.27,-116.35 350.83,-194.94 280.29,-281.13 274.76,-287.9 266.88,-292.48 258.68,-295.59"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="257.88,-292.18 249.34,-298.45 259.92,-298.87 257.88,-292.18"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panmoduletraining_data_files_mUsedByGraph = svgPanZoom('#moduletraining_data_files_mUsedByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsedByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 12.2.1 (20241206.2353)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="511pt" height="32pt"
+ viewBox="0.00 0.00 510.88 32.27" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 506.88,-28.27 506.88,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24.27 0,-24.27 0,0 54,0 54,-24.27"/>
+<text text-anchor="middle" x="27" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="144.13,-24.27 71.87,-24.27 71.87,0 144.13,0 144.13,-24.27"/>
+<text text-anchor="middle" x="108" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="231.63,-24.27 162.37,-24.27 162.37,0 231.63,0 231.63,-24.27"/>
+<text text-anchor="middle" x="197" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="306.26,-24.27 249.74,-24.27 249.74,0 306.26,0 306.26,-24.27"/>
+<text text-anchor="middle" x="278" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="381.26,-24.27 324.74,-24.27 324.74,0 381.26,0 381.26,-24.27"/>
+<text text-anchor="middle" x="353" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="502.88,-24.27 399.12,-24.27 399.12,0 502.88,0 502.88,-24.27"/>
+<text text-anchor="middle" x="451" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      <br>
+
+
+
+
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-training_data_files_t"></span>
+      <h3>public        interface <a href='../interface/training_data_files_t.html'>training_data_files_t</a> 
+      </h3>
+    </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure module function from_components(path, inputs_prefix, outputs_prefix, infixes) result(training_data_files)  
+    <a href="../proc/from_components~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-path~2"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>path</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-inputs_prefix"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>inputs_prefix</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-outputs_prefix"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>outputs_prefix</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-infixes"></span>
+              type(string_t),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>infixes</strong>(:)</td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/training_data_files_t.html'>training_data_files_t</a>)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure module function from_json(lines) result(training_data_files)  
+    <a href="../proc/from_json~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lines~6"></span>
+              class(string_t),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lines</strong>(:)</td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/training_data_files_t.html'>training_data_files_t</a>)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-equals~4"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    private elemental module function equals(lhs, rhs) result(lhs_eq_rhs)  
+    <a href="../proc/equals~4.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lhs~5"></span>
+              class(<a href='../type/training_data_files_t.html'>training_data_files_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lhs</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rhs~6"></span>
+              class(<a href='../type/training_data_files_t.html'>training_data_files_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rhs</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-fully_qualified_inputs_files"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    private pure module function fully_qualified_inputs_files(self) result(names)  
+    <a href="../proc/fully_qualified_inputs_files.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~42"></span>
+              class(<a href='../type/training_data_files_t.html'>training_data_files_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(string_t), allocatable, (:)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-fully_qualified_outputs_files"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    private pure module function fully_qualified_outputs_files(self) result(names)  
+    <a href="../proc/fully_qualified_outputs_files.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~43"></span>
+              class(<a href='../type/training_data_files_t.html'>training_data_files_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(string_t), allocatable, (:)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-fully_qualified_time_file"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    private pure module function fully_qualified_time_file(self) result(name)  
+    <a href="../proc/fully_qualified_time_file.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~44"></span>
+              class(<a href='../type/training_data_files_t.html'>training_data_files_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(string_t)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-path"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    private pure module function path(self) result(training_data_file_path)  
+    <a href="../proc/path.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~40"></span>
+              class(<a href='../type/training_data_files_t.html'>training_data_files_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>character(len=:), allocatable</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-to_json~3"></span>
+      <h3>        interface
+      </h3>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>
+    private pure module function to_json(self) result(lines)  
+    <a href="../proc/to_json~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~41"></span>
+              class(<a href='../type/training_data_files_t.html'>training_data_files_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(string_t), allocatable, (:)</small>
+    </h4>
+    
+
+        </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Derived Types</h2>
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-training_data_files_t"></span>
+      <h3>
+        type, public&nbsp;::&nbsp;
+        <a href='../type/training_data_files_t.html'>training_data_files_t</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-infixes_"></span>
+              type(string_t),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>infixes_</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-inputs_prefix_"></span>
+              character(len=:),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>inputs_prefix_</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-outputs_prefix_"></span>
+              character(len=:),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>outputs_prefix_</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-path_"></span>
+              character(len=:),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>path_</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        <h4>Constructor</h4>
+          
+        <table class="table table-striped varlist">
+          <tbody>
+                <tr>
+                  <td>
+                        private
+
+                    pure, module
+                    function
+                    <strong>from_components</strong>
+                    (path, inputs_prefix, outputs_prefix, infixes)
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                        private
+
+                    pure, module
+                    function
+                    <strong>from_json</strong>
+                    (lines)
+                  </td>
+                  <td></td>
+                </tr>
+          </tbody>
+        </table>
+
+
+        <h4>Type-Bound Procedures</h4>
+        <table class="table table-striped varlist">
+          <tbody>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/training_data_files_t.html#boundprocedure-fully_qualified_inputs_files'>fully_qualified_inputs_files</a></strong></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/training_data_files_t.html#boundprocedure-fully_qualified_outputs_files'>fully_qualified_outputs_files</a></strong></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/training_data_files_t.html#boundprocedure-fully_qualified_time_file'>fully_qualified_time_file</a></strong></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  generic, public ::
+  <strong><a href='../type/training_data_files_t.html#boundprocedure-operator%28%3D%3D%29~5'>operator(==)</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/training_data_files_t.html#boundprocedure-equals~4'>equals</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/training_data_files_t.html#boundprocedure-path'>path</a></strong></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/training_data_files_t.html#boundprocedure-to_json~4'>to_json</a></strong></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, private ::
+  <strong><a href='../type/training_data_files_t.html#boundprocedure-equals~4'>equals</a></strong></td>
+                  <td></td>
+              </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              Fiats
+ was developed by Berkeley Lab<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2025-04-15 18:44 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

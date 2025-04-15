@@ -1,4 +1,4 @@
-! Copyright (c), The Regents of the University of California
+! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 module neural_network_m
   !! Define an abstraction that supports inference operations on a neural network

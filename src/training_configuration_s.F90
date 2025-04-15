@@ -1,4 +1,4 @@
-! Copyright (c), The Regents of the University of California
+! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 submodule(training_configuration_m) training_configuration_s
   use double_precision_string_m, only : double_precision_string_t
@@ -45,48 +45,22 @@ contains
   end procedure
 
   module procedure default_real_from_file
-#if defined _CRAYFTN
-    type(string_t), allocatable :: lines(:)
-#endif
-
     training_configuration%file_t = file_object
 
-#if defined _CRAYFTN
-    lines = training_configuration%file_t%lines()
-#else
     associate(lines => training_configuration%file_t%lines())
-#endif
-
       training_configuration%hyperparameters_ = hyperparameters_t(lines)
       training_configuration%network_configuration_= network_configuration_t(lines)
       training_configuration%tensor_names_ = tensor_names_t(lines)
-
-#if ! defined _CRAYFTN
     end associate
-#endif
-
   end procedure
 
   module procedure double_precision_from_file
-#if defined _CRAYFTN
-    type(double_precision_string_t), allocatable :: lines(:)
-#endif
-
     training_configuration%double_precision_file_t = file_object
-
-#if defined _CRAYFTN
-    lines = training_configuration%double_precision_file_t%double_precision_lines()
-#else
     associate(lines => training_configuration%double_precision_file_t%double_precision_lines())
-#endif
-
       training_configuration%hyperparameters_ = hyperparameters_t(lines)
       training_configuration%network_configuration_= network_configuration_t(lines)
       training_configuration%tensor_names_ = tensor_names_t(lines)
-
-#if ! defined _CRAYFTN
     end associate
-#endif
   end procedure
 
   module procedure default_real_to_json
@@ -152,12 +126,7 @@ contains
   end procedure
 
   module procedure default_real_activation
-#if defined _CRAYFTN
-    type(string_t) :: activation_name
-    activation_name = self%network_configuration_%activation_name()
-#else
     associate(activation_name => self%network_configuration_%activation_name())
-#endif
       select case(activation_name%string())
         case ("gelu")
           activation = activation_t(gelu)
@@ -170,18 +139,11 @@ contains
         case default
           error stop 'activation_factory_s(factory): unrecognized activation name "' // activation_name%string() // '"' 
       end select
-#if ! (defined _CRAYFTN)
     end associate
-#endif
   end procedure
 
   module procedure double_precision_activation
-#if defined _CRAYFTN
-    type(string_t) :: activation_name
-    activation_name = self%network_configuration_%activation_name()
-#else
     associate(activation_name => self%network_configuration_%activation_name())
-#endif
       select case(activation_name%string())
         case ("gelu")
           activation = activation_t(gelu)
@@ -194,9 +156,7 @@ contains
         case default
           error stop 'activation_factory_s(factory): unrecognized activation name "' // activation_name%string() // '"' 
       end select
-#if ! (defined _CRAYFTN)
     end associate
-#endif
   end procedure
 
   module procedure default_real_input_names
