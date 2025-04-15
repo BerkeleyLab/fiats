@@ -13,7 +13,11 @@ submodule(netCDF_file_m) netCDF_file_s
 
 contains
 
-  module procedure construct
+  module procedure construct_from_string_name
+   netCDF_file%file_name_ = file_name
+  end procedure
+
+  module procedure construct_from_character_name
    netCDF_file%file_name_ = file_name
   end procedure
 

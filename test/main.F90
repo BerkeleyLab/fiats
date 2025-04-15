@@ -14,6 +14,7 @@ program main
   use tensor_map_test_m, only : tensor_map_test_t
   use tensor_names_test_m, only : tensor_names_test_t
   use tensor_test_m, only : tensor_test_t
+  use training_data_files_test_m, only : training_data_files_test_t
   use julienne_m, only : command_line_t
   implicit none
 
@@ -27,6 +28,7 @@ program main
   type(tensor_map_test_t) tensor_map_test
   type(tensor_names_test_t) tensor_names_test
   type(tensor_test_t) tensor_test
+  type(training_data_files_test_t) training_data_files_test
   real t_start, t_finish
 
   integer :: passes=0, tests=0
@@ -56,6 +58,7 @@ program main
   call asymmetric_network_test%report(passes, tests)
   call neural_network_test%report(passes, tests)
   call trainable_network_test%report(passes, tests)
+  call training_data_files_test%report(passes, tests)
   call cpu_time(t_finish)
 
   print *

@@ -145,15 +145,17 @@ contains
                     end do
                   end do
                 end do
-                histogram%bin_frequency_ = real(bin_count) / real(cardinality)
               end if
+              histogram%bin_frequency_ = real(bin_count) / real(cardinality)
             end associate
           end associate
         end associate
       end associate
+#ifdef ASSERTIONS
       associate(binned => sum(bin_count))
         call_assert_diagnose(cardinality == binned, "histogram_s(construct): lossless binning", intrinsic_array_t([cardinality, binned]))
       end associate
+#endif
     end associate
 
   end procedure

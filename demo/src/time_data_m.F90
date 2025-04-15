@@ -20,6 +20,8 @@ module time_data_m
     procedure, private :: default_real_to_json
     generic :: dt      => default_real_dt 
     procedure, private :: default_real_dt
+    generic :: times   => default_real_times
+    procedure, private :: default_real_times
   end type
 
   type, extends(file_t) :: icar_output_file_t
@@ -57,7 +59,13 @@ module time_data_m
 
   interface icar_output_file_t
 
-    pure module function from_string_array(lines) result(icar_output_file)
+    pure module function from_file_object(file) result(icar_output_file)
+      implicit none
+      type(file_t), intent(in) :: file
+      type(icar_output_file_t) icar_output_file
+    end function
+
+    pure module function from_lines(lines) result(icar_output_file)
       implicit none
       type(string_t), intent(in) :: lines(:)
       type(icar_output_file_t) icar_output_file
@@ -77,6 +85,12 @@ module time_data_m
       implicit none
       class(time_data_t), intent(in) :: self
       real, allocatable :: dt_values(:)
+    end function
+
+    pure module function default_real_times(self) result(times)
+      implicit none
+      class(time_data_t), intent(in) :: self
+      type(string_t), allocatable :: times(:)
     end function
 
   end interface
