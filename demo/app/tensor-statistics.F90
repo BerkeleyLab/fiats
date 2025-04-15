@@ -20,7 +20,7 @@ program tensor_statistics
   use NetCDF_variable_m, only: NetCDF_variable_t, time_derivative_t
   use histogram_m, only: histogram_t, to_file
   use time_data_m, only: time_data_t, icar_output_file_t
-  use fiats_m, only : training_configuration_t
+  use fiats_m, only : training_configuration_t, training_data_files_t
   implicit none
 
   character(len=*), parameter :: usage =                new_line('') // new_line('') // & 
@@ -39,11 +39,14 @@ program tensor_statistics
   call system_clock(t_start, clock_rate)
   call get_command_line_arguments(num_bins, start_step, end_step, stride, raw)
 
-  associate(training_configuration => training_configuration_t(file_t("training_configuration.json")))
+  associate( &
+     training_configuration => training_configuration_t(file_t("training_configuration.json")) &
+    ,training_data_files => training_data_files_t(file_t("training_data_files.json")) &
+  )
 
     call compute_histograms( &
-       input_tensor_file_names  = training_configuration%input_file_names() &
-      ,output_tensor_file_names = training_configuration%output_file_names() &
+       input_tensor_file_names  = training_data_files%input_file_names() &
+      ,output_tensor_file_names = training_data_files%output_file_names() &
       ,input_component_names    = training_configuration%input_variable_names() &
       ,output_component_names   = training_configuration%output_variable_names() &
       ,time_data_file_name      = training_configuration%time_data_file_name() &

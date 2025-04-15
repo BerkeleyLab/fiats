@@ -3,22 +3,14 @@
          "mini-batches" : 10,
          "learning rate" : 1.50000000,
          "optimizer" : "adam"
-     }
- ,
+     },
      "network configuration": {
          "skip connections" : false,
          "nodes per layer" : [7,32,32,32,5],
          "activation function" : "sigmoid"
      },
- ,
      "tensor names": {
          "inputs"  : ["potential_temperature","qv", "qc", "qr", "qs", "pressure", "temperature"],
          "outputs" : ["potential_temperature","qv", "qc", "qr", "qs"]
-     },
-     "training data file names": {
-         "path" : "dates-20101001-2011076",
-         "inputs prefix"  : "training_input-image-",
-         "outputs prefix" : "training_output-image-",
-         "infixes" : ["000001", "000002", "000003", "000004", "000005", "000006", "000007", "000008", "000009", "000010"]
      }
  }
