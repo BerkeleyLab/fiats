@@ -1,4 +1,4 @@
-! Copyright (c), The Regents of the University of California
+! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 program read_query_infer
   !! This program demonstrates how to read a neural network from a JSON file,
