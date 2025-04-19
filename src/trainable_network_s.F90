@@ -11,6 +11,13 @@ contains
     trainable_network%workspace_ = workspace_t(neural_network)
   end procedure
 
+  module procedure default_real_from_json
+    associate(neural_network => neural_network_t(file))
+      trainable_network%neural_network_t = neural_network
+      trainable_network%workspace_ = workspace_t(neural_network)
+    end associate
+  end procedure
+
   module procedure default_real_train
     call self%learn(mini_batches_arr, cost, adam, learning_rate, self%workspace_)
   end procedure

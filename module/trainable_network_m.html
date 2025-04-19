@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.5% of total for modules and submodules.">53 statements</a>
+                 title=" 1.6% of total for modules and submodules.">58 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -182,13 +182,13 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='mini_batch_m.html'>mini_batch_m</a></li>
                   <li class="list-inline-item"><a href='neural_network_m.html'>neural_network_m</a></li>
                   <li class="list-inline-item"><a href='input_output_pair_m.html'>input_output_pair_m</a></li>
-                  <li class="list-inline-item">julienne_m</li>
                   <li class="list-inline-item"><a href='tensor_map_m.html'>tensor_map_m</a></li>
+                  <li class="list-inline-item">julienne_m</li>
                   <li class="list-inline-item"><a href='kind_parameters_m.html'>kind_parameters_m</a></li>
                   <li class="list-inline-item"><a href='training_configuration_m.html'>training_configuration_m</a></li>
+                  <li class="list-inline-item"><a href='mini_batch_m.html'>mini_batch_m</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -1129,6 +1129,50 @@ large graphs.</div>
     <ul class="list-group">
           <li class="list-group-item">
                 <h3>
+    private impure elemental module function default_real_from_json(file) result(trainable_network)  
+    <a href="../proc/default_real_from_json~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-file~3"></span>
+              type(file_t),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>file</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/trainable_network_t.html'>trainable_network_t</a>)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
     private pure module function default_real_network(neural_network) result(trainable_network)  
     <a href="../proc/default_real_network.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
@@ -1148,7 +1192,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-neural_network~18"></span>
+              <span class="anchor" id="variable-neural_network~2"></span>
               type(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1174,7 +1218,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private module function perturbed_identity_network(training_configuration, perturbation_magnitude, metadata, input_map, output_map) result(trainable_network)  
-    <a href="../proc/perturbed_identity_network~7.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/perturbed_identity_network~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -1192,7 +1236,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-training_configuration~5"></span>
+              <span class="anchor" id="variable-training_configuration"></span>
               type(<a href='../type/training_configuration_t.html'>training_configuration_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1207,7 +1251,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-perturbation_magnitude~6"></span>
+              <span class="anchor" id="variable-perturbation_magnitude~2"></span>
               real,
             </td>
 <td>intent(in)</td>
@@ -1222,7 +1266,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-metadata~3"></span>
+              <span class="anchor" id="variable-metadata"></span>
               type(string_t),
             </td>
 <td>intent(in)</td>
@@ -1237,7 +1281,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-input_map~5"></span>
+              <span class="anchor" id="variable-input_map"></span>
               type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>)
             </td>
 <td></td>
@@ -1252,7 +1296,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-output_map~5"></span>
+              <span class="anchor" id="variable-output_map"></span>
               type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>)
             </td>
 <td></td>
@@ -1306,7 +1350,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~88"></span>
+              <span class="anchor" id="variable-self~7"></span>
               class(<a href='../type/trainable_network_t.html'>trainable_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1321,7 +1365,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-input_output_pair~3"></span>
+              <span class="anchor" id="variable-input_output_pair"></span>
               type(<a href='../type/input_output_pair_t.html'>input_output_pair_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1375,7 +1419,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~87"></span>
+              <span class="anchor" id="variable-self~6"></span>
               class(<a href='../type/trainable_network_t.html'>trainable_network_t</a>),
             </td>
 <td>intent(inout)</td>
@@ -1390,7 +1434,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-mini_batches_arr~2"></span>
+              <span class="anchor" id="variable-mini_batches_arr"></span>
               type(<a href='../type/mini_batch_t.html'>mini_batch_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1405,7 +1449,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-cost~4"></span>
+              <span class="anchor" id="variable-cost"></span>
               real,
             </td>
 <td>intent(out),</td>
@@ -1420,7 +1464,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-adam~2"></span>
+              <span class="anchor" id="variable-adam"></span>
               logical,
             </td>
 <td>intent(in)</td>
@@ -1435,7 +1479,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-learning_rate~3"></span>
+              <span class="anchor" id="variable-learning_rate"></span>
               real,
             </td>
 <td>intent(in)</td>
@@ -1487,7 +1531,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-k~15"></span>
+              <span class="anchor" id="variable-k~9"></span>
               integer,
             </td>
               <td>public,</td>
@@ -1504,7 +1548,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-m~3"></span>
+              <span class="anchor" id="variable-m"></span>
               integer,
             </td>
               <td>public,</td>
@@ -1544,6 +1588,17 @@ large graphs.</div>
           
         <table class="table table-striped varlist">
           <tbody>
+                <tr>
+                  <td>
+                        private
+
+                    impure, elemental, module
+                    function
+                    <strong>default_real_from_json</strong>
+                    (file)
+                  </td>
+                  <td></td>
+                </tr>
                 <tr>
                   <td>
                         private
@@ -1605,7 +1660,7 @@ large graphs.</div>
               </tr>
               <tr>
                 <td>  generic, public ::
-  <strong><a href='../type/trainable_network_t.html#boundprocedure-nodes_per_layer~7'>nodes_per_layer</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_nodes_per_layer~2'>default_real_nodes_per_layer</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_nodes_per_layer~2'>double_precision_nodes_per_layer</a></td>
+  <strong><a href='../type/trainable_network_t.html#boundprocedure-nodes_per_layer~7'>nodes_per_layer</a></strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_nodes_per_layer'>default_real_nodes_per_layer</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_nodes_per_layer'>double_precision_nodes_per_layer</a></td>
                   <td></td>
               </tr>
               <tr>
@@ -1683,7 +1738,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-04-18 20:11 +0000             </p>
+ on 2025-04-19 02:55 +0000             </p>
           </div>
         </div>
         <br>

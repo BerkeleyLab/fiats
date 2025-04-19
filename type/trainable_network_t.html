@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="<p> 4.5% of total for derived types.</p>Including implementation: 10 statements,  4.0% of total for derived types.">25 statements</a>
+                 title="<p> 5.4% of total for derived types.</p>Including implementation: 10 statements,  4.0% of total for derived types.">30 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -133,8 +133,8 @@
       </a>
       <div id="vars-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../type/trainable_network_t.html#variable-k~15">k</a>
-            <a class="list-group-item" href="../type/trainable_network_t.html#variable-m~3">m</a>
+            <a class="list-group-item" href="../type/trainable_network_t.html#variable-k~9">k</a>
+            <a class="list-group-item" href="../type/trainable_network_t.html#variable-m">m</a>
             <a class="list-group-item" href="../type/trainable_network_t.html#variable-workspace_">workspace_</a>
         </div>
       </div>
@@ -392,7 +392,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-k~15"></span>
+              <span class="anchor" id="variable-k~9"></span>
               integer,
             </td>
               <td>public,</td>
@@ -409,7 +409,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-m~3"></span>
+              <span class="anchor" id="variable-m"></span>
               integer,
             </td>
               <td>public,</td>
@@ -458,6 +458,50 @@ large graphs.</div>
     <ul class="list-group">
           <li class="list-group-item">
                 <h3>
+    private impure elemental module function default_real_from_json(file) result(trainable_network)  
+    <a href="../proc/default_real_from_json~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+
+    </h3>
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-file~3"></span>
+              type(file_t),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>file</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='trainable_network_t.html'>trainable_network_t</a>)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
     private pure module function default_real_network(neural_network) result(trainable_network)  
     <a href="../proc/default_real_network.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
@@ -477,7 +521,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-neural_network~18"></span>
+              <span class="anchor" id="variable-neural_network~2"></span>
               type(<a href='neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -503,7 +547,7 @@ large graphs.</div>
           <li class="list-group-item">
                 <h3>
     private module function perturbed_identity_network(training_configuration, perturbation_magnitude, metadata, input_map, output_map) result(trainable_network)  
-    <a href="../proc/perturbed_identity_network~7.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/perturbed_identity_network~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
   
@@ -521,7 +565,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-training_configuration~5"></span>
+              <span class="anchor" id="variable-training_configuration"></span>
               type(<a href='training_configuration_t.html'>training_configuration_t</a>),
             </td>
 <td>intent(in)</td>
@@ -536,7 +580,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-perturbation_magnitude~6"></span>
+              <span class="anchor" id="variable-perturbation_magnitude~2"></span>
               real,
             </td>
 <td>intent(in)</td>
@@ -551,7 +595,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-metadata~3"></span>
+              <span class="anchor" id="variable-metadata"></span>
               type(string_t),
             </td>
 <td>intent(in)</td>
@@ -566,7 +610,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-input_map~5"></span>
+              <span class="anchor" id="variable-input_map"></span>
               type(<a href='tensor_map_t.html'>tensor_map_t</a>)
             </td>
 <td></td>
@@ -581,7 +625,7 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-output_map~5"></span>
+              <span class="anchor" id="variable-output_map"></span>
               type(<a href='tensor_map_t.html'>tensor_map_t</a>)
             </td>
 <td></td>
@@ -829,14 +873,14 @@ large graphs.</div>
       <span class="anchor" id="boundprocedure-nodes_per_layer~7"></span>
       <h3>
           generic, public ::
-  <strong>nodes_per_layer</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_nodes_per_layer~2'>default_real_nodes_per_layer</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_nodes_per_layer~2'>double_precision_nodes_per_layer</a>
+  <strong>nodes_per_layer</strong> => <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-default_real_nodes_per_layer'>default_real_nodes_per_layer</a>, <a href='/home/runner/work/fiats/fiats/doc/html/type/neural_network_t.html#boundprocedure-double_precision_nodes_per_layer'>double_precision_nodes_per_layer</a>
         
       </h3>
     </div>
       <ul class="list-group">
           <li class="list-group-item">
                     <h3>
-    private  interface <a href='../interface/default_real_nodes_per_layer~2.html'>default_real_nodes_per_layer</a>()  
+    private  interface <a href='../interface/default_real_nodes_per_layer.html'>default_real_nodes_per_layer</a>()  
 </h3>
     
 
@@ -848,7 +892,7 @@ large graphs.</div>
           </li>
           <li class="list-group-item">
                     <h3>
-    private  interface <a href='../interface/double_precision_nodes_per_layer~2.html'>double_precision_nodes_per_layer</a>()  
+    private  interface <a href='../interface/double_precision_nodes_per_layer.html'>double_precision_nodes_per_layer</a>()  
 </h3>
     
 
@@ -1334,7 +1378,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-04-18 20:11 +0000             </p>
+ on 2025-04-19 02:55 +0000             </p>
           </div>
         </div>
         <br>
