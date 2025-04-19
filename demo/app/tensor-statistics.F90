@@ -45,11 +45,11 @@ program tensor_statistics
   )
 
     call compute_histograms( &
-       input_tensor_file_names  = training_data_files%input_file_names() &
-      ,output_tensor_file_names = training_data_files%output_file_names() &
+       input_tensor_file_names  = training_data_files%fully_qualified_inputs_files() &
+      ,output_tensor_file_names = training_data_files%fully_qualified_outputs_files() &
+      ,time_data_file_name      = training_data_files%fully_qualified_time_file() &
       ,input_component_names    = training_configuration%input_variable_names() &
       ,output_component_names   = training_configuration%output_variable_names() &
-      ,time_data_file_name      = training_configuration%time_data_file_name() &
       ,raw = raw &
     )
   end associate

@@ -13,10 +13,9 @@ program train_cloud_microphysics
   !! External dependencies:
   use julienne_m, only : string_t, file_t, command_line_t, bin_t
   use assert_m
-  use fiats_m, only : &
-    neural_network_t, mini_batch_t, input_output_pair_t, tensor_t, trainable_network_t, tensor_map_t, training_configuration_t, &
-    shuffle
-    
+  use fiats_m, only : tensor_t, trainable_network_t, input_output_pair_t, mini_batch_t, &
+    tensor_map_t, training_configuration_t, training_data_files_t, shuffle
+
   !! Internal dependencies:
   use phase_space_bin_m, only : phase_space_bin_t
   use NetCDF_file_m, only: NetCDF_file_t
@@ -49,19 +48,23 @@ program train_cloud_microphysics
   end type
 
   integer(int64) t_start, t_finish, clock_rate
-  character(len=*), parameter :: config= "training_configuration.json"
 
   call system_clock(t_start, clock_rate)
   
+  associate( &
+     training_configuration => training_configuration_t(file_t("training_configuration.json")) &
+    ,training_data_files => training_data_files_t(file_t("training_data_files.json")) &
+  )
 #if defined(MULTI_IMAGE_SUPPORT)
-  if (this_image()==1) then
+    if (this_image()==1) then
 #endif
-    call read_train_write(training_configuration_t(file_t(config)), get_command_line_arguments(), create_or_append_to("cost.plt"))
+      call read_train_write(training_configuration, training_data_files, get_command_line_arguments(), create_or_append_to("cost.plt"))
 #if defined(MULTI_IMAGE_SUPPORT)
-  else
-    call read_train_write(training_configuration_t(file_t(config)), get_command_line_arguments())
-  end if
+    else
+      call read_train_write(training_configuration, training_data_files, get_command_line_arguments())
+    end if
 #endif
+  end associate
 
   call system_clock(t_finish)
 
@@ -151,8 +154,9 @@ contains
     
   end function get_command_line_arguments
 
-  subroutine read_train_write(training_configuration, args, plot_file)
+  subroutine read_train_write(training_configuration, training_data_files, args, plot_file)
     type(training_configuration_t), intent(in) :: training_configuration
+    type(training_data_files_t), intent(in) :: training_data_files
     type(command_line_arguments_t), intent(in) :: args
     type(plot_file_t), intent(in), optional :: plot_file 
     type(NetCDF_variable_t), allocatable :: input_variable(:), output_variable(:)
@@ -234,7 +238,7 @@ contains
       allocate(derivative(size(output_variable)))
 
       print '(a)',"- reading time from JSON file"
-      associate(time_data => time_data_t(file_t(training_configuration%time_data_file_name())))
+      associate(time_data => time_data_t(file_t(training_data_files%fully_qualified_time_file())))
         do v = 1, size(derivative)
           derivative_name: &
           associate(derivative_name => "d" // output_names(v)%string() // "/dt")
@@ -276,7 +280,7 @@ contains
         read_or_initialize_network:   &
         if (preexisting_network_file) then
           print *,"Reading network from file " // network_file
-          trainable_network = trainable_network_t(neural_network_t(file_t(string_t(network_file))))
+          trainable_network = trainable_network_t(file_t(string_t(network_file)))
           close(network_unit)
         else
           close(network_unit)
