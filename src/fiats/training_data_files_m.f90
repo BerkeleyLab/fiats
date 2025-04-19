@@ -52,10 +52,10 @@ module training_data_files_m
       logical lhs_eq_rhs
     end function
 
-    pure module function to_json(self) result(lines)
+    pure module function to_json(self) result(file)
       implicit none
       class(training_data_files_t), intent(in) :: self
-      type(string_t), allocatable :: lines(:)
+      type(file_t) file
     end function
 
     pure module function fully_qualified_inputs_files(self) result(names)
