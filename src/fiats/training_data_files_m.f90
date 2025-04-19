@@ -1,7 +1,7 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 module training_data_files_m
-  use julienne_string_m, only : string_t
+  use julienne_m, only : string_t, file_t
   implicit none
 
   private
@@ -23,9 +23,9 @@ module training_data_files_m
 
   interface training_data_files_t
 
-    pure module function from_json(lines) result(training_data_files)
+    pure module function from_json(file) result(training_data_files)
       implicit none
-      class(string_t), intent(in) :: lines(:)
+      type(file_t), intent(in) :: file
       type(training_data_files_t) training_data_files
     end function
 

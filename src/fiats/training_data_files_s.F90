@@ -44,16 +44,18 @@ contains
 
     training_data_files_key_found = .false.
 
-    do l=1,size(lines)
-      if (lines(l)%get_json_key() == training_data_files_key) then
-        training_data_files_key_found = .true.
-        training_data_files%path_ = lines(l+1)%get_json_value(string_t(path_key), mold=string_t(""))
-        training_data_files%inputs_prefix_ = lines(l+2)%get_json_value(string_t(inputs_prefix_key), mold=string_t(""))
-        training_data_files%outputs_prefix_ = lines(l+3)%get_json_value(string_t(outputs_prefix_key), mold=string_t(""))
-        training_data_files%infixes_ = lines(l+4)%get_json_value(string_t(infixes_key), mold=[string_t("")])
-        return
-      end if
-    end do
+    associate(lines => file%lines())
+      do l=1,size(lines)
+        if (lines(l)%get_json_key() == training_data_files_key) then
+          training_data_files_key_found = .true.
+          training_data_files%path_ = lines(l+1)%get_json_value(string_t(path_key), mold=string_t(""))
+          training_data_files%inputs_prefix_ = lines(l+2)%get_json_value(string_t(inputs_prefix_key), mold=string_t(""))
+          training_data_files%outputs_prefix_ = lines(l+3)%get_json_value(string_t(outputs_prefix_key), mold=string_t(""))
+          training_data_files%infixes_ = lines(l+4)%get_json_value(string_t(infixes_key), mold=[string_t("")])
+          return
+        end if
+      end do
+    end associate
 
     call_assert(training_data_files_key_found)
   end procedure

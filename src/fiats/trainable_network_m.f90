@@ -4,7 +4,7 @@
 module trainable_network_m
   use neural_network_m, only : neural_network_t, workspace_t
   use input_output_pair_m, only : input_output_pair_t
-  use julienne_m, only : string_t
+  use julienne_m, only : string_t, file_t
   use kind_parameters_m, only : default_real
   use mini_batch_m, only : mini_batch_t
   use training_configuration_m, only : training_configuration_t
@@ -32,6 +32,12 @@ module trainable_network_m
       type(neural_network_t), intent(in) :: neural_network
       type(trainable_network_t) trainable_network
     end function 
+
+    impure elemental module function default_real_from_json(file) result(trainable_network)
+      implicit none
+      type(file_t), intent(in) :: file
+      type(trainable_network_t) trainable_network
+    end function
 
     module function perturbed_identity_network(training_configuration, perturbation_magnitude, metadata, input_map, output_map) &
       result(trainable_network)
