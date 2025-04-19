@@ -14,8 +14,8 @@ program train_cloud_microphysics
   use julienne_m, only : string_t, file_t, command_line_t, bin_t
   use assert_m
   use fiats_m, only : &
-    neural_network_t, mini_batch_t, input_output_pair_t, tensor_t, trainable_network_t, tensor_map_t, training_configuration_t, &
-    shuffle
+    neural_network_t, mini_batch_t, input_output_pair_t, tensor_t, trainable_network_t, &
+    tensor_map_t, training_configuration_t, shuffle
     
   !! Internal dependencies:
   use phase_space_bin_m, only : phase_space_bin_t
