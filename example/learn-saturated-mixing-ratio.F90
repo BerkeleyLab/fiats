@@ -2,7 +2,7 @@
 ! Terms of use are as specified in LICENSE.txt
 program train_saturated_mixture_ratio
   !! This program trains a neural network to learn the saturated mixing ratio function of ICAR.
-  use fiats_m, only : neural_network_t, trainable_network_t, mini_batch_t, tensor_t, input_output_pair_t, shuffle
+  use fiats_m, only : trainable_network_t, mini_batch_t, tensor_t, input_output_pair_t, shuffle
   use julienne_m, only : string_t, file_t, command_line_t, bin_t, csv
   use assert_m, only : assert, intrinsic_array_t
   use saturated_mixing_ratio_m, only : y, T, p
@@ -42,7 +42,7 @@ program train_saturated_mixture_ratio
 
     if (io_status == io_success) then
       print *,"Reading network from file " // network_file%string()
-      trainable_network = trainable_network_t(neural_network_t(file_t(network_file)))
+      trainable_network = trainable_network_t(file_t(network_file))
       close(network_unit)
     else
       close(network_unit)
@@ -154,11 +154,11 @@ contains
      write(unit=plot_file_unit, fmt=csv) nodes
   end subroutine
 
-  subroutine output(neural_network, file_name)
-    class(neural_network_t), intent(in) :: neural_network
+  subroutine output(trainable_network, file_name)
+    type(trainable_network_t), intent(in) :: trainable_network
     type(string_t), intent(in) :: file_name
     type(file_t) json_file
-    json_file = neural_network%to_json()
+    json_file = trainable_network%to_json()
     call json_file%write_lines(file_name)
   end subroutine
 
@@ -186,9 +186,9 @@ contains
       call random_number(b_harvest)
 
       associate(w => identity + perturbation_magnitude*(w_harvest-0.5)/0.5, b => perturbation_magnitude*(b_harvest-0.5)/0.5)
-        trainable_network = trainable_network_t( neural_network_t(nodes=n, weights=w, biases=b, &
+        trainable_network = trainable_network_t(nodes=n, weights=w, biases=b, &
           metadata=[string_t("Saturated Mixing Ratio"),string_t("Rouson"),string_t("20241013"),string_t("relu"),string_t("false")] &
-        ))
+        )
       end associate
     end associate
   end function

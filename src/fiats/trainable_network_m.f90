@@ -27,6 +27,16 @@ module trainable_network_m
 
   interface trainable_network_t 
 
+    module function default_real_construct_from_components(metadata, weights, biases, nodes, input_map, output_map) &
+      result(trainable_network)
+      implicit none
+      type(string_t), intent(in) :: metadata(:)
+      real, intent(in) :: weights(:,:,:), biases(:,:)
+      integer, intent(in) :: nodes(0:)
+      type(tensor_map_t), intent(in), optional :: input_map, output_map
+      type(trainable_network_t) trainable_network
+    end function
+
     pure module function default_real_network(neural_network) result(trainable_network)
       implicit none
       type(neural_network_t), intent(in) :: neural_network

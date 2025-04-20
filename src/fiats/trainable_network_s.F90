@@ -6,6 +6,11 @@ submodule(trainable_network_m) trainable_network_s
 
 contains
 
+  module procedure default_real_construct_from_components
+    trainable_network%neural_network_t = neural_network_t(metadata, weights, biases, nodes, input_map, output_map)
+    trainable_network%workspace_ = workspace_t(trainable_network%neural_network_t)
+  end procedure
+
   module procedure default_real_network
     trainable_network%neural_network_t = neural_network
     trainable_network%workspace_ = workspace_t(neural_network)
