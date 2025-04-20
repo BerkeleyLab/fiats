@@ -91,7 +91,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="<p> 0.2% of total for procedures.</p>Including implementation: 20 statements,  0.2% of total for procedures.">20 statements</a>
+                 title="<p> 0.3% of total for procedures.</p>Including implementation: 28 statements,  0.3% of total for procedures.">28 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -143,6 +143,7 @@
       </a>
       <div id="funcs-0" class="collapse">
         <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../interface/trainable_network_t.html#proc-default_real_construct_from_components">default_real_construct_from_components</a>
             <a class="list-group-item" href="../interface/trainable_network_t.html#proc-default_real_from_json">default_real_from_json</a>
             <a class="list-group-item" href="../interface/trainable_network_t.html#proc-default_real_network">default_real_network</a>
             <a class="list-group-item" href="../interface/trainable_network_t.html#proc-perturbed_identity_network">perturbed_identity_network</a>
@@ -170,6 +171,126 @@
 
         <h2>Functions</h2>
             <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-default_real_construct_from_components"></span> <h3>private module function default_real_construct_from_components(metadata, weights, biases, nodes, input_map, output_map) result(trainable_network)  
+    <a href="../proc/default_real_construct_from_components~2.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+</h3></div>
+    <div class="card-body">
+        
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-metadata"></span>
+              type(string_t),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>metadata</strong>(:)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-weights"></span>
+              real,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>weights</strong>(:,:,:)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-biases"></span>
+              real,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>biases</strong>(:,:)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nodes"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nodes</strong>(0:)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-input_map"></span>
+              type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>input_map</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-output_map"></span>
+              type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>output_map</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/trainable_network_t.html'>trainable_network_t</a>)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+            <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-default_real_from_json"></span> <h3>private impure elemental module function default_real_from_json(file) result(trainable_network)  
     <a href="../proc/default_real_from_json~3.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3></div>
@@ -189,7 +310,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-file~3"></span>
+              <span class="anchor" id="variable-file"></span>
               type(file_t),
             </td>
 <td>intent(in)</td>
@@ -234,7 +355,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-neural_network~2"></span>
+              <span class="anchor" id="variable-neural_network"></span>
               type(<a href='../type/neural_network_t.html'>neural_network_t</a>),
             </td>
 <td>intent(in)</td>
@@ -261,7 +382,7 @@
 
             <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-perturbed_identity_network"></span> <h3>private module function perturbed_identity_network(training_configuration, perturbation_magnitude, metadata, input_map, output_map) result(trainable_network)  
-    <a href="../proc/perturbed_identity_network~5.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+    <a href="../proc/perturbed_identity_network~4.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 </h3></div>
     <div class="card-body">
         
@@ -294,7 +415,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-perturbation_magnitude~2"></span>
+              <span class="anchor" id="variable-perturbation_magnitude"></span>
               real,
             </td>
 <td>intent(in)</td>
@@ -309,7 +430,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-metadata"></span>
+              <span class="anchor" id="variable-metadata~2"></span>
               type(string_t),
             </td>
 <td>intent(in)</td>
@@ -324,7 +445,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-input_map"></span>
+              <span class="anchor" id="variable-input_map~2"></span>
               type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>)
             </td>
 <td></td>
@@ -339,7 +460,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-output_map"></span>
+              <span class="anchor" id="variable-output_map~2"></span>
               type(<a href='../type/tensor_map_t.html'>tensor_map_t</a>)
             </td>
 <td></td>
@@ -383,7 +504,7 @@
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-04-19 02:55 +0000             </p>
+ on 2025-04-20 03:18 +0000             </p>
           </div>
         </div>
         <br>
