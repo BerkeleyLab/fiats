@@ -20,12 +20,15 @@ program concurrent_inferences
   network_file_name = string_t(command_line%flag_value("--network"))
 
   if (len(network_file_name%string())==0) then
-    error stop new_line('') // new_line('') &
-      //  'Usage: ' // new_line('') &
-      // '  fpm run --example concurrent-inferences --profile release --flag "-fopenmp" \' // new_line('') &
-      // '    -- --network "<file-name>" \' //  new_line('') &
+    error stop                      new_line('') // new_line('') &
+      // 'Usage:'                                // new_line('') &
+      // '  fpm run \'                           // new_line('') &
+      // '    --example concurrent-inferences \' // new_line('') &
+      // '    --compiler flang-new \'            // new_line('') &
+      // '    --flag -O3 \'                      // new_line('') &
+      // '    -- --network "<file-name>" \'      // new_line('') &
       // '    [--do-concurrent] [--openmp] [--elemental] [--double-precision] [--trials <integer>]' // new_line('') &
-      // ' where <> indicates user input and [] indicates an optional argument.' // new_line('')
+      // 'where <> indicates user input and [] indicates an optional argument.'
   end if
 
   inputs = random_inputs()
