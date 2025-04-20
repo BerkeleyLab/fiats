@@ -28,7 +28,7 @@ program concurrent_inferences
       // '    --flag -O3 \'                      // new_line('') &
       // '    -- --network "<file-name>" \'      // new_line('') &
       // '    [--do-concurrent] [--openmp] [--elemental] [--double-precision] [--trials <integer>]' // new_line('') &
-      // ' where <> indicates user input and [] indicates an optional argument.'
+      // 'where <> indicates user input and [] indicates an optional argument.'
   end if
 
   inputs = random_inputs()
