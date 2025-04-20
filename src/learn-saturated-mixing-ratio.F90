@@ -16,8 +16,13 @@ program train_saturated_mixture_ratio
   network_file = string_t(command_line%flag_value("--output-file"))
 
   if (len(network_file%string())==0) then
-    error stop new_line('a') // new_line('a') // &
-      'Usage: fpm run --example learn-saturated-mixing-ratio --profile release --flag "-fopenmp" -- --output-file "<file-name>"'
+    error stop                           new_line('') // new_line('') &
+      // 'Usage:'                                     // new_line('') &
+      // '  fpm run \'                                // new_line('') &
+      // '  --example learn-saturated-mixing-ratio \' // new_line('') &
+      // '  --compiler flang-new \'                   // new_line('') &
+      // '  --flag "-O3" \'                           // new_line('') &
+      // '  -- --output-file "<file-name>"'           // new_line('')
   end if
 
   call system_clock(counter_start, clock_rate)
