@@ -69,38 +69,43 @@ The Fortran standard defines steps for synchronized image launch, synchronized n
 Multi-image execution in a library thus requires a multi-image Fortran main program or at least some mechanism for emulating the same.
  
 # State of the field
+## Fortran deep learning software
 At least six open-source software packages provide deep learning services to Fortran software.
-Three provide Fortran application programming interfaces (APIs) that wrap C++ libraries:
+Three provide Fortran application programming interfaces (APIs) wrapping C++ libraries:
 
 * Fortran-TF-Lib [@ftorch] is a TensorFlow [@tensorflow] API,
 * FTorch [@ftorch] is an API for the PyTorch [@pytorch] back-end libtorch [@libtorch], and
 * TorchFort [torchfort] is a libtorch API.
 
-Cloning these three APIs and running a recursive search of the entire source tree via `grep pure -ri .` finds no `pure` procedures. 
-The absence of `pure` procudures precludes the use of the API anywhere in the call stack of procedures invoked inside a `do concurrent` construct.
+As of this writing, recursive searches in the root directories of the these three projects find no `pure` procedures as determined by
+```
+grep -e "pure " -e "simple " -e "elemental " -ri . | grep -v "impure "
+```
+where the flags reflect that Fortran 2023 defines `simple` and `elemental` procedures as `pure` unless an `elemental` procedures is declared `impure`.
+The absence of `pure` procedures precludes the use of these APIs anywhere in the call stack inside a `do concurrent` construct.
+Also, as APIs backed by C++ libraries, none use Fortran's multi-image execution features.
 
-Another three packages aiming to support Fortran are themselves native Fortran solutions:
+Three packages supporting deep learning in Fortran are themselves written in Fortran:
 
 * Athena [@athena]
 * Fiats [@fiats]
-* neural-fortran[@neural-fortran]
+* neural-fortran [@neural-fortran]
 
-... One can view each of these along several axes from active to dormant and from portable to hardware-specific from research artifact to production-ready
+Searching the latter three repositories' `src` directories and culling false positives suggests that over half of the procedures in each are `pure`, including 75\% of the procedures in Fiats.
+Each of the three native Fortran repositories exploits this property by extensively using `do concurrent`.
+Only Fiats leverages the locality specifiers that Fortran 2018 introduced and Fortran 2023 expanded by adding parallel reductions.
+
+Of the six APIs and libraries discussed here, only neural-fortran and Fiats employ Fortran's multi-image features -- neural-fortran in its core library and Fiats in one of its demonstration applications.
+Future work on Fiats will include researching ways to leverage multi-image execution to parallelize neural-network training algorithms.
 
 ## Activity level
-
-## Research suitability
-
-Open-source development expands the ways in which software can support research by inviting user contributions.
-Furthermore, developing software in the language of the users lowers a barrier to such contributions.
-
-For example, the ability to recompile a runtime library facilitates studying
-performance portability or studying the impact of different build configurations.
+Each of the six projects discussed in this paper appears to be actively developed except fortran-tf-lib.
+The fortran-tf-lib repository has a most recent commit dated in 2023 and has no releases.
+Each of the rest has a most-recent commit no older than May 2025.
 
 # Recent research and scholarly publications
-
-Fiats supports research in training a cloud microphysics surrogate model for ICAR and automatic parallelization of batch inference calculations using an E3SM aerosols surrogate.
-This research has spawned two peer-reviewed publications, including one accepted [rouson2025automatically] and one in open review [rouson2025cloud].  
+Fiats supports research in training surrogate models and parallelizing batch inference calculations for atmospheric sciences.
+This research has generated two peer-reviewed paper submissions, including one accepted to appear in workshop proceedings [rouson2025automatically] and one in open review [rouson2025cloud].
 Fiats also supports ongoing research in data-reduction strategies for cloud microphysics training data sets.
 
 
