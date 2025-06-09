@@ -23,7 +23,7 @@ bibliography: paper.bib
 [Fiats](https://go.lbl.gov/fiats) provides a platform for research on the training and deployment of neural-network surrogate models for computational science.
 Fiats also supports exploring, advancing, and combining functional, object-oriented, and parallel programming patterns in Fortran 2023 [@fortran2023].
 As such, the Fiats name has dual expansions: ``Functional inference and training for surrogates'' or ``Fortran inference and training for science.''
-Fiats inference functions are `pure` and thus suitable for invocation inside Fortran's loop-level parallelism construct: `do concurrent`. 
+Fiats inference functions are `pure` and therefore suitable for invocation inside Fortran's loop-level parallelism construct: `do concurrent`. 
 Fiats training procedures center around a `do concurrent` construct with a Fortran 2023 parallel reduction.
 Several compilers can automatically parallelize `do concurrent` on Central Processing Units (CPUs) or Graphics Processing Units (GPUs).
 Fiats thus aims to achieve performance portability through standard language mechanisms.
@@ -46,7 +46,7 @@ To explore how new language features and novel uses of features can power deep l
   - Publishing and updating the Parallel Runtime Interface for Fortran (PRIF) [bonachea2024prif,prif-0.5], and
   - Developing the first PRIF implementation: [Caffeine](https://go.lbl.gov/caffeine) [@rouson2022caffeine].
 
-Fiats thus supports the study of deep learning for science and programming paradigms and patterns for deep learning in Fortran 2023.
+Fiats thus supports the study of deep learning for science and the study of programming paradigms and patterns for deep learning in Fortran 2023.
 
 # Statement of need
 Fortran 2008 introduced `do concurrent` for expressing loop-level parallelism and multi-image execution for SPMD/PGAS parallel programming in shared or distributed memory.
@@ -58,7 +58,7 @@ Fortran 2018 and 2023 expanded and refined these features by adding, for example
 which creates a need for libraries that support users who adopt these features.
 For example, one requirement that impacts library design stems from Fortran's stipulation that procedures invoked inside a `do concurrent` construct must be `pure`. 
 
-Every intrinsic function defined in the Fortran 2023 standard is `simple`, which are `pure` procedures that satisfy additional constraints.
+All intrinsic functions defined in the Fortran 2023 standard are `simple`, an attribute that implies `pure` plus additional constraints.
 Libraries that export `pure` procedures thus behave like extensions of the language.
 To wit, the Fortran 2023 standard states, ``It is expected that most library procedures will conform to the constraints required of pure procedures, and so can be declared pure and referenced in `do concurrent` constructs... and within user-defined `pure` procedures.''
 
