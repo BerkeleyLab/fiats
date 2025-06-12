@@ -143,7 +143,7 @@ contains
     print *,"Elapsed system clock during `OpenMP` inference: ", openmp_time
   end function
 
-  real(real64) function elemental_time
+  real(real64) function elemental_time()
     integer(int64) t_start, t_finish, clock_rate
 
     print *,"Performing elemental inferences inside `omp workshare`"
