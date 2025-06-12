@@ -110,6 +110,12 @@ Fiats supports research in training surrogate models and parallelizing batch inf
 This research has generated two peer-reviewed paper submissions, including one accepted to appear in workshop proceedings [rouson2025automatically] and one in open review [rouson2025cloud].
 Fiats also supports ongoing research in data-reduction strategies for cloud microphysics training data sets.
 
+# Class Diagram
+ \autoref{fig:derived-types} shows a class diagram displaying the derived types an procedures used in the `train-cloud-microphysics` demonstration application inside the `demo/app` subdirectory of Fiats.
+
+![Fiats class diagram.\label{fig:derived-types}](class-diagram){ width=100% }
+
+
 # Acknowledgments
 This material is based upon work supported by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research and Office of Nuclear Physics, Scientific Discovery through Advanced Computing (SciDAC)  Next-Generation Scientific Software Technologies (NGSST) programs under Contract No. DE-AC02-05CH11231.
 This material is also based on work supported by Laboratory Directed Research and Development (LDRD) funding from Lawrence Berkeley National Laboratory, provided by the Director, Office of Science, of the U.S. DOE under Contract No. DE-AC02-05CH11231.
