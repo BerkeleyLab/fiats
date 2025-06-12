@@ -44,7 +44,7 @@ To explore how new language features and novel uses of features can power deep l
   - Studying performance [@rouson2025automatic],
   - Isolating and reporting compiler bugs and fixing front-end bugs,
   - Publishing and updating the Parallel Runtime Interface for Fortran (PRIF) [bonachea2024prif,prif-0.5], and
-  - Developing the first PRIF implementation: [Caffeine](https://go.lbl.gov/caffeine) [@rouson2022caffeine].
+  - Developing the first PRIF implementation: [Caffeine](https://go.lbl.gov/caffeine) [@rouson2022caffeine,bonachea2025caffeine].
 
 Fiats thus supports the study of deep learning for science and the study of programming paradigms and patterns for deep learning in Fortran 2023.
 
@@ -109,16 +109,25 @@ Each of the rest has a most-recent commit no older than May 2025.
 # Recent research and scholarly publications
 ## Publications
 Fiats supports research in training surrogate models and parallelizing batch inference calculations for atmospheric sciences.
-This research has generated two peer-reviewed paper submissions, including one accepted to appear in workshop proceedings [rouson2025automatically] and one in open review [rouson2025cloud].
+This research has generated two peer-reviewed paper submissions, including one accepted to appear in workshop proceedings [@rouson2025automatically] and one in open review [@rouson2025cloud].
 Fiats also supports ongoing research in data-reduction strategies for cloud microphysics training data sets.
 
-## Research software overview
-\autoref{fig:derived-types} contains a Unified Modeling Language (UML) class diagram depicting the Fiats derived types that supported the research reported by [rouson2025automatically] and [rouson2025cloud] and as well as supporting ongoing research.
-Specifically, \autoref{fig:derived-types} describes the Fiats derived type relationships involved in the Fiat's repository's `concurrent-inferences` example program and in the `infer-aerosols` and `train-cloud-microphysics` demonstration applications.
-Also included are class diagarams for two types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking utility.
-The Julienne types' class diagrams are included because they are referenced elsewhere in the diagram.
+## Use of Fiats in research
+\autoref{fig:derived-types} contains a Unified Modeling Language (UML) class diagram depicting the Fiats derived types that supported the research publications cited in the previous subsection:
+
+1. [`example/concurrent-inferences.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/example/concurrent-inferences.f90#L1),
+2. [`example/learn-saturated-mixing-ratio.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/example/learn-saturated-mixing-ratio.F90#L1),
+3. [`app/demo/infer-aerosols.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/demo/app/infer-aerosol.f90#L1), and
+4. [`app/demo/train-cloud-microphysics.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/demo/app/train-cloud-microphysics.F90#L1).
 
 ![Fiats class diagram.\label{fig:derived-types}](class-diagram){ width=100% }
+
+[@rouson2025automatically] reported the results of research on automatically parallelizing batch inference calculations via Fortran's '`do concurrent` construct using program 1.
+[@rouson2025cloud] reported the results of research on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2 and 3.
+Program 4 supports ongoing research on developing a cloud microphysics surrogate for the Intermediate Complexity Atmospheric Research (ICAR) atmospheric model.
+In addition to Fiats types, \autoref{fig:derived-types} includes class diagarams for two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking utility: the `string_t` and `file_t` types.
+Other parts of the diagram reference these Julienne types so the `string_t` and `filet_t` class diagrams are include for completeness.
+
 
 # Acknowledgments
 This material is based upon work supported by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research and Office of Nuclear Physics, Scientific Discovery through Advanced Computing (SciDAC)  Next-Generation Scientific Software Technologies (NGSST) programs under Contract No. DE-AC02-05CH11231.
