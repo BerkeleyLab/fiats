@@ -105,16 +105,20 @@ Each of the Fortran deep learning APIs and libraries discussed in this paper is 
 Fortran-TF-Lib's most recent commit was in 2023, and it is the only Fortran API or library that has never produced releases.
 Each of the rest has a most-recent commit no older than May 2025.
 
+
 # Recent research and scholarly publications
+## Publications
 Fiats supports research in training surrogate models and parallelizing batch inference calculations for atmospheric sciences.
 This research has generated two peer-reviewed paper submissions, including one accepted to appear in workshop proceedings [rouson2025automatically] and one in open review [rouson2025cloud].
 Fiats also supports ongoing research in data-reduction strategies for cloud microphysics training data sets.
 
-# Class Diagram
- \autoref{fig:derived-types} shows a class diagram displaying the derived types an procedures used in the `train-cloud-microphysics` demonstration application inside the `demo/app` subdirectory of Fiats.
+## Research software overview
+\autoref{fig:derived-types} contains a Unified Modeling Language (UML) class diagram depicting the Fiats derived types that supported the research reported by [rouson2025automatically] and [rouson2025cloud] and as well as supporting ongoing research.
+Specifically, \autoref{fig:derived-types} describes the Fiats derived type relationships involved in the Fiat's repository's `concurrent-inferences` example program and in the `infer-aerosols` and `train-cloud-microphysics` demonstration applications.
+Also included are class diagarams for two types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking utility.
+The Julienne types' class diagrams are included because they are referenced elsewhere in the diagram.
 
 ![Fiats class diagram.\label{fig:derived-types}](class-diagram){ width=100% }
-
 
 # Acknowledgments
 This material is based upon work supported by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research and Office of Nuclear Physics, Scientific Discovery through Advanced Computing (SciDAC)  Next-Generation Scientific Software Technologies (NGSST) programs under Contract No. DE-AC02-05CH11231.
