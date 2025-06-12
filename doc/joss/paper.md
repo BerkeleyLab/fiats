@@ -116,8 +116,8 @@ Fiats also supports ongoing research in data-reduction strategies for cloud micr
 \autoref{fig:derived-types} contains a Unified Modeling Language (UML) class diagram depicting the Fiats derived types that supported the research publications cited in the previous subsection:
 
 1. [`example/concurrent-inferences.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/example/concurrent-inferences.f90#L1),
-2. [`example/learn-saturated-mixing-ratio.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/example/learn-saturated-mixing-ratio.F90#L1),
-3. [`app/demo/infer-aerosols.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/demo/app/infer-aerosol.f90#L1), and
+2. [`app/demo/infer-aerosols.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/demo/app/infer-aerosol.f90#L1), and
+3. [`example/learn-saturated-mixing-ratio.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/example/learn-saturated-mixing-ratio.F90#L1),
 4. [`app/demo/train-cloud-microphysics.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/demo/app/train-cloud-microphysics.F90#L1).
 
 ![Fiats class diagram.\label{fig:derived-types}](class-diagram){ width=100% }
@@ -128,6 +128,42 @@ Program 4 supports ongoing research on developing a cloud microphysics surrogate
 In addition to Fiats types, \autoref{fig:derived-types} includes class diagarams for two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking utility: the `string_t` and `file_t` types.
 Other parts of the diagram reference these Julienne types so the `string_t` and `filet_t` class diagrams are include for completeness.
 
+Each class diagram for a derived type in \autoref{fig:derived-types} displays three panels: one containing the type name, an empty panel where private compoents have been ommitted, a third panel listing public procedure bindings.
+The third panel also lists user-defined structure constructors, which are generic interfaces through which to invoke one or more functions that define a result of the named type.
+The figure's rightmost four class diagrams exist primarily to serve the needs of those seeking to peform inference.
+The leftmost six diagrams serve training needs.
+Because inference is considerably simpler, it makes sense to describe the right side of the diagram before the left side.
+
+The `concurrent-inferences` example program, the simplest case, centers around perfoming a batch of inferences.  
+From the bottom of the class hierarchy up, the program 
+
+1. Gets a `character` file name from the command line, 
+2. Passes the name to a `string_t` constructor,
+3. Pases the resulting `string_t` object to a `file_t` constructor,
+4. Passes the resulting `file_t` object to a `neural_network_t` constructor.
+
+The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects in various ways such using OpenMP directives or `do concurrent` or an array statement that takes advantage of `infer` being `elemental`.
+
+The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t`, a parameterized derived type (PDT) that has a `kind` type parameter.
+To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_netowrk_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
+The `double_precision_file_t` type serves to control the interpretation of the JSON network file: JSON does not distinguish between categories numerical values such as `real`, `double precision`, or even `integer` so something external to the file determine the interpretation of the numbers a JSON file stores.
+
+The `learn-saturated-mixing-ratio` and `train-cloud-microphysics` programs center around the use of a `trainable_network_t` object gor training.
+The former trains neural network surrogatge for a thermodynamic function from ICAR: the saturated mixing ratio, a scalar function of temperature and pressure.
+The latter trains surrogates for the complete cloud microphysics models in ICAR -- models that require thousands of lines of codee to implemenet.
+Whereas diagrammed relationships of `neural_network_t` reflect direct dependencies only two types (`file_t` and `tensor_t`), even describing the basic behaviors of `trainable_network_t` requires showing dependencies on five types:
+
+* A `training_configuration_t` object, which holds hyperparameters such as the learning rate and choice of optimization algorithms,
+* A `file_t` object from which the `training_configuration` is read inside the `trainable_network_t` constructor,
+* A `mini_batch_t` object that stores an array of `input_output_pair` objects from the training data set,
+* Two `tensor_map_t` objects storing the linear functions applied to map intputs to training data range and to map outputs from the training data range back to the application domain, and
+* A parent `neural_network_t` object storing the network architecture, including weights, biases, layer widths, etc.
+
+The `trainable_network_t` serves to store a `workspace_t` (not shown) as a scratchpad for training purposes.
+The workspace is not needed for inference.
+During each training step, a `trainable_network_t` object passes its `workspaece_t` into a corresponding `learn` procedure binding (not shown) on its paraent `neural_network_t`.
+
+Lines
 
 # Acknowledgments
 This material is based upon work supported by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research and Office of Nuclear Physics, Scientific Discovery through Advanced Computing (SciDAC)  Next-Generation Scientific Software Technologies (NGSST) programs under Contract No. DE-AC02-05CH11231.
