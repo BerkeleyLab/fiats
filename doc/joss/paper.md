@@ -143,6 +143,7 @@ From the bottom of the class hierarchy up, the program
 4. Passes the resulting `file_t` object to a `neural_network_t` constructor.
 
 The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects in various ways such using OpenMP directives or `do concurrent` or an array statement that takes advantage of `infer` being `elemental`.
+Lines 101 and 109 of `example/concurrent-inferences.f90` of `git` tag `joss-line-references` demonstrate neural-network construction from a file and using neural network for inference, respectively.
 
 The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t`, a parameterized derived type (PDT) that has a `kind` type parameter.
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_netowrk_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
@@ -162,6 +163,7 @@ Whereas diagrammed relationships of `neural_network_t` reflect direct dependenci
 The `trainable_network_t` serves to store a `workspace_t` (not shown) as a scratchpad for training purposes.
 The workspace is not needed for inference.
 During each training step, a `trainable_network_t` object passes its `workspaece_t` into a corresponding `learn` procedure binding (not shown) on its paraent `neural_network_t`.
+Lines 101 and 109 of `demo/app/train-cloud-microphysics.f90` at `git` tag `joss-line-references` demonstrate neural-network construction from a file and using neural network for inference, respectively.
 
 Lines
 
