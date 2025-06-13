@@ -163,10 +163,10 @@ Whereas diagrammed relationships of `neural_network_t` reflect direct dependenci
 The `trainable_network_t` serves to store a `workspace_t` (not shown) as a scratch-pad for training purposes.
 The workspace is not needed for inference.
 During each training step, a `trainable_network_t` object passes its `workspace_t` into a corresponding `learn` procedure binding (not shown) on its parent `neural_network_t`.
-Lines 388--396 of `demo/app/train-cloud-microphysics.f90` at `git` tag `joss-line-references` demonstrate 
+Lines 388--396 of `demo/app/train-cloud-microphysics.f90` at `git` tag `joss-line-references` demonstrate
 
-1. A loop over epochs, 
-2. The shuffling of the `input_output_pair_t` objects at the beginning of each eopoch, 
+1. A loop over epochs,
+2. The shuffling of the `input_output_pair_t` objects at the beginning of each eopoch,
 3. The grouping of `input_output_pair_t` objects into `mini_batch_t` objects, and
 4. The invocation of the `train` procedure for each mini-batch,
 
