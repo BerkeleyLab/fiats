@@ -120,7 +120,7 @@ Fiats also supports ongoing research in data-reduction strategies for cloud micr
 3. [`example/learn-saturated-mixing-ratio.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/example/learn-saturated-mixing-ratio.F90#L1),
 4. [`app/demo/train-cloud-microphysics.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/demo/app/train-cloud-microphysics.F90#L1).
 
-![Fiats class diagram.\label{fig:derived-types}](class-diagram){ width=100% }
+![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationship annotations (gray boxes) as a sentence with the boxed text preceded by the derived type at the base of an arrow (the subject) and followed by the type at the head of an arrow (the sentenc's object).  Type extension reads with the type on the end of the open triangle as the subject.  Composition reads with the type on the side of the closed diamond as the subject. \label{fig:derived-types}](class-diagram){ width=100% }
 
 [@rouson2025automatically] reported the results of research on automatically parallelizing batch inference calculations via Fortran's '`do concurrent` construct using program 1.
 [@rouson2025cloud] reported the results of research on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2 and 3.
