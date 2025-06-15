@@ -15,6 +15,10 @@ authors:
     orcid: 0000-0002-3205-2169
     equal-contrib: false
     affiliation: 1
+  - name: Jordan A. Welsman
+    orcid: 0000-0002-2882-594X
+    equal-contrib: false
+    affiliation: 1
 affiliations:
  - name: Lawrence Berkeley National Laboratory, United States
    index: 1
