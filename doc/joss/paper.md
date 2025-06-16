@@ -30,7 +30,7 @@ bibliography: paper.bib
 # Summary
 [Fiats](https://go.lbl.gov/fiats) provides a platform for research on the training and deployment of neural-network surrogate models for computational science.
 Fiats also supports exploring, advancing, and combining functional, object-oriented, and parallel programming patterns in Fortran 2023 [@fortran2023].
-As such, the Fiats name has dual expansions: ``Functional inference and training for surrogates'' or ``Fortran inference and training for science.''
+As such, the Fiats name has dual expansions: ``Functional Inference And Training for Surrogates'' or ``Fortran Inference And Training for Science.''
 Fiats inference functions are `pure` and therefore suitable for invocation inside Fortran's loop-level parallelism construct: `do concurrent`. 
 Fiats training procedures center around a `do concurrent` construct with a Fortran 2023 parallel reduction.
 Several compilers can automatically parallelize `do concurrent` on Central Processing Units (CPUs) or Graphics Processing Units (GPUs).
@@ -44,7 +44,7 @@ In addition to simple, illustrative examples, the Fiats repository's `demo/app` 
 
 Ongoing research explores how Fiats can exploit multi-image execution, a set of Fortran features for Single-Program, Multiple-Data (SPMD) parallel programming with a Partitioned Global Address Space (PGAS) [@numrich2018co-arrays], where the PGAS features center around ``coarray'' distributed data structures.
 
-To explore how new language features and novel uses of features can power deep learning in Fortran, Fiats contributors work to advance Fortran by
+To explore how new language features and novel uses of features can power deep learning in Fortran, Fiats contributors work to advance Fortran by:
 
 * Participating in the Fortran standardization process and
 * Contributing to compiler development through 
@@ -68,14 +68,14 @@ For example, one requirement that impacts library design stems from Fortran's st
 
 All intrinsic functions defined in the Fortran 2023 standard are `simple`, an attribute that implies `pure` plus additional constraints.
 Libraries that export `pure` procedures thus behave like extensions of the language.
-To wit, the Fortran 2023 standard states, ``It is expected that most library procedures will conform to the constraints required of pure procedures, and so can be declared pure and referenced in `do concurrent` constructs... and within user-defined `pure` procedures.''
+To wit, the Fortran 2023 standard states: "It is expected that most library procedures will conform to the constraints required of pure procedures, and so can be declared pure and referenced in `do concurrent` constructs... and within user-defined `pure` procedures."
 
-Conversely, multi-image execution in a library places a requirement on the user code.
+Conversely, multi-image execution in a library places a requirement on the client code.
 The Fortran standard defines steps for synchronized image launch, synchronized normal termination, and single-image initiation of global error termination.
 Multi-image execution in a library thus requires support for multi-image execution in the main program.
 
-A surrogate model's utility hinges upon exhibiting execution times faster than the physics-based model the surrogate replaces.
-This restricts the surrogate neural network to a few thousand tunable parameters.
+A surrogate model's utility hinges upon exhibiting inference execution times faster than the physics-based model the surrogate replaces.
+This commonly restricts the surrogate neural network to a few thousand tunable parameters.
 For networks of modest size, useful insights can sometimes be gleaned from visually inspecting the network parameters.
 Fiats stores networks in human-readable JavaScript Object Notation (JSON) format.
 The Fiats companion package [Nexport](https://go.lbl.gov/nexport) facilitates exchanging such files with [PyTorch](https://pytorch.org).
@@ -86,7 +86,7 @@ At least six open-source software packages provide deep learning services to For
 Three provide Fortran application programming interfaces (APIs) that wrap C++ libraries:
 
 * [Fortran-TF-Lib](https://github.com/Cambridge-ICCS/fortran-tf-lib) is a Fortran API for [TensorFlow](https://tensorflow.org),
-* [FTorch](https://github.com/Cambridge-ICCS/FTorch) is a Fortran API for libtorach, the PyTorch back-end, and
+* [FTorch](https://github.com/Cambridge-ICCS/FTorch) is a Fortran API for libtorch, the PyTorch back-end, and
 * [TorchFort](https://github.com/NVIDIA/TorchFort) is also a Fortran API for libtorch.
 
 As of this writing, recursive searches in the root directories of the these three projects find no `pure` procedures.
@@ -98,7 +98,7 @@ Three packages supporting deep learning in Fortran are themselves written in For
 
 * [Athena](https://github.com/nedtaylor/athena) [@taylor2024athena]
 * [Fiats](https://go.lbl.gov/fiats) [@rouson2025automatically]
-* [neural-fortran](https://github.com/) [@curcic2019parallel]
+* [neural-fortran](https://github.com/modern-fortran/neural-fortran) [@curcic2019parallel]
 
 Searching Athena, Fiats, and neural-fortran `src` subdirectories finds that over half of the procedures in each are `pure`, including 75\% of Fiats procedures.
 Included in these tallies are procedures explicitly marked as `pure` along with `simple` procedures and `elemental` procedures without the `impure` attribute.
@@ -128,13 +128,13 @@ Fiats also supports ongoing research in data-reduction strategies for cloud micr
 3. [`example/learn-saturated-mixing-ratio.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/example/learn-saturated-mixing-ratio.F90#L1),
 4. [`app/demo/train-cloud-microphysics.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/demo/app/train-cloud-microphysics.F90#L1).
 
-![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationship annotations (gray boxes) as a sentence with the boxed text preceded by the derived type at the base of an arrow (the subject) and followed by the type at the head of an arrow (the sentenc's object).  Type extension reads with the type on the end of the open triangle as the subject.  Composition reads with the type on the side of the closed diamond as the subject. \label{fig:derived-types}](class-diagram){ width=100% }
+![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationship annotations (gray boxes) as a sentence with the boxed text preceded by the derived type at the base of an arrow (the subject) and followed by the type at the head of an arrow (the sentence's object).  Type extension reads with the type on the end of the open triangle as the subject.  Composition reads with the type on the side of the closed diamond as the subject. \label{fig:derived-types}](class-diagram){ width=100% }
 
 [@rouson2025automatically] reported the results of research on automatically parallelizing batch inference calculations via Fortran's '`do concurrent` construct using program 1.
 [@rouson2025cloud] reported the results of research on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2 and 3.
 Program 4 supports ongoing research on developing a cloud microphysics surrogate for the Intermediate Complexity Atmospheric Research (ICAR) atmospheric model.
 In addition to Fiats types, \autoref{fig:derived-types} includes class diagrams for two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking utility: the `string_t` and `file_t` types.
-Other parts of the diagram reference these Julienne types so the `string_t` and `filet_t` class diagrams are include for completeness.
+Other parts of the diagram reference these Julienne types so the `string_t` and `filet_t` class diagrams are included for completeness.
 
 Each class diagram for a derived type in \autoref{fig:derived-types} displays three panels: one containing the type name, an empty panel where private components have been omitted, a third panel listing public procedure bindings.
 The third panel also lists user-defined structure constructors, which are generic interfaces through which to invoke one or more functions that define a result of the named type.
@@ -150,17 +150,17 @@ From the bottom of the class hierarchy up, the program
 3. Passes the resulting `string_t` object to a `file_t` constructor,
 4. Passes the resulting `file_t` object to a `neural_network_t` constructor.
 
-The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects in various ways such using OpenMP directives or `do concurrent` or an array statement that takes advantage of `infer` being `elemental`.
-Lines 101 and 109 of `example/concurrent-inferences.f90` of `git` tag `joss-line-references` demonstrate neural-network construction from a file and using neural network for inference, respectively.
+The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects in various ways such as using OpenMP directives, or `do concurrent`, or an array statement that takes advantage of `infer` being `elemental`.
+Lines 101 and 109 of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrate neural-network construction from a file and using neural network for inference, respectively.
 
 The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t`, a parameterized derived type (PDT) that has a `kind` type parameter.
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
-The `double_precision_file_t` type serves to control the interpretation of the JSON network file: JSON does not distinguish between categories numerical values such as `real`, `double precision`, or even `integer` so something external to the file determine the interpretation of the numbers a JSON file stores.
+The `double_precision_file_t` type serves to control the interpretation of the JSON network file: JSON does not distinguish between categories of numerical values such as `real`, `double precision`, or even `integer`, so something external to the file must determine the interpretation of the numbers a JSON file stores.
 
 The `learn-saturated-mixing-ratio` and `train-cloud-microphysics` programs center around the use of a `trainable_network_t` object for training.
-The former trains neural network surrogate for a thermodynamic function from ICAR: the saturated mixing ratio, a scalar function of temperature and pressure.
+The former trains neural network surrogates for a thermodynamic function from ICAR: the saturated mixing ratio, a scalar function of temperature and pressure.
 The latter trains surrogates for the complete cloud microphysics models in ICAR -- models that require thousands of lines of code to implement.
-Whereas diagrammed relationships of `neural_network_t` reflect direct dependencies only two types (`file_t` and `tensor_t`), even describing the basic behaviors of `trainable_network_t` requires showing dependencies on five types:
+Whereas diagrammed relationships of `neural_network_t` reflect direct dependencies of only two types (`file_t` and `tensor_t`), even describing the basic behaviors of `trainable_network_t` requires showing dependencies on five types:
 
 * A `training_configuration_t` object, which holds hyperparameters such as the learning rate and choice of optimization algorithms,
 * A `file_t` object from which the `training_configuration` is read inside the `trainable_network_t` constructor,
@@ -171,10 +171,10 @@ Whereas diagrammed relationships of `neural_network_t` reflect direct dependenci
 The `trainable_network_t` serves to store a `workspace_t` (not shown) as a scratch-pad for training purposes.
 The workspace is not needed for inference.
 During each training step, a `trainable_network_t` object passes its `workspace_t` into a corresponding `learn` procedure binding (not shown) on its parent `neural_network_t`.
-Lines 388--396 of `demo/app/train-cloud-microphysics.f90` at `git` tag `joss-line-references` demonstrate
+Lines 388--396 of `demo/app/train-cloud-microphysics.f90` at `git` tag `joss-line-references` demonstrate:
 
 1. A loop over epochs,
-2. The shuffling of the `input_output_pair_t` objects at the beginning of each eopoch,
+2. The shuffling of the `input_output_pair_t` objects at the beginning of each epoch,
 3. The grouping of `input_output_pair_t` objects into `mini_batch_t` objects, and
 4. The invocation of the `train` procedure for each mini-batch,
 
