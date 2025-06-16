@@ -11,6 +11,10 @@ authors:
     orcid: 0000-0002-2344-868X
     equal-contrib: false
     affiliation: 1
+  - name: Dan Bonachea
+    orcid: 0000-0002-0724-9349
+    equal-contrib: false
+    affiliation: 1
   - name: Brad Richardson
     orcid: 0000-0002-3205-2169
     equal-contrib: false
