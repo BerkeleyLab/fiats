@@ -23,6 +23,10 @@ authors:
     orcid: 0000-0002-2882-594X
     equal-contrib: false
     affiliation: 1
+  - name: Zhe Bai
+    orcid: 0000-0002-3092-0903
+    equal-contrib: false
+    affiliation: 1
 affiliations:
  - name: Lawrence Berkeley National Laboratory, United States
    index: 1
