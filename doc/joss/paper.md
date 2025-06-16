@@ -123,10 +123,10 @@ Fiats also supports ongoing research in data-reduction strategies for cloud micr
 ## Use of Fiats in research
 \autoref{fig:derived-types} contains a Unified Modeling Language (UML) class diagram depicting the Fiats derived types that supported the research publications cited in the previous subsection:
 
-1. [`example/concurrent-inferences.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/example/concurrent-inferences.f90#L1),
-2. [`app/demo/infer-aerosols.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/demo/app/infer-aerosol.f90#L1), and
-3. [`example/learn-saturated-mixing-ratio.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/example/learn-saturated-mixing-ratio.F90#L1),
-4. [`app/demo/train-cloud-microphysics.f90`](https://github.com/BerkeleyLab/fiats/blob/460f31e5df2f3a50800b6792822754b04a91f5c9/demo/app/train-cloud-microphysics.F90#L1).
+1. [`example/concurrent-inferences.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L1),
+2. [`app/demo/infer-aerosols.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/infer-aerosol.f90#L1), and
+3. [`example/learn-saturated-mixing-ratio.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/learn-saturated-mixing-ratio.F90#L1),
+4. [`app/demo/train-cloud-microphysics.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/train-cloud-microphysics.F90#L1).
 
 ![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationship annotations (gray boxes) as a sentence with the boxed text preceded by the derived type at the base of an arrow (the subject) and followed by the type at the head of an arrow (the sentence's object).  Type extension reads with the type on the end of the open triangle as the subject.  Composition reads with the type on the side of the closed diamond as the subject. \label{fig:derived-types}](class-diagram){ width=100% }
 
