@@ -49,10 +49,10 @@ To explore how new language features and novel uses of features can power deep l
 * Participating in the Fortran standardization process and
 * Contributing to compiler development through 
   - Writing unit tests [@rasmussen2022agile],
-  - Studying performance [@rouson2025automatic],
+  - Studying performance [@rouson2025automatically],
   - Isolating and reporting compiler bugs and fixing front-end bugs,
-  - Publishing and updating the Parallel Runtime Interface for Fortran (PRIF) [bonachea2024prif,prif-0.5], and
-  - Developing the first PRIF implementation: [Caffeine](https://go.lbl.gov/caffeine) [@rouson2022caffeine,bonachea2025caffeine].
+  - Publishing and updating the Parallel Runtime Interface for Fortran (PRIF) [@bonachea2024prif; @prif-0.5], and
+  - Developing the first PRIF implementation: [Caffeine](https://go.lbl.gov/caffeine) [@rouson2022caffeine; @bonachea2025caffeine].
 
 Fiats thus supports the study of deep learning for science and the study of programming paradigms and patterns for deep learning in Fortran 2023.
 
@@ -97,7 +97,7 @@ Also, as APIs backed by C++ libraries, none use Fortran's multi-image execution 
 Three packages supporting deep learning in Fortran are themselves written in Fortran:
 
 * [Athena](https://github.com/nedtaylor/athena) [@taylor2024athena]
-* [Fiats](https://go.lbl.gov/fiats) [@rouson2025automatic]
+* [Fiats](https://go.lbl.gov/fiats) [@rouson2025automatically]
 * [neural-fortran](https://github.com/) [@curcic2019parallel]
 
 Searching Athena, Fiats, and neural-fortran `src` subdirectories finds that over half of the procedures in each are `pure`, including 75\% of Fiats procedures.
