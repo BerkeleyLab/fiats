@@ -31,6 +31,10 @@ authors:
     orcid: 0000-0003-4077-3430
     equal-contrib: false
     affiliation: 2
+  - name: Katherine Rasmussen
+    orcid: 0000-0001-7974-1853
+    equal-contrib: false
+    affiliation: 1
 affiliations:
  - name: Lawrence Berkeley National Laboratory, United States
    index: 1
