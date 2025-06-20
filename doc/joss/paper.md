@@ -31,9 +31,15 @@ authors:
     orcid: 0000-0002-0436-9118
     equal-contrib: false
     affiliation: 1
+  - name: Ethan D Gutmann
+    orcid: 0000-0003-4077-3430
+    equal-contrib: false
+    affiliation: 2
 affiliations:
  - name: Lawrence Berkeley National Laboratory, United States
    index: 1
+ - name: NSF National Center for Atmospheric Research, United States
+   index: 2
 date: 9 June 2025
 bibliography: paper.bib
 
@@ -43,7 +49,7 @@ bibliography: paper.bib
 [Fiats](https://go.lbl.gov/fiats) provides a platform for research on the training and deployment of neural-network surrogate models for computational science.
 Fiats also supports exploring, advancing, and combining functional, object-oriented, and parallel programming patterns in Fortran 2023 [@fortran2023].
 As such, the Fiats name has dual expansions: ``Functional Inference And Training for Surrogates'' or ``Fortran Inference And Training for Science.''
-Fiats inference functions are `pure` and therefore suitable for invocation inside Fortran's loop-level parallelism construct: `do concurrent`. 
+Fiats inference functions are `pure` and therefore suitable for invocation inside Fortran's loop-level parallelism construct: `do concurrent`.
 Fiats training procedures center around a `do concurrent` construct with a Fortran 2023 parallel reduction.
 Several compilers can automatically parallelize `do concurrent` on Central Processing Units (CPUs) or Graphics Processing Units (GPUs).
 Fiats thus aims to achieve performance portability through standard language mechanisms.
@@ -59,7 +65,7 @@ Ongoing research explores how Fiats can exploit multi-image execution, a set of 
 To explore how new language features and novel uses of features can power deep learning in Fortran, Fiats contributors work to advance Fortran by:
 
 * Participating in the Fortran standardization process and
-* Contributing to compiler development through 
+* Contributing to compiler development through
   - Writing unit tests [@rasmussen2022agile],
   - Studying performance [@rouson2025automatically],
   - Isolating and reporting compiler bugs and fixing front-end bugs,
@@ -76,7 +82,7 @@ Fortran 2018 and 2023 expanded and refined these features by adding, for example
 2. Collective subroutines, image teams, events (semaphores), atomic subroutines, and more,
 
 which creates a need for libraries that support users who adopt these features.
-For example, one requirement that impacts library design stems from Fortran's stipulation that procedures invoked inside a `do concurrent` construct must be `pure`. 
+For example, one requirement that impacts library design stems from Fortran's stipulation that procedures invoked inside a `do concurrent` construct must be `pure`.
 
 All intrinsic functions defined in the Fortran 2023 standard are `simple`, an attribute that implies `pure` plus additional constraints.
 Libraries that export `pure` procedures thus behave like extensions of the language.
@@ -91,7 +97,7 @@ This commonly restricts the surrogate neural network to a few thousand tunable p
 For networks of modest size, useful insights can sometimes be gleaned from visually inspecting the network parameters.
 Fiats stores networks in human-readable JavaScript Object Notation (JSON) format.
 The Fiats companion package [Nexport](https://go.lbl.gov/nexport) facilitates exchanging such files with [PyTorch](https://pytorch.org).
- 
+
 # State of the field
 ## Fortran deep learning software
 At least six open-source software packages provide deep learning services to Fortran.
@@ -155,9 +161,9 @@ The leftmost six diagrams serve training needs.
 Because inference is considerably simpler, it makes sense to describe the right side of the diagram before the left side.
 
 The `concurrent-inferences` example program, the simplest case, centers around performing a batch of inferences.  
-From the bottom of the class hierarchy up, the program 
+From the bottom of the class hierarchy up, the program
 
-1. Gets a `character` file name from the command line, 
+1. Gets a `character` file name from the command line,
 2. Passes the name to a `string_t` constructor,
 3. Passes the resulting `string_t` object to a `file_t` constructor,
 4. Passes the resulting `file_t` object to a `neural_network_t` constructor.
