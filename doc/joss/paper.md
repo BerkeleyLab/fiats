@@ -31,6 +31,10 @@ authors:
     orcid: 0000-0003-4077-3430
     equal-contrib: false
     affiliation: 2
+  - name: David Torres
+    orcid: 0000-0003-2469-5284
+    equal-contrib: false
+    affiliation: 1,3
   - name: Katherine Rasmussen
     orcid: 0000-0001-7974-1853
     equal-contrib: false
@@ -40,7 +44,9 @@ affiliations:
    index: 1
  - name: NSF National Center for Atmospheric Research, United States
    index: 2
-date: 9 June 2025
+ - name: Northern New Mexico College, United States
+   index: 3
+date: 20 June 2025
 bibliography: paper.bib
 
 ---
