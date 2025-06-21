@@ -39,6 +39,10 @@ authors:
     orcid: 0000-0001-7974-1853
     equal-contrib: false
     affiliation: 1
+  - name: Baboucarr Dibba
+    orcid: 0009-0008-0479-3948
+    equal-contrib: false
+    affiliation: 1
 affiliations:
  - name: Lawrence Berkeley National Laboratory, United States
    index: 1
