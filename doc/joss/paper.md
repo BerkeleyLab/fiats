@@ -34,7 +34,7 @@ authors:
   - name: David Torres
     orcid: 0000-0003-2469-5284
     equal-contrib: false
-    affiliation: 1,3
+    affiliation: 3
   - name: Katherine Rasmussen
     orcid: 0000-0001-7974-1853
     equal-contrib: false
