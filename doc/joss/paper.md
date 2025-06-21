@@ -43,6 +43,10 @@ authors:
     orcid: 0009-0008-0479-3948
     equal-contrib: false
     affiliation: 1
+  - name: Yunhao Zhang
+    orcid: 0009-0009-3182-9296
+    equal-contrib: false
+    affiliation: 1
 affiliations:
  - name: Lawrence Berkeley National Laboratory, United States
    index: 1
