@@ -27,6 +27,10 @@ authors:
     orcid: 0000-0002-3092-0903
     equal-contrib: false
     affiliation: 1
+  - name: Jeremiah Bailey
+    orcid: 0000-0002-0436-9118
+    equal-contrib: false
+    affiliation: 1
 affiliations:
  - name: Lawrence Berkeley National Laboratory, United States
    index: 1
