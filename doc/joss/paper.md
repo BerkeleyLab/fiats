@@ -47,6 +47,10 @@ authors:
     orcid: 0009-0009-3182-9296
     equal-contrib: false
     affiliation: 1
+  - name: Kareem Weaver
+    orcid: 0009-0009-3846-6248
+    equal-contrib: false
+    affiliation: 1
 affiliations:
  - name: Lawrence Berkeley National Laboratory, United States
    index: 1
