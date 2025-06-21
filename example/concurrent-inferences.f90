@@ -3,7 +3,7 @@
 program concurrent_inferences
   !! This program demonstrates how to read a neural network from a JSON file
   !! and use the network to perform concurrent inferences.
-  use fiats_m, only : neural_network_t, tensor_t, double_precision, double_precision_string_t, double_precision_file_t
+  use fiats_m, only : neural_network_t, tensor_t, double_precision, double_precision_file_t
   use julienne_m, only : string_t, command_line_t, file_t
   use assert_m, only : assert
   use iso_fortran_env, only : int64, real64
@@ -143,7 +143,7 @@ contains
     print *,"Elapsed system clock during `OpenMP` inference: ", openmp_time
   end function
 
-  real(real64) function elemental_time
+  real(real64) function elemental_time()
     integer(int64) t_start, t_finish, clock_rate
 
     print *,"Performing elemental inferences inside `omp workshare`"
