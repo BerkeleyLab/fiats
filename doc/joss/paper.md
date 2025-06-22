@@ -170,7 +170,7 @@ Fiats also supports ongoing research in data-reduction strategies for cloud micr
 
 ![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationship annotations (gray boxes) as a sentence with the boxed text preceded by the derived type at the base of an arrow (the subject) and followed by the type at the head of an arrow (the sentence's object).  Type extension reads with the type on the end of the open triangle as the subject.  Composition reads with the type on the side of the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=100% }
 
-![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t){ width=45% }
+![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t.png,double_precision_file_t.png){ width=45% }
 
 ![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=45% }
 
