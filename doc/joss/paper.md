@@ -170,6 +170,18 @@ Fiats also supports ongoing research in data-reduction strategies for cloud micr
 
 ![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationship annotations (gray boxes) as a sentence with the boxed text preceded by the derived type at the base of an arrow (the subject) and followed by the type at the head of an arrow (the sentence's object).  Type extension reads with the type on the end of the open triangle as the subject.  Composition reads with the type on the side of the closed diamond as the subject. \label{fig:derived-types}](class-diagram){ width=100% }
 
+\label{fig:derived-types}](training_configuration_t){ width=100% }
+\label{fig:derived-types}](double_precision_file_t){ width=100% }
+\label{fig:derived-types}](input_output_pair_t){ width=100% }
+\label{fig:derived-types}](trainable_nework_t){ width=100% }
+\label{fig:derived-types}](unmapped_network_t){ width=100% }
+\label{fig:derived-types}](neural_network_t){ width=100% }
+\label{fig:derived-types}](mini_batch_t){ width=100% }
+\label{fig:derived-types}](tensor_map_t){ width=100% }
+\label{fig:derived-types}](string_t){ width=100% }
+\label{fig:derived-types}](tensor_t){ width=100% }
+\label{fig:derived-types}](file_t){ width=100% }
+
 [@rouson2025automatically] reported the results of research on automatically parallelizing batch inference calculations via Fortran's '`do concurrent` construct using program 1.
 [@rouson2025cloud] reported the results of research on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2 and 3.
 Program 4 supports ongoing research on developing a cloud microphysics surrogate for the Intermediate Complexity Atmospheric Research (ICAR) atmospheric model.
