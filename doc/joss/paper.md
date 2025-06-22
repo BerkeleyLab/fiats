@@ -155,22 +155,50 @@ Each of the rest has a most-recent commit no older than May 2025.
 
 
 # Recent research and scholarly publications
-## Publications
 Fiats supports research in training surrogate models and parallelizing batch inference calculations for atmospheric sciences.
-This research has generated two peer-reviewed paper submissions, including one accepted to appear in workshop proceedings [@rouson2025automatically] and one in open review [@rouson2025cloud].
-Fiats also supports ongoing research in data-reduction strategies for cloud microphysics training data sets.
-
-## Use of Fiats in research
-\autoref{fig:derived-types} contains a Unified Modeling Language (UML) class diagram depicting the Fiats derived types that supported the research publications cited in the previous subsection:
+This research has generated two peer-reviewed paper submissions, including one accepted to appear in workshop proceedings [@rouson2025automatically] and one in open review [@rouson2025cloud].  
+Four programs in the Fiats repository played significant roles in these two papers:
 
 1. [`example/concurrent-inferences.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L1),
-2. [`app/demo/infer-aerosols.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/infer-aerosol.f90#L1), and
-3. [`example/learn-saturated-mixing-ratio.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/learn-saturated-mixing-ratio.F90#L1),
+2. [`example/learn-saturated-mixing-ratio.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/learn-saturated-mixing-ratio.F90#L1),
+3. [`app/demo/infer-aerosols.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/infer-aerosol.f90#L1), and
 4. [`app/demo/train-cloud-microphysics.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/train-cloud-microphysics.F90#L1).
+
+[@rouson2025automatically] reported the results of research on automatically parallelizing batch inference calculations via Fortran's '`do concurrent` construct using program 1.
+[@rouson2025cloud] reported the results of research on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2-4.
+
+The \ac{uml} class diagram in \autoref{fig:derived-types} summarizes the Fiats derived types that supported the two aforementioned the research described by .
+\autoref{fig:derived-types} includes two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework: the `string_t` and `file_t` types.
+Other parts of the diagram reference these Julienne types so the figure includes the Julienne types for completeness.
 
 ![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationship annotations (gray boxes) as a sentence with the boxed text preceded by the derived type at the base of an arrow (the subject) and followed by the type at the head of an arrow (the sentence's object).  Type extension reads with the type on the end of the open triangle as the subject.  Composition reads with the type on the side of the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=100% }
 
-![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t.png,double_precision_file_t.png){ width=45% }
+The rightmost four types in \autoref{fig:derived-types} exist primarily support inference.
+The leftmost six types support training.
+Because inference is considerably simpler, it makes sense to describe the right side of the diagram before the left side.
+
+The `concurrent-inferences` example program, the simplest case, centers around performing a batch of inferences using the `string_t`, `file_t`, and `neural_network_t` types.
+\autoref{fig:training_configuration_t} through \autoref{fig:string_t} contain class diagrams with more details on these types.
+Each detailed diagram displays a panel for the type name, an empty panel where private components have been omitted, and a panel listing public procedure bindings.
+The third panel also lists what the Fortran 2023 standard describes as user-defined structure constructors: generic interfaces through which to invoke one or more functions that define a result of the named type [@fortran2023].
+We henceforth refer to these as ``contructors.''
+
+![String class diagram \label{fig:string_t}](string_t){ width=45% }
+![File class diagram \label{fig:file_t}](file_t){ width=45% }
+![Neural network class diagram \label{fig:neural_network_t}](neural_network_t){ width=45% }
+
+From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `concurrent-inferences` program
+
+1. Gets a `character` file name from the command line,
+2. Passes the name to a `string_t` constructor,
+3. Passes the resulting `string_t` object to a `file_t` constructor, and
+4. Passes the resulting `file_t` object to a `neural_network_t` constructor.
+
+The program then repeatedly invokes the `infer` type-bound procedure on a \ac{3D} array of `tensor_t` objects in various ways such as using OpenMP directives or `do concurrent` or an array statement.
+The array statement takes advantage of `infer` being `elemental`.
+Lines 101 and 109 of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrate neural-network construction from a file and using the network for inference, respectively.
+
+![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t){ width=45% }
 
 ![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=45% }
 
@@ -180,40 +208,11 @@ Fiats also supports ongoing research in data-reduction strategies for cloud micr
 
 ![Unmapped network class diagram \label{fig:unmapped_network_t}](unmapped_network_t){ width=45% }
 
-![Neural network class diagram \label{fig:neural_network_t}](neural_network_t){ width=45% }
-
 ![Mini-batch class diagram \label{fig:mini_batch_t}](mini_batch_t){ width=100% }
 
 ![Tensor map class diagram \label{fig:tensor_map_t}](tensor_map_t){ width=100% }
 
-![String class diagram \label{fig:string_t}](string_t){ width=45% }
-
 ![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=45% }
-
-![File class diagram \label{fig:file_t}](file_t){ width=45% }
-
-[@rouson2025automatically] reported the results of research on automatically parallelizing batch inference calculations via Fortran's '`do concurrent` construct using program 1.
-[@rouson2025cloud] reported the results of research on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2 and 3.
-Program 4 supports ongoing research on developing a cloud microphysics surrogate for the Intermediate Complexity Atmospheric Research (ICAR) atmospheric model.
-In addition to Fiats types, \autoref{fig:derived-types} includes class diagrams for two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking utility: the `string_t` and `file_t` types.
-Other parts of the diagram reference these Julienne types so the `string_t` and `filet_t` class diagrams are included for completeness.
-
-Each class diagram for a derived type in \autoref{fig:derived-types} displays three panels: one containing the type name, an empty panel where private components have been omitted, a third panel listing public procedure bindings.
-The third panel also lists user-defined structure constructors, which are generic interfaces through which to invoke one or more functions that define a result of the named type.
-The figure's rightmost four class diagrams exist primarily to serve the needs of those seeking to perform inference.
-The leftmost six diagrams serve training needs.
-Because inference is considerably simpler, it makes sense to describe the right side of the diagram before the left side.
-
-The `concurrent-inferences` example program, the simplest case, centers around performing a batch of inferences.  
-From the bottom of the class hierarchy up, the program
-
-1. Gets a `character` file name from the command line,
-2. Passes the name to a `string_t` constructor,
-3. Passes the resulting `string_t` object to a `file_t` constructor,
-4. Passes the resulting `file_t` object to a `neural_network_t` constructor.
-
-The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects in various ways such as using OpenMP directives, or `do concurrent`, or an array statement that takes advantage of `infer` being `elemental`.
-Lines 101 and 109 of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrate neural-network construction from a file and using neural network for inference, respectively.
 
 The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t`, a parameterized derived type (PDT) that has a `kind` type parameter.
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
