@@ -167,7 +167,7 @@ Four programs in the Fiats repository played significant roles in these two pape
 [@rouson2025automatically] reported the results of research on automatically parallelizing batch inference calculations via Fortran's '`do concurrent` construct using program 1.
 [@rouson2025cloud] reported the results of research on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2-4.
 
-The \ac{uml} class diagram in \autoref{fig:derived-types} summarizes the Fiats derived types that supported the two aforementioned the research described by .
+The Unified Modeling Language (uml) class diagram in \autoref{fig:derived-types} summarizes the Fiats derived types that supported the two aforementioned the research described by .
 \autoref{fig:derived-types} includes two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework: the `string_t` and `file_t` types.
 Other parts of the diagram reference these Julienne types so the figure includes the Julienne types for completeness.
 
@@ -194,7 +194,7 @@ From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `conc
 3. Passes the resulting `string_t` object to a `file_t` constructor, and
 4. Passes the resulting `file_t` object to a `neural_network_t` constructor.
 
-The program then repeatedly invokes the `infer` type-bound procedure on a \ac{3D} array of `tensor_t` objects in various ways such as using OpenMP directives or `do concurrent` or an array statement.
+The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects in various ways such as using OpenMP directives or `do concurrent` or an array statement.
 The array statement takes advantage of `infer` being `elemental`.
 Lines 101 and 109 of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrate neural-network construction from a file and using the network for inference, respectively.
 
