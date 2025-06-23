@@ -169,7 +169,7 @@ Four programs in the Fiats repository played significant roles in these two pape
 @rouson2025cloud used programs 2--4 to study neural-network training for cloud microphysics and inference for atmospheric aerosols.
 The derived types in the Unified Modeling Language (UML) class diagram in \autoref{fig:derived-types} enabled these studies.
 
-![Class diagram: derived types (boxes), type relationships (connecting lines), type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (a gray box) followed by the type named at the arrow's head as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=100% }
+![Class diagram: derived types (named in bordered white boxes), type relationships (connecting lines), type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (in an unbordered gray box) followed by the type named at the arrow's head as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=100% }
 
 \autoref{fig:derived-types} includes two of the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework's derived types, `string_t` and `file_t`, because other parts of the figure reference these types.
 The rightmost four types in \autoref{fig:derived-types} exist primarily to support inference.
@@ -205,17 +205,14 @@ The `infer-aerosols` program performs inferences by invoking `double precision` 
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
 The `double_precision_file_t` (see \autoref{fig:double_precision_file_t}) type serves to control the interpretation of the JSON network file: JSON does not distinguish between categories of numerical values such as `real`, `double precision`, or even `integer`, so something external to the file must determine the interpretation of the numbers a JSON file stores.
 
-![Unmapped network class diagram \label{fig:unmapped_network_t}](unmapped_network_t){ width=65% }
+![Unmapped network class diagram \label{fig:unmapped_network_t}](unmapped_network_t){ width=100% }
 
-![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=65% }
+![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=100% }
 
 The `learn-saturated-mixing-ratio` and `train-cloud-microphysics` programs center around the use of a `trainable_network_t` object (see \autoref{fig:trainable_network_t})for training.
 The former trains neural network surrogates for a thermodynamic function from ICAR: the saturated mixing ratio, a scalar function of temperature and pressure.
 The latter trains surrogates for the complete cloud microphysics models in ICAR -- models that require thousands of lines of code to implement.
 Whereas diagrammed relationships of `neural_network_t` reflect direct dependencies of only two types (`file_t` and `tensor_t`), even describing the basic behaviors of `trainable_network_t` requires showing dependencies on five types:
-
-![Traininable network class diagram \label{fig:trainable_nework_t}](trainable_nework_t){ width=100% }
-
 
 * A `training_configuration_t` object (see \autoref{fig:training_configuration_t}), which holds hyperparameters such as the learning rate and choice of optimization algorithms,
 * A `file_t` object from which the `training_configuration` is read inside the `trainable_network_t` constructor,
@@ -223,14 +220,15 @@ Whereas diagrammed relationships of `neural_network_t` reflect direct dependenci
 * Two `tensor_map_t` objects (see \autoref{fig:tensor_map_t}) storing the linear functions applied to map inputs to training data range and to map outputs from the training data range back to the application domain, and
 * A parent `neural_network_t` object storing the network architecture, including weights, biases, layer widths, etc.
 
-![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t){ width=65% }
+![Traininable network class diagram \label{fig:trainable_network_t}](trainable_nework_t){ width=100% }
 
-![Input/Outpur tensor pair class diagram \label{fig:input_output_pair_t}](input_output_pair_t){ width=65% }
+![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t){ width=100% }
+
+![Input/Outpur tensor pair class diagram \label{fig:input_output_pair_t}](input_output_pair_t){ width=100% }
 
 ![Mini-batch class diagram \label{fig:mini_batch_t}](mini_batch_t){ width=80% }
 
 ![Tensor map class diagram \label{fig:tensor_map_t}](tensor_map_t){ width=100% }
-
 
 The `trainable_network_t` serves to store a `workspace_t` (not shown) as a scratch-pad for training purposes.
 The workspace is not needed for inference.
