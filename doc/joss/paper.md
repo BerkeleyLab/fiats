@@ -178,9 +178,9 @@ Each detailed diagram displays a top panel listing the type name, an empty middl
 
 ![String class diagram \label{fig:string_t}](string_t){ width=50% }
 
-![File class diagram \label{fig:file_t}](file_t){ width=30% }
+![File class diagram \label{fig:file_t}](file_t){ width=35% }
 
-![Neural network class diagram \label{fig:neural_network_t}](neural_network_t){ width=75% }
+![Neural network class diagram \label{fig:neural_network_t}](neural_network_t){ width=70% }
 
 The bottom panel also lists what the Fortran 2023 standard describes as user-defined structure constructors: generic interfaces through which to invoke functions that define a result of the named type [@fortran2023]. 
 We henceforth refer to these as "constructors."
@@ -191,19 +191,19 @@ From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `conc
 3. Passes the resulting `string_t` object to a `file_t` constructor, and
 4. Passes the resulting `file_t` object to a `neural_network_t` constructor.
 
-The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects (see \autoref{fig:tensor_t} in various ways such as using OpenMP directives or `do concurrent` or an array statement.
+The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects (see \autoref{fig:tensor_t}) in various ways such as using OpenMP directives or `do concurrent` or an array statement.
 The array statement takes advantage of `infer` being `elemental`.
 Lines [101](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#101) and [109](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L109) of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrate neural-network construction from a file and using the network for inference, respectively.
 
-![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=45% }
+![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=55% }
 
 The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t` (see \autoref{fig:unmapped_network_t}), a parameterized derived type (PDT) that has a `kind` type parameter.
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
 The `double_precision_file_t` (see \autoref{fig:double_precision_file_t}) type serves to control the interpretation of the JSON network file: JSON does not distinguish between categories of numerical values such as `real`, `double precision`, or even `integer`, so something external to the file must determine the interpretation of the numbers a JSON file stores.
 
-![Unmapped network class diagram \label{fig:unmapped_network_t}](unmapped_network_t){ width=45% }
+![Unmapped network class diagram \label{fig:unmapped_network_t}](unmapped_network_t){ width=65% }
 
-![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=45% }
+![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=65% }
 
 The `learn-saturated-mixing-ratio` and `train-cloud-microphysics` programs center around the use of a `trainable_network_t` object (see \autoref{fig:trainable_network_t})for training.
 The former trains neural network surrogates for a thermodynamic function from ICAR: the saturated mixing ratio, a scalar function of temperature and pressure.
@@ -219,11 +219,11 @@ Whereas diagrammed relationships of `neural_network_t` reflect direct dependenci
 * Two `tensor_map_t` objects (see \autoref{fig:tensor_map_t}) storing the linear functions applied to map inputs to training data range and to map outputs from the training data range back to the application domain, and
 * A parent `neural_network_t` object storing the network architecture, including weights, biases, layer widths, etc.
 
-![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t){ width=45% }
+![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t){ width=65% }
 
-![Input/Outpur tensor pair class diagram \label{fig:input_output_pair_t}](input_output_pair_t){ width=45% }
+![Input/Outpur tensor pair class diagram \label{fig:input_output_pair_t}](input_output_pair_t){ width=65% }
 
-![Mini-batch class diagram \label{fig:mini_batch_t}](mini_batch_t){ width=100% }
+![Mini-batch class diagram \label{fig:mini_batch_t}](mini_batch_t){ width=80% }
 
 ![Tensor map class diagram \label{fig:tensor_map_t}](tensor_map_t){ width=100% }
 
