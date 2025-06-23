@@ -188,7 +188,13 @@ Each detailed diagram displays a top panel listing the type name, an empty middl
 
 The bottom panel also lists what the Fortran 2023 standard describes as user-defined structure constructors: generic interfaces through which to invoke functions that define a result of the named type [@fortran2023]. 
 We henceforth refer to these as "constructors."
-From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `concurrent-inferences` program
+From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `concurrent-inferences` program does the following:
+
+![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=55% }
+
+![Unmapped network class diagram \label{fig:unmapped_network_t}](unmapped_network_t){ width=100% }
+
+![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=55% }
 
 1. Gets a `character` file name from the command line,
 2. Passes the name to a `string_t` constructor,
@@ -202,12 +208,6 @@ Lines [101](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/examp
 The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t` (see \autoref{fig:unmapped_network_t}), a parameterized derived type (PDT) that has a `kind` type parameter.
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
 The `double_precision_file_t` (see \autoref{fig:double_precision_file_t}) type serves to control the interpretation of the JSON network file: JSON does not distinguish between categories of numerical values such as `real`, `double precision`, or even `integer`, so something external to the file must determine the interpretation of the numbers a JSON file stores.
-
-![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=55% }
-
-![Unmapped network class diagram \label{fig:unmapped_network_t}](unmapped_network_t){ width=100% }
-
-![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=100% }
 
 The `learn-saturated-mixing-ratio` and `train-cloud-microphysics` programs center around the use of a `trainable_network_t` object (see \autoref{fig:trainable_network_t})for training.
 The former trains neural network surrogates for a thermodynamic function from ICAR: the saturated mixing ratio, a scalar function of temperature and pressure.
