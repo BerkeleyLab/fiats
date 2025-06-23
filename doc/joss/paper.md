@@ -164,28 +164,27 @@ Four programs in the Fiats repository played significant roles in these two pape
 3. [`app/demo/infer-aerosols.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/infer-aerosol.f90#L1), and
 4. [`app/demo/train-cloud-microphysics.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/train-cloud-microphysics.F90#L1).
 
-[@rouson2025automatically] reported the results of research on automatically parallelizing batch inference calculations via Fortran's '`do concurrent` construct using program 1.
-[@rouson2025cloud] reported the results of research on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2-4.
+[@rouson2025automatically] reported on research into automatically parallelizing batch inferences via Fortran's '`do concurrent` construct using program 1.
+[@rouson2025cloud] reported on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2-4.
+The Unified Modeling Language (uml) class diagram in \autoref{fig:derived-types} summarizes the Fiats derived types that supported the research described in these two papers.
 
-The Unified Modeling Language (uml) class diagram in \autoref{fig:derived-types} summarizes the Fiats derived types that supported the two aforementioned the research described by .
-\autoref{fig:derived-types} includes two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework: the `string_t` and `file_t` types.
-Other parts of the diagram reference these Julienne types so the figure includes the Julienne types for completeness.
+\autoref{fig:derived-types} includes two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework: `string_t` and `file_t`.
+\autoref{fig:derived-types} includes these Julienne types because other parts of the figure reference them.
 
 ![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationship annotations (gray boxes) as a sentence with the boxed text preceded by the derived type at the base of an arrow (the subject) and followed by the type at the head of an arrow (the sentence's object).  Type extension reads with the type on the end of the open triangle as the subject.  Composition reads with the type on the side of the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=100% }
 
-The rightmost four types in \autoref{fig:derived-types} exist primarily support inference.
+The rightmost four types in \autoref{fig:derived-types} exist primarily to support inference.
 The leftmost six types support training.
 Because inference is considerably simpler, it makes sense to describe the right side of the diagram before the left side.
 
-The `concurrent-inferences` example program, the simplest case, centers around performing a batch of inferences using the `string_t`, `file_t`, and `neural_network_t` types.
-\autoref{fig:training_configuration_t} through \autoref{fig:string_t} contain class diagrams with more details on these types.
-Each detailed diagram displays a panel for the type name, an empty panel where private components have been omitted, and a panel listing public procedure bindings.
-The third panel also lists what the Fortran 2023 standard describes as user-defined structure constructors: generic interfaces through which to invoke one or more functions that define a result of the named type [@fortran2023].
-We henceforth refer to these as ``contructors.''
+The `concurrent-inferences` example program, the simplest case, performs batch inference using the `string_t`, `file_t`, and `neural_network_t` types.
+\autoref{fig:string} through \autoref{fig:neuralnetwork} show class diagrams with more details on these types.
+Each detailed diagram displays a top panel listing the type name, an empty middle panel where private components have been omitted, and a bottom panel listing public procedure bindings.
+The bottom panel also lists what the Fortran 2023 standard describes as user-defined structure constructors (henceforth simply ``constructors''): generic interfaces through which to invoke functions that define a result of the named type [@fortran2023].
 
-![String class diagram \label{fig:string_t}](string_t){ width=45% }
-![File class diagram \label{fig:file_t}](file_t){ width=45% }
-![Neural network class diagram \label{fig:neural_network_t}](neural_network_t){ width=45% }
+![String class diagram \label{fig:string}](string_t){ width=33% }
+![File class diagram \label{fig:file](file_t){ width=33% }
+![Neural network class diagram \label{fig:neuralnetwork}](neural_network_t){ width=33% }
 
 From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `concurrent-inferences` program
 
