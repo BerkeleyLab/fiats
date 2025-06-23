@@ -163,11 +163,11 @@ Four programs in the Fiats repository played significant roles in these two pape
 3. [`app/demo/infer-aerosols.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/infer-aerosol.f90#L1), and
 4. [`app/demo/train-cloud-microphysics.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/train-cloud-microphysics.F90#L1).
 
-@rouson2025automatically reported on research into automatically parallelizing batch inferences via Fortran's '`do concurrent` construct using program 1.
-@rouson2025cloud reported on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2-4.
-These papers contain research enabled by the derived types in the Unified Modeling Language (UML) class diagram in \autoref{fig:derived-types}.
+@rouson2025automatically used program 1 to study the automatic parallelization of batch inferences via `do concurrent`.
+@rouson2025cloud used programs 2--4 to study neural-network training for cloud microphysics and inference for atmospheric aerosols.
+The derived types in the Unified Modeling Language (UML) class diagram in \autoref{fig:derived-types} enabled these studies.
 
-![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (gray boxes) followed by the type named at the arrow's head of as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=50% }
+![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (gray boxes) followed by the type named at the arrow's head of as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=75% }
 
 \autoref{fig:derived-types} includes two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework: `string_t` and `file_t`, which are included because other parts of the figure reference them.
 The rightmost four types in \autoref{fig:derived-types} exist primarily to support inference.
