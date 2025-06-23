@@ -171,6 +171,12 @@ The derived types in the Unified Modeling Language (UML) class diagram in \autor
 
 ![Class diagram: derived types (named in bordered white boxes), type relationships (connecting lines), type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (in an unbordered gray box) followed by the type named at the arrow's head as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=100% }
 
+![String class diagram \label{fig:string_t}](string_t){ width=50% }
+
+![File class diagram \label{fig:file_t}](file_t){ width=35% }
+
+![Neural network class diagram \label{fig:neural_network_t}](neural_network_t){ width=70% }
+
 \autoref{fig:derived-types} includes two of the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework's derived types, `string_t` and `file_t`, because other parts of the figure reference these types.
 The rightmost four types in \autoref{fig:derived-types} exist primarily to support inference.
 The leftmost six types support training.
@@ -179,12 +185,6 @@ Because inference is considerably simpler, it makes sense to describe the right 
 The `concurrent-inferences` example program, the simplest case, performs batch inference using the `string_t`, `file_t`, and `neural_network_t` types.
 \autoref{fig:string_t} through \autoref{fig:neural_network_t} show class diagrams with more details on these types.
 Each detailed diagram displays a top panel listing the type name, an empty middle panel where private components have been omitted, and a bottom panel listing public procedure bindings.
-
-![String class diagram \label{fig:string_t}](string_t){ width=50% }
-
-![File class diagram \label{fig:file_t}](file_t){ width=35% }
-
-![Neural network class diagram \label{fig:neural_network_t}](neural_network_t){ width=70% }
 
 The bottom panel also lists what the Fortran 2023 standard describes as user-defined structure constructors: generic interfaces through which to invoke functions that define a result of the named type [@fortran2023]. 
 We henceforth refer to these as "constructors."
@@ -199,11 +199,11 @@ The program then repeatedly invokes the `infer` type-bound procedure on a three-
 The array statement takes advantage of `infer` being `elemental`.
 Lines [101](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#101) and [109](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L109) of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrate neural-network construction from a file and using the network for inference, respectively.
 
-![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=55% }
-
 The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t` (see \autoref{fig:unmapped_network_t}), a parameterized derived type (PDT) that has a `kind` type parameter.
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
 The `double_precision_file_t` (see \autoref{fig:double_precision_file_t}) type serves to control the interpretation of the JSON network file: JSON does not distinguish between categories of numerical values such as `real`, `double precision`, or even `integer`, so something external to the file must determine the interpretation of the numbers a JSON file stores.
+
+![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=55% }
 
 ![Unmapped network class diagram \label{fig:unmapped_network_t}](unmapped_network_t){ width=100% }
 
