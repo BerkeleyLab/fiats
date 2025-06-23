@@ -174,7 +174,6 @@ The Unified Modeling Language (uml) class diagram in \autoref{fig:derived-types}
 The rightmost four types in \autoref{fig:derived-types} exist primarily to support inference.
 The leftmost six types support training.
 Because inference is considerably simpler, it makes sense to describe the right side of the diagram before the left side.
-![String class diagram \label{fig:string}](string_t){ width=33% }
 
 The `concurrent-inferences` example program, the simplest case, performs batch inference using the `string_t`, `file_t`, and `neural_network_t` types.
 \autoref{fig:string} through \autoref{fig:neuralnetwork} show class diagrams with more details on these types.
@@ -183,11 +182,9 @@ The bottom panel also lists what the Fortran 2023 standard describes as user-def
 
 ![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationship annotations (gray boxes) as a sentence with the boxed text preceded by the derived type at the base of an arrow (the subject) and followed by the type at the head of an arrow (the sentence's object).  Type extension reads with the type on the end of the open triangle as the subject.  Composition reads with the type on the side of the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=100% }
 
-![String class diagram \label{fig:string}](string_t){ width=33% }
-
-![File class diagram \label{fig:file](file_t){ width=33% }
-
-![Neural network class diagram \label{fig:neuralnetwork}](neural_network_t){ width=33% }
+![String class diagram \label{fig:string}](string_t){ width=37% }
+![File class diagram \label{fig:file}](file_t){ width=25% }
+![Neural network class diagram \label{fig:neuralnetwork}](neural_network_t){ width=37% }
 
 From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `concurrent-inferences` program
 
