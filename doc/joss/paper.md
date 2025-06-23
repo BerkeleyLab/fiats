@@ -190,11 +190,11 @@ The bottom panel also lists what the Fortran 2023 standard describes as user-def
 We henceforth refer to these as "constructors."
 From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `concurrent-inferences` program does the following:
 
-![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=55% }
+![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=75% }
 
 ![Unmapped network class diagram \label{fig:unmapped_network_t}](unmapped_network_t){ width=100% }
 
-![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=55% }
+![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=100% }
 
 1. Gets a `character` file name from the command line,
 2. Passes the name to a `string_t` constructor,
@@ -222,11 +222,11 @@ Whereas diagrammed relationships of `neural_network_t` reflect direct dependenci
 
 ![Traininable network class diagram \label{fig:trainable_network_t}](trainable_nework_t){ width=100% }
 
-![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t){ width=100% }
-
-![Input/Outpur tensor pair class diagram \label{fig:input_output_pair_t}](input_output_pair_t){ width=100% }
+![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t){ width=80% }
 
 ![Mini-batch class diagram \label{fig:mini_batch_t}](mini_batch_t){ width=80% }
+
+![Input/Outpur tensor pair class diagram \label{fig:input_output_pair_t}](input_output_pair_t){ width=100% }
 
 ![Tensor map class diagram \label{fig:tensor_map_t}](tensor_map_t){ width=100% }
 
