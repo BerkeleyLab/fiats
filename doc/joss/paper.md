@@ -178,8 +178,10 @@ The leftmost six types support training.
 Because inference is considerably simpler, it makes sense to describe the right side of the diagram before the left side.
 
 The `concurrent-inferences` example program, the simplest case, performs batch inference using the `string_t`, `file_t`, and `neural_network_t` types.
-\autoref{fig:string} through \autoref{fig:neuralnetwork} show class diagrams with more details on these types.
+\autoref{fig:string_t} through \autoref{fig:neural_tnetwork_t} show class diagrams with more details on these types.
 Each detailed diagram displays a top panel listing the type name, an empty middle panel where private components have been omitted, and a bottom panel listing public procedure bindings.
+
+![String_t, File_t, and Neural_network_t class diagrams \label{fig:string_file_neural_network}](string_file_neural_network){ width=100% }
 
 ![String class diagram \label{fig:string_t}](string_t){ width=40% }
 
