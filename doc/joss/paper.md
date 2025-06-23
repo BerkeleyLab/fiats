@@ -190,11 +190,11 @@ The bottom panel also lists what the Fortran 2023 standard describes as user-def
 We henceforth refer to these as "constructors."
 From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `concurrent-inferences` program does the following:
 
-![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=75% }
+![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=60% }
 
 ![Unmapped network class diagram \label{fig:unmapped_network_t}](unmapped_network_t){ width=100% }
 
-![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=100% }
+![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=80% }
 
 1. Gets a `character` file name from the command line,
 2. Passes the name to a `string_t` constructor,
@@ -203,7 +203,7 @@ From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `conc
 
 The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects (see \autoref{fig:tensor_t}) in various ways such as using OpenMP directives or `do concurrent` or an array statement.
 The array statement takes advantage of `infer` being `elemental`.
-Lines [101](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#101) and [109](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L109) of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrate neural-network construction from a file and using the network for inference, respectively.
+Lines [101](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L101) and [109](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L109) of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrate neural-network construction from a file and using the network for inference, respectively.
 
 The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t` (see \autoref{fig:unmapped_network_t}), a parameterized derived type (PDT) that has a `kind` type parameter.
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
