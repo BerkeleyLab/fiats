@@ -121,7 +121,6 @@ Fiats stores networks in human-readable JavaScript Object Notation (JSON) format
 The Fiats companion package [Nexport](https://go.lbl.gov/nexport) facilitates exchanging such files with [PyTorch](https://pytorch.org).
 
 # State of the field
-## Fortran deep learning software
 At least six open-source software packages provide deep learning services to Fortran.
 Three provide Fortran application programming interfaces (APIs) that wrap C++ libraries:
 
@@ -148,7 +147,6 @@ Only Fiats, however, leverages the locality specifiers introduced in Fortran 201
 Of the APIs and libraries discussed here, only neural-fortran and Fiats use multi-image features: neural-fortran in its core library and Fiats in a demonstration application.
 Both use these features minimally, leaving considerable room for research on parallel speedup.
 
-## Activity level
 Each of the Fortran deep learning APIs and libraries discussed in this paper is actively developed except Fortran-TF-Lib.
 Fortran-TF-Lib's has posted no releases and its most recent commit was in 2023.
 Each of the rest has a most-recent commit no older than May 2025.
@@ -167,7 +165,7 @@ Four programs in the Fiats repository played significant roles in these two pape
 @rouson2025cloud used programs 2--4 to study neural-network training for cloud microphysics and inference for atmospheric aerosols.
 The derived types in the Unified Modeling Language (UML) class diagram in \autoref{fig:derived-types} enabled these studies.
 
-![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (gray boxes) followed by the type named at the arrow's head of as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=75% }
+![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (gray boxes) followed by the type named at the arrow's head of as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=90% }
 
 \autoref{fig:derived-types} includes two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework: `string_t` and `file_t`, which are included because other parts of the figure reference them.
 The rightmost four types in \autoref{fig:derived-types} exist primarily to support inference.
