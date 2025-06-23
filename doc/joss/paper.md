@@ -55,6 +55,10 @@ authors:
     orcid: 0000-0002-3092-0903
     equal-contrib: false
     affiliation: 1
+  - name: Tan Nguyen
+    orcid: 0000-0003-3748-403X
+    equal-contrib: false
+    affiliation: 1
 affiliations:
  - name: Lawrence Berkeley National Laboratory, United States
    index: 1
