@@ -145,12 +145,12 @@ Included in these tallies are procedures explicitly marked as `pure` along with 
 Athena, Fiats, and neural-fortran each employ `do concurrent` extensively.
 Only Fiats, however, leverages the locality specifiers introduced in Fortran 2018 and expanded in Fortran 2023 to include parallel reductions.
 
-Of the APIs and libraries discussed here, only neural-fortran and Fiats employ multi-image features: neural-fortran in its core library and Fiats in a demonstration application.
-Both use multi-image features minimally, leaving considerable room for future research into parallel speedup.
+Of the APIs and libraries discussed here, only neural-fortran and Fiats use multi-image features: neural-fortran in its core library and Fiats in a demonstration application.
+Both use these features minimally, leaving considerable room for research on parallel speedup.
 
 ## Activity level
 Each of the Fortran deep learning APIs and libraries discussed in this paper is actively developed except Fortran-TF-Lib.
-Fortran-TF-Lib's most recent commit was in 2023, and it is the only Fortran API or library that has never produced releases.
+Fortran-TF-Lib's has posted no releases and its most recent commit was in 2023.
 Each of the rest has a most-recent commit no older than May 2025.
 
 # Recent research and scholarly publications
@@ -163,11 +163,11 @@ Four programs in the Fiats repository played significant roles in these two pape
 3. [`app/demo/infer-aerosols.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/infer-aerosol.f90#L1), and
 4. [`app/demo/train-cloud-microphysics.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/train-cloud-microphysics.F90#L1).
 
-[@rouson2025automatically] reported on research into automatically parallelizing batch inferences via Fortran's '`do concurrent` construct using program 1.
-[@rouson2025cloud] reported on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2-4.
-These papers contain research that used enabled by the derived types in the Unified Modeling Language (UML) class diagram in \autoref{fig:derived-types}.
+@rouson2025automatically reported on research into automatically parallelizing batch inferences via Fortran's '`do concurrent` construct using program 1.
+@rouson2025cloud reported on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2-4.
+These papers contain research enabled by the derived types in the Unified Modeling Language (UML) class diagram in \autoref{fig:derived-types}.
 
-![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (gray boxes) followed by the type named at the arrow's head of as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=100% }
+![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (gray boxes) followed by the type named at the arrow's head of as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=50% }
 
 \autoref{fig:derived-types} includes two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework: `string_t` and `file_t`, which are included because other parts of the figure reference them.
 The rightmost four types in \autoref{fig:derived-types} exist primarily to support inference.
