@@ -70,7 +70,7 @@ bibliography: paper.bib
 # Summary
 [Fiats](https://go.lbl.gov/fiats) provides a platform for research on the training and deployment of neural-network surrogate models for computational science.
 Fiats also supports exploring, advancing, and combining functional, object-oriented, and parallel programming patterns in Fortran 2023 [@fortran2023].
-As such, the Fiats name has dual expansions: ``Functional Inference And Training for Surrogates'' or ``Fortran Inference And Training for Science.''
+As such, the Fiats name has dual expansions: "Functional Inference And Training for Surrogates" or "Fortran Inference And Training for Science."
 Fiats inference functions are `pure` and therefore suitable for invocation inside Fortran's loop-level parallelism construct: `do concurrent`.
 Fiats training procedures center around a `do concurrent` construct with a Fortran 2023 parallel reduction.
 Several compilers can automatically parallelize `do concurrent` on Central Processing Units (CPUs) or Graphics Processing Units (GPUs).
@@ -82,7 +82,7 @@ In addition to simple, illustrative examples, the Fiats repository's `demo/app` 
 2. Another calculates input- and output-tensor statistics for ICAR's physics-based microphysics models, and
 3. A third performs batch inference using an aerosols surrogate for the Energy Exascale Earth Systems Model ([E3SM](https://e3sm.org)).
 
-Ongoing research explores how Fiats can exploit multi-image execution, a set of Fortran features for Single-Program, Multiple-Data (SPMD) parallel programming with a Partitioned Global Address Space (PGAS) [@numrich2018co-arrays], where the PGAS features center around ``coarray'' distributed data structures.
+Ongoing research explores how Fiats can exploit multi-image execution, a set of Fortran features for Single-Program, Multiple-Data (SPMD) parallel programming with a Partitioned Global Address Space (PGAS) [@numrich2018co-arrays], where the PGAS features center around "coarray" distributed data structures.
 
 To explore how new language features and novel uses of features can power deep learning in Fortran, Fiats contributors work to advance Fortran by:
 
@@ -185,7 +185,7 @@ Each detailed diagram displays a top panel listing the type name, an empty middl
 ![Neural network class diagram \label{fig:neural_network_t}](neural_network_t){ width=60% }
 
 The bottom panel also lists what the Fortran 2023 standard describes as user-defined structure constructors: generic interfaces through which to invoke functions that define a result of the named type [@fortran2023]. 
-We henceforth refer to these as ``constructors.''
+We henceforth refer to these as "constructors."
 From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `concurrent-inferences` program
 
 1. Gets a `character` file name from the command line,
