@@ -165,14 +165,14 @@ Four programs in the Fiats repository played significant roles in these two pape
 
 [@rouson2025automatically] reported on research into automatically parallelizing batch inferences via Fortran's '`do concurrent` construct using program 1.
 [@rouson2025cloud] reported on neural-network training for cloud microphysics and inference for atmospheric aerosols using programs 2-4.
-The Unified Modeling Language (uml) class diagram in \autoref{fig:derived-types} summarizes the Fiats derived types that supported the research described in these two papers.
+These papers contain research that used enabled by the derived types in the Unified Modeling Language (UML) class diagram in \autoref{fig:derived-types}.
+
+![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (gray boxes) followed by the type named at the arrow's head of as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=100% }
 
 \autoref{fig:derived-types} includes two derived types from the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework: `string_t` and `file_t`, which are included because other parts of the figure reference them.
 The rightmost four types in \autoref{fig:derived-types} exist primarily to support inference.
 The leftmost six types support training.
 Because inference is considerably simpler, it makes sense to describe the right side of the diagram before the left side.
-
-![Class diagram: type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationship annotations (gray boxes) as a sentence with the boxed text preceded by the derived type at the base of an arrow (the subject) and followed by the type at the head of an arrow (the sentence's object).  Type extension reads with the type on the end of the open triangle as the subject.  Composition reads with the type on the side of the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=100% }
 
 The `concurrent-inferences` example program, the simplest case, performs batch inference using the `string_t`, `file_t`, and `neural_network_t` types.
 \autoref{fig:string_t} through \autoref{fig:neural_tnetwork_t} show class diagrams with more details on these types.
