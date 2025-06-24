@@ -209,6 +209,12 @@ The `infer-aerosols` program performs inferences by invoking `double precision` 
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
 The `double_precision_file_t` (see \autoref{fig:double_precision_file_t}) type serves to control the interpretation of the JSON network file: JSON does not distinguish between categories of numerical values such as `real`, `double precision`, or even `integer`, so something external to the file must determine the interpretation of the numbers a JSON file stores.
 
+![Traininable network class diagram \label{fig:trainable_network_t}](trainable_nework_t){ width=100% }
+
+![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t){ width=80% }
+
+![Mini-batch class diagram \label{fig:mini_batch_t}](mini_batch_t){ width=80% }
+
 The `learn-saturated-mixing-ratio` and `train-cloud-microphysics` programs center around the use of a `trainable_network_t` object (see \autoref{fig:trainable_network_t})for training.
 The former trains neural network surrogates for a thermodynamic function from ICAR: the saturated mixing ratio, a scalar function of temperature and pressure.
 The latter trains surrogates for the complete cloud microphysics models in ICAR -- models that require thousands of lines of code to implement.
@@ -219,12 +225,6 @@ Whereas diagrammed relationships of `neural_network_t` reflect direct dependenci
 * A `mini_batch_t` object (see \autoref{fig:mini_batch_t}) that stores an array of `input_output_pair` objects (see \autoref{fig:input_output_pair_t}) from the training data set,
 * Two `tensor_map_t` objects (see \autoref{fig:tensor_map_t}) storing the linear functions applied to map inputs to training data range and to map outputs from the training data range back to the application domain, and
 * A parent `neural_network_t` object storing the network architecture, including weights, biases, layer widths, etc.
-
-![Traininable network class diagram \label{fig:trainable_network_t}](trainable_nework_t){ width=100% }
-
-![Training configuation class diagram \label{fig:training_configuration_t}](training_configuration_t){ width=80% }
-
-![Mini-batch class diagram \label{fig:mini_batch_t}](mini_batch_t){ width=80% }
 
 ![Input/Outpur tensor pair class diagram \label{fig:input_output_pair_t}](input_output_pair_t){ width=100% }
 
