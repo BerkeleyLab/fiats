@@ -207,7 +207,7 @@ Lines [101](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/examp
 
 The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t` (see \autoref{fig:unmapped_network_t}), a parameterized derived type (PDT) that has a `kind` type parameter.
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
-The `double_precision_file_t` (see \autoref{fig:double_precision_file_t}) type serves to control the interpretation of the JSON network file: JSON does not distinguish between categories of numerical values such as `real`, `double precision`, or even `integer`, so something external to the file must determine the interpretation of the numbers a JSON file stores.
+The `double_precision_file_t` (see \autoref{fig:double_precision_file_t}) type controls the interpretation of the JSON network file: JSON does not distinguish between categories of numerical values such as `real`, `double precision`, or even `integer`, so something external to the file must determine the interpretation of the numbers a JSON file stores.
 
 ![Trainable network class diagram \label{fig:trainable_network_t}](trainable_network_t){ width=100% }
 
@@ -230,10 +230,10 @@ Whereas diagrammed relationships of `neural_network_t` reflect direct dependenci
 
 ![Tensor map class diagram \label{fig:tensor_map_t}](tensor_map_t){ width=100% }
 
-The `trainable_network_t` serves to store a `workspace_t` (not shown) as a scratch-pad for training purposes.
+The `trainable_network_t` type stores a `workspace_t` (not shown) as a scratch-pad for training purposes.
 The workspace is not needed for inference.
 During each training step, a `trainable_network_t` object passes its `workspace_t` into a corresponding `learn` procedure binding (not shown) on its parent `neural_network_t`.
-Lines 388--396 of `demo/app/train-cloud-microphysics.f90` at `git` tag `joss-line-references` demonstrate:
+Lines [388--396](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/train-cloud-microphysics.F90#L388) of `demo/app/train-cloud-microphysics.f90` at `git` tag `joss-line-references` demonstrate:
 
 1. A loop over epochs,
 2. The shuffling of the `input_output_pair_t` objects at the beginning of each epoch,
