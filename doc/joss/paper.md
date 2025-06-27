@@ -75,7 +75,7 @@ bibliography: paper.bib
 [Fiats](https://go.lbl.gov/fiats) provides a platform for research on the training and deployment of neural-network surrogate models for computational science.
 Fiats also supports exploring, advancing, and combining functional, object-oriented, and parallel programming patterns in Fortran 2023 [@fortran2023].
 As such, the Fiats name has dual expansions: "Functional Inference And Training for Surrogates" or "Fortran Inference And Training for Science."
-Fiats inference and training procedures are `pure` and therefore satisfy a language constraint imposed on procedur invocations inside Fortran's parallel loop construct: `do concurrent`.
+Fiats inference and training procedures are `pure` and therefore satisfy a language constraint imposed on procedure invocations inside Fortran's parallel loop construct: `do concurrent`.
 Furthermore, the Fiats training procedures are built around a `do concurrent` parallel reduction.
 Several compilers can automatically parallelize `do concurrent` on Central Processing Units (CPUs) or Graphics Processing Units (GPUs).
 Fiats thus aims to achieve performance portability through standard language mechanisms.
@@ -152,7 +152,7 @@ Of the APIs and libraries discussed here, only neural-fortran and Fiats use mult
 Both use multi-image features minimally, leaving considerable room for researching parallelization strategies.
 
 Each of the Fortran deep learning APIs and libraries discussed in this paper is actively developed except Fortran-TF-Lib.
-Fortran-TF-Lib's most recent commit was in 2023 no releases have been posted.
+Fortran-TF-Lib's most recent commit was in 2023 and no releases have been posted.
 The other mentioned projects have most-recent commits no older than two months as of June 2025.
 
 # Recent research and scholarly publications
@@ -165,7 +165,7 @@ Four programs in the Fiats repository played significant roles in these two pape
 3. [`app/demo/infer-aerosols.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/infer-aerosol.f90#L1), and
 4. [`app/demo/train-cloud-microphysics.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/train-cloud-microphysics.F90).
 
-@rouson2025automatically used program 1 to study automaticlly parallelizing batch inferences via `do concurrent`.
+@rouson2025automatically used program 1 to study automatically parallelizing batch inferences via `do concurrent`.
 @rouson2025cloud used programs 2--4 to study neural-network training for cloud microphysics and inference for atmospheric aerosols.
 The derived types in the Unified Modeling Language (UML) class diagram in \autoref{fig:derived-types} enabled these studies.
 
@@ -178,7 +178,7 @@ The derived types in the Unified Modeling Language (UML) class diagram in \autor
 ![Neural network class diagram \label{fig:neural_network_t}](neural_network_t){ width=70% }
 
 \autoref{fig:derived-types} includes two of the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework's derived types, `string_t` and `file_t`.
-Thes are included because other parts of the figure reference these types.
+These are included because other parts of the figure reference these types.
 The rightmost four types in \autoref{fig:derived-types} exist primarily to support inference.
 The leftmost six support training.
 Because inference is considerably simpler, it makes sense to describe the right side of the diagram before the left side.
@@ -187,7 +187,7 @@ The `concurrent-inferences` example program performs batch inference using the `
 \autoref{fig:string_t} through \autoref{fig:neural_network_t} show class diagrams with more details on these types.
 Each detailed diagram displays a top panel listing the type name, an empty middle panel with private components omitted, and a bottom panel listing public procedure bindings.
 
-The bottom panel also lists what the Fortran 2023 standard describes as user-defined structure constructors, which ar generic interfaces through which to invoke functions that define a result of the named type [@fortran2023]. 
+The bottom panel also lists what the Fortran 2023 standard describes as user-defined structure constructors, which are generic interfaces through which to invoke functions that define a result of the named type [@fortran2023]. 
 We henceforth refer to these as "constructors."
 From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `concurrent-inferences` program does the following:
 
@@ -204,7 +204,7 @@ From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `conc
 
 The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects (see \autoref{fig:tensor_t}) using OpenMP directives or `do concurrent` or an array statement.
 The array statement takes advantage of `infer` being `elemental`.
-Lines [101](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L101) of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrates neural-network construction from a file.
+Line [101](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L101) of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrates neural-network construction from a file.
 Line [109](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L109) demonstrates using the network for inference.
 
 The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t` (see \autoref{fig:unmapped_network_t}), a parameterized derived type (PDT) that has a `kind` type parameter.
