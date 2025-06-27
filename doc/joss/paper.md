@@ -235,7 +235,7 @@ Whereas diagrammed relationships of `neural_network_t` reflect direct dependenci
 The `trainable_network_t` type stores a `workspace_t` (not shown) as a scratch-pad for training purposes.
 The workspace is not needed for inference.
 During each training step, a `trainable_network_t` object passes its `workspace_t` to a `learn` procedure binding (not shown) on its parent `neural_network_t`.
-Lines [388--396](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/train-cloud-microphysics.F90#L388) of `demo/app/train-cloud-microphysics.f90` at `git` tag `joss-line-references` demonstrate:
+Lines [388--396](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/demo/app/train-cloud-microphysics.F90#L388-L396) of `demo/app/train-cloud-microphysics.f90` at `git` tag `joss-line-references` demonstrate:
 
 1. A loop over epochs,
 2. The shuffling of the `input_output_pair_t` objects at the beginning of each epoch,
