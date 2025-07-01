@@ -9,6 +9,5 @@ This Unified Modeling Language (UML) class diagram depicts the derived types and
 classDiagram
 
     class tensor_t~kind~{
-      tensor_t(values : real) tensor_t
       tensor_t(values : real~kind~) tensor_t
     }
