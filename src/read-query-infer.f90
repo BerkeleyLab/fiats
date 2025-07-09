@@ -14,7 +14,7 @@ program read_query_infer
 
     if (len(file_name%string())==0) then
       error stop new_line('a') // new_line('a') // &
-        'Usage: fpm run --example read-query -- --input-file "<file-name>"' 
+        'Usage: fpm run --example read-query-infer -- --input-file "<file-name>"' 
     end if
 
     print *, "Reading an neural_network_t object from the same JSON file '"//file_name%string()//"'."
