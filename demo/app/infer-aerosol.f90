@@ -43,89 +43,96 @@ contains
 
   subroutine read_stats_and_perform_inference(path)
     character(len=*), intent(in) :: path
-    integer,          parameter :: num_inputs = 80, num_outputs = 31
-    character(len=*), parameter :: network_file_name = "model.json"
-    character(len=*), parameter :: inputs_tensor_file_name = "aerosol_input.nc"
-    double precision cube_root
-    double precision, allocatable, dimension(:,:) :: aerosol_data, input_components, output_components
-    type(tensor_statistics_t) input_stats, output_stats
-    type(unmapped_network_t(double_precision)) neural_network
+    integer,          parameter :: branch_net_inputs = 39, branch_net_outputs = 20
+    integer,          parameter :: trunk_net_inputs = 4, trunk_net_outputs = 20
+    character(len=*), parameter :: branch_file_name = "model_branch.json", trunk_file_name = "model_trunk.json"
+    character(len=*), parameter :: saved_data_file_name = "saved_data.nc"
+    double precision, allocatable, dimension(:) :: longitude, latitude, level, ymean, mean_X, std_X, mean_y, std_y
+    double precision, allocatable, dimension(:,:) :: cldfr_idx, basis, X_test, input_components, output_components
+    type(unmapped_network_t(double_precision)) branch_network, trunk_network
     integer i, j
 
-    input_stats  = read_tensor_statistics(path // "meanxp.txt", path // "stdxp.txt", num_inputs)  !for pre-processing normalization
-    output_stats = read_tensor_statistics(path // "meanyp.txt", path // "stdyp.txt", num_outputs) !for post-processing normalization
+    associate(saved_data_file => NetCDF_file_t(path // saved_data_file_name))
+      print '(a)', "Reading saved from " // path // saved_data_file_name
+      call saved_data_file%input("longitude", longitude)
+      call saved_data_file%input("latitude", latitude)
+      call saved_data_file%input("level", level)
+      call saved_data_file%input("cldfr_idx", cldfr_idx)
+      call saved_data_file%input("basis", basis)
+      call saved_data_file%input("ymean", ymean)
+      call saved_data_file%input("X_test", X_test)
+      call saved_data_file%input("mean_X", mean_X)
+      call saved_data_file%input("std_X", std_X)
+      call saved_data_file%input("mean_y", mean_y)
+      call saved_data_file%input("std_y", std_y)
+    end associate
 
-    associate(inputs_tensor_file => NetCDF_file_t(path // inputs_tensor_file_name))
-      print *,"Reading network inputs from ", inputs_tensor_file_name
-      call inputs_tensor_file%input("input_vars", aerosol_data)
-    end associate    
+    print *, "Reading the branch network from " // branch_file_name
+    branch_network = unmapped_network_t(double_precision_file_t(path // branch_file_name))
+    print *, "Reading the trunk network from " // trunk_file_name
+    trunk_network = unmapped_network_t(double_precision_file_t(path // trunk_file_name))
 
-    ! print*,'shape aerosol array = ',shape(aerosol_data) ! convert to an asssertion
-    
-    allocate(input_components(size(aerosol_data,2),size(aerosol_data,1)))
-    allocate(output_components(size(aerosol_data,2),num_outputs))
+    allocate(input_components(size(X_test,2),size(X_test,1)))
 
-    !$omp parallel do shared(aerosol_data,input_components,input_stats) private(i,j,cube_root)
     pre_process: &
-    do j = 1,size(aerosol_data,2)
-      do i = 1,size(aerosol_data,1)
-        cube_root = (abs(aerosol_data(i,j))**(1.d0/3.d0))*sign(1.d0,aerosol_data(i,j))
-        input_components(j,i) = (cube_root - input_stats%mean(i))/input_stats%standard_deviation(i)
-      end do
+    do concurrent(i = 1:size(X_test,1),  j = 1:size(X_test,2)) default(none) shared(X_test,input_components)
+      associate(cube_root => (abs(X_test(i,j))**(1.d0/3.d0))*sign(1.d0,X_test(i,j)))
+        input_components(j,i) = (cube_root - mean_X(i))/std_X(i)
+      end associate
     end do pre_process
-    !$omp end parallel do   
-      
-    print *, "Reading the neural network from " // network_file_name
-    neural_network = unmapped_network_t(double_precision_file_t(path // network_file_name))
 
-    time_inference: &
-    block
-      integer(int64) t_start, t_finish, clock_rate
-      type(tensor_t(double_precision)), allocatable :: inputs(:), outputs(:)
-      double precision start_time,end_time
-      real, allocatable :: output_slice(:)
-      integer i, icc
+    stop "----> done < ----"
 
-      allocate(inputs(size(input_components,1)))
-      allocate(outputs(size(input_components,1)))      
+    !allocate(output_components(size(aerosol_data,2),num_outputs))
 
-      !$omp parallel do shared(inputs,input_components) 
-      do i = 1,size(input_components,1)
-        inputs(i) = tensor_t(input_components(i,:))
-      end do
-      !$omp end parallel do         
+    !time_inference: &
+    !block
+    !  integer(int64) t_start, t_finish, clock_rate
+    !  type(tensor_t(double_precision)), allocatable :: inputs(:), outputs(:)
+    !  double precision start_time,end_time
+    !  real, allocatable :: output_slice(:)
+    !  integer i, icc
 
-      print*, "Starting inference."
-      call system_clock(t_start, clock_rate)      
+    !  allocate(inputs(size(input_components,1)))
+    !  allocate(outputs(size(input_components,1)))      
 
-      icc = size(input_components,1)
+    !  !$omp parallel do shared(inputs,input_components) 
+    !  do i = 1,size(input_components,1)
+    !    inputs(i) = tensor_t(input_components(i,:))
+    !  end do
+    !  !$omp end parallel do         
 
-      !$ start_time = omp_get_wtime()
-      !$omp parallel do shared(inputs,outputs,icc)
-      do i = 1,icc
-         outputs(i) = neural_network%infer(inputs(i))
-      end do
-      !$omp end parallel do   
-      !$    end_time = omp_get_wtime()       
+    !  print*, "Starting inference."
+    !  call system_clock(t_start, clock_rate)      
 
-      call system_clock(t_finish)
-      print*, "Finished inference."
-      print *,"System clock time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
-      !$    print*,'OMP Total time = ',end_time - start_time
+    !  icc = size(input_components,1)
 
-      allocate(output_slice(num_outputs))
+    !  !$ start_time = omp_get_wtime()
+    !  !$omp parallel do shared(inputs,outputs,icc)
+    !  do i = 1,icc
+    !     outputs(i) = neural_network%infer(inputs(i))
+    !  end do
+    !  !$omp end parallel do   
+    !  !$    end_time = omp_get_wtime()       
 
-      !$omp parallel do shared(outputs,output_components,icc,output_stats) private(output_slice,i,j)
-      post_process: &
-      do i = 1,icc
-         output_slice = outputs(i)%values()
-         do j = 1,num_outputs
-            output_components(i,j) = (output_stats%standard_deviation(j)*output_slice(j)+output_stats%mean(j))**3
-         end do
-      end do post_process
-      !$omp end parallel do
+    !  call system_clock(t_finish)
+    !  print*, "Finished inference."
+    !  print *,"System clock time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
+    !  !$    print*,'OMP Total time = ',end_time - start_time
 
-    end block time_inference
+    !  allocate(output_slice(num_outputs))
+
+    !  !$omp parallel do shared(outputs,output_components,icc,output_stats) private(output_slice,i,j)
+    !  post_process: &
+    !  do i = 1,icc
+    !     output_slice = outputs(i)%values()
+    !     do j = 1,num_outputs
+    !        output_components(i,j) = (output_stats%standard_deviation(j)*output_slice(j)+output_stats%mean(j))**3
+    !     end do
+    !  end do post_process
+    !  !$omp end parallel do
+
+    !end block time_inference
    
   end subroutine read_stats_and_perform_inference
 
