@@ -36,7 +36,7 @@ module NetCDF_file_test_m
   end type
 
   interface output
-    module procedure output_2D_integer, output_1D_double
+    module procedure output_2D_default_integer, output_1D_double, output_2D_64_bit_integer
   end interface
 
 contains
@@ -51,12 +51,13 @@ contains
     type(test_result_t), allocatable :: test_results(:)
 
     test_results = NetCDF_file_test%run([ &
-       test_description_t("writing and then reading gives input matching the output for a 2D integer array", write_then_read_2D_integer) &
-      ,test_description_t("writing and then reading gives input matching the output for a 1D double precision array", write_then_read_1D_double) &
+       test_description_t("writing and then reading gives input matching the output for a 2D integer array", write_then_read_2D_default_integer) &
+       ,test_description_t("writing and then reading gives input matching the output for a 1D double precision array", write_then_read_1D_double) &
+       ,test_description_t("writing and then reading gives input matching the outpur for a 64-bit integer 2D array", write_then_read_2D_nf90_int64) &
     ])
   end function
 
-  subroutine output_2D_integer(file_name, data_out)
+  subroutine output_2D_default_integer(file_name, data_out)
     character(len=*), intent(in) :: file_name
     integer, intent(in) :: data_out(:,:)
 
@@ -82,6 +83,35 @@ contains
     end associate
     associate(nf_status => nf90_close(ncid)) ! close file to free associated NetCDF resources and flush buffers
       call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
+    end associate
+  end subroutine
+
+  subroutine output_2D_64_bit_integer(file_name, data_out)
+    character(len=*), intent(in) :: file_name
+    integer(selected_int_kind(18)), intent(in) :: data_out(:,:)
+
+    integer ncid, varid, x_dimid, y_dimid
+
+    associate(nf_status => nf90_create(file_name, nf90_clobber, ncid)) ! create or ovewrite file
+      call_assert_diagnose(nf_status == nf90_noerr, "nf90_create(file_name, nf90_clobber, ncid) succeeds",trim(nf90_strerror(nf_status)))
+    end associate
+    associate(nf_status => nf90_def_dim(ncid, "x", size(data_out,2), x_dimid)) ! define x dimension & get its ID
+      call_assert_diagnose(nf_status == nf90_noerr,'nf90_def_dim(ncid,"x",size(data_out,2),x_dimid) succeeds',trim(nf90_strerror(nf_status)))
+    end associate
+    associate(nf_status => nf90_def_dim(ncid, "y", size(data_out,1), y_dimid)) ! define y dimension & get its ID
+      call_assert_diagnose(nf_status==nf90_noerr, 'nf90_def_dim(ncid,"y",size(data_out,2),y_dimid) succeeds', trim(nf90_strerror(nf_status)))
+    end associate
+    associate(nf_status => nf90_def_var(ncid, "data", nf90_int, [y_dimid, x_dimid], varid))!define integer 'data' variable & get ID
+      call_assert_diagnose(nf_status == nf90_noerr, 'nf90_def_var(ncid,"data",nf90_int,[y_dimid,x_dimid],varid) succeds', trim(nf90_strerror(nf_status)))
+    end associate
+    associate(nf_status => nf90_enddef(ncid)) ! exit define mode: tell NetCDF we are done defining metadata
+      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_enddef(ncid)', trim(nf90_strerror(nf_status)))
+    end associate
+    associate(nf_status => nf90_put_var(ncid, varid, data_out)) ! write all data to file
+      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_put_var(ncid, varid, data_out)', trim(nf90_strerror(nf_status)))
+    end associate
+    associate(nf_status => nf90_close(ncid)) ! close file to free associated NetCDF resources and flush buffers
+      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_close(ncid)', trim(nf90_strerror(nf_status)))
     end associate
   end subroutine
 
@@ -111,7 +141,7 @@ contains
     end associate
   end subroutine
 
-  function write_then_read_2D_integer() result(test_diagnosis)
+  function write_then_read_2D_default_integer() result(test_diagnosis)
     type(test_diagnosis_t) test_diagnosis
     integer i, j
     integer, parameter :: ny = 12,  nx = 6
@@ -128,6 +158,23 @@ contains
     test_diagnosis = .all. (data_written .equalsExpected. data_read) // "data_written /= data_read"
   end function
 
+  function write_then_read_2D_nf90_int64() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
+    integer i, j
+    integer, parameter :: ny = 12,  nx = 6
+    integer(selected_int_kind(18)), parameter :: data_written(*,*) = reshape([((i*j, i=1,nx), j=1,ny)], [ny,nx])
+    integer(selected_int_kind(18)), allocatable :: data_read(:,:)
+    character(len=*), parameter :: file_name = "build/NetCDF_test_2D_integer.nc"
+
+    call output(file_name, data_written)
+
+    associate(NetCDF_file => NetCDF_file_t(file_name))
+      call NetCDF_file%input("data", data_read)
+    end associate
+
+    test_diagnosis = .all. (data_written .equalsExpected. data_read) // "data_written /= data_read"
+  end function
+  
   function write_then_read_1D_double() result(test_diagnosis)
     type(test_diagnosis_t) test_diagnosis
     integer i

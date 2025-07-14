@@ -3,9 +3,6 @@
 
 program infer_aerosol
 
-  ! Intrinsic modules:
-  use iso_fortran_env, only : int64, real64
-
   ! External dependencies:
   use fiats_m, only : unmapped_network_t, tensor_t, double_precision, double_precision_file_t
   use julienne_m, only : string_t, command_line_t
@@ -27,8 +24,6 @@ program infer_aerosol
 
   call read_stats_and_perform_inference( file_path( stop_code = usage_info ) )
 
-  print *,new_line('') // "______infer-aerosol done _______"
-
 contains
 
   function file_path(stop_code) result(path)
@@ -48,8 +43,11 @@ contains
     character(len=*), parameter :: branch_file_name = "model_branch.json", trunk_file_name = "model_trunk.json"
     character(len=*), parameter :: saved_data_file_name = "saved_data.nc"
     double precision, allocatable, dimension(:) :: longitude, latitude, level, ymean, mean_X, std_X, mean_y, std_y
-    double precision, allocatable, dimension(:,:) :: cldfr_idx, basis, X_test, input_components, output_components
+    double precision, allocatable, dimension(:,:) :: basis, X_test, input_components, output_components
+    double precision, allocatable, dimension(:,:) :: cldfr_idx, slice
     type(unmapped_network_t(double_precision)) branch_network, trunk_network
+    integer(selected_int_kind(18)) t_start, t_finish, clock_rate
+    type(tensor_t(double_precision)), allocatable :: outputs(:)
     integer i, j
 
     associate(saved_data_file => NetCDF_file_t(path // saved_data_file_name))
@@ -67,45 +65,51 @@ contains
       call saved_data_file%input("std_y", std_y)
     end associate
 
+    slice = testslice(cldfr_idx, level, longitude, latitude, 72)
+
     print *, "Reading the branch network from " // branch_file_name
     branch_network = unmapped_network_t(double_precision_file_t(path // branch_file_name))
     print *, "Reading the trunk network from " // trunk_file_name
     trunk_network = unmapped_network_t(double_precision_file_t(path // trunk_file_name))
 
+    !do i = 1, size(basis,2)
+    !  print "(*(G0,:,','))", basis(:,i)
+    !end do
+
     allocate(input_components(size(X_test,2),size(X_test,1)))
 
+    print *,"shape(input_components) ",shape(input_components)
+
     pre_process: &
-    do concurrent(i = 1:size(X_test,1),  j = 1:size(X_test,2)) default(none) shared(X_test,input_components)
+    do concurrent(i = 1:size(X_test,1),  j = 1:size(X_test,2)) ! default(none) shared(X_test,input_components)
       associate(cube_root => (abs(X_test(i,j))**(1.d0/3.d0))*sign(1.d0,X_test(i,j)))
         input_components(j,i) = (cube_root - mean_X(i))/std_X(i)
       end associate
     end do pre_process
 
-    stop "----> done < ----"
-
     !allocate(output_components(size(aerosol_data,2),num_outputs))
 
-    !time_inference: &
-    !block
-    !  integer(int64) t_start, t_finish, clock_rate
-    !  type(tensor_t(double_precision)), allocatable :: inputs(:), outputs(:)
-    !  double precision start_time,end_time
-    !  real, allocatable :: output_slice(:)
-    !  integer i, icc
+    time_inference: &
+    block
+      integer(nf90_int64) t_start, t_finish, clock_rate
+      type(tensor_t(double_precision)), allocatable :: inputs(:), outputs(:)
+      double precision start_time,end_time
+      real, allocatable :: output_slice(:)
+      integer i, icc
 
-    !  allocate(inputs(size(input_components,1)))
-    !  allocate(outputs(size(input_components,1)))      
+      allocate(inputs(size(input_components,1)))
+      allocate(outputs(size(input_components,1)))      
 
-    !  !$omp parallel do shared(inputs,input_components) 
-    !  do i = 1,size(input_components,1)
-    !    inputs(i) = tensor_t(input_components(i,:))
-    !  end do
-    !  !$omp end parallel do         
+      icc: &
+      associate(icc => size(input_components,1)/100)
 
-    !  print*, "Starting inference."
-    !  call system_clock(t_start, clock_rate)      
+        print*, "Starting inference with ", icc, " input tensors"
+        call system_clock(t_start, clock_rate)      
 
-    !  icc = size(input_components,1)
+        allocate(outputs(icc))
+        do concurrent(i = 1:icc)
+          outputs(i) = branch_network%infer(tensor_t(input_components(i,:)))
+        end do
 
     !  !$ start_time = omp_get_wtime()
     !  !$omp parallel do shared(inputs,outputs,icc)
@@ -132,7 +136,9 @@ contains
     !  end do post_process
     !  !$omp end parallel do
 
-    !end block time_inference
+    end block time_inference
+
+    end associate icc
    
   end subroutine read_stats_and_perform_inference
 
@@ -157,4 +163,16 @@ contains
     close(standard_deviation_unit)
   end function
 
-end program infer_aerosol
+  function testslice(cldfr_idx, level, longitude, latitude, i) result(X_test_aug)
+    double precision, intent(in) :: level(:), longitude(:), latitude(:)
+    double precision, intent(in) :: cldfr_idx(:,:)
+    integer, intent(in) :: i
+    double precision :: X_test_aug(size(cldfr_idx,1), 4)
+
+    X_test_aug(:,1) =     level(int(cldfr_idx(:,1))+1)
+    X_test_aug(:,2) =  latitude(int(cldfr_idx(:,2))+1)
+    X_test_aug(:,3) = longitude(int(cldfr_idx(:,2))+1)
+    X_test_aug(:,4) = dble(i)
+  end function
+
+ end program infer_aerosol

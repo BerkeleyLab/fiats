@@ -1,6 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 module NetCDF_file_m
+  use iso_fortran_env, only : int64
   use julienne_m, only : string_t
   implicit none
 
@@ -11,8 +12,8 @@ module NetCDF_file_m
     private
     character(len=:), allocatable :: file_name_
   contains
-    generic :: input =>   input_integer, input_double_precision, input_real
-    procedure, private :: input_integer, input_double_precision, input_real
+    generic :: input =>   input_integer, input_int64, input_double_precision, input_real
+    procedure, private :: input_integer, input_int64, input_double_precision, input_real
   end type
 
   interface NetCDF_file_t
@@ -45,6 +46,13 @@ module NetCDF_file_m
       class(NetCDF_file_t), intent(in) :: self
       character(len=*), intent(in) :: varname
       integer, intent(out), allocatable :: values(..)
+    end subroutine
+
+    module subroutine input_int64(self, varname, values)
+      implicit none
+      class(NetCDF_file_t), intent(in) :: self
+      character(len=*), intent(in) :: varname
+      integer(int64), intent(out), allocatable :: values(..)
     end subroutine
 
     module subroutine input_double_precision(self, varname, values)

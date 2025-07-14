@@ -103,6 +103,66 @@ contains
 
   end procedure
 
+  module procedure input_int64
+
+    character(len=32) varid_string
+    integer ncid, varid
+
+    associate( nf_status => nf90_open(self%file_name_, nf90_nowrite, ncid) ) ! open file with read-only acces
+      call_assert_diagnose(nf_status == nf90_noerr, "Net_CDF_file_m(input_int64): nf90_open" // trim(nf90_strerror(nf_status)), diagnostic_data = trim(nf90_strerror(nf_status)) // self%file_name_)
+    end associate
+
+    associate( nf_status => nf90_inq_varid(ncid, varname, varid)) ! get variable's ID
+      write(varid_string, *) varid
+      call_assert_diagnose(nf_status == nf90_noerr, "Net_CDF_file_m(input_int64): nf90_inq_varid " // trim(nf90_strerror(nf_status)), diagnostic_data = "varname '" // varname // "', varid " // trim(adjustl(varid_string)))
+
+    end associate
+
+    select rank(values)
+      rank(1)
+        associate(array_shape => get_shape(ncid, varname))
+          call_assert(size(array_shape)==rank(values))
+          allocate(values(array_shape(1)))
+          associate( nf_status => nf90_get_var(ncid, varid, values)) ! read data
+            call_assert_diagnose(nf_status == nf90_noerr, "NetCDF_file_s(input_int64): nf90_get_var", trim(nf90_strerror(nf_status)))
+          end associate
+        end associate
+      rank(2)
+    print *,"---- rank(2) ----"
+        associate(array_shape => get_shape(ncid, varname))
+          call_assert(size(array_shape)==rank(values))
+          allocate(values(array_shape(1), array_shape(2)))
+    print *,"---- nf90_get_var(",ncid," ",varname," values) ----"
+    print *,"---- shape(values), ",shape(values),"  ----"
+          associate( nf_status => nf90_get_var(ncid, varid, values)) ! read data
+    print *,"---- nf90_get_var done ----"
+            call_assert_diagnose(nf_status == nf90_noerr, "NetCDF_file_s(input_int64): nf90_get_var", trim(nf90_strerror(nf_status)))
+          end associate
+        end associate
+      rank(3)
+        associate(array_shape => get_shape(ncid, varname))
+          call_assert(size(array_shape)==rank(values))
+          allocate(values(array_shape(1), array_shape(2), array_shape(3)))
+          associate( nf_status => nf90_get_var(ncid, varid, values)) ! read data
+            call_assert_diagnose(nf_status == nf90_noerr, "NetCDF_file_s(input_int64): nf90_get_var", trim(nf90_strerror(nf_status)))
+          end associate
+        end associate
+      rank(4)
+        associate(array_shape => get_shape(ncid, varname))
+          call_assert(size(array_shape)==rank(values))
+          allocate(values(array_shape(1), array_shape(2), array_shape(3), array_shape(4)))
+          associate( nf_status => nf90_get_var(ncid, varid, values)) ! read data
+            call_assert_diagnose(nf_status == nf90_noerr, "NetCDF_file_s(input_int64): nf90_get_var", trim(nf90_strerror(nf_status)))
+          end associate
+        end associate
+      rank default
+        error stop "NetCDF_file_s(input_int64): unsupported rank"
+    end select
+
+    print *,"---- input_int64 ----"
+
+  end procedure
+
   module procedure input_double_precision
     character(len=32) varid_string
     integer ncid, varid
