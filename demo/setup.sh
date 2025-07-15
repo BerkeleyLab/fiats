@@ -80,17 +80,13 @@ PREFIX=`realpath $PREFIX`
 
 fpm_fc_version=$($FPM_FC --version)
 if [[ $fpm_fc_version = flang* ]]; then
-  if [[ $fpm_fc_version = *19* ]]; then
-    FPM_FLAG="-mmlir -allow-assumed-rank -O3 -L$NETCDF_LIB_PATH -L$HDF5_LIB_PATH"
-  else
-    FPM_FLAG="-O3 -L$NETCDF_LIB_PATH -L$HDF5_LIB_PATH"
-  fi
+  FPM_FLAG="-O3 -L$NETCDF_LIB_PATH -L$HDF5_LIB_PATH"
 elif [[ $fpm_fc_version = GNU* ]]; then
   echo
   echo "$FPM_FC appears to be gfortran, which is currently unsupported due to compiler bugs for parameterized derived types."
   echo
   exit 1
-  FPM_FLAG="-fcoarray=single -O3 -fallow-argument-mismatch -ffree-line-length-none -L$NETCDF_LIB_PATH -L$HDF5_LIB_PATH"
+  FPM_FLAG="-fcoarray=single -O3 -L$NETCDF_LIB_PATH -L$HDF5_LIB_PATH"
   FPM_RUNNER="cafrun -n 1"
   FPM_CC="mpicc"
 else
@@ -146,9 +142,9 @@ echo "--compiler \"`pkg-config fiats --variable=FIATS_FPM_FC`\" \\"       >> $RU
 if [[ ! -z ${FPM_RUNNER:-} ]];  then
   echo "--runner \"`pkg-config fiats --variable=FIATS_FPM_RUNNER`\" \\"   >> $RUN_FPM_SH
 fi
-echo "--flag \"-cpp `pkg-config fiats --variable=FIATS_FPM_FLAG`\" \\"    >> $RUN_FPM_SH
+echo "--flag \"-cpp -O3 `pkg-config fiats --variable=FIATS_FPM_FLAG`\" \\">> $RUN_FPM_SH
 echo "--link-flag \"`pkg-config fiats --variable=FIATS_FPM_LD_FLAG`\" \\" >> $RUN_FPM_SH
-echo "\$program_arguments"                                                           >> $RUN_FPM_SH
+echo "\$program_arguments"                                                >> $RUN_FPM_SH
 chmod u+x $RUN_FPM_SH
 if [ $CI = true ]; then
   echo "---------------"
