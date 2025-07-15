@@ -5,8 +5,9 @@ program infer_aerosol
 
   ! External dependencies:
   use fiats_m, only : unmapped_network_t, tensor_t, double_precision, double_precision_file_t
-  use julienne_m, only : string_t, command_line_t
+  use julienne_m, only : string_t, command_line_t, csv
   use omp_lib
+  use iso_fortran_env, only : int64, real64
 
   ! Internal dependencies:
   use NetCDF_file_m, only: NetCDF_file_t
@@ -43,7 +44,7 @@ contains
     character(len=*), parameter :: branch_file_name = "model_branch.json", trunk_file_name = "model_trunk.json"
     character(len=*), parameter :: saved_data_file_name = "saved_data.nc"
     double precision, allocatable, dimension(:) :: longitude, latitude, level, ymean, mean_X, std_X, mean_y, std_y
-    double precision, allocatable, dimension(:,:) :: basis, X_test, input_components, output_components
+    double precision, allocatable, dimension(:,:) :: basis, X_test, input_components
     double precision, allocatable, dimension(:,:) :: cldfr_idx, slice
     type(unmapped_network_t(double_precision)) branch_network, trunk_network
     integer(selected_int_kind(18)) t_start, t_finish, clock_rate
@@ -72,13 +73,7 @@ contains
     print *, "Reading the trunk network from " // trunk_file_name
     trunk_network = unmapped_network_t(double_precision_file_t(path // trunk_file_name))
 
-    !do i = 1, size(basis,2)
-    !  print "(*(G0,:,','))", basis(:,i)
-    !end do
-
     allocate(input_components(size(X_test,2),size(X_test,1)))
-
-    print *,"shape(input_components) ",shape(input_components)
 
     pre_process: &
     do concurrent(i = 1:size(X_test,1),  j = 1:size(X_test,2)) ! default(none) shared(X_test,input_components)
@@ -87,37 +82,46 @@ contains
       end associate
     end do pre_process
 
-    !allocate(output_components(size(aerosol_data,2),num_outputs))
-
     time_inference: &
     block
-      integer(nf90_int64) t_start, t_finish, clock_rate
-      type(tensor_t(double_precision)), allocatable :: inputs(:), outputs(:)
-      double precision start_time,end_time
+      integer(int64) t_start_dc, t_end_dc, clock_rate, t_start_omp, t_end_omp
+      type(tensor_t(double_precision)), allocatable :: outputs(:)
       real, allocatable :: output_slice(:)
-      integer i, icc
+      integer s
 
-      allocate(inputs(size(input_components,1)))
-      allocate(outputs(size(input_components,1)))      
+      count_samples: &
+      associate(samples => size(input_components,1))
 
-      icc: &
-      associate(icc => size(input_components,1)/100)
+        allocate(outputs(samples))
 
-        print*, "Starting inference with ", icc, " input tensors"
-        call system_clock(t_start, clock_rate)      
+        print*, "Starting inference via `do concurrent` with ", samples, " samples of size ",size(input_components,2)
+        call system_clock(t_start_dc, clock_rate)
+        do concurrent(integer :: s = 1:samples) default(none) shared(outputs, branch_network, input_components)
+          outputs(s) = branch_network%infer(tensor_t(input_components(s,:)))
+        end do
+        call system_clock(t_end_dc)
+        print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
 
-        allocate(outputs(icc))
-        do concurrent(i = 1:icc)
-          outputs(i) = branch_network%infer(tensor_t(input_components(i,:)))
+        print *,"inputs -----------------"
+        do s = 1, 1
+          print csv, input_components(s,:)
+        end do
+        print csv,"outputs ----------------"
+        do s = 1, 1
+          print *, outputs(s)%values()
         end do
 
-    !  !$ start_time = omp_get_wtime()
-    !  !$omp parallel do shared(inputs,outputs,icc)
-    !  do i = 1,icc
-    !     outputs(i) = neural_network%infer(inputs(i))
-    !  end do
-    !  !$omp end parallel do   
-    !  !$    end_time = omp_get_wtime()       
+        !print*, "Starting inference via `omp parallel do` with ", samples, " samples of size ",size(input_components,2)
+        !call system_clock(t_start_omp, clock_rate)
+        !!$ t_start_omp = omp_get_wtime()
+        !!$omp parallel do shared(outputs,branch_network,input_components)
+        !do s = 1, samples
+        !  outputs(s) = branch_network%infer(tensor_t(input_components(s,:)))
+        !end do
+        !!$omp end parallel do
+        !!$ t_end_omp = omp_get_wtime()
+        !call system_clock(t_end_omp)
+        !print *,"Elapsed system clock during `omp parallel do`: ", real(t_end_omp - t_start_omp, real64)/real(clock_rate, real64)
 
     !  call system_clock(t_finish)
     !  print*, "Finished inference."
@@ -136,9 +140,9 @@ contains
     !  end do post_process
     !  !$omp end parallel do
 
-    end block time_inference
+    end associate count_samples
 
-    end associate icc
+    end block time_inference
    
   end subroutine read_stats_and_perform_inference
 
