@@ -44,7 +44,7 @@ contains
     character(len=*), parameter :: branch_file_name = "model_branch.json", trunk_file_name = "model_trunk.json"
     character(len=*), parameter :: saved_data_file_name = "saved_data.nc"
     double precision, allocatable, dimension(:) :: longitude, latitude, level, ymean, mean_X, std_X, mean_y, std_y
-    double precision, allocatable, dimension(:,:) :: basis, X_test, input_components
+    double precision, allocatable, dimension(:,:) :: basis, X_test, branch_inputs, trunk_inputs
     double precision, allocatable, dimension(:,:) :: cldfr_idx, slice
     type(unmapped_network_t(double_precision)) branch_network, trunk_network
     integer(selected_int_kind(18)) t_start, t_finish, clock_rate
@@ -52,7 +52,7 @@ contains
     integer i, j
 
     associate(saved_data_file => NetCDF_file_t(path // saved_data_file_name))
-      print '(a)', "Reading saved from " // path // saved_data_file_name
+      print '(a)', "Reading saved data from " // path // saved_data_file_name
       call saved_data_file%input("longitude", longitude)
       call saved_data_file%input("latitude", latitude)
       call saved_data_file%input("level", level)
@@ -73,14 +73,13 @@ contains
     print *, "Reading the trunk network from " // trunk_file_name
     trunk_network = unmapped_network_t(double_precision_file_t(path // trunk_file_name))
 
-    allocate(input_components(size(X_test,2),size(X_test,1)))
+    allocate(branch_inputs(size(X_test,2),size(X_test,1)))
 
-    pre_process: &
     do concurrent(i = 1:size(X_test,1),  j = 1:size(X_test,2)) ! default(none) shared(X_test,input_components)
       associate(cube_root => (abs(X_test(i,j))**(1.d0/3.d0))*sign(1.d0,X_test(i,j)))
-        input_components(j,i) = (cube_root - mean_X(i))/std_X(i)
+        branch_inputs(j,i) = (cube_root - mean_X(i))/std_X(i)
       end associate
-    end do pre_process
+    end do
 
     time_inference: &
     block
@@ -90,26 +89,18 @@ contains
       integer s
 
       count_samples: &
-      associate(samples => size(input_components,1))
+      associate(samples => size(branch_inputs,1))
 
         allocate(outputs(samples))
 
-        print*, "Starting inference via `do concurrent` with ", samples, " samples of size ",size(input_components,2)
+        print*, "Starting inference via `do concurrent` with ", samples, " samples of size ",size(branch_inputs,2)
         call system_clock(t_start_dc, clock_rate)
-        do concurrent(integer :: s = 1:samples) default(none) shared(outputs, branch_network, input_components)
-          outputs(s) = branch_network%infer(tensor_t(input_components(s,:)))
+        do concurrent(integer :: s = 1:samples) default(none) shared(outputs, branch_network, branch_inputs)
+          outputs(s) = branch_network%infer(tensor_t(branch_inputs(s,:)))
         end do
         call system_clock(t_end_dc)
         print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
 
-        print *,"inputs -----------------"
-        do s = 1, 1
-          print csv, input_components(s,:)
-        end do
-        print csv,"outputs ----------------"
-        do s = 1, 1
-          print *, outputs(s)%values()
-        end do
 
         !print*, "Starting inference via `omp parallel do` with ", samples, " samples of size ",size(input_components,2)
         !call system_clock(t_start_omp, clock_rate)
@@ -142,6 +133,23 @@ contains
 
     end associate count_samples
 
+    allocate(trunk_inputs, mold=slice)
+
+    associate(ncol => size(mean_X))
+      !print *,"ncol ",ncol
+      !print *,"shape(slice) ", shape(slice)
+      !print *,"shape(mean_X) ", shape(mean_X)
+      !print *,"shape(std_X) ", shape(std_X)
+      do concurrent(i = 1:size(slice,1),  j = 1:size(slice,2)) ! default(none) shared(slice,input_components)
+        trunk_inputs(i,j) = (slice(i,j) - mean_X(ncol-4+j))/std_X(ncol-4+j)
+      end do
+    end associate
+
+    print *,"inputs -----------------"
+    do s = 1, 5
+      print csv, trunk_inputs(s,:)
+    end do
+    
     end block time_inference
    
   end subroutine read_stats_and_perform_inference
