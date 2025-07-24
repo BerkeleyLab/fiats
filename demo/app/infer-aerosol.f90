@@ -84,71 +84,47 @@ contains
     time_inference: &
     block
       integer(int64) t_start_dc, t_end_dc, clock_rate, t_start_omp, t_end_omp
-      type(tensor_t(double_precision)), allocatable :: outputs(:)
+      type(tensor_t(double_precision)), allocatable :: branch_outputs(:), trunk_outputs(:)
       real, allocatable :: output_slice(:)
       integer s
 
       count_samples: &
       associate(samples => size(branch_inputs,1))
 
-        allocate(outputs(samples))
+        allocate(branch_outputs(samples))
 
-        print*, "Starting inference via `do concurrent` with ", samples, " samples of size ",size(branch_inputs,2)
+        print*, "Starting branch inference via `do concurrent` with ", samples, " samples of size ",size(branch_inputs,2)
         call system_clock(t_start_dc, clock_rate)
-        do concurrent(integer :: s = 1:samples) default(none) shared(outputs, branch_network, branch_inputs)
-          outputs(s) = branch_network%infer(tensor_t(branch_inputs(s,:)))
+        do concurrent(integer :: s = 1:samples) default(none) shared(branch_outputs, branch_network, branch_inputs)
+          branch_outputs(s) = branch_network%infer(tensor_t(branch_inputs(s,:)))
         end do
         call system_clock(t_end_dc)
         print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
 
+        allocate(trunk_inputs, mold=slice)
 
-        !print*, "Starting inference via `omp parallel do` with ", samples, " samples of size ",size(input_components,2)
-        !call system_clock(t_start_omp, clock_rate)
-        !!$ t_start_omp = omp_get_wtime()
-        !!$omp parallel do shared(outputs,branch_network,input_components)
-        !do s = 1, samples
-        !  outputs(s) = branch_network%infer(tensor_t(input_components(s,:)))
+        associate(ncol => size(mean_X))
+          do concurrent(i = 1:size(slice,1),  j = 1:size(slice,2)) ! default(none) shared(slice,input_components)
+            trunk_inputs(i,j) = (slice(i,j) - mean_X(ncol-4+j))/std_X(ncol-4+j)
+          end do
+        end associate
+
+        !print *,"inputs -----------------"
+        !do s = 1, 5
+        !  print csv, trunk_inputs(s,:)
         !end do
-        !!$omp end parallel do
-        !!$ t_end_omp = omp_get_wtime()
-        !call system_clock(t_end_omp)
-        !print *,"Elapsed system clock during `omp parallel do`: ", real(t_end_omp - t_start_omp, real64)/real(clock_rate, real64)
 
-    !  call system_clock(t_finish)
-    !  print*, "Finished inference."
-    !  print *,"System clock time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
-    !  !$    print*,'OMP Total time = ',end_time - start_time
+        allocate(trunk_outputs(samples))
 
-    !  allocate(output_slice(num_outputs))
-
-    !  !$omp parallel do shared(outputs,output_components,icc,output_stats) private(output_slice,i,j)
-    !  post_process: &
-    !  do i = 1,icc
-    !     output_slice = outputs(i)%values()
-    !     do j = 1,num_outputs
-    !        output_components(i,j) = (output_stats%standard_deviation(j)*output_slice(j)+output_stats%mean(j))**3
-    !     end do
-    !  end do post_process
-    !  !$omp end parallel do
+        print*, "Starting trunk inference via `do concurrent` with ", samples, " samples of size ",size(trunk_inputs,2)
+        call system_clock(t_start_dc, clock_rate)
+        do concurrent(integer :: s = 1:samples) default(none) shared(trunk_outputs, trunk_network, trunk_inputs)
+          trunk_outputs(s) = trunk_network%infer(tensor_t(trunk_inputs(s,:)))
+        end do
+        call system_clock(t_end_dc)
+        print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
 
     end associate count_samples
-
-    allocate(trunk_inputs, mold=slice)
-
-    associate(ncol => size(mean_X))
-      !print *,"ncol ",ncol
-      !print *,"shape(slice) ", shape(slice)
-      !print *,"shape(mean_X) ", shape(mean_X)
-      !print *,"shape(std_X) ", shape(std_X)
-      do concurrent(i = 1:size(slice,1),  j = 1:size(slice,2)) ! default(none) shared(slice,input_components)
-        trunk_inputs(i,j) = (slice(i,j) - mean_X(ncol-4+j))/std_X(ncol-4+j)
-      end do
-    end associate
-
-    print *,"inputs -----------------"
-    do s = 1, 5
-      print csv, trunk_inputs(s,:)
-    end do
     
     end block time_inference
    
@@ -188,3 +164,32 @@ contains
   end function
 
  end program infer_aerosol
+
+        !print*, "Starting inference via `omp parallel do` with ", samples, " samples of size ",size(input_components,2)
+        !call system_clock(t_start_omp, clock_rate)
+        !!$ t_start_omp = omp_get_wtime()
+        !!$omp parallel do shared(outputs,branch_network,input_components)
+        !do s = 1, samples
+        !  outputs(s) = branch_network%infer(tensor_t(input_components(s,:)))
+        !end do
+        !!$omp end parallel do
+        !!$ t_end_omp = omp_get_wtime()
+        !call system_clock(t_end_omp)
+        !print *,"Elapsed system clock during `omp parallel do`: ", real(t_end_omp - t_start_omp, real64)/real(clock_rate, real64)
+
+    !  call system_clock(t_finish)
+    !  print*, "Finished inference."
+    !  print *,"System clock time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
+    !  !$    print*,'OMP Total time = ',end_time - start_time
+
+    !  allocate(output_slice(num_outputs))
+
+    !  !$omp parallel do shared(outputs,output_components,icc,output_stats) private(output_slice,i,j)
+    !  post_process: &
+    !  do i = 1,icc
+    !     output_slice = outputs(i)%values()
+    !     do j = 1,num_outputs
+    !        output_components(i,j) = (output_stats%standard_deviation(j)*output_slice(j)+output_stats%mean(j))**3
+    !     end do
+    !  end do post_process
+    !  !$omp end parallel do
