@@ -38,7 +38,7 @@ module neural_network_m
     generic :: nodes_per_layer          => default_real_nodes_per_layer,         double_precision_nodes_per_layer
     generic :: skip                     => default_real_skip,                    double_precision_skip
     generic :: activation_function_name => default_real_activation_name,         double_precision_activation_name
-    generic, private :: learn                    => default_real_learn
+    generic :: learn                    => default_real_learn
     procedure, private, non_overridable :: default_real_approximately_equal,     double_precision_approximately_equal
     procedure, private, non_overridable :: default_real_infer,                   double_precision_infer
     procedure, private, non_overridable :: default_real_learn
