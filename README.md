@@ -101,11 +101,13 @@ fpm test --compiler gfortran --profile release
 ```
 
 ##### Intel (`ifx`)
-Building and testing Fiats with ifx` 2025.1 using the command
+Testing with `ifx` versions higher than 2025.1 with the following command should report all tests passing except one:
 ```
 fpm test --compiler ifx --flag -fpp --profile release
 ```
-results in all Fiats unit tests passing except for one test that converts a neural network with varying-width hidden layers to and from JSON.  The reason for this failure is under investigation.  If you would like to use Fiats with `ifx` and require hidden layers of varying width, please submit an issue requesting an alternative neural-network file format.
+The failing test converts a neural network with varying-width hidden layers to and from JSON.
+The reason for this failure is under investigation.
+Please submit an issue if you would like to use `ifx` and require hidden layers of varying width.
 
 ##### _Experimental:_ Automatic offloading of `do concurrent` to GPUs
 This capability is under development with the goal to facilitate automatic GPU offloading via the following command:
