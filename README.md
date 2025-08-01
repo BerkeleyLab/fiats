@@ -63,43 +63,35 @@ The remainder of this section contains commands for building Fiats with a recent
 
 #### Supported Compilers
 ##### LLVM (`flang-new`)
-With LLVM `flang` 20 installed in your `PATH`, build and test Fiats with the installed `flang-new` symlink in order for `fpm` to correctly identify the compiler:
+Testing Fiats with LLVM `flang-new` version 20 or later with the following command should report that all tests pass:
 ```
 fpm test --compiler flang-new --flag "-O3"
 ```
-With LLVM `flang` 19, enable the compiler's experimental support for assumed-rank entities:
-
-```
-fpm test --compiler flang-new --flag "-mmlir -allow-assumed-rank -O3"
-```
-
-###### _Experimental:_ Automatic parallelization of `do concurrent` on CPUs
-A series of pull requests is currently being reviewed and merged to enable LLLVM Flang to automatically parallelize `do concurrent`.
-To try this feature, clone the Berkeley Lab [flang-testing-project] fork of llvm-project and build Flang from source
-```
-git clone git@github.com:BerkeleyLab/flang-testing-project
-git checkout paw-atm24-fiats
-```
-The following command will then run an example that parallelizes batch inference calculations:
+With LLVM 19, add `-mmlir -allow-assumed-rank` to the `--flag` argument.
+With LLVM 21, it should be possible to automatically parallelize batch inferences on central processing units (CPUs).
+For example, run [concurrent-inferences](./example/concurrent-inferences.f90) in parallel as follows:
 ```
 fpm run \
   --example concurrent-inferences \
   --compiler flang-new \
-  --flag "-mmlir -allow-assumed-rank -O3 -fopenmp -fdo-concurrent-parallel=host" \
+  --flag "-O3 -fopenmp -fdo-concurrent-parallel=host" \
   -- --network model.json
 ```
 where `model.json` must be a neural network in the [JSON] format used by Fiats and the companion [nexport] package.
-Automatic parallelization for training neural networks is under development.
+[Rouson et al. (2025)](https://dx.doi.org/10.25344/S4VG6T) demonstrated that this approach achieves performance on par with using OpenMP compiler directives.
+Work is under way to automatically parallelize training on CPUs.
+Future work will aim to support automatically offloading inference and training to GPUs.
+
+##### NAG (`nagfor`)
+With `nagfor` 7.2 Build 7235 or later, the following command builds Fiats and reports that all tests pass:
+```
+fpm test --compiler nagfor --flag -fpp
+```
 
 #### Partially Supported Compilers
 
-Fiats release 0.14.0 and earlier support the use of the NAG, GNU, and Intel Fortran compilers.
-We are corresponding with these compilers' developers about addressing the compiler issues preventing building newer Fiats releases.
-
-##### NAG (`nagfor`)
-```
-fpm test --compiler nagfor --flag -fpp --profile release
-```
+Fiats release 0.14.0 and earlier support the use of the GNU and Intel Fortran compilers.
+We are corresponding with these compilers' developers about addressing the issues preventing building newer Fiats releases.
 
 ##### GNU (`gfortran`)
 Compiler bugs related to parameterized derived types currently prevent `gfortran` from building Fiats versions 0.15.0 or later.
