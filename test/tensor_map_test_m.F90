@@ -4,11 +4,18 @@ module tensor_map_test_m
   !! Test tensor_map_t object input/output, construction, and linear mappings
 
   ! External dependencies
-  use julienne_m, only : string_t, test_t, test_result_t, test_description_t, test_description_substring, file_t
+  use julienne_m, only : &
+     operator(.all.) &
+    ,operator(.approximates.) &
+    ,operator(.within.) &
+    ,string_t &
+    ,test_description_substring &
+    ,test_description_t &
+    ,test_diagnosis_t &
+    ,test_result_t &
+    ,test_t &
+    ,file_t
   use fiats_m, only : tensor_map_t, tensor_t
-#ifdef __GFORTRAN__
-  use julienne_m, only : test_function_i
-#endif
 
   ! Internal dependencies
   use tensor_map_m, only : tensor_map_t
@@ -35,21 +42,10 @@ contains
     type(test_result_t), allocatable :: test_results(:)
     type(test_description_t), allocatable :: test_descriptions(:)
 
-#ifndef __GFORTRAN__
     test_descriptions = [ & 
       test_description_t("component-wise construction followed by conversion to and from JSON", write_then_read_tensor_map), &
       test_description_t("mapping to and from the unit interval as an identity transformation", map_to_from_training_range) &
     ]
-#else
-    procedure(test_function_i), pointer :: check_write_then_read_ptr, check_map_to_from_range_ptr 
-    check_write_then_read_ptr   => write_then_read_tensor_map
-    check_map_to_from_range_ptr => map_to_from_training_range
-
-    test_descriptions = [ &
-      test_description_t("component-wise construction followed by conversion to and from JSON", check_write_then_read_ptr), &
-      test_description_t("mapping to and from the unit interval as an identity transformation", check_map_to_from_range_ptr) &
-    ]
-#endif
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &
       substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
@@ -59,8 +55,8 @@ contains
     test_results = test_descriptions%run()
   end function
 
-  function write_then_read_tensor_map() result(test_passes)
-    logical test_passes
+  function write_then_read_tensor_map() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     type(file_t) :: json_file
 #ifdef _CRAYFTN
     type(tensor_map_t) :: tensor_map
@@ -69,15 +65,15 @@ contains
     associate(tensor_map => tensor_map_t(layer="inputs", minima=[-1., 0., 1.], maxima=[1., 2., 4.]))
 #endif
       associate(from_json => tensor_map_t(tensor_map%to_json()))
-        test_passes = tensor_map == from_json
+        test_diagnosis = test_diagnosis_t(tensor_map == from_json, "tensor_map /= from_json")
       end associate
 #ifndef _CRAYFTN
     end associate
 #endif
   end function
 
-  function map_to_from_training_range() result(test_passes)
-    logical test_passes
+  function map_to_from_training_range() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     real, parameter :: tolerance = 1.E-07
 #ifdef _CRAYFTN
     type(tensor_map_t) :: tensor_map
@@ -85,12 +81,12 @@ contains
     tensor_map = tensor_map_t(layer="output", minima=[-4., 0., 1., -1.], maxima=[0., 2., 5., 1.])
     tensor = tensor_t([-2., 0., 5., 0.])
     round_trip = tensor_map%map_from_training_range(tensor_map%map_to_training_range(tensor))
-    test_passes = all(abs(tensor%values() - round_trip%values()) < tolerance)
+    test_diagnosis = .all. (tensor%values() .approximates.  round_trip%values() .within. tolerance)
 #else
     associate(tensor_map => tensor_map_t(layer="output", minima=[-4., 0., 1., -1.], maxima=[0., 2., 5., 1.]))
       associate(tensor => tensor_t([-2., 0., 5., 0.]))
         associate(round_trip => tensor_map%map_from_training_range(tensor_map%map_to_training_range(tensor)))
-          test_passes = all(abs(tensor%values() - round_trip%values()) < tolerance)
+          test_diagnosis = .all. (tensor%values() .approximates.  round_trip%values() .within. tolerance)
         end associate
       end associate
     end associate

@@ -8,11 +8,17 @@ module trainable_network_test_m
 
   ! External dependencies
   use assert_m
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, bin_t, &
-    vector_test_description_t, vector_function_strategy_t
-#ifdef __GFORTRAN__
-  use julienne_m, only : test_function_i
-#endif
+  use julienne_m, only : &
+     operator(.all.) &
+    ,operator(.approximates.) &
+    ,operator(.within.) &
+    ,bin_t &
+    ,test_description_substring &
+    ,test_description_t &
+    ,test_diagnosis_t &
+    ,test_result_t &
+    ,test_t &
+    ,string_t 
 
   ! Internal dependencies
   use fiats_m, only : trainable_network_t, neural_network_t, tensor_t, input_output_pair_t, mini_batch_t, shuffle
@@ -21,26 +27,6 @@ module trainable_network_test_m
   private
   public :: trainable_network_test_t
 
-  type, extends(vector_function_strategy_t) :: and_gate_test_function_t
-  contains
-    procedure, nopass :: vector_function => and_gate_with_skewed_training_data
-  end type
-    
-  type, extends(vector_function_strategy_t) :: not_and_test_function_t
-  contains
-    procedure, nopass :: vector_function => not_and_gate_with_skewed_training_data
-  end type
-    
-  type, extends(vector_function_strategy_t) :: or_gate_test_function_t
-  contains
-    procedure, nopass :: vector_function => or_gate_with_random_weights
-  end type
-    
-  type, extends(vector_function_strategy_t) :: xor_gate_test_function_t
-  contains
-    procedure, nopass :: vector_function => xor_gate_with_random_weights
-  end type
-    
   type, extends(test_t) :: trainable_network_test_t
   contains
     procedure, nopass :: subject
@@ -67,91 +53,24 @@ contains
   end function
 
   function results() result(test_results)
-    type(test_result_t), allocatable :: test_results(:), vector_test_results(:)
-    type(test_description_t), allocatable :: scalar_test_descriptions(:)
-    type(vector_test_description_t), allocatable :: vector_test_descriptions(:)
-    type(xor_gate_test_function_t) xor_gate_test_function
-    type(or_gate_test_function_t) or_gate_test_function
-    type(not_and_test_function_t) not_and_test_function
-    type(and_gate_test_function_t) and_gate_test_function
+    type(test_result_t), allocatable :: test_results(:)
+    type(test_description_t), allocatable :: test_descriptions(:)
 
-#ifndef __GFORTRAN__
-    scalar_test_descriptions = [ &
-      test_description_t("preserving an identity mapping with 2 hidden layers", &
-         preserves_identity_mapping), &
-      test_description_t("training a perturbed identity mapping to converge to an identity mapping using the Adam optimizer", &
-         perturbed_identity_converges) &
-      ]
-#else
-    procedure(test_function_i), pointer :: preserves_identity_ptr, perturbed_identity_ptr
-    preserves_identity_ptr => preserves_identity_mapping
-    perturbed_identity_ptr => perturbed_identity_converges
-
-    scalar_test_descriptions = [ &
-      test_description_t( &
-         "preserving an identity mapping with 2 hidden layers", &
-         preserves_identity_ptr), &
-      test_description_t("training a perturbed identity mapping to converge to an identity mapping using the Adam optimizer", &
-         perturbed_identity_ptr) &
-      ]
-#endif
-
-    vector_test_descriptions = [ &
-      vector_test_description_t( &
-        [string_t("learning to map (true,true)->true with 2 hidden layers trained on skewed AND-gate data") &
-        ,string_t("learning to map (false,true)->false with 2 hidden layers trained on skewed AND-gate data") &
-        ,string_t("learning to map (true,false)->false with 2 hidden layers trained on skewed AND-gate data") &
-        ,string_t("learning to map (false,false)->false with 2 hidden layers trained on skewed AND-gate data") &
-        ], and_gate_test_function), &
-      vector_test_description_t( &
-        [string_t("learning to map (true,true)->false with 2 hidden layers trained on skewed NOT-AND-gate data") &
-        ,string_t("learning to map (false,true)->true with 2 hidden layers trained on skewed NOT-AND-gate data") &
-        ,string_t("learning to map (true,false)->true with 2 hidden layers trained on skewed NOT-AND-gate data") &
-        ,string_t("learning to map (false,false)->true with 2 hidden layers trained on skewed NOT-AND-gate data") &
-        ], not_and_test_function), &
-      vector_test_description_t( &
-        [string_t("learning to map (true,true)->true with 2 hidden layers trained on symmetric OR-gate data & random weights") &
-        ,string_t("learning to map (false,true)->true with 2 hidden layers trained on symmetric OR-gate data & random weights") &
-        ,string_t("learning to map (true,false)->true with 2 hidden layers trained on symmetric OR-gate data & random weights") &
-        ,string_t("learning to map (false,false)->false with 2 hidden layers trained on symmetric OR-gate data & random weights") &
-        ], or_gate_test_function), &
-      vector_test_description_t( &
-      [string_t("learning (true,true)->false with 2 hidden layers trained on symmetric XOR-gate data & random weights with Adam")&
-      ,string_t("learning (false,true)->true with 2 hidden layers trained on symmetric XOR-gate data & random weights with Adam")&
-      ,string_t("learning (true,false)->true with 2 hidden layers trained on symmetric XOR-gate data & random weights with Adam")&
-      ,string_t("learning (false,false)->false with 2 hidden layers trained on symmetric XOR-gate data & random weights with Adam")&
-        ], xor_gate_test_function) &
-      ]
-
+    test_descriptions = [ &
+       test_description_t("preserving an identity map with 2 hidden layers", preserve_identity) &
+      ,test_description_t("learning identity with Adam from perturbed-identity initial condition", learn_identity) &
+      ,test_description_t("learning a 2-hidden-layer AND gate from a skewed AND training data", learn_and_from_skewed_data) &
+      ,test_description_t("learning NOT-AND from skewed NOT-AND data", learn_not_and_from_skewed_data) &
+      ,test_description_t("learning OR from symmetric OR-gate data and random initial weights", learn_or_from_random_weights) &
+      ,test_description_t("learning XOR from symmetric XOR-gate data and random initial weights", learn_xor_from_random_weights) &
+    ]
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &
-      substring_in_description => scalar_test_descriptions%contains_text(string_t(test_description_substring)), &
-      num_vector_tests => size(vector_test_descriptions) &
-    )
-      scalar_test_descriptions = pack(scalar_test_descriptions, substring_in_subject .or. substring_in_description)
-
-      block
-        integer i
-
-        associate( &
-          substring_in_description_vector => &
-            [(any(vector_test_descriptions(i)%contains_text(test_description_substring)), i=1,num_vector_tests)] &
-        )
-          if (substring_in_subject) then
-            vector_test_results = [(vector_test_descriptions(i)%run(), i=1,num_vector_tests)]
-          else if (any(substring_in_description_vector)) then
-              vector_test_descriptions = pack(vector_test_descriptions, substring_in_description_vector)
-              vector_test_results =  [(vector_test_descriptions(i)%run(), i=1,size(vector_test_descriptions))]
-              vector_test_results =  &
-                pack(vector_test_results, vector_test_results%description_contains(string_t(test_description_substring)))
-           else
-            vector_test_results = [test_result_t::]
-          end if
-          test_results = [scalar_test_descriptions%run(), vector_test_results]
-        end associate
-      end block
+      substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
+    )   
+      test_descriptions = pack(test_descriptions, substring_in_subject .or. substring_in_description)
     end associate
-
+    test_results = test_descriptions%run()
   end function
 
   subroutine print_truth_table(gate_name, gate_function_ptr, test_inputs, actual_outputs)
@@ -209,11 +128,12 @@ contains
     ))
   end function
 
-  function and_gate_with_skewed_training_data() result(test_passes)
-    logical, allocatable :: test_passes(:)
+  function learn_and_from_skewed_data() result(test_diagnosis)
+    !! AND truth table: [(true,true), (false,true), (true,false), (false,false)] -> [ true, false, false, false]
+    type(test_diagnosis_t) test_diagnosis
     type(mini_batch_t), allocatable :: mini_batches(:)
     type(tensor_t), allocatable, dimension(:,:) :: training_inputs, training_outputs
-    type(tensor_t), allocatable, dimension(:) :: tmp, tmp2, test_inputs, expected_test_outputs, actual_outputs
+    type(tensor_t), allocatable, dimension(:) :: tmp, tmp2, test_inputs, expected_outputs, actual_outputs
     type(trainable_network_t) trainable_network
     real, parameter :: tolerance = 1.E-02
     real, allocatable :: harvest(:,:,:)
@@ -238,9 +158,9 @@ contains
     call trainable_network%train(mini_batches, adam=.false., learning_rate=1.5)
 
     test_inputs = [tensor_t([true,true]), tensor_t([false,true]), tensor_t([true,false]), tensor_t([false,false])]
-    expected_test_outputs = [(and(test_inputs(i)), i=1, size(test_inputs))]
+    expected_outputs = [(and(test_inputs(i)), i=1, size(test_inputs))]
     actual_outputs = trainable_network%infer(test_inputs)
-    test_passes = [(abs(actual_outputs(i)%values() - expected_test_outputs(i)%values()) < tolerance, i=1, size(actual_outputs))]
+    test_diagnosis = .all. [(actual_outputs(i)%values() .approximates. expected_outputs(i)%values() .within. tolerance, i=1,size(actual_outputs))]
 
   contains
 
@@ -252,11 +172,12 @@ contains
 
   end function
 
-  function not_and_gate_with_skewed_training_data() result(test_passes)
-    logical, allocatable :: test_passes(:)
+  function learn_not_and_from_skewed_data() result(test_diagnosis)
+    !! NOT AND truth table: [(true,true), (false,true), (true,false), (false,false)] -> [false,  true,  true,  true]
+    type(test_diagnosis_t) test_diagnosis
     type(mini_batch_t), allocatable :: mini_batches(:)
     type(tensor_t), allocatable :: training_inputs(:,:), tmp(:), test_inputs(:)
-    type(tensor_t), allocatable :: training_outputs(:,:), expected_test_outputs(:), tmp2(:)
+    type(tensor_t), allocatable :: training_outputs(:,:), expected_outputs(:), tmp2(:)
     type(trainable_network_t) trainable_network
     type(tensor_t), allocatable :: actual_outputs(:)
     real, parameter :: tolerance = 1.E-02
@@ -282,9 +203,9 @@ contains
     call trainable_network%train(mini_batches, adam=.false., learning_rate=1.5)
 
     test_inputs = [tensor_t([true,true]), tensor_t([false,true]), tensor_t([true,false]), tensor_t([false,false])]
-    expected_test_outputs = [(not_and(test_inputs(i)), i=1, size(test_inputs))]
+    expected_outputs = [(not_and(test_inputs(i)), i=1, size(test_inputs))]
     actual_outputs = trainable_network%infer(test_inputs)
-    test_passes = [(abs(actual_outputs(i)%values() - expected_test_outputs(i)%values()) < tolerance, i=1, size(actual_outputs))]
+    test_diagnosis = .all. [(actual_outputs(i)%values() .approximates. expected_outputs(i)%values() .within. tolerance, i=1,size(actual_outputs))]
 
   contains
     
@@ -296,11 +217,12 @@ contains
 
   end function
 
-  function or_gate_with_random_weights() result(test_passes)
-    logical, allocatable :: test_passes(:)
+  function learn_or_from_random_weights() result(test_diagnosis)
+    !! OR truth table:      [(true,true), (false,true), (true,false), (false,false)] -> [ true,  true,  true, false]
+    type(test_diagnosis_t) test_diagnosis
     type(mini_batch_t), allocatable :: mini_batches(:)
     type(tensor_t), allocatable :: training_inputs(:,:), test_inputs(:), actual_outputs(:)
-    type(tensor_t), allocatable :: training_outputs(:,:), expected_test_outputs(:)
+    type(tensor_t), allocatable :: training_outputs(:,:), expected_outputs(:)
     type(trainable_network_t) trainable_network
     real, parameter :: tolerance = 1.E-02
     real, allocatable :: harvest(:,:,:)
@@ -327,9 +249,9 @@ contains
     call trainable_network%train(mini_batches, adam=.false., learning_rate=1.5)
 
     test_inputs = [tensor_t([true,true]), tensor_t([false,true]), tensor_t([true,false]), tensor_t([false,false])]
-    expected_test_outputs = [(or(test_inputs(i)), i=1, size(test_inputs))]
+    expected_outputs = [(or(test_inputs(i)), i=1, size(test_inputs))]
     actual_outputs = trainable_network%infer(test_inputs)
-    test_passes = [(abs(actual_outputs(i)%values() - expected_test_outputs(i)%values()) < tolerance, i=1, size(actual_outputs))]
+    test_diagnosis = .all. [(actual_outputs(i)%values() .approximates. expected_outputs(i)%values() .within. tolerance, i=1,size(actual_outputs))]
 
   contains
     
@@ -341,11 +263,12 @@ contains
 
   end function
 
-  function xor_gate_with_random_weights() result(test_passes)
-    logical, allocatable :: test_passes(:)
+  function learn_xor_from_random_weights() result(test_diagnosis)
+    !! XOR truth table:     [(true,true), (false,true), (true,false), (false,false)] -> [false,  true,  true, false]
+    type(test_diagnosis_t) test_diagnosis
     type(mini_batch_t), allocatable :: mini_batches(:)
     type(tensor_t), allocatable, dimension(:,:) :: training_inputs, training_outputs 
-    type(tensor_t), allocatable, dimension(:) :: actual_outputs, test_inputs, expected_test_outputs
+    type(tensor_t), allocatable, dimension(:) :: actual_outputs, test_inputs, expected_outputs
     type(trainable_network_t) trainable_network
     real, parameter :: tolerance = 1.E-02
     real, allocatable :: harvest(:,:,:)
@@ -385,9 +308,9 @@ contains
     block
       integer i
 
-      expected_test_outputs = [(local_xor(test_inputs(i)), i=1, size(test_inputs))]
+      expected_outputs = [(local_xor(test_inputs(i)), i=1, size(test_inputs))]
       actual_outputs = trainable_network%infer(test_inputs)
-      test_passes = [(abs(actual_outputs(i)%values() - expected_test_outputs(i)%values()) < tolerance, i=1, size(actual_outputs))]
+      test_diagnosis = .all. [(actual_outputs(i)%values() .approximates. expected_outputs(i)%values() .within. tolerance, i=1,size(actual_outputs))]
     end block
 
   contains
@@ -430,8 +353,8 @@ contains
     ))
   end function
 
-  function preserves_identity_mapping() result(test_passes)
-    logical test_passes
+  function preserve_identity() result(test_diagnosis)
+    type(test_diagnosis_t)test_diagnosis
     type(mini_batch_t), allocatable :: mini_batches(:)
     type(input_output_pair_t), allocatable :: input_output_pairs(:)
     type(tensor_t), allocatable :: inputs(:)
@@ -472,7 +395,7 @@ contains
 #else
         associate(network_outputs => trainable_network%infer(inputs))
 #endif
-          test_passes = maxval(abs([(network_outputs(i)%values() - inputs(i)%values(), i=1,num_pairs)])) < tolerance
+          test_diagnosis = .all. [(network_outputs(i)%values() .approximates. inputs(i)%values() .within. tolerance, i=1,size(inputs))]
 #if defined _CRAYFTN || __GFORTRAN__
 #else
         end associate
@@ -483,12 +406,12 @@ contains
 
   end function
 
-  function perturbed_identity_converges() result(test_passes)
+  function learn_identity() result(test_diagnosis)
     ! test that a network that represents a randomly perturbed identity mapping converges to an identity,
     ! (i.e., mapping inputs to outputs identically). This test operates at the edge of a radius of
     ! non-convergence, i.e., for the given size training data set, decrementing num_epochs or num_bins
     ! or negating adam or not shuffling doesn't converge within the specified output-value tolerance.
-    logical test_passes
+    type(test_diagnosis_t) test_diagnosis
     type(mini_batch_t), allocatable :: mini_batches(:)
     type(input_output_pair_t), allocatable :: input_output_pairs(:)
     type(tensor_t), allocatable :: inputs(:)
@@ -532,7 +455,7 @@ contains
 #else
         associate(network_outputs => trainable_network%infer(inputs))
 #endif
-          test_passes = maxval(abs([(network_outputs(i)%values() - inputs(i)%values(), i=1,num_pairs)])) < tolerance
+          test_diagnosis = .all. [(network_outputs(i)%values() .approximates. inputs(i)%values() .within. tolerance, i=1,size(inputs))]
 #if defined _CRAYFTN || __GFORTRAN__
 #else
         end associate

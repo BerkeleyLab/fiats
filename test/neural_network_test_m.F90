@@ -5,10 +5,18 @@ module neural_network_test_m
 
   ! External dependencies
   use kind_parameters_m, only : double_precision
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, file_t
-#ifdef __GFORTRAN__
-  use julienne_m, only : test_function_i
-#endif
+  use julienne_m, only : &
+      file_t &
+     ,operator(.all.) &
+     ,operator(.also.) &
+     ,operator(.approximates.) &
+     ,operator(.within.) &
+     ,string_t &
+     ,test_diagnosis_t &
+     ,test_t &
+     ,test_result_t &
+     ,test_description_t &
+     ,test_description_substring
 
   ! Internal dependencies
   use fiats_m, only : neural_network_t, tensor_t, metadata_t
@@ -35,35 +43,14 @@ contains
     type(test_result_t), allocatable :: test_results(:)
     type(test_description_t), allocatable :: test_descriptions(:)
 
-#ifndef __GFORTRAN__
     test_descriptions = [ &
        test_description_t("performing elemental inference with 1 hidden layer", elemental_infer_with_1_hidden_layer_xor_net) &
       ,test_description_t("performing elemental inference with 2 hidden layers", elemental_infer_with_2_hidden_layer_xor_net) &
-      ,test_description_t("converting a network with 2 hidden layers to and from JSON format", multi_hidden_layer_net_to_from_json)&
+      ,test_description_t("converting a network with 2 hidden layers to and from JSON format", multi_hidden_layer_net_to_from_json) &
       ,test_description_t("converting a network with varying-width hidden layers to/from JSON", varying_width_net_to_from_json) &
       ,test_description_t("performing inference with a network with hidden layers of varying width", infer_with_varying_width_net) &
       ,test_description_t("double-precision inference", double_precision_inference) &
     ]
-#else
-    procedure(test_function_i), pointer :: elemental_infer_1_ptr, elemental_infer_2_ptr, multi_hidden_ptr, vary_width_ptr, &
-      vary_width_infer_ptr, double_precision_inference_ptr
-
-    elemental_infer_1_ptr => elemental_infer_with_1_hidden_layer_xor_net
-    elemental_infer_2_ptr => elemental_infer_with_2_hidden_layer_xor_net
-    multi_hidden_ptr => multi_hidden_layer_net_to_from_json
-    vary_width_ptr => varying_width_net_to_from_json
-    vary_width_infer_ptr => infer_with_varying_width_net
-    double_precision_inference_ptr => double_precision_inference
-
-    test_descriptions = [ &
-       test_description_t("performing elemental inference with 1 hidden layer", elemental_infer_1_ptr) &
-      ,test_description_t("performing elemental inference with 2 hidden layers", elemental_infer_2_ptr) &
-      ,test_description_t("converting a network with 2 hidden layers to and from JSON format", multi_hidden_ptr) &
-      ,test_description_t("converting a network with varying-width hidden layers to/from JSON", vary_width_ptr) &
-      ,test_description_t("performing inference with varying-width hidden layers", vary_width_infer_ptr)  &
-      ,test_description_t("double-precision inference", double_precision_inference_ptr) &
-    ]
-#endif
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &
       substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
@@ -181,28 +168,29 @@ contains
     )   
   end function
 
-  function multi_hidden_layer_net_to_from_json() result(test_passes)
-    logical test_passes
+  function multi_hidden_layer_net_to_from_json() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     type(neural_network_t) neural_network, from_json
     type(file_t) json_file
 
     neural_network = distinct_parameters()
     json_file = neural_network%to_json()
     from_json = neural_network_t(json_file)
-    test_passes = neural_network == from_json 
+    test_diagnosis = test_diagnosis_t(test_passed = neural_network == from_json, diagnostics_string= "neural_network == from_json")
   end function
 
-  function varying_width_net_to_from_json() result(test_passes)
-    logical test_passes
+  function varying_width_net_to_from_json() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
 
     associate(neural_network => varying_width())
       associate(from_json => neural_network_t( neural_network%to_json() ))
-        test_passes = neural_network == from_json 
+        test_diagnosis = test_diagnosis_t(test_passed = neural_network == from_json, diagnostics_string= "neural_network == from_json")
       end associate
     end associate
   end function
 
-  function infer_with_varying_width_net() result(test_passes)
+  function infer_with_varying_width_net() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     logical test_passes
     type(neural_network_t) neural_network
     type(tensor_t) inputs, outputs
@@ -211,23 +199,24 @@ contains
     neural_network = decrement_split_combine_increment()
     inputs = tensor_t([1.1, 2.7])
     outputs = neural_network%infer(inputs)
-    test_passes = all(abs(inputs%values() - outputs%values()) < tolerance)
+    test_diagnosis = .all. (inputs%values() .approximates.  outputs%values() .within. tolerance)
   end function
 
-  function double_precision_inference() result(test_passes)
+  function double_precision_inference() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     logical test_passes
     type(neural_network_t(double_precision)) neural_network
     type(tensor_t(double_precision)) inputs, outputs
-    real, parameter :: tolerance = 1.D-08
+    double precision, parameter :: tolerance = 1.D-08
 
     neural_network = double_precision_network()
     inputs = tensor_t([1.1D0, 2.7D0])
     outputs = neural_network%infer(inputs)
-    test_passes = all(abs(inputs%values() - outputs%values()) < tolerance)
+    test_diagnosis = .all. (inputs%values() .approximates.  outputs%values() .within. tolerance)
   end function
 
-  function elemental_infer_with_1_hidden_layer_xor_net() result(test_passes)
-    logical test_passes
+  function elemental_infer_with_1_hidden_layer_xor_net() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     type(neural_network_t) neural_network
 
     neural_network = single_hidden_layer_xor_network()
@@ -240,15 +229,16 @@ contains
       associate(array_of_inputs => [tensor_t([true,true]), tensor_t([true,false]), tensor_t([false,true]), tensor_t([false,false])])
         truth_table = neural_network%infer(array_of_inputs)
       end associate
-      test_passes = all( &
-        abs(truth_table(1)%values() - false) < tolerance .and. abs(truth_table(2)%values() - true) < tolerance .and. &
-        abs(truth_table(3)%values() - true) < tolerance .and. abs(truth_table(4)%values() - false) < tolerance &
-      )
+      test_diagnosis =  &
+               (.all. (truth_table(1)%values() .approximates. (false) .within. tolerance)) &
+        .also. (.all. (truth_table(2)%values() .approximates. ( true) .within. tolerance)) &
+        .also. (.all. (truth_table(3)%values() .approximates. ( true) .within. tolerance)) &
+        .also. (.all. (truth_table(4)%values() .approximates. (false) .within. tolerance))
     end block
   end function
 
-  function elemental_infer_with_2_hidden_layer_xor_net() result(test_passes)
-    logical test_passes
+  function elemental_infer_with_2_hidden_layer_xor_net() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     type(neural_network_t) neural_network
 
     neural_network = multi_layer_xor_network()
@@ -261,10 +251,11 @@ contains
       associate(array_of_inputs => [tensor_t([true,true]), tensor_t([true,false]), tensor_t([false,true]), tensor_t([false,false])])
         truth_table = neural_network%infer(array_of_inputs)
       end associate
-      test_passes = all( &
-        abs(truth_table(1)%values() - false) < tolerance .and. abs(truth_table(2)%values() - true) < tolerance .and. &
-        abs(truth_table(3)%values() - true) < tolerance .and. abs(truth_table(4)%values() - false) < tolerance &
-      )
+      test_diagnosis = &
+                .all. (truth_table(1)%values() .approximates. (false) .within. tolerance)  &
+        .also. (.all. (truth_table(2)%values() .approximates. ( true) .within. tolerance)) &
+        .also. (.all. (truth_table(3)%values() .approximates. ( true) .within. tolerance)) &
+        .also. (.all. (truth_table(4)%values() .approximates. (false) .within. tolerance))
     end block
   end function
 
