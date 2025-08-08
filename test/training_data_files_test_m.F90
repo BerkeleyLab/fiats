@@ -4,11 +4,11 @@ module training_data_files_test_m
   !! Test training_data_files_t object I/O and construction
 
   ! External dependencies
+  use fiats_m, only : training_data_files_t
   use julienne_m, only : &
-     file_t &
-    ,string_t &
-    ,test_description_substring &
+     string_t &
     ,test_description_t &
+    ,test_description_substring &
     ,test_diagnosis_t &
     ,test_result_t &
     ,test_t

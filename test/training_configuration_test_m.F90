@@ -4,14 +4,15 @@ module training_configuration_test_m
   !! Test training_configuration_t object I/O and construction
 
   ! External dependencies
+  use fiats_m, only : training_configuration_t, hyperparameters_t, network_configuration_t, tensor_names_t
   use julienne_m, only : &
-    file_t &
-   ,string_t &
-   ,test_diagnosis_t &
-   ,test_description_substring &
-   ,test_description_t &
-   ,test_result_t &
-   ,test_t
+     file_t &
+    ,string_t &
+    ,test_description_t &
+    ,test_description_substring &
+    ,test_diagnosis_t &
+    ,test_result_t &
+    ,test_t
 
   ! Internal dependencies
   use fiats_m, only : training_configuration_t, hyperparameters_t, network_configuration_t, tensor_names_t
@@ -67,10 +68,7 @@ contains
     ))
       associate(from_json => training_configuration_t(file_t(training_configuration%to_json())))
 #endif
-        test_diagnosis = test_diagnosis_t( &
-           test_passed = training_configuration == from_json &
-          ,diagnostics_string = "training_configuration /= from_json" &
-        )
+        test_diagnosis = test_diagnosis_t(training_configuration == from_json, "training_configuration /= from_json")
 #ifndef _CRAYFTN
       end associate
     end associate

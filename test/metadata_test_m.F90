@@ -8,10 +8,10 @@ module metadata_test_m
   use julienne_m, only : &
      string_t &
     ,test_diagnosis_t &
-    ,test_t &
-    ,test_result_t &
     ,test_description_t &
-    ,test_description_substring
+    ,test_description_substring &
+    ,test_result_t &
+    ,test_t
 
   ! Internal dependencies
   use metadata_m, only : metadata_t
@@ -74,7 +74,7 @@ contains
     )
       associate(from_json => metadata_t(metadata%to_json()))
 #endif
-        test_diagnosis = test_diagnosis_t(test_passed = metadata == from_json, diagnostics_string="metadata /= from_json")
+        test_diagnosis = test_diagnosis_t(metadata == from_json, "metadata /= from_json")
 #ifndef _CRAYFTN
       end associate
     end associate

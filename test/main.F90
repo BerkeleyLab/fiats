@@ -64,10 +64,14 @@ program main
   print *
   print *,"Test suite execution time: ",t_finish - t_start
   print *
-  print '(*(a,:,g0))',"_________ In total, ",passes, " of ",tests, " tests pass. ", skips, " tests were skipped. _________"
-#ifdef MULTI_IMAGE_SUPPORT
-  sync all
+#if HAVE_MULTI_IMAGE_SUPPORT
+  if (this_image()==1) then
+#endif
+    print *
+    print '(*(a,:,g0))', "_________ In total, ",passes," of ",tests, " tests pass.  ", skips, " tests were skipped. _________"
+#if HAVE_MULTI_IMAGE_SUPPORT
+  end if
 #endif
   print *
-  if (passes + skips/=tests) error stop "-------- One or more tests failed. See the above report. ---------"
+  if (passes + skips /= tests) error stop "Some executed tests failed."
 end program

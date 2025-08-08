@@ -36,7 +36,9 @@ contains
     end do
 
     line = trim(adjustl(layer_lines(start+4*neurons_in_layer+1)%string()))
-    call_julienne_assert(line(1:1) .equalsExpected. ']')
+    associate(hidden_layer_end => ']')
+      call_julienne_assert(line(1:1) .equalsExpected. hidden_layer_end)
+    end associate
 
     if (line(len(line):len(line)) == ",") layer%next = layer_t(layer_lines, start+4*neurons_in_layer+2)
 
@@ -67,7 +69,9 @@ contains
     end do
 
     line = trim(adjustl(layer_lines(start+4*neurons_in_layer+1)%string()))
-    call_julienne_assert(line(1:1) .equalsExpected. ']')
+    associate(hidden_layer_end => ']')
+      call_julienne_assert(line(1:1) .equalsExpected. ']')
+    end associate
 
     if (line(len(line):len(line)) == ",") layer%next = layer_t(layer_lines, start+4*neurons_in_layer+2)
 
@@ -82,7 +86,7 @@ contains
       num_hidden_layers =>  hidden_layers%count_layers(), &
       num_output_layers => output_layer%count_layers() &
     )   
-      call_assert(num_output_layers==1)
+      call_julienne_assert(num_output_layers .equalsExpected. 1)
 
       associate(nodes => [num_inputs, neurons_per_hidden_layer, num_outputs])
         associate(n_max => maxval(nodes))
@@ -154,7 +158,7 @@ contains
       num_hidden_layers =>  hidden_layers%count_layers(), &
       num_output_layers => output_layer%count_layers() &
     )   
-      call_assert(num_output_layers==1)
+      call_julienne_assert(num_output_layers .equalsExpected. 1)
 
       associate(nodes => [num_inputs, neurons_per_hidden_layer, num_outputs])
         associate(n_max => maxval(nodes))

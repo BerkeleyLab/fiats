@@ -6,7 +6,11 @@
 module multiply_inputs
   !! Define a function that produces the desired network output for a given network input
   use fiats_m, only : tensor_t
-  use julienne_m, only : call_julienne_assert_, operator(.isAtMost.), operator(.isAtLeast.), operator(.also.)
+  use julienne_m, only : &
+     call_julienne_assert_ &
+    ,operator(.also.) &
+    ,operator(.isAtLeast.) &
+    ,operator(.isAtMost.)
   implicit none
 
 contains
@@ -14,8 +18,10 @@ contains
     type(tensor_t), intent(in) :: x_tensor
     type(tensor_t) a_tensor
     associate(x => x_tensor%values())
-      call_julienne_assert((ubound(x,1) .isAtMost. 7) .also. (lbound(x,1) .isAtMost. 2))
-      a_tensor = tensor_t([x(1)*x(2), x(2)*x(3), x(3)*x(4), x(4)*x(5), x(5)*x(6), x(6)*x(8)])
+      associate(sufficient_inputs => (ubound(x,1).isAtLeast. 7) .also. (lbound(x,1) .isAtMost. 2))
+        call_julienne_assert(sufficient_inputs)
+        a_tensor = tensor_t([x(1)*x(2), x(2)*x(3), x(3)*x(4), x(4)*x(5), x(5)*x(6), x(6)*x(8)])
+      end associate
     end associate
   end function
 
@@ -60,7 +66,7 @@ program learn_multiplication
         inputs = [(tensor_t(real([(j*i, j = 1,num_inputs)])/(num_inputs*num_pairs)), i = 1, num_pairs)]
         desired_outputs = y(inputs)
         output_sizes = [(size(desired_outputs(i)%values()),i=1,size(desired_outputs))]
-        call_julienne_assert(num_outputs .equalsExpected. output_sizes)
+        call_julienne_assert(.all. (num_outputs .equalsExpectd. output_sizes))
       end block
       input_output_pairs = input_output_pair_t(inputs, desired_outputs)
       block 

@@ -6,16 +6,22 @@
 module power_series
   !! Define a function that produces the desired network output for a given network input
   use fiats_m, only : tensor_t
-  use julienne_m, only : call_julienne_assert_, operator(.isAtMost.), operator(.isAtLeast.), operator(.also.)
+  use julienne_m, only : &
+     call_julienne_assert_ &
+    ,operator(.also.) &
+    ,operator(.isAtLeast.) &
+    ,operator(.isAtMost.)
   implicit none
 
 contains
   elemental function y(x_in) result(a)
     type(tensor_t), intent(in) :: x_in
     type(tensor_t) a
-    associate(x => x_in%values())
-      call_julienne_assert((ubound(x,1) .isAtMost. 7) .also. (lbound(x,1) .isAtMost. 2))
-      a = tensor_t([1 + x(1) + (x(1)**2)/2 + (x(1)**3)/6, x(2), x(3), x(4), x(5), x(6)])
+    associate(x => x_in%values()) sufficient_input => (ubound(x,1) .isAtLeast. 7) .also. (lbound(x,1) .isAtMost. 2))
+      associate(sufficient_input => (ubound(x,1) .isAtLeast. 7) .also. (lbound(x,1) .isAtMost. 2))
+        call_julienne_assert(sufficient_input)
+        a = tensor_t([1 + x(1) + (x(1)**2)/2 + (x(1)**3)/6, x(2), x(3), x(4), x(5), x(6)])
+      end associate
     end associate
   end function
 

@@ -6,13 +6,12 @@ module network_configuration_test_m
   ! External dependencies
   use fiats_m, only : network_configuration_t
   use julienne_m, only : &
-    file_t &
-   ,string_t &
-   ,test_diagnosis_t &
-   ,test_t &
-   ,test_result_t &
+    string_t &
    ,test_description_t &
-   ,test_description_substring
+   ,test_description_substring &
+   ,test_diagnosis_t &
+   ,test_result_t &
+   ,test_t
 
   ! Internal dependencies
   use network_configuration_m, only : network_configuration_t

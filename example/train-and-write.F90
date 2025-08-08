@@ -13,7 +13,7 @@ program train_and_write
   !! that is uniformly distributed on the range [0,0.1].
   use fiats_m, only : &
     neural_network_t, trainable_network_t, mini_batch_t, tensor_t, input_output_pair_t, shuffle
-  use julienne_m, only : string_t, file_t, command_line_t, bin_t, operator(.equalsExpected.)
+  use julienne_m, only : string_t, file_t, command_line_t, bin_t, call_julienne_assert_, operator(.equalsExpected.)
   implicit none
 
   type(string_t) final_network_file
@@ -42,7 +42,7 @@ program train_and_write
 
     associate(num_inputs => trainable_network%num_inputs(), num_outputs => trainable_network%num_outputs())
 
-      call_julienne_assert(num_inputs .equalsExepcted. num_outputs)
+      call_julienne_assert(num_inputs .equalsExpected. num_outputs)
       block
         integer i, j
         inputs = [(tensor_t(real([(j*i, j = 1,num_inputs)])/(num_inputs*num_pairs)), i = 1, num_pairs)]
