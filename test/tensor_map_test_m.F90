@@ -5,7 +5,7 @@ module tensor_map_test_m
 
   ! External dependencies
   use julienne_m, only : &
-     file_t
+     file_t &
     ,operator(.all.) &
     ,operator(.approximates.) &
     ,operator(.within.) &
@@ -14,7 +14,7 @@ module tensor_map_test_m
     ,test_description_t &
     ,test_diagnosis_t &
     ,test_result_t &
-    ,test_t &
+    ,test_t
   use fiats_m, only : tensor_map_t, tensor_t
 
   ! Internal dependencies
