@@ -5,7 +5,6 @@ program concurrent_inferences
   !! and use the network to perform concurrent inferences.
   use fiats_m, only : neural_network_t, tensor_t, double_precision, double_precision_file_t
   use julienne_m, only : string_t, command_line_t, file_t
-  use assert_m, only : assert
   use iso_fortran_env, only : int64, real64
   use omp_lib
   implicit none

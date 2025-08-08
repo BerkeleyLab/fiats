@@ -1,5 +1,8 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "julienne-assert-macros.h"
+
 program train_and_write
   !! This program demonstrates how to train a simple neural network starting from a randomized initial condition and 
   !! how to write the initial network and the trained network to separate JSON files.  The network has two hiden layers.
@@ -10,8 +13,7 @@ program train_and_write
   !! that is uniformly distributed on the range [0,0.1].
   use fiats_m, only : &
     neural_network_t, trainable_network_t, mini_batch_t, tensor_t, input_output_pair_t, shuffle
-  use julienne_m, only : string_t, file_t, command_line_t, bin_t
-  use assert_m, only : assert, intrinsic_array_t
+  use julienne_m, only : string_t, file_t, command_line_t, bin_t, operator(.equalsExpected.)
   implicit none
 
   type(string_t) final_network_file
@@ -40,9 +42,7 @@ program train_and_write
 
     associate(num_inputs => trainable_network%num_inputs(), num_outputs => trainable_network%num_outputs())
 
-      call assert(num_inputs == num_outputs,"trainable_network_test_m(identity_mapping): # inputs == # outputs", &
-        intrinsic_array_t([num_inputs, num_outputs]) &
-      )
+      call_julienne_assert(num_inputs .equalsExepcted. num_outputs)
       block
         integer i, j
         inputs = [(tensor_t(real([(j*i, j = 1,num_inputs)])/(num_inputs*num_pairs)), i = 1, num_pairs)]
