@@ -1,11 +1,12 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
+#include "julienne-assert-macros.h"
 #include "assert_macros.h"
 
 submodule(neuron_m) neuron_s
   use assert_m
-  use julienne_formats_m, only : separated_values
+  use julienne_m, only : separated_values, call_julienne_assert_
   implicit none
 
 contains
@@ -55,11 +56,11 @@ contains
     character(len=:), allocatable :: line
     integer i
 
-    call_assert_diagnose(adjustl(neuron_lines(start)%string())=='{', "neuron_s(construct): neuron object start", neuron_lines(start)%string())
+    call_julienne_assert(adjustl(neuron_lines(start)%string()) .equalsExpected. '{')
 
     line = neuron_lines(start+1)%string()
     associate(colon => index(line, ":"))
-      call_assert_diagnose(adjustl(line(:colon-1))=='"weights"', "neuron_s(construct): neuron weights", line)
+      call_julienne_assert(adjustl(line(:colon-1)) .equalsExpected. '"weights"')
       associate(opening_bracket => colon + index(line(colon+1:), "["))
         associate(closing_bracket => opening_bracket + index(line(opening_bracket+1:), "]"))
           associate(commas => count("," == [(line(i:i), i=opening_bracket+1,closing_bracket-1)]))
@@ -74,12 +75,12 @@ contains
 
     line = neuron_lines(start+2)%string()
     associate(colon => index(line, ":"))
-      call_assert_diagnose(adjustl(line(:colon-1))=='"bias"', "neuron_s(construct): neuron bias", line)
+      call_julienne_assert(adjustl(line(:colon-1)) .equalsExpected. '"bias"')
       read(line(colon+1:), fmt=*) neuron%bias_
     end associate
 
     line = adjustl(neuron_lines(start+3)%string())
-    call_assert_diagnose(line(1:1)=='}', "neuron_s(construct): neuron object end", line)
+    call_julienne_assert(line(1:1) .equalsExpected. '}')
     line = adjustr(neuron_lines(start+3)%string())
     if (line(len(line):len(line)) == ",") neuron%next = from_json(neuron_lines, start+4)
 
@@ -90,10 +91,10 @@ contains
     character(len=:), allocatable :: line
     integer i
 
-    call_assert_diagnose(adjustl(neuron_lines(start)%string())=='{', "neuron_s(double_precison_from_json): neuron object start", neuron_lines(start)%string())
+    call_julienne_assert(adjustl(neuron_lines(start)%string()) .equalsExpected. '{')
     line = neuron_lines(start+1)%string()
     associate(colon => index(line, ":"))
-      call_assert_diagnose(adjustl(line(:colon-1))=='"weights"', "neuron_s(double_precision_from_json): neuron weights", line)
+      call_julienne_assert(adjustl(line(:colon-1)) .equaqlsExpected. '"weights"')
       associate(opening_bracket => colon + index(line(colon+1:), "["))
         associate(closing_bracket => opening_bracket + index(line(opening_bracket+1:), "]"))
           associate(commas => count("," == [(line(i:i), i=opening_bracket+1,closing_bracket-1)]))
@@ -108,12 +109,12 @@ contains
 
     line = neuron_lines(start+2)%string()
     associate(colon => index(line, ":"))
-      call_assert_diagnose(adjustl(line(:colon-1))=='"bias"', "neuron_s(double_precision_from_json): neuron bias", line)
+      call_julienne_assert(adjustl(line(:colon-1)) .equalsExpected. '"bias"')
       read(line(colon+1:), fmt=*) neuron%bias_
     end associate
 
     line = adjustl(neuron_lines(start+3)%string())
-    call_assert_diagnose(line(1:1)=='}', "neuron_s(double_precision_from_json): neuron object end", line)
+    call_julienne_assert(line(1:1) .equalsExpecte. '}')
     line = adjustr(neuron_lines(start+3)%string())
     if (line(len(line):len(line)) == ",") neuron%next = double_precision_from_json(neuron_lines, start+4)
 

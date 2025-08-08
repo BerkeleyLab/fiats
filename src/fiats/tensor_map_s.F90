@@ -1,10 +1,11 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
+#include "julienne-assert-macros.h"
 #include "assert_macros.h"
 
 submodule(tensor_map_m) tensor_map_s
-  use assert_m
+  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
   use julienne_m, only : separated_values
   use kind_parameters_m, only : default_real
   implicit none
@@ -12,7 +13,7 @@ submodule(tensor_map_m) tensor_map_s
 contains
 
   module procedure construct_default_real
-    call_assert(size(minima)==size(maxima))
+    call_julienne_assert(size(minima) .equalsExpected. size(maxima))
     tensor_map%layer_ = layer
     tensor_map%intercept_ = minima
     tensor_map%slope_ = maxima - minima
@@ -35,7 +36,7 @@ contains
   end procedure
 
   module procedure construct_double_precision
-    call_assert(size(minima)==size(maxima))
+    call_julienne_assert(size(minima) .equalsExpected. size(maxima))
     tensor_map%layer_ = layer
     tensor_map%intercept_ = minima
     tensor_map%slope_ = maxima - minima
@@ -85,8 +86,8 @@ contains
     call_assert(allocated(lhs%layer_    ) .and. allocated(rhs%layer_    ))
     call_assert(allocated(lhs%intercept_) .and. allocated(rhs%intercept_))
     call_assert(allocated(lhs%slope_    ) .and. allocated(rhs%slope_    ))
-    call_assert(size(lhs%intercept_) == size(rhs%intercept_))
-    call_assert(size(lhs%slope_    ) == size(rhs%slope_    ))
+    call_julienne_assert(size(lhs%intercept_) .equalsExpected. size(rhs%intercept_))
+    call_julienne_assert(size(lhs%slope_    ) .equalsExpected. size(rhs%slope_    ))
 
     lhs_equals_rhs = &
       lhs%layer_ == rhs%layer_ .and. &
@@ -100,8 +101,8 @@ contains
     call_assert(allocated(lhs%layer_    ) .and. allocated(rhs%layer_    ))
     call_assert(allocated(lhs%intercept_) .and. allocated(rhs%intercept_))
     call_assert(allocated(lhs%slope_    ) .and. allocated(rhs%slope_    ))
-    call_assert(size(lhs%intercept_) == size(rhs%intercept_))
-    call_assert(size(lhs%slope_    ) == size(rhs%slope_    ))
+    call_julienne_assert(size(lhs%intercept_) .equalsExpected. size(rhs%intercept_))
+    call_julienne_assert(size(lhs%slope_    ) .equalsExpected. size(rhs%slope_    ))
 
     lhs_equals_rhs = &
       lhs%layer_ == rhs%layer_ .and. &

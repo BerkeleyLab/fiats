@@ -5,7 +5,18 @@ module tensor_test_m
 
   ! External dependencies
   use kind_parameters_m, only : double_precision 
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, file_t
+  use julienne_m, only : &
+     operator(.all.) &
+    ,operator(.also.) &
+    ,operator(.approximates.) &
+    ,operator(.equalsExpected.) &
+    ,operator(.within.) &
+    ,string_t &
+    ,test_t &
+    ,test_result_t &
+    ,test_description_t &
+    ,test_description_substring &
+    ,test_diagnosis_t 
 #ifdef __GFORTRAN__
   use julienne_m, only : test_function_i
 #endif
@@ -57,15 +68,17 @@ contains
     test_results = test_descriptions%run()
   end function
 
-  function double_precision_construction() result(test_passes)
-    logical test_passes
+  function double_precision_construction() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     type(tensor_t(double_precision)) tensor
     double precision, parameter :: tolerance = 1.0D-12
     double precision, parameter :: values(*) = [1.000000000001D-12]
 
     tensor = tensor_t(values) ! this will fail to compile if no double_precision constructor exists and the 
     associate(tensor_values => tensor%values())
-      test_passes = kind(tensor_values) == double_precision .and. all(abs(tensor_values - values) < tolerance)
+      test_diagnosis = &
+        kind(tensor_values) .equalsExpected. double_precision &
+        .also. (.all. (tensor_values .approximates. values .within. tolerance))
     end associate
   end function
 

@@ -1,11 +1,19 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
 module hyperparameters_test_m
   !! Test hyperparameters_t object I/O and construction
 
   ! External dependencies
   use fiats_m, only : hyperparameters_t
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t
+  use julienne_m, only : &
+     operator(.equalsExpected.) &
+    ,string_t &
+    ,test_description_t &
+    ,test_description_substring &
+    ,test_diagnosis_t &
+    ,test_result_t &
+    ,test_t
 #ifdef __GFORTRAN__
   use julienne_m, only : test_function_i
 #endif
@@ -38,7 +46,7 @@ contains
 #ifndef __GFORTRAN__
     test_descriptions = [ & 
       test_description_t( &
-        string_t("component-wise construction followed by conversion to and from JSON"), &
+        "component-wise construction followed by conversion to and from JSON", &
         write_then_read_hyperparameters) &
     ]
 #else
@@ -47,7 +55,7 @@ contains
 
     test_descriptions = [ &
       test_description_t( &
-        string_t("component-wise construction followed by conversion to and from JSON"), &
+        "component-wise construction followed by conversion to and from JSON", &
         check_write_then_read_ptr) &
     ]
 #endif
@@ -60,8 +68,8 @@ contains
     test_results = test_descriptions%run()
   end function
 
-  function write_then_read_hyperparameters() result(test_passes)
-    logical test_passes
+  function write_then_read_hyperparameters() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
 #ifdef _CRAYFTN
     type(hyperparameters_t) :: hyperparameters, from_json
     hyperparameters = hyperparameters_t(mini_batches=5, learning_rate=1., optimizer = "stochastic gradient descent")
@@ -70,7 +78,7 @@ contains
     associate(hyperparameters => hyperparameters_t(mini_batches=5, learning_rate=1., optimizer = "stochastic gradient descent"))
       associate(from_json => hyperparameters_t(hyperparameters%to_json()))
 #endif
-        test_passes = hyperparameters == from_json
+        test_diagnosis = test_diagnosis_t(hyperparameters == from_json, diagnostics_string="hyperparameters /= from_json")
 #ifndef _CRAYFTN
       end associate
     end associate

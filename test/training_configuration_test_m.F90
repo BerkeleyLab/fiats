@@ -5,7 +5,14 @@ module training_configuration_test_m
 
   ! External dependencies
   use fiats_m, only : training_configuration_t, hyperparameters_t, network_configuration_t, tensor_names_t
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, file_t
+  use julienne_m, only : &
+     file_t &
+    ,string_t &
+    ,test_description_t &
+    ,test_description_substring &
+    ,test_diagnosis_t &
+    ,test_result_t &
+    ,test_t
 #ifdef __GFORTRAN__
   use julienne_m, only : test_function_i
 #endif
@@ -59,8 +66,8 @@ contains
     test_results = test_descriptions%run()
   end function
 
-  function construct_and_convert_to_and_from_json() result(test_passes)
-    logical test_passes
+  function construct_and_convert_to_and_from_json() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
 #ifdef _CRAYFTN
     type(training_configuration_t) :: training_configuration, from_json
     training_configuration = training_configuration_t( &
@@ -77,7 +84,7 @@ contains
     ))
       associate(from_json => training_configuration_t(file_t(training_configuration%to_json())))
 #endif
-        test_passes = training_configuration == from_json
+        test_diagnosis = test_diagnosis_t(training_configuration == from_json, "training_configuration /= from_json")
 #ifndef _CRAYFTN
       end associate
     end associate

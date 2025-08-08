@@ -5,7 +5,13 @@ module tensor_names_test_m
 
   ! External dependencies
   use fiats_m, only : tensor_names_t
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t
+  use julienne_m, only : &
+     string_t &
+    ,test_t &
+    ,test_result_t &
+    ,test_description_t &
+    ,test_description_substring &
+    ,test_diagnosis_t
 #ifdef __GFORTRAN__
   use julienne_m, only : test_function_i
 #endif
@@ -36,18 +42,14 @@ contains
 
 #ifndef __GFORTRAN__
     test_descriptions = [ & 
-      test_description_t( &
-        string_t("component-wise construction followed by conversion to and from JSON"), &
-        write_then_read_tensor_names) &
+      test_description_t( "component-wise construction followed by conversion to and from JSON", write_then_read_tensor_names) &
     ]
 #else
-    procedure(test_function_i), pointer :: check_write_then_read_ptr
-    check_write_then_read_ptr => write_then_read_tensor_names
+    procedure(test_function_i), pointer :: & 
+      write_then_read_tensor_names_ptr => write_then_read_tensor_names
 
     test_descriptions = [ &
-      test_description_t( &
-        string_t("component-wise construction followed by conversion to and from JSON"), &
-        check_write_then_read_ptr) &
+      test_description_t("component-wise construction followed by conversion to and from JSON", write_then_read_tensor_names_ptr) &
     ]
 #endif
     associate( &
@@ -59,8 +61,8 @@ contains
     test_results = test_descriptions%run()
   end function
 
-  function write_then_read_tensor_names() result(test_passes)
-    logical test_passes
+  function write_then_read_tensor_names() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
 
     associate( &
       from_components => tensor_names_t( &
@@ -68,7 +70,7 @@ contains
         outputs = [string_t("qc"), string_t("qv")] &
     ) )
       associate(from_json => tensor_names_t(from_components%to_json()))
-        test_passes = from_components == from_json 
+        test_diagnosis = test_diagnosis_t(from_components == from_json, "from_components /= from_json")
       end associate
     end associate
   end function

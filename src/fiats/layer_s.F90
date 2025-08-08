@@ -1,10 +1,12 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
+#include "julienne-assert-macros.h"
 #include "assert_macros.h"
 
 submodule(layer_m) layer_s
   use assert_m
+  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
   implicit none
 
 contains
@@ -19,7 +21,7 @@ contains
     line = adjustl(layer_lines(start)%string())
     hidden_layers = line == '['
     output_layer = line == '"output_layer": ['
-    call_assert_diagnose(hidden_layers .or. output_layer, "layer_s(default_real_construct_layer): layer start", line)
+    call_assert(hidden_layers .or. output_layer)
 
     layer%neuron = neuron_t(layer_lines, start+1)
     num_inputs = size(layer%neuron%weights())
@@ -29,12 +31,13 @@ contains
     do 
       if (.not. neuron%next_allocated()) exit
       neuron => neuron%next_pointer()
-      call_assert_describe(size(neuron%weights()) == num_inputs, "layer_s(default_real_construct_layer): constant number of inputs")
+      call_julienne_assert(size(neuron%weights()) .equalsExpected. num_inputs)
       neurons_in_layer = neurons_in_layer + 1
     end do
 
     line = trim(adjustl(layer_lines(start+4*neurons_in_layer+1)%string()))
-    call_assert_describe(line(1:1)==']', "layer_s(default_real_construct_layer): hidden layer end")
+    ! look for hidden-layer end:
+    call_julienne_assert(line(1:1) .equalsExpected. ']')
 
     if (line(len(line):len(line)) == ",") layer%next = layer_t(layer_lines, start+4*neurons_in_layer+2)
 
@@ -50,7 +53,7 @@ contains
     line = adjustl(layer_lines(start)%string())
     hidden_layers = line == '['
     output_layer = line == '"output_layer": ['
-    call_assert_diagnose(hidden_layers .or. output_layer, "layer_s(double_precision_construct_layer): layer start", line)
+    call_assert(hidden_layers .or. output_layer)
 
     layer%neuron = neuron_t(layer_lines, start+1)
     num_inputs = size(layer%neuron%weights())
@@ -60,12 +63,13 @@ contains
     do 
       if (.not. neuron%next_allocated()) exit
       neuron => neuron%next_pointer()
-      call_assert_describe(size(neuron%weights()) == num_inputs, "layer_s(double_precision_construct_layer): constant number of inputs")
+      call_julienne_assert(size(neuron%weights()) .equalsExpected. num_inputs)
       neurons_in_layer = neurons_in_layer + 1
     end do
 
     line = trim(adjustl(layer_lines(start+4*neurons_in_layer+1)%string()))
-    call_assert_describe(line(1:1)==']', "layer_s(double_precision_construct_layer): hidden layer end")
+    ! look for hidden-layer end:
+    call_julienne_assert(line(1:1) .equalsExpected. ']')
 
     if (line(len(line):len(line)) == ",") layer%next = layer_t(layer_lines, start+4*neurons_in_layer+2)
 
@@ -80,7 +84,7 @@ contains
       num_hidden_layers =>  hidden_layers%count_layers(), &
       num_output_layers => output_layer%count_layers() &
     )   
-      call_assert(num_output_layers==1)
+      call_julienne_assert(num_output_layers .equalsExpected. 1)
 
       associate(nodes => [num_inputs, neurons_per_hidden_layer, num_outputs])
         associate(n_max => maxval(nodes))
@@ -152,7 +156,7 @@ contains
       num_hidden_layers =>  hidden_layers%count_layers(), &
       num_output_layers => output_layer%count_layers() &
     )   
-      call_assert(num_output_layers==1)
+      call_julienne_assert(num_output_layers .equalsExpected. 1)
 
       associate(nodes => [num_inputs, neurons_per_hidden_layer, num_outputs])
         associate(n_max => maxval(nodes))

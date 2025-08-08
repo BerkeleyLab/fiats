@@ -5,7 +5,13 @@ module metadata_test_m
 
   ! External dependencies
   use fiats_m, only : metadata_t
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t
+  use julienne_m, only : &
+     string_t &
+    ,test_t &
+    ,test_result_t &
+    ,test_description_t &
+    ,test_description_substring &
+    ,test_diagnosis_t
 #ifdef __GFORTRAN__
   use julienne_m, only : test_function_i
 #endif
@@ -60,8 +66,8 @@ contains
     test_results = test_descriptions%run()
   end function
 
-  function write_then_read_metadata() result(test_passes)
-    logical test_passes
+  function write_then_read_metadata() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
 #ifdef _CRAYFTN
     type(metadata_t) :: metadata, from_json
     metadata = metadata_t( &
@@ -84,7 +90,7 @@ contains
     )
       associate(from_json => metadata_t(metadata%to_json()))
 #endif
-        test_passes = metadata == from_json
+        test_diagnosis = test_diagnosis_t(metadata == from_json, "metadata /= from_json")
 #ifndef _CRAYFTN
       end associate
     end associate

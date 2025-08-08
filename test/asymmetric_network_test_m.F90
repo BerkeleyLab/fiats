@@ -1,15 +1,25 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 module asymmetric_network_test_m
   !! Define tests in which the desired output depends asymmetrically on the inputs 
 
   ! External dependencies
-  use assert_m
   use julienne_m, only : &
-    test_t, test_result_t, vector_test_description_t, test_description_substring, string_t, vector_function_strategy_t
+     call_julienne_assert_ &
+    ,operator(.all.) &
+    ,operator(.also.) &
+    ,operator(.approximates.) &
+    ,operator(.equalsExpected.) &
+    ,operator(.within.) &
+    ,string_t &
+    ,test_description_t &
+    ,test_diagnosis_t &
+    ,test_t &
+    ,test_result_t &
+    ,test_description_substring
 
   ! Internal dependencies
   use fiats_m, only : neural_network_t, tensor_t
@@ -25,11 +35,6 @@ module asymmetric_network_test_m
     procedure, nopass :: results
   end type
 
-  type, extends(vector_function_strategy_t) :: xor_and_2nd_input_t
-  contains
-    procedure, nopass :: vector_function => xor_and_2nd_input_truth_table 
-  end type
-
 contains
 
   pure function subject() result(specimen)
@@ -39,28 +44,18 @@ contains
 
   function results() result(test_results)
     type(test_result_t), allocatable :: test_results(:)
-    type(xor_and_2nd_input_t) xor_and_2nd_input
+    type(test_description_t), allocatable :: test_descriptions(:)
 
-    associate( vector_test_description => vector_test_description_t( &
-      [ string_t("mapping (true,true) to false"), & 
-        string_t("mapping (true,false) to false"), &
-        string_t("mapping (false,true) to true"), &
-        string_t("mapping (false,false) to false") &
-      ], xor_and_2nd_input) &
+    test_descriptions = [ &
+      test_description_t("learning the truth table for XOR-AND-the-2nd-input logic", xor_and_2nd_input_truth_table) &
+    ]
+    associate( &
+      substring_in_subject => index(subject(), test_description_substring) /= 0, &
+      substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
     )
-      associate(substring_in_subject => index(subject(), test_description_substring) /= 0)
-        associate(substring_in_description => vector_test_description%contains_text(test_description_substring))
-          if (substring_in_subject) then
-            test_results = vector_test_description%run()
-          else if (any(substring_in_description)) then
-            test_results = vector_test_description%run()
-            test_results = pack(test_results, test_results%description_contains(string_t(test_description_substring)))
-           else
-            test_results = [test_result_t::]
-          end if
-        end associate
-      end associate
+      test_descriptions = pack(test_descriptions, substring_in_subject .or. substring_in_description)
     end associate
+    test_results = test_descriptions%run()
   end function
 
   function xor_and_2nd_input_network() result(neural_network)
@@ -77,7 +72,7 @@ contains
     allocate(biases(n_max, layers))
 
     l = 1
-    call_assert(n(l-1)==2)
+    call_julienne_assert(n(l-1) .equalsExpected. 2)
       j = 1
       weights(j,1:n(l-1),l) = [1,0]
       j = 2
@@ -87,10 +82,10 @@ contains
       j = 4
       weights(j,1:n(l-1),l) = [0,1]
       biases(1:n(l),l) = [0., -1.99, 0., 0.]
-    call_assert(j == n(l))
+    call_julienne_assert(j .equalsExpected. n(l))
   
     l = 2
-    call_assert(n(l-1)==4)
+    call_julienne_assert(n(l-1) .equalsExpected. 4)
       j = 1
       weights(j,1:n(l-1),l) = [0,0,0,0]
       j = 2
@@ -100,22 +95,21 @@ contains
       j = 4
       weights(j,1:n(l-1),l) = [0,0,0,1]
       biases(1:n(l),l) = [0,0,0,0]
-    call_assert(j == n(l))
-
+    call_julienne_assert(j .equalsExpected. n(l))
 
     l = 3
-    call_assert(n(l-1)==4)
+    call_julienne_assert(n(l-1) .equalsExpected. 4)
       j = 1
       weights(j,1:n(l-1),l) = [0,1,0,1]
       biases(1:n(l),l) = [-1]
-    call_assert(j == n(l))
+    call_julienne_assert(j .equalsExpected. n(l))
 
     neural_network = neural_network_t(metadata, weights, biases, nodes = n)
 
   end function
 
-  function xor_and_2nd_input_truth_table() result(test_passes)
-    logical, allocatable :: test_passes(:)
+  function xor_and_2nd_input_truth_table() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
 
     type(neural_network_t) asymmetric
 
@@ -136,12 +130,12 @@ contains
         false_true_outputs => false_true%values(), &
         false_false_outputs => false_false%values() &
       )
-        test_passes = [ &
-          size(true_true_outputs)==1 .and. abs(true_true_outputs(1) - false) < tolerance, &
-          size(true_false_outputs)==1 .and. abs(true_false_outputs(1) - false) < tolerance,  &
-          size(false_true_outputs)==1 .and. abs(false_true_outputs(1) - true) < tolerance, &
-          size(false_false_outputs)==1 .and. abs(false_false_outputs(1) - false) < tolerance  &
-        ]
+        test_diagnosis = &
+          .all. ([size(true_true_outputs), size(true_false_outputs), size(false_true_outputs), size(false_false_outputs)] .equalsExpected. 1) &
+          .also. (  true_true_outputs(1) .approximates. (false) .within. tolerance) &
+          .also. ( true_false_outputs(1) .approximates. (false) .within. tolerance) &
+          .also. ( false_true_outputs(1) .approximates. (true)  .within. tolerance) &
+          .also. (false_false_outputs(1) .approximates. (false) .within. tolerance)
       end associate
     end block
 

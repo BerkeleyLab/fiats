@@ -5,7 +5,13 @@ module network_configuration_test_m
 
   ! External dependencies
   use fiats_m, only : network_configuration_t
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, file_t
+  use julienne_m, only : &
+     string_t &
+    ,test_t &
+    ,test_result_t &
+    ,test_description_t &
+    ,test_description_substring &
+    ,test_diagnosis_t
 #ifdef __GFORTRAN__
   use julienne_m, only : test_function_i
 #endif
@@ -37,7 +43,7 @@ contains
 #ifndef __GFORTRAN__
     test_descriptions = [ & 
       test_description_t( &
-        string_t("component-wise construction followed by conversion to and from JSON"), &
+        "component-wise construction followed by conversion to and from JSON", &
         write_then_read_network_configuration) &
     ]
 #else
@@ -46,7 +52,7 @@ contains
 
     test_descriptions = [ &
       test_description_t( &
-        string_t("component-wise construction followed by conversion to and from JSON"), &
+        "component-wise construction followed by conversion to and from JSON", &
         check_write_then_read_ptr) &
     ]
 #endif
@@ -59,8 +65,8 @@ contains
     test_results = test_descriptions%run()
   end function
 
-  function write_then_read_network_configuration() result(test_passes)
-    logical test_passes
+  function write_then_read_network_configuration() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
 #ifdef _CRAYFTN
     type(network_configuration_t) :: constructed_from_components, constructed_from_json
     constructed_from_components= &
@@ -71,7 +77,7 @@ contains
       network_configuration_t(skip_connections=.false., nodes_per_layer=[2,72,2], activation_name="sigmoid"))
       associate(constructed_from_json => network_configuration_t(constructed_from_components%to_json()))
 #endif
-        test_passes = constructed_from_components == constructed_from_json 
+        test_diagnosis = test_diagnosis_t(constructed_from_components == constructed_from_json, "constructed_from_components /= constructed_from_json")
 #ifndef _CRAYFTN
       end associate
     end associate

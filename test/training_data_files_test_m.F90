@@ -5,9 +5,15 @@ module training_data_files_test_m
 
   ! External dependencies
   use fiats_m, only : training_data_files_t
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, file_t
+  use julienne_m, only : &
+     string_t &
+    ,test_description_t &
+    ,test_description_substring &
+    ,test_diagnosis_t &
+    ,test_result_t &
+    ,test_t
 #if ! defined(HAVE_PROCEDURE_ACTUAL_FOR_POINTER_DUMMY)
-  use julienne_m, only : test_function_i
+  use julienne_m, only : diagnosis_function_i
 #endif
 
   ! Internal dependencies
@@ -40,7 +46,7 @@ contains
       test_description_t( string_t("round-trip to/from JSON yielding equivalent objects"), check_json_round_trip) &
     ]
 #else
-    procedure(test_function_i), pointer :: check_json_round_trip_ptr
+    procedure(diagnosis_function_i), pointer :: check_json_round_trip_ptr
     check_json_round_trip_ptr => check_json_round_trip
 
     test_descriptions = [ &
@@ -56,8 +62,8 @@ contains
     test_results = test_descriptions%run()
   end function
 
-  function check_json_round_trip() result(test_passes)
-    logical test_passes
+  function check_json_round_trip() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     associate(training_data_files => training_data_files_t( &
        path = "dates-20101001-2011076" &
       ,inputs_prefix  = "training_input-image-" &
@@ -65,7 +71,7 @@ contains
       ,infixes = string_t(["000001", "000002", "000003", "000004", "000005", "000006", "000007", "000008", "000009", "000010"]) &
     ))
       associate(from_json => training_data_files_t(training_data_files%to_json()))
-        test_passes = training_data_files == from_json
+        test_diagnosis = test_diagnosis_t(training_data_files == from_json, "training_data_files /= from_json")
       end associate
     end associate
   end function
