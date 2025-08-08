@@ -12,9 +12,6 @@ module network_configuration_test_m
     ,test_description_t &
     ,test_description_substring &
     ,test_diagnosis_t
-#ifdef __GFORTRAN__
-  use julienne_m, only : test_function_i
-#endif
 
   ! Internal dependencies
   use network_configuration_m, only : network_configuration_t
@@ -40,22 +37,11 @@ contains
     type(test_result_t), allocatable :: test_results(:)
     type(test_description_t), allocatable :: test_descriptions(:)
 
-#ifndef __GFORTRAN__
     test_descriptions = [ & 
       test_description_t( &
         "component-wise construction followed by conversion to and from JSON", &
         write_then_read_network_configuration) &
     ]
-#else
-    procedure(test_function_i), pointer :: check_write_then_read_ptr
-    check_write_then_read_ptr => write_then_read_network_configuration
-
-    test_descriptions = [ &
-      test_description_t( &
-        "component-wise construction followed by conversion to and from JSON", &
-        check_write_then_read_ptr) &
-    ]
-#endif
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &
       substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &

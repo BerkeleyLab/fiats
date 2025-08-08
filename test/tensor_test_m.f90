@@ -17,9 +17,6 @@ module tensor_test_m
     ,test_description_t &
     ,test_description_substring &
     ,test_diagnosis_t 
-#ifdef __GFORTRAN__
-  use julienne_m, only : test_function_i
-#endif
 
   ! Internal dependencies
   use fiats_m, only : tensor_t
@@ -46,19 +43,9 @@ contains
     type(test_result_t), allocatable :: test_results(:)
     type(test_description_t), allocatable :: test_descriptions(:)
 
-#ifndef __GFORTRAN__
     test_descriptions = [ &
       test_description_t("double-precision construction and value extraction", double_precision_construction) &
     ]
-#else
-    procedure(test_function_i), pointer :: double_precision_construction_ptr
-      
-    double_precision_construction_ptr => double_precision_construction
-
-    test_descriptions = [ &
-      test_description_t("double-precision construction and value extraction", double_precision_construction_ptr) &
-    ]
-#endif
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &
       substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &

@@ -14,9 +14,6 @@ module hyperparameters_test_m
     ,test_diagnosis_t &
     ,test_result_t &
     ,test_t
-#ifdef __GFORTRAN__
-  use julienne_m, only : test_function_i
-#endif
 
   ! Internal dependencies
   use hyperparameters_m, only : hyperparameters_t
@@ -43,22 +40,11 @@ contains
     type(test_description_t), allocatable :: test_descriptions(:)
     type(test_result_t), allocatable :: test_results(:)
 
-#ifndef __GFORTRAN__
     test_descriptions = [ & 
       test_description_t( &
         "component-wise construction followed by conversion to and from JSON", &
         write_then_read_hyperparameters) &
     ]
-#else
-    procedure(test_function_i), pointer :: check_write_then_read_ptr
-    check_write_then_read_ptr => write_then_read_hyperparameters
-
-    test_descriptions = [ &
-      test_description_t( &
-        "component-wise construction followed by conversion to and from JSON", &
-        check_write_then_read_ptr) &
-    ]
-#endif
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &
       substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &

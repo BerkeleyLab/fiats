@@ -12,9 +12,6 @@ module training_data_files_test_m
     ,test_diagnosis_t &
     ,test_result_t &
     ,test_t
-#if ! defined(HAVE_PROCEDURE_ACTUAL_FOR_POINTER_DUMMY)
-  use julienne_m, only : diagnosis_function_i
-#endif
 
   ! Internal dependencies
   use training_data_files_m, only : training_data_files_t
@@ -41,18 +38,9 @@ contains
     type(test_description_t), allocatable :: test_descriptions(:)
     type(test_result_t), allocatable :: test_results(:)
 
-#if defined(HAVE_PROCEDURE_ACTUAL_FOR_POINTER_DUMMY)
     test_descriptions = [ & 
       test_description_t( string_t("round-trip to/from JSON yielding equivalent objects"), check_json_round_trip) &
     ]
-#else
-    procedure(diagnosis_function_i), pointer :: check_json_round_trip_ptr
-    check_json_round_trip_ptr => check_json_round_trip
-
-    test_descriptions = [ &
-      test_description_t(string_t("round-trip to/from JSON yielding equivalent objects"), check_json_round_trip_ptr) &
-    ]
-#endif
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &
       substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &

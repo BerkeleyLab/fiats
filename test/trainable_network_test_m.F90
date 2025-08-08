@@ -20,9 +20,6 @@ module trainable_network_test_m
     ,test_diagnosis_t &
     ,test_result_t &
     ,test_t
-#ifdef __GFORTRAN__
-  use julienne_m, only : test_function_i
-#endif
 
   ! Internal dependencies
   use fiats_m, only : trainable_network_t, neural_network_t, tensor_t, input_output_pair_t, mini_batch_t, shuffle
@@ -60,7 +57,6 @@ contains
     type(test_result_t), allocatable :: test_results(:)
     type(test_description_t), allocatable :: test_descriptions(:)
 
-#ifndef __GFORTRAN__
     test_descriptions = [ &
        test_description_t("preserving an identity mapping with 2 hidden layers", preserves_identity_mapping) &
       ,test_description_t("learning an identity from a perturbed identity using Adam", perturbed_identity_converges) &
@@ -69,24 +65,6 @@ contains
       ,test_description_t("learning an OR gate with 2 hidden layers from symmetric data & random weights", or_gate_with_random_weights) &
       ,test_description_t("learning an XOR gate with 2 hidden from symmetric data & random weights with Adam", xor_gate_with_random_weights) &
     ]
-#else
-    procedure(test_function_i), pointer :: &
-       preserves_identity_ptr                     => preserves_identity_mapping &
-      ,perturbed_identity_ptr                     => perturbed_identity_converges &
-      ,and_gate_with_skewed_training_data_ptr     => and_gate_with_skewed_training_data &
-      ,not_and_gate_with_skewed_training_data_ptr => not_and_gate_with_skewed_training_data &
-      ,or_gate_with_random_weights_ptr            => or_gate_with_random_weights &
-      ,xor_gate_with_random_weights_ptr           => xor_gate_with_random_weights
-
-    test_descriptions = [ &
-       test_description_t("preserving an identity mapping with 2 hidden layers", preserves_identity_mapping_ptr) &
-      ,test_description_t("learning an identity from a perturbed identity using Adam", perturbed_identity_converges_ptr) &
-      ,test_description_t("learning an AND gate with with 2 hidden layers from skewed data", and_gate_with_skewed_training_data_ptr) &
-      ,test_description_t("learning NOT AND from skewed data" , not_and_test_function_ptr) &
-      ,test_description_t("learning an OR gate with 2 hidden layers from symmetric data & random weights", or_gate_with_random_weights_ptr) &
-      ,test_description_t("learning an XOR gate with 2 hidden from symmetric data & random weights with Adam", xor_gate_test_function_ptr) &
-    ]
-#endif
 
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &

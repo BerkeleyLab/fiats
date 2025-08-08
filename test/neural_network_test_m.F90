@@ -17,9 +17,6 @@ module neural_network_test_m
     ,test_description_t &
     ,test_description_substring &
     ,test_diagnosis_t
-#ifdef __GFORTRAN__
-  use julienne_m, only : test_function_i
-#endif
 
   ! Internal dependencies
   use fiats_m, only : neural_network_t, tensor_t, metadata_t
@@ -46,7 +43,6 @@ contains
     type(test_result_t), allocatable :: test_results(:)
     type(test_description_t), allocatable :: test_descriptions(:)
 
-#ifndef __GFORTRAN__
     test_descriptions = [ &
        test_description_t("performing elemental inference with 1 hidden layer", elemental_infer_with_1_hidden_layer_xor_net) &
       ,test_description_t("performing elemental inference with 2 hidden layers", elemental_infer_with_2_hidden_layer_xor_net) &
@@ -55,26 +51,6 @@ contains
       ,test_description_t("performing inference with a network with hidden layers of varying width", infer_with_varying_width_net) &
       ,test_description_t("double-precision inference", double_precision_inference) &
     ]
-#else
-    procedure(test_function_i), pointer :: elemental_infer_1_ptr, elemental_infer_2_ptr, multi_hidden_ptr, vary_width_ptr, &
-      vary_width_infer_ptr, double_precision_inference_ptr
-
-    elemental_infer_1_ptr => elemental_infer_with_1_hidden_layer_xor_net
-    elemental_infer_2_ptr => elemental_infer_with_2_hidden_layer_xor_net
-    multi_hidden_ptr => multi_hidden_layer_net_to_from_json
-    vary_width_ptr => varying_width_net_to_from_json
-    vary_width_infer_ptr => infer_with_varying_width_net
-    double_precision_inference_ptr => double_precision_inference
-
-    test_descriptions = [ &
-       test_description_t("performing elemental inference with 1 hidden layer", elemental_infer_1_ptr) &
-      ,test_description_t("performing elemental inference with 2 hidden layers", elemental_infer_2_ptr) &
-      ,test_description_t("converting a network with 2 hidden layers to and from JSON format", multi_hidden_ptr) &
-      ,test_description_t("converting a network with varying-width hidden layers to/from JSON", vary_width_ptr) &
-      ,test_description_t("performing inference with varying-width hidden layers", vary_width_infer_ptr)  &
-      ,test_description_t("double-precision inference", double_precision_inference_ptr) &
-    ]
-#endif
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &
       substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
