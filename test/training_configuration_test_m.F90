@@ -4,14 +4,17 @@ module training_configuration_test_m
   !! Test training_configuration_t object I/O and construction
 
   ! External dependencies
-  use fiats_m, only : training_configuration_t, hyperparameters_t, network_configuration_t, tensor_names_t
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t, file_t
-#ifdef __GFORTRAN__
-  use julienne_m, only : test_function_i
-#endif
+  use julienne_m, only : &
+    file_t &
+   ,string_t &
+   ,test_diagnosis_t &
+   ,test_description_substring &
+   ,test_description_t &
+   ,test_result_t &
+   ,test_t
 
   ! Internal dependencies
-  use training_configuration_m, only : training_configuration_t
+  use fiats_m, only : training_configuration_t, hyperparameters_t, network_configuration_t, tensor_names_t
   implicit none
 
   private
@@ -34,22 +37,9 @@ contains
     type(test_result_t), allocatable :: test_results(:)
     type(test_description_t), allocatable :: test_descriptions(:)
 
-#ifndef __GFORTRAN__
     test_descriptions = [ & 
-      test_description_t( &
-        string_t("component-wise construction followed by conversion to and from JSON"), &
-        construct_and_convert_to_and_from_json) & 
+      test_description_t("component-wise construction and conversion to/from JSON", construct_convert_to_from_json) &
     ]
-#else
-    procedure(test_function_i), pointer :: check_write_then_read_ptr
-    check_write_then_read_ptr => construct_and_convert_to_and_from_json
-
-    test_descriptions = [ &
-      test_description_t( &
-        string_t("component-wise construction followed by conversion to and from JSON"), &
-        check_write_then_read_ptr) &
-    ]
-#endif
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &
       substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
@@ -59,8 +49,8 @@ contains
     test_results = test_descriptions%run()
   end function
 
-  function construct_and_convert_to_and_from_json() result(test_passes)
-    logical test_passes
+  function construct_convert_to_from_json() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
 #ifdef _CRAYFTN
     type(training_configuration_t) :: training_configuration, from_json
     training_configuration = training_configuration_t( &
@@ -77,7 +67,10 @@ contains
     ))
       associate(from_json => training_configuration_t(file_t(training_configuration%to_json())))
 #endif
-        test_passes = training_configuration == from_json
+        test_diagnosis = test_diagnosis_t( &
+           test_passed = training_configuration == from_json &
+          ,diagnostics_string = "training_configuration /= from_json" &
+        )
 #ifndef _CRAYFTN
       end associate
     end associate

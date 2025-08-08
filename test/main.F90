@@ -31,7 +31,7 @@ program main
   type(training_data_files_test_t) training_data_files_test
   real t_start, t_finish
 
-  integer :: passes=0, tests=0
+  integer :: passes=0, tests=0, skips=0
 
   print_usage_if_help_requested: &
   block
@@ -48,26 +48,26 @@ program main
 
   call cpu_time(t_start)
   call random_init(repeatable=.true.,image_distinct=.true.)
-  call hyperparameters_test%report(passes, tests)
-  call network_configuration_test%report(passes, tests)
-  call metadata_test%report(passes, tests)
-  call training_configuration_test%report(passes, tests)
-  call tensor_map_test%report(passes, tests)
-  call tensor_names_test%report(passes, tests)
-  call tensor_test%report(passes, tests)
-  call asymmetric_network_test%report(passes, tests)
-  call neural_network_test%report(passes, tests)
-  call trainable_network_test%report(passes, tests)
-  call training_data_files_test%report(passes, tests)
+  call hyperparameters_test%report(passes, tests, skips)
+  call network_configuration_test%report(passes, tests, skips)
+  call metadata_test%report(passes, tests, skips)
+  call training_configuration_test%report(passes, tests, skips)
+  call tensor_map_test%report(passes, tests, skips)
+  call tensor_names_test%report(passes, tests, skips)
+  call tensor_test%report(passes, tests, skips)
+  call asymmetric_network_test%report(passes, tests, skips)
+  call neural_network_test%report(passes, tests, skips)
+  call trainable_network_test%report(passes, tests, skips)
+  call training_data_files_test%report(passes, tests, skips)
   call cpu_time(t_finish)
 
   print *
   print *,"Test suite execution time: ",t_finish - t_start
   print *
-  print '(*(a,:,g0))',"_________ In total, ",passes," of ",tests, " tests pass. _________"
+  print '(*(a,:,g0))',"_________ In total, ",passes, " of ",tests, " tests pass. ", skips, " tests were skipped. _________"
 #ifdef MULTI_IMAGE_SUPPORT
   sync all
 #endif
   print *
-  if (passes/=tests) error stop "-------- One or more tests failed. See the above report. ---------"
+  if (passes + skips/=tests) error stop "-------- One or more tests failed. See the above report. ---------"
 end program

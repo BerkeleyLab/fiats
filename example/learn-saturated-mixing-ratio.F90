@@ -1,10 +1,20 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "julienne-assert-macros.h"
+
 program train_saturated_mixture_ratio
   !! This program trains a neural network to learn the saturated mixing ratio function of ICAR.
   use fiats_m, only : trainable_network_t, mini_batch_t, tensor_t, input_output_pair_t, shuffle
-  use julienne_m, only : string_t, file_t, command_line_t, bin_t, csv
-  use assert_m, only : assert, intrinsic_array_t
+  use julienne_m, only : &
+     command_line_t &
+    ,bin_t &
+    ,call_julienne_assert_ &
+    ,csv &
+    ,file_t &
+    ,operator(.all.) &
+    ,operator(.equalsExpected.) &
+    ,string_t
   use saturated_mixing_ratio_m, only : y, T, p
   use iso_fortran_env, only : int64, output_unit
   implicit none
@@ -63,10 +73,10 @@ program train_saturated_mixture_ratio
         integer, allocatable :: output_sizes(:)
         inputs = [( [(tensor_t([T(i), p(j)]), j=1,size(p))], i = 1,size(T))]
         num_pairs = size(inputs)
-        call assert(num_pairs == size(T)*size(p), "train_cloud_microphysics: inputs tensor array complete")
+        call_julienne_assert(num_pairs .equalsExpected. size(T)*size(p))
         desired_outputs = y(inputs)
         output_sizes = [(size(desired_outputs(i)%values()),i=1,size(desired_outputs))]
-        call assert(all([num_outputs==output_sizes]), "fit-polynomials: # outputs", intrinsic_array_t([num_outputs,output_sizes])) 
+        call_julienne_assert(.all. (num_outputs .equalsExpected. output_sizes))
       end block
 
       input_output_pairs = input_output_pair_t(inputs, desired_outputs)

@@ -1,11 +1,13 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
+#include "julienne-assert-macros.h"
 #include "assert_macros.h"
 #include "compound_assertions.h"
 
 submodule(neural_network_m) neural_network_s
   use assert_m
+  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
   use double_precision_string_m, only : double_precision_string_t
   use kind_parameters_m, only : double_precision
   use layer_m, only : layer_t
@@ -145,33 +147,31 @@ contains
 
   module procedure default_real_consistency
 
-    associate(allocated_=>[allocated(self%weights_),allocated(self%biases_),allocated(self%nodes_)])
-      call_assert_diagnose(all(allocated_),"neural_network_s(default_real_consistency): all(allocated_)",intrinsic_array_t(allocated_))
-    end associate
+    call_assert(allocated(self%weights_))
+    call_assert(allocated(self%biases_))
+    call_assert(allocated(self%nodes_))
 
     associate(max_width=>maxval(self%nodes_), component_sizes=>[size(self%biases_,1), size(self%weights_,1), size(self%weights_,2)])
-      call_assert_diagnose(all(component_sizes == max_width), "neural_network_s(default_real_consistency): all(component_sizes == max_width)", intrinsic_array_t([max_width, component_sizes]))
+      call_julienne_assert(component_sizes .equalsExpected. max_width)
     end associate
 
     associate(input_subscript => lbound(self%nodes_,1))
-      call_assert_diagnose(input_subscript == input_layer, "neural_network_s(default_real_consistency): n base subsscript", input_subscript)
+      call_julienne_assert(input_subscript .equalsExpected. input_layer)
     end associate
 
   end procedure
 
   module procedure double_precision_consistency
 
-    associate(allocated_=>[allocated(self%weights_),allocated(self%biases_),allocated(self%nodes_)])
-      call_assert_diagnose(all(allocated_),"neural_network_s(default_real_consistency): all(allocated_)",intrinsic_array_t(allocated_))
-    end associate
+    call_assert(allocated(self%weights_))
+    call_assert(allocated(self%biases_))
+    call_assert(allocated(self%nodes_))
 
     associate(max_width=>maxval(self%nodes_), component_sizes=>[size(self%biases_,1), size(self%weights_,1), size(self%weights_,2)])
-      call_assert_diagnose(all(component_sizes == max_width), "neural_network_s(default_real_consistency): all(component_sizes == max_width)", intrinsic_array_t([max_width, component_sizes]))
+      call_julienne_assert(all(component_sizes .equalsExpected. max_width))
     end associate
 
-    associate(input_subscript => lbound(self%nodes_,1))
-      call_assert_diagnose(input_subscript == input_layer, "neural_network_s(default_real_consistency): n base subsscript", input_subscript)
-    end associate
+    call_julienne_assert(lbound(self%nodes_,1) .equalsExpected. input_layer)
 
   end procedure
 
@@ -359,7 +359,7 @@ contains
             lines(line) = string_t('         ]')
             line = line + 1
             lines(line) = string_t('}')
-            call_assert_diagnose(line == json_lines, "neural_network_t%to_json: all lines defined", intrinsic_array_t([json_lines, line]))
+            call_julienne_assert(line .equalsExpected. json_lines)
           end associate
           json_file = file_t(lines)
         end block
@@ -475,7 +475,7 @@ contains
             lines(line) = string_t('         ]')
             line = line + 1
             lines(line) = string_t('}')
-            call_assert_diagnose(line == json_lines, "neural_network_t%to_json: all lines defined", intrinsic_array_t([json_lines, line]))
+            call_julienne_assert(line .equalsExpected. json_lines)
           end associate
           json_file = file_t(lines)
         end block
@@ -492,14 +492,14 @@ contains
     type(layer_t) hidden_layers, output_layer
 
     lines = file_%lines()
-    call_assert_describe(adjustl(lines(1)%string())=="{", "neural_network_s(default_real_from_json): expected outermost object '{'")
+    call_julienne_assert(adjustl(lines(1)%string()) .equalsExpected. "{")
  
     check_git_tag: &
     block 
       character(len=:), allocatable :: tag
 
       tag = lines(2)%get_json_value("minimum_acceptable_tag", mold="")
-      call_assert_diagnose(tag == minimum_acceptable_tag, "neural_network_s(default_real_from_json): minimum_acceptable_tag", tag //"(expected " //minimum_acceptable_tag // ")")
+      call_julienne_assert(tag .equalsExpected. minimum_acceptable_tag)
     end block check_git_tag
       
     num_file_lines = size(lines)
@@ -514,7 +514,7 @@ contains
            if (justified_line == '"inputs_map": {') exit
          end do find_inputs_map
 
-         call_assert_diagnose(justified_line =='"inputs_map": {', 'default_real_from_json: expecting "inputs_map": {', justified_line)
+         call_julienne_assert(justified_line .equalsExpected. '"inputs_map": {')
          input_map = tensor_map_t(lines(l:l+num_map_lines-1))
 
          find_outputs_map: &
@@ -523,7 +523,7 @@ contains
            if (justified_line == '"outputs_map": {') exit
          end do find_outputs_map
 
-         call_assert_diagnose(justified_line =='"outputs_map": {', 'default_real_from_json: expecting "outputs_map": {', justified_line)
+         call_julienne_assert(justified_line .equalsExpected. '"outputs_map": {')
          output_map = tensor_map_t(lines(l:l+num_map_lines-1))
 
       end associate
@@ -534,7 +534,7 @@ contains
       justified_line = adjustl(lines(l)%string())
       if (justified_line == '"hidden_layers": [') exit
     end do find_hidden_layers
-    call_assert_diagnose(justified_line=='"hidden_layers": [', 'default_real_from_json: expecting "hidden_layers": [', justified_line)
+    call_julienne_assert(justified_line .equalsExpected. '"hidden_layers": [')
 
     read_hidden_layers: &
     block
@@ -547,7 +547,7 @@ contains
       associate(proto_neuron => neuron_t(weights=[0.], bias=0.))
         associate(output_layer_line_number => l + 1 + size(proto_neuron%to_json())*sum(hidden_layers%count_neurons()) + bracket_lines_per_layer*hidden_layers%count_layers() + 1)
           output_layer_line = lines(output_layer_line_number)%string()
-          call_assert_diagnose(adjustl(output_layer_line)=='"output_layer": [', 'default_real_from_json: expecting "output_layer": [', lines(output_layer_line_number)%string())
+          call_julienne_assert(adjustl(output_layer_line) .equalsExpected. '"output_layer": [')
           output_layer = layer_t(lines, start=output_layer_line_number)
         end associate
       end associate read_layers_of_neurons
@@ -558,7 +558,7 @@ contains
       justified_line = adjustl(lines(l)%string())
       if (justified_line == '"metadata": {') exit
     end do find_metadata
-    call_assert_diagnose(justified_line=='"metadata": {', 'default_real_from_json: expecting "metadata": {', justified_line)
+    call_julienne_assert(justified_line .equalsExpected. '"metadata": {')
 
     read_metadata: &
     associate(proto_meta => metadata_t(string_t(""),string_t(""),string_t(""),string_t(""),string_t("")))
@@ -585,14 +585,14 @@ contains
     type(layer_t(double_precision)) hidden_layers, output_layer
 
     lines = file%double_precision_lines()
-    call_assert_describe(adjustl(lines(1)%string())=="{", "neural_network_s(double_precision_from_json): expected outermost object '{'")
+    call_julienne_assert(adjustl(lines(1)%string()) .equalsExpected.  "{")
 
     check_git_tag: &
     block
       character(len=:), allocatable :: tag
 
       tag = lines(2)%get_json_value("minimum_acceptable_tag", mold="")
-      call_assert_diagnose(tag == minimum_acceptable_tag, "neural_network_s(double_precision_from_json): minimum_acceptable_tag", tag//"(expected "//minimum_acceptable_tag //")")
+      call_julienne_assert(tag .equalsExpected. minimum_acceptable_tag)
     end block check_git_tag
 
     num_file_lines = size(lines)
@@ -607,7 +607,7 @@ contains
            if (justified_line == '"inputs_map": {') exit
          end do find_inputs_map
 
-         call_assert_diagnose(justified_line =='"inputs_map": {', 'double_precision_from_json: expecting "inputs_map": {', justified_line)
+         call_julienne_assert(justified_line .equalsExpected. '"inputs_map": {')
          input_map = tensor_map_t(lines(l:l+num_map_lines-1))
 
          find_outputs_map: &
@@ -616,7 +616,7 @@ contains
            if (justified_line == '"outputs_map": {') exit
          end do find_outputs_map
 
-         call_assert_diagnose(justified_line =='"outputs_map": {', 'double_precision_from_json: expecting "outputs_map": {', justified_line)
+         call_julienne_assert(justified_line .equalsExpected. '"outputs_map": {')
          output_map = tensor_map_t(lines(l:l+num_map_lines-1))
 
       end associate
@@ -627,7 +627,7 @@ contains
       justified_line = adjustl(lines(l)%string())
       if (justified_line == '"hidden_layers": [') exit
     end do find_hidden_layers
-    call_assert_diagnose(justified_line=='"hidden_layers": [', 'double_precision_from_json: expecting "hidden_layers": [', justified_line)
+    call_julienne_assert(justified_line .equalsExpected. '"hidden_layers": [')
 
     read_hidden_layers: &
     block
@@ -640,7 +640,7 @@ contains
       associate(proto_neuron => neuron_t(weights=[0D0], bias=0D0))
         associate(output_layer_line_number => l + 1 + size(proto_neuron%to_json())*sum(hidden_layers%count_neurons()) + bracket_lines_per_layer*hidden_layers%count_layers() + 1)
           output_layer_line = lines(output_layer_line_number)%string()
-          call_assert_diagnose(adjustl(output_layer_line)=='"output_layer": [', 'double_precision_from_json: expecting "output_layer": [', lines(output_layer_line_number)%string())
+          call_julienne_assert(adjustl(output_layer_line) .equalsExpected. '"output_layer": [')
           output_layer = layer_t(lines, start=output_layer_line_number)
         end associate
       end associate read_layers_of_neurons
@@ -651,7 +651,7 @@ contains
       justified_line = adjustl(lines(l)%string())
       if (justified_line == '"metadata": {') exit
     end do find_metadata
-    call_assert_diagnose(justified_line=='"metadata": {', 'double_precision_from_json: expecting "metadata": {', justified_line)
+    call_julienne_assert(justified_line .equalsExpected. '"metadata": {')
 
     read_metadata: &
     associate(proto_meta => metadata_t(string_t(""),string_t(""),string_t(""),string_t(""),string_t("")))
@@ -671,14 +671,9 @@ contains
 
     call_assert_consistency(self)
 
-    associate(equal_shapes => [ &
-      shape(self%weights_) == shape(neural_network%weights_), &
-      shape(self%biases_) == shape(neural_network%biases_), &
-      shape(self%nodes_) == shape(neural_network%nodes_)  &
-     ])
-      call_assert_diagnose(all(equal_shapes), "assert_conformable: all(equal_shapes)", intrinsic_array_t(equal_shapes))
-    end associate
-
+    call_assert(all(shape(self%weights_) == shape(neural_network%weights_)))
+    call_assert(all(shape(self%biases_) == shape(neural_network%biases_)))
+    call_assert(all(shape(self%nodes_) == shape(neural_network%nodes_)))
     call_assert(self%activation_ == neural_network%activation_)
     
   end procedure
@@ -687,14 +682,9 @@ contains
 
     call_assert_consistency(self)
 
-    associate(equal_shapes => [ &
-      shape(self%weights_) == shape(neural_network%weights_), &
-      shape(self%biases_) == shape(neural_network%biases_), &
-      shape(self%nodes_) == shape(neural_network%nodes_)  &
-     ])
-      call_assert_diagnose(all(equal_shapes), "assert_conformable: all(equal_shapes)", intrinsic_array_t(equal_shapes))
-    end associate
-
+    call_assert(all(shape(self%weights_) == shape(neural_network%weights_)))
+    call_assert(all(shape(self%biases_) == shape(neural_network%biases_)))
+    call_assert(all(shape(self%nodes_) == shape(neural_network%nodes_)))
     call_assert(self%activation_ == neural_network%activation_)
     
   end procedure
@@ -870,7 +860,7 @@ contains
 
 #if F2023_LOCALITY
               iterate_through_batch: &
-              do concurrent (pair = 1:mini_batch_size) local(a,z,delta) reduce(+: dcdb, dcdw)
+              do concurrent (pair = 1:mini_batch_size) default(none) local(a,z,delta) reduce(+: dcdb, dcdw)
 
 #elif F2018_LOCALITY
 

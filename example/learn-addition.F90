@@ -1,9 +1,12 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "julienne-assert-macros.h"
+
 module addition_m
   !! Define a function that produces the desired network output for a given network input
   use fiats_m, only : tensor_t
-  use assert_m, only : assert
+  use julienne_m, only : call_julienne_assert_, operator(.isAtLeast.), operator(.isAtMost.), operator(.also.)
   implicit none
 
 contains
@@ -11,7 +14,7 @@ contains
     type(tensor_t), intent(in) :: x_tensor
     type(tensor_t) a_tensor
     associate(x => x_tensor%values())
-      call assert(ubound(x,1)>=7 .and. lbound(x,1)<=2,"y(x) :: sufficient input")
+      call_julienne_assert((ubound(x,1) .isAtLeast. 7) .also. (lbound(x,1) .isAtMost. 2))
       a_tensor = tensor_t([x(1)+x(2), x(2)+x(3), x(3)+x(4), x(4)+x(5), x(5)+x(6), x(6)+x(8)])
     end associate
   end function
@@ -20,10 +23,10 @@ end module
 
 program learn_addition
   !! This trains a neural network to learn the following six polynomial functions of its eight inputs.
+  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.), operator(.all.), operator(.also.)
   use fiats_m, only : &
     neural_network_t, trainable_network_t, mini_batch_t, tensor_t, input_output_pair_t, shuffle
   use julienne_m, only : string_t, file_t, command_line_t, bin_t
-  use assert_m, only : assert, intrinsic_array_t
   use addition_m, only : y
   implicit none
 
@@ -59,7 +62,7 @@ program learn_addition
         inputs = [(tensor_t(real([(j*i, j = 1,num_inputs)])/(num_inputs*num_pairs)), i = 1, num_pairs)]
         desired_outputs = y(inputs)
         output_sizes = [(size(desired_outputs(i)%values()),i=1,size(desired_outputs))]
-        call assert(all([num_outputs==output_sizes]), "fit-polynomials: # outputs", intrinsic_array_t([num_outputs,output_sizes])) 
+        call_julienne_assert(.all.(num_outputs .equalsExpected. output_sizes))
       end block
       input_output_pairs = input_output_pair_t(inputs, desired_outputs)
       block 

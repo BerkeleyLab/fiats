@@ -2,9 +2,11 @@
 ! Terms of use are as specified in LICENSE.txt
 
 #include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 submodule(metadata_m) metadata_s
   use assert_m
+  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
   implicit none
 
 contains
@@ -28,7 +30,7 @@ contains
   module procedure from_json
     integer l
 
-    call_assert(lines(1)%get_json_key() == "metadata")
+    call_julienne_assert(lines(1)%get_json_key() .equalsExpected. "metadata")
 
     do l = 2, size(lines)-1
       associate(key => lines(l)%get_json_key())
@@ -49,13 +51,13 @@ contains
       end associate
     end do
 
-    call_assert_describe(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]), "metadata_s(from_json): metadata object end found")
+    call_julienne_assert(any(trim(adjustl(lines(size(lines))%string())) .equalsExpected. ["},","} "]))
   end procedure
 
   module procedure double_precision_from_json
     integer l
 
-    call_assert(lines(1)%get_json_key() == "metadata")
+    call_julienne_assert(lines(1)%get_json_key() .equalsExpected. "metadata")
 
     do l = 2, size(lines)-1
       associate(key => lines(l)%get_json_key())
@@ -76,7 +78,7 @@ contains
       end associate
     end do
 
-    call_assert_describe(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]), "metadata_s(double_precision_from_json): metadata object end found")
+    call_assert(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]))
   end procedure
 
   module procedure to_json

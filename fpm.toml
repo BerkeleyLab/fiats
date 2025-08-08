@@ -1,9 +1,5 @@
 name = "fiats"
-version = "0.15.0"
-license = "see LICENSE.txt"
-author = "Damian Rouson, Tan Nguyen, Jordan Welsman, David Torres, Brad Richardson, Katherine Rasmussen, Federica Villani, Dan Bonachea"
-maintainer = "rouson@lbl.gov"
 
 [dependencies]
-assert = {git = "https://github.com/sourceryinstitute/assert", tag = "2.1.0"}
-julienne = {git = "https://github.com/berkeleylab/julienne", tag = "1.5.3"}
+assert = {git = "https://github.com/sourceryinstitute/assert", tag = "3.0.2"}
+julienne = {git = "https://github.com/berkeleylab/julienne", tag = "2.4.3"}

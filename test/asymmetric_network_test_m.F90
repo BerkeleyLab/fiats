@@ -9,7 +9,17 @@ module asymmetric_network_test_m
   ! External dependencies
   use assert_m
   use julienne_m, only : &
-    test_t, test_result_t, vector_test_description_t, test_description_substring, string_t, vector_function_strategy_t
+     operator(.approximates.) &
+    ,operator(.all.) &
+    ,operator(.also.) &
+    ,operator(.equalsExpected.) &
+    ,operator(.within.) &
+    ,test_description_t &
+    ,test_diagnosis_t &
+    ,test_t &
+    ,test_result_t &
+    ,test_description_substring &
+    ,string_t
 
   ! Internal dependencies
   use fiats_m, only : neural_network_t, tensor_t
@@ -25,11 +35,6 @@ module asymmetric_network_test_m
     procedure, nopass :: results
   end type
 
-  type, extends(vector_function_strategy_t) :: xor_and_2nd_input_t
-  contains
-    procedure, nopass :: vector_function => xor_and_2nd_input_truth_table 
-  end type
-
 contains
 
   pure function subject() result(specimen)
@@ -39,25 +44,15 @@ contains
 
   function results() result(test_results)
     type(test_result_t), allocatable :: test_results(:)
-    type(xor_and_2nd_input_t) xor_and_2nd_input
+    type(test_description_t), allocatable :: test_descriptions(:)
 
-    associate( vector_test_description => vector_test_description_t( &
-      [ string_t("mapping (true,true) to false"), & 
-        string_t("mapping (true,false) to false"), &
-        string_t("mapping (false,true) to true"), &
-        string_t("mapping (false,false) to false") &
-      ], xor_and_2nd_input) &
-    )
-      associate(substring_in_subject => index(subject(), test_description_substring) /= 0)
-        associate(substring_in_description => vector_test_description%contains_text(test_description_substring))
-          if (substring_in_subject) then
-            test_results = vector_test_description%run()
-          else if (any(substring_in_description)) then
-            test_results = vector_test_description%run()
-            test_results = pack(test_results, test_results%description_contains(string_t(test_description_substring)))
-           else
-            test_results = [test_result_t::]
-          end if
+    test_descriptions = [ &
+      test_description_t("matching the truth table for XOR-and-2nd-input gate", check_xor_and_2nd_input_truth_table) &
+    ]
+    associate(substring_in_subject => index(subject(), test_description_substring) /= 0)
+      associate(substring_in_test_diagnosis => test_descriptions%contains_text(test_description_substring))
+        associate(matching_descriptions => pack(test_descriptions, substring_in_subject .or. substring_in_test_diagnosis))
+          test_results = matching_descriptions%run()
         end associate
       end associate
     end associate
@@ -114,36 +109,32 @@ contains
 
   end function
 
-  function xor_and_2nd_input_truth_table() result(test_passes)
-    logical, allocatable :: test_passes(:)
-
+  function check_xor_and_2nd_input_truth_table() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     type(neural_network_t) asymmetric
+    real, parameter :: tolerance = 1.E-08, false = 0., true = 1.
+    type(tensor_t) true_true, true_false, false_true, false_false
 
     asymmetric = xor_and_2nd_input_network()
 
-    block
-      real, parameter :: tolerance = 1.E-08, false = 0., true = 1.
-      type(tensor_t) true_true, true_false, false_true, false_false
+    true_true = asymmetric%infer(tensor_t([true,true]))
+    true_false = asymmetric%infer(tensor_t([true,false]))
+    false_true = asymmetric%infer(tensor_t([false,true]))
+    false_false = asymmetric%infer(tensor_t([false,false]))
 
-      true_true = asymmetric%infer(tensor_t([true,true]))
-      true_false = asymmetric%infer(tensor_t([true,false]))
-      false_true = asymmetric%infer(tensor_t([false,true]))
-      false_false = asymmetric%infer(tensor_t([false,false]))
-
-      associate( &
-        true_true_outputs => true_true%values(), &
-        true_false_outputs => true_false%values(), &
-        false_true_outputs => false_true%values(), &
-        false_false_outputs => false_false%values() &
-      )
-        test_passes = [ &
-          size(true_true_outputs)==1 .and. abs(true_true_outputs(1) - false) < tolerance, &
-          size(true_false_outputs)==1 .and. abs(true_false_outputs(1) - false) < tolerance,  &
-          size(false_true_outputs)==1 .and. abs(false_true_outputs(1) - true) < tolerance, &
-          size(false_false_outputs)==1 .and. abs(false_false_outputs(1) - false) < tolerance  &
-        ]
-      end associate
-    end block
+    associate( &
+         true_true_output =>   true_true%values() &
+      , true_false_output =>  true_false%values() &
+      , false_true_output =>  false_true%values() &
+      ,false_false_output => false_false%values() &
+    )
+      test_diagnosis = &
+        (.all. ([size(true_true_output),size(true_false_output),size(false_true_output),size(false_false_output)]  .equalsExpected. 1)) &
+        .also. (  true_true_output(1) .approximates. (false) .within. tolerance) &
+        .also. ( true_false_output(1) .approximates. (false) .within. tolerance) &
+        .also. ( false_true_output(1) .approximates. (true)  .within. tolerance) &
+        .also. (false_false_output(1) .approximates. (false) .within. tolerance)
+    end associate
 
   end function
 
