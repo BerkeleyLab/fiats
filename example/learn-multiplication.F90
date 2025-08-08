@@ -17,9 +17,11 @@ contains
   elemental function y(x_tensor) result(a_tensor)
     type(tensor_t), intent(in) :: x_tensor
     type(tensor_t) a_tensor
-    associate(x => x_tensor%values(), sufficient_inputs => (ubound(x,1).isAtLeast. 7) .also. (lbound(x,1) .isAtMost. 2))
-      call_julienne_assert(sufficient_inputs)
-      a_tensor = tensor_t([x(1)*x(2), x(2)*x(3), x(3)*x(4), x(4)*x(5), x(5)*x(6), x(6)*x(8)])
+    associate(x => x_tensor%values())
+      associate(sufficient_inputs => (ubound(x,1).isAtLeast. 7) .also. (lbound(x,1) .isAtMost. 2))
+        call_julienne_assert(sufficient_inputs)
+        a_tensor = tensor_t([x(1)*x(2), x(2)*x(3), x(3)*x(4), x(4)*x(5), x(5)*x(6), x(6)*x(8)])
+      end associate
     end associate
   end function
 
