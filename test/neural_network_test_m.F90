@@ -16,7 +16,7 @@ module neural_network_test_m
      ,test_description_t &
      ,test_diagnosis_t &
      ,test_result_t &
-     ,test_t&
+     ,test_t
 
   ! Internal dependencies
   use fiats_m, only : neural_network_t, tensor_t, metadata_t

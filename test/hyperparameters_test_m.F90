@@ -12,7 +12,7 @@ module hyperparameters_test_m
     ,test_description_t &
     ,test_diagnosis_t &
     ,test_result_t &
-    ,test_t 
+    ,test_t
 
   ! Internal dependencies
   use hyperparameters_m, only : hyperparameters_t
