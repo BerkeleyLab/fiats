@@ -71,7 +71,7 @@ contains
 
   module procedure to_json
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
-    integer, parameter :: max_logical_width= 6, char_per_elem = 10, brackets = 2
+    integer, parameter :: max_logical_width= 6, char_per_elem = 25, brackets = 2
     character(len=max_logical_width) skip_connections_string
     character(len=:), allocatable :: nodes_per_layer_string
 

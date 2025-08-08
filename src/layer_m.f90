@@ -1,5 +1,8 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "julienne-assert-macros.h"
+
 module layer_m
   use double_precision_string_m, only : double_precision_string_t
   use kind_parameters_m, only : default_real, double_precision

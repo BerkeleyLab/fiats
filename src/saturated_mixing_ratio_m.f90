@@ -22,13 +22,16 @@
 ! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 ! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ! SOFTWARE.
+
+#include "julienne-assert-macros.h"
+
 module saturated_mixing_ratio_m
   !! This module supports the program in the file example/learn-saturated-mixing-ratio.f90.
   !! The saturated_mixing_ratio function in this module resulted from refactoring the sat_mr function
   !! in the Intermediate Complexity Atmospheric Research (ICAR) model file src/physics/mp_simple.f90.
   !! ICAR is distributed under the above MIT license.  See https://github.com/ncar/icar.
   use fiats_m, only : tensor_t
-  use assert_m, only : assert
+  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
   implicit none
  
   private
@@ -72,7 +75,7 @@ contains
     type(tensor_t), intent(in) :: x_in
     type(tensor_t) a
     associate(x => x_in%values())
-      call assert(lbound(x,1)==1 .and. ubound(x,1)==2,"y(x) :: sufficient input")
+      call_julienne_assert((lbound(x,1) .equalsExpected. 1) .also. (ubound(x,1) .equalsExpected. 2,"y(x) :: sufficient input"))
       a = tensor_t([saturated_mixing_ratio(x(1),x(2))])
     end associate
   end function
