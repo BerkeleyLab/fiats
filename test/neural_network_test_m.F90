@@ -12,11 +12,11 @@ module neural_network_test_m
      ,operator(.approximates.) &
      ,operator(.within.) &
      ,string_t &
-     ,test_diagnosis_t &
-     ,test_t &
-     ,test_result_t &
+     ,test_description_substring &
      ,test_description_t &
-     ,test_description_substring
+     ,test_diagnosis_t &
+     ,test_result_t &
+     ,test_t
 
   ! Internal dependencies
   use fiats_m, only : neural_network_t, tensor_t, metadata_t
@@ -176,22 +176,21 @@ contains
     neural_network = distinct_parameters()
     json_file = neural_network%to_json()
     from_json = neural_network_t(json_file)
-    test_diagnosis = test_diagnosis_t(test_passed = neural_network == from_json, diagnostics_string= "neural_network == from_json")
+    test_diagnosis = test_diagnosis_t(neural_network == from_json, "neural_network /= from_json")
   end function
 
   function varying_width_net_to_from_json() result(test_diagnosis)
-    type(test_diagnosis_t) test_diagnosis
+    type (test_diagnosis_t) test_diagnosis
 
     associate(neural_network => varying_width())
       associate(from_json => neural_network_t( neural_network%to_json() ))
-        test_diagnosis = test_diagnosis_t(test_passed = neural_network == from_json, diagnostics_string= "neural_network == from_json")
+        test_diagnosis = test_diagnosis_t(neural_network == from_json, "neural_network /= from_json")
       end associate
     end associate
   end function
 
   function infer_with_varying_width_net() result(test_diagnosis)
     type(test_diagnosis_t) test_diagnosis
-    logical test_passes
     type(neural_network_t) neural_network
     type(tensor_t) inputs, outputs
     real, parameter :: tolerance = 1.E-08
@@ -199,12 +198,11 @@ contains
     neural_network = decrement_split_combine_increment()
     inputs = tensor_t([1.1, 2.7])
     outputs = neural_network%infer(inputs)
-    test_diagnosis = .all. (inputs%values() .approximates.  outputs%values() .within. tolerance)
+    test_diagnosis = .all. (inputs%values() .approximates. outputs%values() .within. tolerance)
   end function
 
   function double_precision_inference() result(test_diagnosis)
     type(test_diagnosis_t) test_diagnosis
-    logical test_passes
     type(neural_network_t(double_precision)) neural_network
     type(tensor_t(double_precision)) inputs, outputs
     double precision, parameter :: tolerance = 1.D-08
@@ -212,7 +210,7 @@ contains
     neural_network = double_precision_network()
     inputs = tensor_t([1.1D0, 2.7D0])
     outputs = neural_network%infer(inputs)
-    test_diagnosis = .all. (inputs%values() .approximates.  outputs%values() .within. tolerance)
+    test_diagnosis = .all. (inputs%values() .approximates. outputs%values() .within. tolerance)
   end function
 
   function elemental_infer_with_1_hidden_layer_xor_net() result(test_diagnosis)
@@ -252,9 +250,9 @@ contains
         truth_table = neural_network%infer(array_of_inputs)
       end associate
       test_diagnosis = &
-                .all. (truth_table(1)%values() .approximates. (false) .within. tolerance)  &
-        .also. (.all. (truth_table(2)%values() .approximates. ( true) .within. tolerance)) &
-        .also. (.all. (truth_table(3)%values() .approximates. ( true) .within. tolerance)) &
+               (.all. (truth_table(1)%values() .approximates. (false) .within. tolerance)) &
+        .also. (.all. (truth_table(2)%values() .approximates. (true ) .within. tolerance)) &
+        .also. (.all. (truth_table(3)%values() .approximates. (true ) .within. tolerance)) &
         .also. (.all. (truth_table(4)%values() .approximates. (false) .within. tolerance))
     end block
   end function

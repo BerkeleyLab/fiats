@@ -7,9 +7,9 @@ program train_saturated_mixture_ratio
   !! This program trains a neural network to learn the saturated mixing ratio function of ICAR.
   use fiats_m, only : trainable_network_t, mini_batch_t, tensor_t, input_output_pair_t, shuffle
   use julienne_m, only : &
-     command_line_t &
+     call_julienne_assert_ &
+    ,command_line_t &
     ,bin_t &
-    ,call_julienne_assert_ &
     ,csv &
     ,file_t &
     ,operator(.all.) &
@@ -73,7 +73,9 @@ program train_saturated_mixture_ratio
         integer, allocatable :: output_sizes(:)
         inputs = [( [(tensor_t([T(i), p(j)]), j=1,size(p))], i = 1,size(T))]
         num_pairs = size(inputs)
-        call_julienne_assert(num_pairs .equalsExpected. size(T)*size(p))
+        associate(inputs_tensor_array_complete => num_pairs .equalsExpected. size(T)*size(p))
+          call_julienne_assert(inputs_tensor_array_complete)
+        end associate
         desired_outputs = y(inputs)
         output_sizes = [(size(desired_outputs(i)%values()),i=1,size(desired_outputs))]
         call_julienne_assert(.all. (num_outputs .equalsExpected. output_sizes))

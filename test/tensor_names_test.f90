@@ -6,12 +6,12 @@ module tensor_names_test_m
   ! External dependencies
   use fiats_m, only : tensor_names_t
   use julienne_m, only : &
-    test_description_t &
+    string_t &
+   ,test_description_t &
    ,test_description_substring &
    ,test_diagnosis_t &
    ,test_result_t &
-   ,test_t &
-   ,string_t
+   ,test_t 
 
   ! Internal dependencies
   use tensor_names_m, only : tensor_names_t
@@ -58,7 +58,7 @@ contains
         outputs = [string_t("qc"), string_t("qv")] &
     ) )
       associate(from_json => tensor_names_t(from_components%to_json()))
-        test_diagnosis = test_diagnosis_t(test_passed = from_components == from_json, diagnostics_string="from_components /= from_json")
+        test_diagnosis = test_diagnosis_t(from_components == from_json, "from_components /= from_json")
       end associate
     end associate
   end function

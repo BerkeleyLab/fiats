@@ -7,7 +7,7 @@
 
 submodule(neural_network_m) neural_network_s
   use assert_m
-  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
+  use julienne_m, only : call_julienne_assert_ , operator(.all.), operator(.equalsExpected.)
   use double_precision_string_m, only : double_precision_string_t
   use kind_parameters_m, only : double_precision
   use layer_m, only : layer_t
@@ -152,7 +152,7 @@ contains
     call_assert(allocated(self%nodes_))
 
     associate(max_width=>maxval(self%nodes_), component_sizes=>[size(self%biases_,1), size(self%weights_,1), size(self%weights_,2)])
-      call_julienne_assert(component_sizes .equalsExpected. max_width)
+      call_julienne_assert(.all. (component_sizes .equalsExpected. max_width))
     end associate
 
     associate(input_subscript => lbound(self%nodes_,1))
@@ -171,7 +171,9 @@ contains
       call_julienne_assert(all(component_sizes .equalsExpected. max_width))
     end associate
 
-    call_julienne_assert(lbound(self%nodes_,1) .equalsExpected. input_layer)
+    associate(input_subscript => lbound(self%nodes_,1))
+      call_julienne_assert(input_subscript .equalsExpected. input_layer)
+    end associate
 
   end procedure
 
@@ -492,15 +494,10 @@ contains
     type(layer_t) hidden_layers, output_layer
 
     lines = file_%lines()
-    call_julienne_assert(adjustl(lines(1)%string()) .equalsExpected. "{")
- 
-    check_git_tag: &
-    block 
-      character(len=:), allocatable :: tag
-
-      tag = lines(2)%get_json_value("minimum_acceptable_tag", mold="")
-      call_julienne_assert(tag .equalsExpected. minimum_acceptable_tag)
-    end block check_git_tag
+    associate(outermost_object => '{')
+      call_julienne_assert(adjustl(lines(1)%string()) .equalsExpected. outermost_object)
+    end associate
+    call_julienne_assert(lines(2)%get_json_value("minimum_acceptable_tag", mold="") .equalsExpected. minimum_acceptable_tag)
       
     num_file_lines = size(lines)
 
@@ -585,15 +582,10 @@ contains
     type(layer_t(double_precision)) hidden_layers, output_layer
 
     lines = file%double_precision_lines()
-    call_julienne_assert(adjustl(lines(1)%string()) .equalsExpected.  "{")
-
-    check_git_tag: &
-    block
-      character(len=:), allocatable :: tag
-
-      tag = lines(2)%get_json_value("minimum_acceptable_tag", mold="")
-      call_julienne_assert(tag .equalsExpected. minimum_acceptable_tag)
-    end block check_git_tag
+    associate(outermost_object => '{')
+      call_julienne_assert(adjustl(lines(1)%string()) .equalsExpected. outermost_object) 
+    end associate
+    call_julienne_assert(lines(2)%get_json_value("minimum_acceptable_tag", mold="") .equalsExpected. minimum_acceptable_tag)
 
     num_file_lines = size(lines)
 
@@ -671,9 +663,9 @@ contains
 
     call_assert_consistency(self)
 
-    call_assert(all(shape(self%weights_) == shape(neural_network%weights_)))
-    call_assert(all(shape(self%biases_) == shape(neural_network%biases_)))
-    call_assert(all(shape(self%nodes_) == shape(neural_network%nodes_)))
+    call_julienne_assert(.all. (shape(self%weights_) .equalsExpected. shape(neural_network%weights_)))
+    call_julienne_assert(.all. (shape(self%biases_) .equalsExpected. shape(neural_network%biases_)))
+    call_julienne_assert(.all. (shape(self%nodes_) .equalsExpected. shape(neural_network%nodes_)))
     call_assert(self%activation_ == neural_network%activation_)
     
   end procedure
@@ -682,10 +674,10 @@ contains
 
     call_assert_consistency(self)
 
-    call_assert(all(shape(self%weights_) == shape(neural_network%weights_)))
-    call_assert(all(shape(self%biases_) == shape(neural_network%biases_)))
-    call_assert(all(shape(self%nodes_) == shape(neural_network%nodes_)))
-    call_assert(self%activation_ == neural_network%activation_)
+    call_julienne_assert(.all. (shape(self%weights_) .equalsExpected. shape(neural_network%weights_)))
+    call_julienne_assert(.all. (shape(self%biases_) .equalsExpected. shape(neural_network%biases_)))
+    call_julienne_assert(.all. (shape(self%nodes_) .equalsExpected. shape(neural_network%nodes_)))
+    call_julienne_assert(self%activation_ == neural_network%activation_)
     
   end procedure
 

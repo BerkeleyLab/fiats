@@ -9,14 +9,14 @@ module tensor_test_m
      operator(.all.) &
     ,operator(.also.) &
     ,operator(.approximates.) &
+    ,operator(.equalsExpected.) &
     ,operator(.within.) &
+    ,string_t &
     ,test_description_substring &
     ,test_description_t &
     ,test_diagnosis_t &
     ,test_result_t &
-    ,test_t &
-    ,string_t &
-    ,file_t
+    ,test_t
 
   ! Internal dependencies
   use fiats_m, only : tensor_t
@@ -63,14 +63,9 @@ contains
 
     tensor = tensor_t(values) ! this will fail to compile if no double_precision constructor exists and the 
     associate(tensor_values => tensor%values())
-      associate(kinds => kind(tensor_values))
-        test_diagnosis = &
-          test_diagnosis_t( &
-            test_passed        =  kinds == double_precision  &
-           ,diagnostics_string = "kind "// string_t(kinds) // " is not double precision" &
-          ) &
-          .also. (.all. (tensor_values .approximates. values .within. tolerance))
-      end associate
+      test_diagnosis = &
+        (kind(tensor_values) .equalsExpected. double_precision) &
+        .also. (.all. (tensor_values .approximates. values .within. tolerance))
     end associate
   end function
 

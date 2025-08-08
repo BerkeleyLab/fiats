@@ -6,7 +6,11 @@
 module exponentiation_m
   !! Define a function that produces the desired network output for a given network input
   use fiats_m, only : tensor_t
-  use julienne_m, only : call_julienne_assert_, operator(.isAtLeast.), operator(.isAtMost.), operator(.also.)
+  use julienne_m, only : &
+     call_julienne_assert_ &
+    ,operator(.also.) &
+    ,operator(.isAtMost.) &
+    ,operator(.isAtLeast.)
   implicit none
 
 contains
@@ -14,11 +18,12 @@ contains
     type(tensor_t), intent(in) :: x_tensor
     type(tensor_t) a_tensor
     associate(x => x_tensor%values())
-      call_julienne_assert(ubound(x,1) .isAtLeast. 7 .also. lbound(x,1) .isAtMost. 2)
-      a_tensor = tensor_t([x(1)**2, x(2)**3, x(3)**4, x(4)**4, x(5)**3, x(6)**2])
+      associate(suffient_input => (ubound(x,1) .isAtLeast. 7) .also. (lbound(x,1) .isAtMost. 2))
+        call_julienne_assert(suffient_input)
+        a_tensor = tensor_t([x(1)**2, x(2)**3, x(3)**4, x(4)**4, x(5)**3, x(6)**2])
+      end associate
     end associate
   end function
-
 end module
 
 program learn_exponentiation

@@ -6,8 +6,7 @@
 
 submodule(neuron_m) neuron_s
   use assert_m
-  use julienne_formats_m, only : separated_values
-  use julienne_m, only : operator(.equalsExpected.), call_julienne_assert_
+  use julienne_m, only : operator(.equalsExpected.), call_julienne_assert_, separated_values
   implicit none
 
 contains

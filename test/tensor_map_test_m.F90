@@ -5,7 +5,8 @@ module tensor_map_test_m
 
   ! External dependencies
   use julienne_m, only : &
-     operator(.all.) &
+     file_t &
+    ,operator(.all.) &
     ,operator(.approximates.) &
     ,operator(.within.) &
     ,string_t &
@@ -13,8 +14,7 @@ module tensor_map_test_m
     ,test_description_t &
     ,test_diagnosis_t &
     ,test_result_t &
-    ,test_t &
-    ,file_t
+    ,test_t
   use fiats_m, only : tensor_map_t, tensor_t
 
   ! Internal dependencies
@@ -81,12 +81,12 @@ contains
     tensor_map = tensor_map_t(layer="output", minima=[-4., 0., 1., -1.], maxima=[0., 2., 5., 1.])
     tensor = tensor_t([-2., 0., 5., 0.])
     round_trip = tensor_map%map_from_training_range(tensor_map%map_to_training_range(tensor))
-    test_diagnosis = .all. (tensor%values() .approximates.  round_trip%values() .within. tolerance)
+    test_diagnosis = .all. (tensor%values() .approximates. round_trip%values() .within. tolerance)
 #else
     associate(tensor_map => tensor_map_t(layer="output", minima=[-4., 0., 1., -1.], maxima=[0., 2., 5., 1.]))
       associate(tensor => tensor_t([-2., 0., 5., 0.]))
         associate(round_trip => tensor_map%map_from_training_range(tensor_map%map_to_training_range(tensor)))
-          test_diagnosis = .all. (tensor%values() .approximates.  round_trip%values() .within. tolerance)
+          test_diagnosis = .all. (tensor%values() .approximates. round_trip%values() .within. tolerance)
         end associate
       end associate
     end associate

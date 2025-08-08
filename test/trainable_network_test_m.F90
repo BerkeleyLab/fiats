@@ -1,7 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 module trainable_network_test_m
   !! Define inference tests and procedures required for reporting results
@@ -9,16 +9,17 @@ module trainable_network_test_m
   ! External dependencies
   use assert_m
   use julienne_m, only : &
-     operator(.all.) &
+     bin_t &
+    ,call_julienne_assert_ &
+    ,operator(.all.) &
     ,operator(.approximates.) &
     ,operator(.within.) &
-    ,bin_t &
+    ,string_t &
     ,test_description_substring &
     ,test_description_t &
     ,test_diagnosis_t &
     ,test_result_t &
-    ,test_t &
-    ,string_t 
+    ,test_t
 
   ! Internal dependencies
   use fiats_m, only : trainable_network_t, neural_network_t, tensor_t, input_output_pair_t, mini_batch_t, shuffle
@@ -64,6 +65,7 @@ contains
       ,test_description_t("learning OR from symmetric OR-gate data and random initial weights", learn_or_from_random_weights) &
       ,test_description_t("learning XOR from symmetric XOR-gate data and random initial weights", learn_xor_from_random_weights) &
     ]
+
     associate( &
       substring_in_subject => index(subject(), test_description_substring) /= 0, &
       substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
@@ -84,7 +86,7 @@ contains
     type(tensor_t) expected_outputs
     integer i
 
-    call_assert(size(test_inputs) == size(actual_outputs))
+    call_julienne_assert(size(test_inputs) .equalsExpected. size(actual_outputs))
 
     print *,"_______" // gate_name // "_______"
 
@@ -144,6 +146,7 @@ contains
     call random_number(harvest)
     harvest = 2.*(harvest - 0.5) ! skew toward more input values being true
 
+
     ! The following temporary copies are required by gfortran bug 100650 and possibly 49324
     ! See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=100650 and https://gcc.gnu.org/bugzilla/show_bug.cgi?id=49324
     tmp = [([(tensor_t(merge(true, false, harvest(:,batch,iter) < 0.5E0)), batch=1, mini_batch_size)], iter=1, num_iterations)]
@@ -173,7 +176,6 @@ contains
   end function
 
   function learn_not_and_from_skewed_data() result(test_diagnosis)
-    !! NOT AND truth table: [(true,true), (false,true), (true,false), (false,false)] -> [false,  true,  true,  true]
     type(test_diagnosis_t) test_diagnosis
     type(mini_batch_t), allocatable :: mini_batches(:)
     type(tensor_t), allocatable :: training_inputs(:,:), tmp(:), test_inputs(:)
@@ -218,7 +220,6 @@ contains
   end function
 
   function learn_or_from_random_weights() result(test_diagnosis)
-    !! OR truth table:      [(true,true), (false,true), (true,false), (false,false)] -> [ true,  true,  true, false]
     type(test_diagnosis_t) test_diagnosis
     type(mini_batch_t), allocatable :: mini_batches(:)
     type(tensor_t), allocatable :: training_inputs(:,:), test_inputs(:), actual_outputs(:)
@@ -228,6 +229,8 @@ contains
     real, allocatable :: harvest(:,:,:)
     integer, parameter :: num_inputs=2, mini_batch_size = 1, num_iterations=50000
     integer batch, iter, i
+
+    test_diagnosis = test_diagnosis_t(.false.,"")
 
     allocate(harvest(num_inputs, mini_batch_size, num_iterations))
     call random_number(harvest)
@@ -264,7 +267,6 @@ contains
   end function
 
   function learn_xor_from_random_weights() result(test_diagnosis)
-    !! XOR truth table:     [(true,true), (false,true), (true,false), (false,false)] -> [false,  true,  true, false]
     type(test_diagnosis_t) test_diagnosis
     type(mini_batch_t), allocatable :: mini_batches(:)
     type(tensor_t), allocatable, dimension(:,:) :: training_inputs, training_outputs 
@@ -272,6 +274,7 @@ contains
     type(trainable_network_t) trainable_network
     real, parameter :: tolerance = 1.E-02
     real, allocatable :: harvest(:,:,:)
+
 #ifdef __flang__
       !! Reducing num_iterations yields a less robust test, but moving away from local minima by
       !! increasing num_iterations causes this test to crash when compiled with the flang or ifx compilers.
@@ -283,7 +286,7 @@ contains
       !! Depending on where in the random-number sequence the weights start, this test can pass for lower
       !! numbers of iterations, e.g., 400000. Using more iterations gives more robust convergence.
 #endif
-    integer batch, iter
+    integer batch, iter, i
 
     allocate(harvest(num_inputs, mini_batch_size, num_iterations))
     call random_number(harvest)
@@ -295,6 +298,8 @@ contains
       training_outputs(batch, iter) = local_xor(training_inputs(batch, iter))
     end do
 
+    test_diagnosis = test_diagnosis_t(.false., "")
+
     allocate(mini_batches(size(training_inputs,1)*num_iterations))
     do concurrent(iter=1:num_iterations)
       mini_batches(iter) = mini_batch_t(input_output_pair_t(training_inputs(:,iter), training_outputs(:,iter)))
@@ -305,13 +310,9 @@ contains
     call trainable_network%train(mini_batches, adam=.true., learning_rate=1.5)
 
     test_inputs = [tensor_t([true,true]), tensor_t([false,true]), tensor_t([true,false]), tensor_t([false,false])]
-    block
-      integer i
-
-      expected_outputs = [(local_xor(test_inputs(i)), i=1, size(test_inputs))]
-      actual_outputs = trainable_network%infer(test_inputs)
-      test_diagnosis = .all. [(actual_outputs(i)%values() .approximates. expected_outputs(i)%values() .within. tolerance, i=1,size(actual_outputs))]
-    end block
+    expected_outputs = [(local_xor(test_inputs(i)), i=1, size(test_inputs))]
+    actual_outputs = trainable_network%infer(test_inputs)
+    test_diagnosis = .all. [(actual_outputs(i)%values() .approximates. expected_outputs(i)%values() .within. tolerance, i=1,size(actual_outputs))]
 
   contains
     
@@ -368,7 +369,7 @@ contains
 
     associate(num_inputs => trainable_network%num_inputs(), num_outputs => trainable_network%num_outputs())
 
-      call_assert(num_inputs == num_outputs)
+      call_julienne_assert(num_inputs .equalsExpected. num_outputs)
 #ifdef _CRAYFTN
       allocate(inputs(num_pairs))
       do i = 1, num_pairs
@@ -427,7 +428,7 @@ contains
 
     associate(num_inputs => trainable_network%num_inputs(), num_outputs => trainable_network%num_outputs())
 
-      call_assert(num_inputs == num_outputs)
+      call_julienne_assert(num_inputs .equalsExpected. num_outputs)
 #ifdef _CRAYFTN
       allocate(inputs(num_pairs))
       do i = 1, num_pairs

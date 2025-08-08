@@ -1,5 +1,6 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
 module hyperparameters_test_m
   !! Test hyperparameters_t object I/O and construction
 
@@ -7,11 +8,11 @@ module hyperparameters_test_m
   use fiats_m, only : hyperparameters_t
   use julienne_m, only : &
      string_t &
-    ,test_diagnosis_t &
-    ,test_t &
-    ,test_result_t &
+    ,test_description_substring &
     ,test_description_t &
-    ,test_description_substring
+    ,test_diagnosis_t &
+    ,test_result_t &
+    ,test_t
 
   ! Internal dependencies
   use hyperparameters_m, only : hyperparameters_t
@@ -60,7 +61,7 @@ contains
     associate(hyperparameters => hyperparameters_t(mini_batches=5, learning_rate=1., optimizer = "stochastic gradient descent"))
       associate(from_json => hyperparameters_t(hyperparameters%to_json()))
 #endif
-        test_diagnosis = test_diagnosis_t(test_passed = hyperparameters == from_json, diagnostics_string="hyperparameters /= from_json")
+        test_diagnosis = test_diagnosis_t(hyperparameters == from_json, diagnostics_string="hyperparameters /= from_json")
 #ifndef _CRAYFTN
       end associate
     end associate
