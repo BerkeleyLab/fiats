@@ -109,11 +109,6 @@ contains
           end do
         end associate
 
-        !print *,"inputs -----------------"
-        !do s = 1, 5
-        !  print csv, trunk_inputs(s,:)
-        !end do
-
         allocate(trunk_outputs(samples))
 
         print*, "Starting trunk inference via `do concurrent` with ", samples, " samples of size ",size(trunk_inputs,2)
@@ -123,6 +118,21 @@ contains
         end do
         call system_clock(t_end_dc)
         print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
+
+        print*, "Starting concatenation" 
+        block
+          double precision, allocatable, dimension(:,:,:) :: aug_v
+          integer i, j, k
+          allocate(aug_v(size(trunk_outputs,1), size(basis,1), size(basis,2)))
+          do concurrent(i=1:size(trunk_outputs,1), j=1:size(basis,1), k=1:size(basis,2) )
+            aug_v(i,j,k) = basis(j,k)
+          end do
+       
+          do i=1,2
+            print '(a,i2)', " --------- row ", i, "---------"
+            print '(*(g0,:," , "))', aug_v(i,:,:)
+          end do
+        end block
 
     end associate count_samples
     
