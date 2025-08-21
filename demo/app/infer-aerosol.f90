@@ -121,17 +121,21 @@ contains
 
         print*, "Starting concatenation" 
         block
-          double precision, allocatable, dimension(:,:,:) :: aug_v
+          double precision, allocatable, dimension(:,:,:) :: aug_v, concat, aug_trunk
           integer i, j, k
           allocate(aug_v(size(trunk_outputs,1), size(basis,1), size(basis,2)))
           do concurrent(i=1:size(trunk_outputs,1), j=1:size(basis,1), k=1:size(basis,2) )
             aug_v(i,j,k) = basis(j,k)
           end do
-       
-          do i=1,2
-            print '(a,i2)', " --------- row ", i, "---------"
-            print '(*(g0,:," , "))', aug_v(i,:,:)
-          end do
+
+          allocate(aug_trunk(size(trunk_outputs,1), size(basis,1), size(basis,2)+1))
+
+          aug_trunk(:,:,1:size(basis,2)) = aug_v(:,:,1:size(basis,2))
+          aug_trunk(:,:,size(basis,2)+1) = trunk_outputs(:)
+
+          print *, " ------ row 1 -------"
+          print '(*(g20.15,:," , ")', aug_trunk(1,:,:)
+          print *, " ------ row 1 -------"
         end block
 
     end associate count_samples
