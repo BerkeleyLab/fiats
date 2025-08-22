@@ -26,14 +26,17 @@ Towards these ends,
 To broaden support for the native parallel features, the Fiats contributors also write compiler tests, bug reports, and patches; develop a parallel runtime library ([Caffeine]); participate in the language standardization process; and provide example inference and training code for exercising and evaluating compilers' automatic parallelization capabilities on processors and accelerators, including Graphics Processing Units (GPUs).
 
 Available optimizers:
+
 * Stochastic gradient descent and
 * Adam (recommended).
 
 Supported network types:
+
 * Feed-forward networks and
 * Residual networks (for inference only).
 
 Supported activation functions:
+
 * Sigmoid,
 * RELU,
 * GELU,
