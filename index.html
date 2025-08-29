@@ -119,24 +119,30 @@ Towards these ends,</p>
 <li>Exploiting multi-image execution to speedup training is under investigation.</li>
 </ul>
 <p>To broaden support for the native parallel features, the Fiats contributors also write compiler tests, bug reports, and patches; develop a parallel runtime library (<a href="https://go.lbl.gov/caffeine">Caffeine</a>); participate in the language standardization process; and provide example inference and training code for exercising and evaluating compilers' automatic parallelization capabilities on processors and accelerators, including Graphics Processing Units (GPUs).</p>
-<p>Available optimizers:
-* Stochastic gradient descent and
-* Adam (recommended).</p>
-<p>Supported network types:
-* Feed-forward networks and
-* Residual networks (for inference only).</p>
-<p>Supported activation functions:
-* Sigmoid,
-* RELU,
-* GELU,
-* Swish, and
-* Step (for inference only).</p>
+<p>Available optimizers:</p>
+<ul>
+<li>Stochastic gradient descent and</li>
+<li>Adam (recommended).</li>
+</ul>
+<p>Supported network types:</p>
+<ul>
+<li>Feed-forward networks and</li>
+<li>Residual networks (for inference only).</li>
+</ul>
+<p>Supported activation functions:</p>
+<ul>
+<li>Sigmoid,</li>
+<li>RELU,</li>
+<li>GELU,</li>
+<li>Swish, and</li>
+<li>Step (for inference only).</li>
+</ul>
 <p>Please submit a pull request or an issue to add or request other optimizers, network types, or activation functions.</p>
 <h2 id="getting-started">Getting Started</h2>
 <h3 id="examples-and-demonstration-applications">Examples and demonstration applications</h3>
-<p>The <a href="example">example</a> subdirectory contains demonstrations of several relatively simple use cases.
+<p>The <a href="https://github.com/BerkeleyLab/fiats/blob/main/example">example</a> subdirectory contains demonstrations of several relatively simple use cases.
 We recommend reviewing the examples to see how to handle basic tasks such as configuring a network training run or reading a neural network and using it to perform inference.</p>
-<p>The <a href="demo">demo</a> subdirectory contains demonstration applications that depend on Fiats but build separately due to requiring additional prerequisites such as <a href="https://www.unidata.ucar.edu/software/netcdf/">NetCDF</a> and <a href="https://www.hdfgroup.org/solutions/hdf5/">HDF5</a>.
+<p>The <a href="https://github.com/BerkeleyLab/fiats/blob/main/demo">demo</a> subdirectory contains demonstration applications that depend on Fiats but build separately due to requiring additional prerequisites such as <a href="https://www.unidata.ucar.edu/software/netcdf/">NetCDF</a> and <a href="https://www.hdfgroup.org/solutions/hdf5/">HDF5</a>.
 The demonstration applications
  - Train a cloud microphysics model surrogate for the Intermediate Complexity Atmospheric Research (<a href="https://github.com/BerkeleyLab/icar/tree/neural-net">ICAR</a>) package,
  - Perform inference using a pretrained model for aerosol dynamics in the Energy Exascale Earth System (<a href="https://e3sm.org">E3SM</a>) package, and
@@ -255,7 +261,7 @@ To see the expected file format, run the [print-training-configuration] example 
 It should be ok, however, to add or removed white space or to reordered whole objects such as placing the "network configuration" object above the  "hyperparameters" object.
 A future release will leverage the <a href="https://gitlab.com/everythingfunctional/rojff">rojff</a> JSON interface to allow for more flexible file formatting.</p>
 <h3 id="training-a-neural-network">Training a neural network</h3>
-<p>Running the following command will train a neural network to learn the saturated mixing ratio function that is one component of the ICAR SB04 cloud microphysics model (see the <a href="example/supporting-modules/saturated_mixing_ratio_m.f90">saturated_mixing_ratio_m</a> module for an implementation of the involved function):</p>
+<p>Running the following command will train a neural network to learn the saturated mixing ratio function that is one component of the ICAR SB04 cloud microphysics model (see the <a href="https://github.com/BerkeleyLab/fiats/blob/main/example/supporting-modules/saturated_mixing_ratio_m.f90">saturated_mixing_ratio_m</a> module for an implementation of the involved function):</p>
 <div class="codehilite"><pre><span></span><code> fpm run --example learn-saturated-mixing-ratio --compiler gfortran --profile release -- --output-file sat-mix-rat.json
 </code></pre></div>
 
@@ -272,12 +278,12 @@ Before halting, the program will print a table of expected and predicted saturat
 The program also writes the neural network initial condition to <code>initial-network.json</code> and the final (trained) network to the file specified in the above command: <code>sat-mix-rat.json</code>.</p>
 <h3 id="performing-inference">Performing inference</h3>
 <p>Users with a PyTorch model may use <a href="https://go.lbl.gov/nexport">nexport</a> to export the model to JSON files that Fiats can read.
-Examples of performing inference using a neural-network JSON file are in <a href="example/concurrent-inferences.f90">example/concurrent-inferences</a>.</p>
+Examples of performing inference using a neural-network JSON file are in <a href="https://github.com/BerkeleyLab/fiats/blob/main/example/concurrent-inferences.f90">example/concurrent-inferences</a>.</p>
 <h2 id="documentation">Documentation</h2>
 <h3 id="html">HTML</h3>
 <p>Please see our <a href="https://berkeleylab.github.io/fiats/">GitHub Pages site</a> for Hypertext Markup Languge (HTML) documentation generated by [<code>ford</code>] or generate documentation locally by installing <code>ford</code> and executing <code>ford ford.md</code>.</p>
 <h3 id="uml">UML</h3>
-<p>Please see the <code>doc/uml</code> subdirectory for Unified Modeling Language (UML) diagrams such as a comprehensive Fiats <a href="./doc/uml/class-diagram.md">class diagram</a> with human-readable <a href="https://mermaid.js.org">Mermaid</a> source that renders graphically when opened by browsing to the document on GitHub.</p>
+<p>Please see the <a href="https://github.com/BerkeleyLab/fiats/blob/main/doc/uml"><code>doc/uml</code></a> subdirectory for Unified Modeling Language (UML) diagrams such as a comprehensive Fiats <a href="https://github.com/BerkeleyLab/fiats/blob/main/doc/uml/class-diagram.md">class diagram</a> with human-readable <a href="https://mermaid.js.org">Mermaid</a> source that renders graphically when opened by browsing to the document on GitHub.</p>
         </div>
           <div class="col-md-4">
             <div class="card card-body bg-light">
@@ -359,7 +365,7 @@ Examples of performing inference using a neural-network JSON file are in <a href
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-08-29 21:20 +0000             </p>
+ on 2025-08-29 21:24 +0000             </p>
           </div>
         </div>
         <br>
