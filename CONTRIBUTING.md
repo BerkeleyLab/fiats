@@ -55,6 +55,22 @@ Notable current and past contributors include:
   [@bonachea](https://github.com/bonachea)
   [![View ORCID record] 0000-0002-0724-9349](https://orcid.org/0000-0002-0724-9349)
 
+* Brad Richardson
+  [@everythingfunctional](https://github.com/everythingfunctional)
+  [![View ORCID record] 0000-0002-3205-2169](https://orcid.org/0000-0002-3205-2169)
+
+* Jordan A. Welsman
+  [@JordanWelsman](https://github.com/JordanWelsman)
+  [![View ORCID record] 0000-0002-2882-594X](https://orcid.org/0000-0002-2882-594X)
+
+* David Torres
+  [@davytorres](https://github.com/davytorres)
+  [![View ORCID record] 0000-0003-2469-5284](https://orcid.org/0000-0003-2469-5284)
+
+* Kareem Weaver
+  [@kareem-weaver](https://github.com/kareem-weaver)
+  [![View ORCID record] 0009-0009-3846-6248](https://orcid.org/0009-0009-3846-6248)
+
 You can also browse the [full list of repository contributors](https://github.com/BerkeleyLab/fiats/graphs/contributors).
 
 ---
