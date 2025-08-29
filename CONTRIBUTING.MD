@@ -29,7 +29,7 @@ To contribute, please follow these steps:
 - [ ] Name your branch according to the issue created.  For example `fix-issue-53` or `issue-53-feature`.
 - [ ] Make your commits logically atomic, self-consistent, and cohesive.
 - [ ] Add one or more unit tests in the `test` subdirectory to verify your fix or feature.
-- [ ] Ensure that your branch passes all tests (via `./build/run-fpm.sh test` with appropriate flags).
+- [ ] Ensure that your branch passes all tests (via `fpm test` with appropriate flags).
 - [ ] Update the [README.md](./README.md) if your branch affects anything described there.
 - [ ] Push your branch to your fork.
 - [ ] Open a [Pull Request](https://github.com/berkeleylab/fiats/pulls) (PR) against an existing branch of the Berkeley Lab [Fiats repository](https://github.com/berkeleylab/fiats). 
