@@ -14,7 +14,6 @@ If you encounter problems or limitations when installing or using Fiats, please 
     - [ ] The Fiats version number or commit hash,
     - [ ] Any conditions required to reproduce the problem such as
       - [ ] The output of `uname -a` showing the operating system (OS), OS version, and processor architecture,
-      - [ ] The number of images executed (e.g., the output of `echo $CAF_IMAGES`),
       - [ ] The command used to run your program (e.g., `./build/run-fpm.sh run`), and
       - [ ] A minimal reproducer: if possible, fewer than 50 lines demonstrating an issue.
 
