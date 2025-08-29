@@ -15,7 +15,7 @@ If you encounter problems or limitations when installing or using Fiats, please 
     - [ ] Any conditions required to reproduce the problem such as
       - [ ] The output of `uname -a` showing the operating system (OS), OS version, and processor architecture,
       - [ ] The command used to run your program (e.g., `fpm run ...`), and
-      - [ ] A minimal reproducer: if possible, fewer than 50 lines demonstrating an issue.
+      - [ ] Details about the model input file used
 
 ## Contributing Code or Documentation
 
