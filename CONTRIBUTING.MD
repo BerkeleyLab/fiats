@@ -60,6 +60,6 @@ You can also browse the [full list of repository contributors](https://github.co
 ---
 
 [Long or Frequently Used URLs]: #
-[View ORCID record]: https://github.com/BerkeleyLab/fiats/wiki/img/ORCID-small.png
+[View ORCID record]: https://github.com/BerkeleyLab/caffeine/wiki/img/ORCID-small.png
 [closed issues]: https://github.com/berkeleylab/fiats/issues?q=is%3Aissue+is%3Aclosed
 [new issue]: https://github.com/berkeleylab/fiats/issues/new
