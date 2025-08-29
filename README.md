@@ -61,6 +61,15 @@ We recommend using any compiler's latest release or even building open-source co
 The [handy-dandy] repository contains scripts capturing steps for building the [LLVM] compiler suite.
 The remainder of this section contains commands for building Fiats with a recent Fortran compiler and the Fortran Package Manager ([`fpm`]).
 
+#### Dependencies
+* [Fortran Package Manager](https://github.com/fortran-lang) (`fpm`)
+  - [Julienne](https://go.lbl.gov/julienne) (automatically downloaded by `fpm`)
+  - [Assert](https://go.lbl.gov/assert) (automatically downloaded by `fpm`)
+* A supported Fortran compiler:
+  - LLVM (`flang-new`) version 19 or higher
+  - NAG (`nagfor`) version 7.2 Build 7235 or higher
+  - Intel (`ifx`) version 2025.2 or higher
+
 #### Supported Compilers
 ##### LLVM (`flang-new`)
 Testing Fiats with LLVM `flang-new` version 20 or later with the following command should report that all tests pass:
