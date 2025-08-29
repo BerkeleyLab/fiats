@@ -10,7 +10,7 @@ If you encounter problems or limitations when installing or using Fiats, please 
  2. Email the Fiats [mailing list](mailto:fortran@lbl.gov) for advice.
  3. If steps 1 or 2 do not resolve the problem, please file a [new issue] including
     - [ ] The Fortran compiler and compiler version used with Fiats,
-    - [ ] The complete output of the install and build commands run with `--verbose` argument,
+    - [ ] The complete output of the build command run with `--verbose` argument,
     - [ ] The Fiats version number or commit hash,
     - [ ] Any conditions required to reproduce the problem such as
       - [ ] The output of `uname -a` showing the operating system (OS), OS version, and processor architecture,
