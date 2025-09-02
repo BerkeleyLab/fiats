@@ -86,13 +86,12 @@ For example, run [concurrent-inferences](./example/concurrent-inferences.f90) in
 fpm run \
   --example concurrent-inferences \
   --compiler flang-new \
-  --flag "-O3 -fopenmp -fdo-concurrent-parallel=host" \
+  --flag "-O3 -fopenmp -fdo-concurrent-to-openmp=host" \
   -- --network model.json
 ```
 where `model.json` must be a neural network in the [JSON] format used by Fiats and the companion [nexport] package.
 [Rouson et al. (2025)](https://dx.doi.org/10.25344/S4VG6T) demonstrated that this approach achieves performance on par with using OpenMP compiler directives.
-Work is under way to automatically parallelize training on CPUs.
-Future work will aim to support automatically offloading inference and training to GPUs.
+Work is under way to automatically parallelize training on CPUs and to offload inference and training to GPUs.
 
 ##### NAG (`nagfor`)
 With `nagfor` 7.2 Build 7235 or later, the following command builds Fiats and reports that all tests pass:
