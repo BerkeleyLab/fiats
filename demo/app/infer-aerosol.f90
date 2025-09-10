@@ -129,13 +129,23 @@ contains
           end do
 
           allocate(aug_trunk(size(trunk_outputs,1), size(basis,1), size(basis,2)+1))
-
           aug_trunk(:,:,1:size(basis,2)) = aug_v(:,:,1:size(basis,2))
-          aug_trunk(:,:,size(basis,2)+1) = trunk_outputs(:)
 
-          print *, " ------ row 1 -------"
-          print '(*(g20.15,:," , ")', aug_trunk(1,:,:)
-          print *, " ------ row 1 -------"
+          do concurrent(i=1:size(aug_trunk,1), j=1:size(aug_trunk,2), m=1:size(trunk_outputs))
+            associate(trunk_values => trunk_outputs(m)%values())
+              aug_trunk(i,j,size(basis,2)+1) = 
+            end associate
+          end do
+
+          print *, "shape(aug_v): ", shape(aug_v)
+          print *, "size(trunk_outputs): ", size(trunk_outputs)
+          print *, "size(trunk_outputs(1)%values): ", size(trunk_outputs(1)%values())
+
+          !aug_trunk(:,:,size(basis,2)+1) = trunk_outputs(:)
+
+          !print *, " ------ row 1 -------"
+          !print '(*(g20.15,:," , ")', aug_trunk(1,:,:)
+          !print *, " ------ row 1 -------"
         end block
 
     end associate count_samples
