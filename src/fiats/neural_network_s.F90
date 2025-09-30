@@ -4,6 +4,7 @@
 #include "julienne-assert-macros.h"
 #include "assert_macros.h"
 #include "compound_assertions.h"
+#include "language-support.F90"
 
 submodule(neural_network_m) neural_network_s
   use assert_m
@@ -74,12 +75,16 @@ contains
       end block
 #endif
 
-      feed_forward: &
-      do l = input_layer+1, output_layer
-        associate(z => matmul(w(1:n(l),1:n(l-1),l), a(1:n(l-1),l-1)) + b(1:n(l),l))
-          a(1:n(l),l) = self%activation_%evaluate(z)
-        end associate
-      end do feed_forward
+      block
+        integer l
+
+        feed_forward: &
+        do l = input_layer+1, output_layer
+          associate(z => matmul(w(1:n(l),1:n(l-1),l), a(1:n(l-1),l-1)) + b(1:n(l),l))
+            a(1:n(l),l) = self%activation_%evaluate(z)
+          end associate
+        end do feed_forward
+      end block
 
 #ifndef _CRAYFTN
       associate(normalized_outputs => tensor_t(a(1:n(output_layer), output_layer)))
@@ -120,12 +125,16 @@ contains
       end block
 #endif
 
-      feed_forward: &
-      do l = input_layer+1, output_layer
-        associate(z => matmul(w(1:n(l),1:n(l-1),l), a(1:n(l-1),l-1)) + b(1:n(l),l))
-          a(1:n(l),l) = self%activation_%evaluate(z)
-        end associate
-      end do feed_forward
+      block
+        integer l
+
+        feed_forward: &
+        do l = input_layer+1, output_layer
+          associate(z => matmul(w(1:n(l),1:n(l-1),l), a(1:n(l-1),l-1)) + b(1:n(l),l))
+            a(1:n(l),l) = self%activation_%evaluate(z)
+          end associate
+        end do feed_forward
+      end block
 
 #ifdef _CRAYFTN
       block
@@ -806,7 +815,7 @@ contains
   end procedure
 
   module procedure default_real_learn
-    integer l, batch, mini_batch_size, pair
+    integer batch, mini_batch_size, pair
     type(tensor_t), allocatable :: inputs(:), expected_outputs(:)
 
     call_assert_consistency(self)
@@ -850,11 +859,11 @@ contains
               real, allocatable :: pair_cost(:)
               if (present(cost)) allocate(pair_cost(mini_batch_size))
 
-#if F2023_LOCALITY
+#if defined(F2023_LOCALITY)
               iterate_through_batch: &
-              do concurrent (pair = 1:mini_batch_size) default(none) local(a,z,delta) reduce(+: dcdb, dcdw)
-
-#elif F2018_LOCALITY
+              do concurrent (pair = 1:mini_batch_size) default(none)  local(a,z,delta) reduce(+: dcdb, dcdw) &
+                shared(self, inputs, output_layer, n, w, b, cost, expected_outputs, pair_cost)
+#elif defined(F2018_LOCALITY)
 
               reduce_gradients: &
               block
@@ -887,11 +896,14 @@ contains
 
                     a(1:self%num_inputs(), input_layer) = inputs(pair)%values()
 
-                    feed_forward: &
-                    do l = 1,output_layer
-                      z(1:n(l),l) = matmul(w(1:n(l),1:n(l-1),l), a(1:n(l-1),l-1)) + b(1:n(l),l) ! z_j^l =  sum_k(w_jk^{l} a_k^{l-1}) + b_j^l
-                      a(1:n(l),l) = self%activation_%evaluate(z(1:n(l),l))
-                    end do feed_forward
+                    block
+                      integer l
+                      feed_forward: &
+                      do l = 1,output_layer
+                        z(1:n(l),l) = matmul(w(1:n(l),1:n(l-1),l), a(1:n(l-1),l-1)) + b(1:n(l),l) ! z_j^l =  sum_k(w_jk^{l} a_k^{l-1}) + b_j^l
+                        a(1:n(l),l) = self%activation_%evaluate(z(1:n(l),l))
+                      end do feed_forward
+                    end block
 
                     associate(y => expected_outputs(pair)%values())
                       if (present(cost)) pair_cost(pair) = sum((y(1:n(output_layer))-a(1:n(output_layer),output_layer))**2)
@@ -901,20 +913,24 @@ contains
                     end associate
                 
                     associate(n_hidden => self%num_hidden_layers())
-                      back_propagate_error: &
-                      do l = n_hidden,1,-1
-                        delta(1:n(l),l) = matmul(transpose(w(1:n(l+1),1:n(l),l+1)), delta(1:n(l+1),l+1)) &
-                                         * self%activation_%differentiate(z(1:n(l),l))
-                      end do back_propagate_error
+                      block
+                        integer l
+
+                        back_propagate_error: &
+                        do l = n_hidden,1,-1
+                          delta(1:n(l),l) = matmul(transpose(w(1:n(l+1),1:n(l),l+1)), delta(1:n(l+1),l+1)) &
+                                           * self%activation_%differentiate(z(1:n(l),l))
+                        end do back_propagate_error
+                      end block
                     end associate
 
                     
 
                     block
-                      integer j
+                      integer j, l
                       sum_gradients: &
                       do l = 1,output_layer
-#if F2023_LOCALITY
+#if defined(F2023_LOCALITY)
                         dcdb(1:n(l),l) = dcdb(1:n(l),l) + delta(1:n(l),l)
                         do concurrent(j = 1:n(l)) reduce(+: dcdw)
                           dcdw(j,1:n(l-1),l) = dcdw(j,1:n(l-1),l) + a(1:n(l-1),l-1)*delta(j,l)
@@ -928,7 +944,7 @@ contains
                       end do sum_gradients
                     end block
     
-#if F2023_LOCALITY
+#if defined(F2023_LOCALITY)
               end do iterate_through_batch
 #elif F2018_LOCALITY
 
@@ -957,34 +973,40 @@ contains
                 real, parameter :: epsilon = 1.E-08
 
                 associate(alpha => learning_rate)
-                  adam_adjust_weights_and_biases: &
-                  do concurrent(l = 1:output_layer)
-                    dcdw(1:n(l),1:n(l-1),l) = dcdw(1:n(l),1:n(l-1),l)/(mini_batch_size)
-                    vdw(1:n(l),1:n(l-1),l)  = beta(1)*vdw(1:n(l),1:n(l-1),l) + obeta(1)*dcdw(1:n(l),1:n(l-1),l)
-                    sdw (1:n(l),1:n(l-1),l) = beta(2)*sdw(1:n(l),1:n(l-1),l) + obeta(2)*(dcdw(1:n(l),1:n(l-1),l)**2)
-                    vdwc(1:n(l),1:n(l-1),l) = vdw(1:n(l),1:n(l-1),l)/(1.- beta(1)**num_mini_batches)
-                    sdwc(1:n(l),1:n(l-1),l) = sdw(1:n(l),1:n(l-1),l)/(1.- beta(2)**num_mini_batches)
-                    w(1:n(l),1:n(l-1),l) = w(1:n(l),1:n(l-1),l) &
-                      - alpha*vdwc(1:n(l),1:n(l-1),l)/(sqrt(sdwc(1:n(l),1:n(l-1),l))+epsilon) ! Adjust weights
+                  block
+                    integer l
+                    adam_adjust_weights_and_biases: &
+                    do concurrent(l = 1:output_layer)
+                      dcdw(1:n(l),1:n(l-1),l) = dcdw(1:n(l),1:n(l-1),l)/(mini_batch_size)
+                      vdw(1:n(l),1:n(l-1),l)  = beta(1)*vdw(1:n(l),1:n(l-1),l) + obeta(1)*dcdw(1:n(l),1:n(l-1),l)
+                      sdw (1:n(l),1:n(l-1),l) = beta(2)*sdw(1:n(l),1:n(l-1),l) + obeta(2)*(dcdw(1:n(l),1:n(l-1),l)**2)
+                      vdwc(1:n(l),1:n(l-1),l) = vdw(1:n(l),1:n(l-1),l)/(1.- beta(1)**num_mini_batches)
+                      sdwc(1:n(l),1:n(l-1),l) = sdw(1:n(l),1:n(l-1),l)/(1.- beta(2)**num_mini_batches)
+                      w(1:n(l),1:n(l-1),l) = w(1:n(l),1:n(l-1),l) &
+                        - alpha*vdwc(1:n(l),1:n(l-1),l)/(sqrt(sdwc(1:n(l),1:n(l-1),l))+epsilon) ! Adjust weights
 
-                    dcdb(1:n(l),l) = dcdb(1:n(l),l)/mini_batch_size
-                    vdb(1:n(l),l) = beta(1)*vdb(1:n(l),l) + obeta(1)*dcdb(1:n(l),l)
-                    sdb(1:n(l),l) = beta(2)*sdb(1:n(l),l) + obeta(2)*(dcdb(1:n(l),l)**2)
-                    vdbc(1:n(l),l) = vdb(1:n(l),l)/(1. - beta(1)**num_mini_batches)
-                    sdbc(1:n(l),l) = sdb(1:n(l),l)/(1. - beta(2)**num_mini_batches)
-                    b(1:n(l),l) = b(1:n(l),l) - alpha*vdbc(1:n(l),l)/(sqrt(sdbc(1:n(l),l))+epsilon) ! Adjust weights
-                  end do adam_adjust_weights_and_biases
+                      dcdb(1:n(l),l) = dcdb(1:n(l),l)/mini_batch_size
+                      vdb(1:n(l),l) = beta(1)*vdb(1:n(l),l) + obeta(1)*dcdb(1:n(l),l)
+                      sdb(1:n(l),l) = beta(2)*sdb(1:n(l),l) + obeta(2)*(dcdb(1:n(l),l)**2)
+                      vdbc(1:n(l),l) = vdb(1:n(l),l)/(1. - beta(1)**num_mini_batches)
+                      sdbc(1:n(l),l) = sdb(1:n(l),l)/(1. - beta(2)**num_mini_batches)
+                      b(1:n(l),l) = b(1:n(l),l) - alpha*vdbc(1:n(l),l)/(sqrt(sdbc(1:n(l),l))+epsilon) ! Adjust weights
+                    end do adam_adjust_weights_and_biases
+                  end block
                 end associate
               end block
             else
               associate(eta => learning_rate)
-                adjust_weights_and_biases: &
-                do concurrent(l = 1:output_layer)
-                  dcdb(1:n(l),l) = dcdb(1:n(l),l)/mini_batch_size
-                  b(1:n(l),l) = b(1:n(l),l) - eta*dcdb(1:n(l),l) ! Adjust biases
-                  dcdw(1:n(l),1:n(l-1),l) = dcdw(1:n(l),1:n(l-1),l)/mini_batch_size
-                  w(1:n(l),1:n(l-1),l) = w(1:n(l),1:n(l-1),l) - eta*dcdw(1:n(l),1:n(l-1),l) ! Adjust weights
-                end do adjust_weights_and_biases
+                block
+                  integer l
+                  adjust_weights_and_biases: &
+                  do concurrent(l = 1:output_layer)
+                    dcdb(1:n(l),l) = dcdb(1:n(l),l)/mini_batch_size
+                    b(1:n(l),l) = b(1:n(l),l) - eta*dcdb(1:n(l),l) ! Adjust biases
+                    dcdw(1:n(l),1:n(l-1),l) = dcdw(1:n(l),1:n(l-1),l)/mini_batch_size
+                    w(1:n(l),1:n(l-1),l) = w(1:n(l),1:n(l-1),l) - eta*dcdw(1:n(l),1:n(l-1),l) ! Adjust weights
+                  end do adjust_weights_and_biases
+                end block
               end associate
             end if
           end do iterate_across_batches
