@@ -2,11 +2,13 @@
 ! Terms of use are as specified in LICENSE.txt
 
 #include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 submodule(NetCDF_variable_m) NetCDF_variable_s
   use ieee_arithmetic, only : ieee_is_nan
   use kind_parameters_m, only : default_real
   use assert_m
+  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.), operator(//)
   use default_m, only : default_or_present_value
   implicit none
 
@@ -29,8 +31,8 @@ contains
 
   module procedure default_real_time_derivative
 
-    call_assert(new%conformable_with(old))
-    call_assert(old%name_==new%name_)
+    call_julienne_assert(new%conformable_with(old))
+    call_julienne_assert(old%name_ .equalsExpected. new%name_)
 
     time_derivative%name_ = "d" // old%name_ // "_dt"
 
@@ -192,14 +194,14 @@ contains
 
   module procedure default_real_rank
     associate(allocation_vector => components_allocated(self))
-      call_assert(count(allocation_vector) == 1)
+      call_julienne_assert(count(allocation_vector) .equalsExpected. 1)
       my_rank = findloc(allocation_vector, .true., dim=1)
     end associate
   end procedure
 
   module procedure double_precision_rank
     associate(allocation_vector => components_allocated(self))
-      call_assert(count(allocation_vector) == 1)
+      call_julienne_assert(count(allocation_vector) .equalsExpected. 1)
       my_rank = findloc(allocation_vector, .true., dim=1)
     end associate
   end procedure
@@ -316,8 +318,8 @@ contains
 
   module procedure default_real_subtract
 
-    call_assert(lhs%conformable_with(rhs))
-    call_assert_diagnose(lhs%name_==rhs%name_, "NetCDF_variable_s(default_real_subtract): lhs%name_==rhs%name_", lhs%name_//"/="//rhs%name_)
+    call_julienne_assert(lhs%conformable_with(rhs))
+    call_julienne_assert(lhs%name_ .equalsExpected. rhs%name_)
 
     difference%name_ = lhs%name_
 
@@ -337,8 +339,8 @@ contains
 
   module procedure double_precision_subtract
 
-    call_assert(lhs%conformable_with(rhs))
-    call_assert_diagnose(lhs%name_ == rhs%name_, "NetCDF_variable_s(double_precision_subtract): lhs%name_==rhs%name_",lhs%name_//"/="//rhs%name_)
+    call_julienne_assert(lhs%conformable_with(rhs))
+    call_julienne_assert(lhs%name_ .equalsExpected. rhs%name_)
 
     difference%name_ = lhs%name_
 

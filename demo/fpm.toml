@@ -1,10 +1,6 @@
-name       = "Fiats-Demonstration-Applications"
-license    = "(Please see fiats/LICENSE.txt.)"
-author     = "(Please see fiats/fpm.toml.)"
-maintainer = "(Please see fiats/fpm.toml.)"
+name = "Fiats-Demonstration-Applications"
 
 [dependencies]
-assert = {git = "https://github.com/sourceryinstitute/assert", tag = "2.1.0"}
-julienne = {git = "https://github.com/berkeleylab/julienne", tag = "1.8.4"}
+julienne = {git = "https://github.com/berkeleylab/julienne", tag = "3.2.1"}
 fiats = {path = "../"}
-netcdf-interfaces = {git = "https://github.com/LKedward/netcdf-interfaces.git", rev = "d2bbb71ac52b4e346b62572b1ca1620134481096"}
+netcdf-interfaces = {git = "https://github.com/berkeleylab/netcdf-interfaces.git", rev = "d2bbb71ac52b4e346b62572b1ca1620134481096"}
