@@ -7,12 +7,12 @@ module trainable_network_test_m
   !! Define inference tests and procedures required for reporting results
 
   ! External dependencies
-  use assert_m
   use julienne_m, only : &
      bin_t &
     ,call_julienne_assert_ &
     ,operator(.all.) &
     ,operator(.approximates.) &
+    ,operator(.equalsExpected.) &
     ,operator(.within.) &
     ,string_t &
     ,test_description_t &

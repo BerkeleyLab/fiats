@@ -4,7 +4,7 @@
 #include "julienne-assert-macros.h"
 
 submodule(time_data_m) time_data_s
-  use julienne_m, only : separated_values, operator(.csv.), operator(.equalsExpected.), call_julienne_assert_
+  use julienne_m, only : call_julienne_assert_, operator(.all.), operator(.csv.), operator(.equalsExpected.), separated_values
   implicit none
 contains
 
@@ -29,7 +29,7 @@ contains
       time_data%time_ = lines(i)%get_json_value(key="times", mold=[string_t::])
       i = 5
       time_data%dt_= lines(i)%get_json_value(key="dt", mold=[real::])
-      call_julienne_assert(all(size(time_data%date_) .equalsExpected. [size(time_data%time_), size(time_data%dt_)]))
+      call_julienne_assert(.all. (size(time_data%date_) .equalsExpected. [size(time_data%time_), size(time_data%dt_)]))
     end associate
   end procedure
 

@@ -3,10 +3,14 @@
 
 #include "julienne-assert-macros.h"
 
-
 submodule(histogram_m) histogram_s
-  use assert_m
-  use julienne_m, only : string_t, operator(.cat.)
+  use julienne_m, only : &
+     call_julienne_assert_ &
+    ,operator(.all.) &
+    ,operator(.cat.) &
+    ,operator(.equalsExpected.) &
+    ,operator(.isAtLeast.) &
+    ,string_t
   implicit none
 
 contains
@@ -77,8 +81,8 @@ contains
         block 
           integer h, b ! histogram number, bin number
 
-          call_julienne_assert(num_bins > 0)
-          call_julienne_assert(all(histograms(1)%num_bins() == [(histograms(h)%num_bins() , h=1,size(histograms))]))
+          call_julienne_assert(num_bins .isAtLeast. 1)
+          call_julienne_assert(.all. (histograms(1)%num_bins() .equalsExpected. [(histograms(h)%num_bins() , h=1,size(histograms))]))
             
           allocate(columns(num_bins))
           do b = 1, num_bins

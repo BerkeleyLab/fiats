@@ -1,10 +1,10 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 submodule(activation_m) activation_s
-  use assert_m
+  use julienne_m ,only : call_julienne_assert_
   implicit none
 
   real            , parameter :: pi    = 3.141592653589793
@@ -21,7 +21,7 @@ contains
     end procedure
 
     module procedure function_name
-      call_assert(lbound(activation_name,1) <= self%selection_ .and. self%selection_ <= ubound(activation_name,1))
+      call_julienne_assert(lbound(activation_name,1) <= self%selection_ .and. self%selection_ <= ubound(activation_name,1))
       string = string_t(trim(activation_name(self%selection_)))
     end procedure
 

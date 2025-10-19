@@ -1,11 +1,10 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 submodule(network_configuration_m) network_configuration_s
-  use assert_m
-  use julienne_formats_m, only : csv
+  use julienne_m, only : csv, call_julienne_assert_
   implicit none
 
   character(len=*), parameter :: skip_connections_key  = "skip connections"
@@ -22,7 +21,7 @@ contains
 
   module procedure equals
 
-    call_assert(allocated(lhs%activation_name_) .and. allocated(rhs%activation_name_))
+    call_julienne_assert(allocated(lhs%activation_name_) .and. allocated(rhs%activation_name_))
 
     lhs_equals_rhs = &
       lhs%skip_connections_ .eqv. rhs%skip_connections_ .and. &
@@ -47,7 +46,7 @@ contains
       end if
     end do
 
-    call_assert(network_configuration_key_found)
+    call_julienne_assert(network_configuration_key_found)
   end procedure
 
   module procedure from_double_precision_string_json
@@ -66,7 +65,7 @@ contains
       end if
     end do
 
-    call_assert(network_configuration_key_found)
+    call_julienne_assert(network_configuration_key_found)
   end procedure
 
   module procedure to_json

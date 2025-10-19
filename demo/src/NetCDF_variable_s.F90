@@ -1,14 +1,12 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
 #include "julienne-assert-macros.h"
 
 submodule(NetCDF_variable_m) NetCDF_variable_s
   use ieee_arithmetic, only : ieee_is_nan
   use kind_parameters_m, only : default_real
-  use assert_m
-  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.), operator(//)
+  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
   use default_m, only : default_or_present_value
   implicit none
 

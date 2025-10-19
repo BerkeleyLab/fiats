@@ -2,11 +2,9 @@
 ! Terms of use are as specified in LICENSE.txt
 
 #include "julienne-assert-macros.h"
-#include "assert_macros.h"
 #include "compound_assertions.h"
 
 submodule(neural_network_m) neural_network_s
-  use assert_m
   use julienne_m, only : call_julienne_assert_ , operator(.all.), operator(.equalsExpected.)
   use double_precision_string_m, only : double_precision_string_t
   use kind_parameters_m, only : double_precision
@@ -147,9 +145,9 @@ contains
 
   module procedure default_real_consistency
 
-    call_assert(allocated(self%weights_))
-    call_assert(allocated(self%biases_))
-    call_assert(allocated(self%nodes_))
+    call_julienne_assert(allocated(self%weights_))
+    call_julienne_assert(allocated(self%biases_))
+    call_julienne_assert(allocated(self%nodes_))
 
     associate(max_width=>maxval(self%nodes_), component_sizes=>[size(self%biases_,1), size(self%weights_,1), size(self%weights_,2)])
       call_julienne_assert(.all. (component_sizes .equalsExpected. max_width))
@@ -163,12 +161,12 @@ contains
 
   module procedure double_precision_consistency
 
-    call_assert(allocated(self%weights_))
-    call_assert(allocated(self%biases_))
-    call_assert(allocated(self%nodes_))
+    call_julienne_assert(allocated(self%weights_))
+    call_julienne_assert(allocated(self%biases_))
+    call_julienne_assert(allocated(self%nodes_))
 
     associate(max_width=>maxval(self%nodes_), component_sizes=>[size(self%biases_,1), size(self%weights_,1), size(self%weights_,2)])
-      call_julienne_assert(all(component_sizes .equalsExpected. max_width))
+      call_julienne_assert(.all. (component_sizes .equalsExpected. max_width))
     end associate
 
     associate(input_subscript => lbound(self%nodes_,1))
@@ -666,7 +664,7 @@ contains
     call_julienne_assert(.all. (shape(self%weights_) .equalsExpected. shape(neural_network%weights_)))
     call_julienne_assert(.all. (shape(self%biases_) .equalsExpected. shape(neural_network%biases_)))
     call_julienne_assert(.all. (shape(self%nodes_) .equalsExpected. shape(neural_network%nodes_)))
-    call_assert(self%activation_ == neural_network%activation_)
+    call_julienne_assert(self%activation_ == neural_network%activation_)
     
   end procedure
 
@@ -810,7 +808,7 @@ contains
     type(tensor_t), allocatable :: inputs(:), expected_outputs(:)
 
     call_assert_consistency(self)
-    call_assert(workspace%fully_allocated())
+    call_julienne_assert(workspace%fully_allocated())
 
     associate(output_layer => ubound(self%nodes_,1))
 

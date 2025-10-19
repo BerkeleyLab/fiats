@@ -29,7 +29,7 @@ end module
 program learn_exponentiation
   !! This trains a neural network to learn the following six polynomial functions of its eight inputs.
   use fiats_m, only : neural_network_t, trainable_network_t, mini_batch_t, tensor_t, input_output_pair_t, shuffle
-  use julienne_m, only : string_t, file_t, command_line_t, bin_t, call_julienne_assert_, operator(.equalsExpected.)
+  use julienne_m, only : string_t, file_t, command_line_t, bin_t, call_julienne_assert_, operator(.equalsExpected.), operator(.all.)
   use exponentiation_m, only : y
   implicit none
 
