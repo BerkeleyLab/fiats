@@ -50,7 +50,7 @@ contains
       block 
         integer line
         integer, parameter :: space = 1, date_length = len("2010/10/01"), time_length = len("03:16:00")
-        character(len=*), parameter :: preface = " training data dt="
+        character(len=*), parameter :: preface = "training data dt="
         integer, parameter :: preface_end = len(preface)
         integer, parameter :: date_start = preface_end + space + 1, date_end = date_start + date_length - 1
         integer, parameter :: time_start =    date_end + space + 1, time_end = time_start + time_length - 1
@@ -64,7 +64,7 @@ contains
 
           do line = 1, num_lines
             associate(raw_line => lines(line)%string())
-              call_julienne_assert(raw_line(1:len(preface))==preface)
+              call_julienne_assert(raw_line(1:len(preface)) .equalsExpected. preface)
               time_data%date_(line) = raw_line(date_start:date_end)
               time_data%time_(line) = raw_line(time_start:time_end)
               read(raw_line(dt_start:),*) time_data%dt_(line)
