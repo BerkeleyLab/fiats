@@ -8,7 +8,6 @@ module hyperparameters_test_m
   use fiats_m, only : hyperparameters_t
   use julienne_m, only : &
      string_t &
-    ,test_description_substring &
     ,test_description_t &
     ,test_diagnosis_t &
     ,test_result_t &
@@ -36,36 +35,21 @@ contains
   end function
 
   function results() result(test_results)
-    type(test_description_t), allocatable :: test_descriptions(:)
+    type(hyperparameters_test_t) hyperparameters_test
     type(test_result_t), allocatable :: test_results(:)
 
-    test_descriptions = [ & 
+    test_results = hyperparameters_test%run([ & 
       test_description_t( "component-wise construction followed by conversion to and from JSON", write_then_read_hyperparameters) &
-    ]
-    associate( &
-      substring_in_subject => index(subject(), test_description_substring) /= 0, &
-      substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
-    )
-      test_descriptions = pack(test_descriptions, substring_in_subject .or. substring_in_description)
-    end associate
-    test_results = test_descriptions%run()
+    ])
   end function
 
   function write_then_read_hyperparameters() result(test_diagnosis)
     type(test_diagnosis_t) test_diagnosis
-#ifdef _CRAYFTN
-    type(hyperparameters_t) :: hyperparameters, from_json
-    hyperparameters = hyperparameters_t(mini_batches=5, learning_rate=1., optimizer = "stochastic gradient descent")
-    from_json = hyperparameters_t(hyperparameters%to_json())
-#else
     associate(hyperparameters => hyperparameters_t(mini_batches=5, learning_rate=1., optimizer = "stochastic gradient descent"))
       associate(from_json => hyperparameters_t(hyperparameters%to_json()))
-#endif
         test_diagnosis = test_diagnosis_t(hyperparameters == from_json, diagnostics_string="hyperparameters /= from_json")
-#ifndef _CRAYFTN
       end associate
     end associate
-#endif
   end function
 
 end module hyperparameters_test_m

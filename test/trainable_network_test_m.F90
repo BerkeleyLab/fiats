@@ -15,7 +15,6 @@ module trainable_network_test_m
     ,operator(.approximates.) &
     ,operator(.within.) &
     ,string_t &
-    ,test_description_substring &
     ,test_description_t &
     ,test_diagnosis_t &
     ,test_result_t &
@@ -55,24 +54,16 @@ contains
 
   function results() result(test_results)
     type(test_result_t), allocatable :: test_results(:)
-    type(test_description_t), allocatable :: test_descriptions(:)
+    type(trainable_network_test_t) trainable_network_test
 
-    test_descriptions = [ &
+    test_results = trainable_network_test%run([ &
        test_description_t("preserving an identity map with 2 hidden layers", preserve_identity) &
       ,test_description_t("learning identity with Adam from perturbed-identity initial condition", learn_identity) &
       ,test_description_t("learning a 2-hidden-layer AND gate from a skewed AND training data", learn_and_from_skewed_data) &
       ,test_description_t("learning NOT-AND from skewed NOT-AND data", learn_not_and_from_skewed_data) &
       ,test_description_t("learning OR from symmetric OR-gate data and random initial weights", learn_or_from_random_weights) &
       ,test_description_t("learning XOR from symmetric XOR-gate data and random initial weights", learn_xor_from_random_weights) &
-    ]
-
-    associate( &
-      substring_in_subject => index(subject(), test_description_substring) /= 0, &
-      substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
-    )   
-      test_descriptions = pack(test_descriptions, substring_in_subject .or. substring_in_description)
-    end associate
-    test_results = test_descriptions%run()
+    ])
   end function
 
   subroutine print_truth_table(gate_name, gate_function_ptr, test_inputs, actual_outputs)
@@ -331,17 +322,9 @@ contains
     real, intent(in) :: perturbation_magnitude
     integer, parameter :: nodes_per_layer(*) = [2, 2, 2, 2]
     integer, parameter :: max_n = maxval(nodes_per_layer), layers = size(nodes_per_layer)
-#ifndef _CRAYFTN
     real, parameter :: identity(*,*,*) = &
       reshape([real:: [1,0], [0,1] ,[1,0], [0,1], [1,0], [0,1]], [max_n, max_n, layers-1])
-#else
-    real, allocatable :: identity(:,:,:)
-#endif
     real harvest(size(identity,1), size(identity,2), size(identity,3))
-
-#ifdef _CRAYFTN
-    identity = reshape([real:: [1,0], [0,1] ,[1,0], [0,1], [1,0], [0,1]], [max_n, max_n, layers-1])
-#endif
 
     call random_number(harvest)
     harvest = perturbation_magnitude*harvest
@@ -370,14 +353,7 @@ contains
     associate(num_inputs => trainable_network%num_inputs(), num_outputs => trainable_network%num_outputs())
 
       call_julienne_assert(num_inputs .equalsExpected. num_outputs)
-#ifdef _CRAYFTN
-      allocate(inputs(num_pairs))
-      do i = 1, num_pairs
-         inputs(i) = tensor_t(real([i,2*i])/num_pairs)
-      end do
-#else
       inputs = [(tensor_t(real([i,2*i])/num_pairs), i = 1, num_pairs)]
-#endif
       associate(outputs => inputs)
         input_output_pairs = input_output_pair_t(inputs, outputs)
       end associate
@@ -429,14 +405,7 @@ contains
     associate(num_inputs => trainable_network%num_inputs(), num_outputs => trainable_network%num_outputs())
 
       call_julienne_assert(num_inputs .equalsExpected. num_outputs)
-#ifdef _CRAYFTN
-      allocate(inputs(num_pairs))
-      do i = 1, num_pairs
-        inputs(i) = tensor_t(real([i,2*i])/(2*num_pairs))
-      end do
-#else
       inputs = [(tensor_t(real([i,2*i])/(2*num_pairs)), i = 1, num_pairs)]
-#endif
       associate(outputs => inputs)
         input_output_pairs = input_output_pair_t(inputs, outputs)
       end associate

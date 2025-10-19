@@ -12,7 +12,6 @@ module tensor_test_m
     ,operator(.equalsExpected.) &
     ,operator(.within.) &
     ,string_t &
-    ,test_description_substring &
     ,test_description_t &
     ,test_diagnosis_t &
     ,test_result_t &
@@ -41,18 +40,11 @@ contains
 
   function results() result(test_results)
     type(test_result_t), allocatable :: test_results(:)
-    type(test_description_t), allocatable :: test_descriptions(:)
+    type(tensor_test_t) tensor_test
 
-    test_descriptions = [ &
+    test_results = tensor_test%run([ &
       test_description_t("double-precision construction and value extraction", double_precision_construction) &
-    ]
-    associate( &
-      substring_in_subject => index(subject(), test_description_substring) /= 0, &
-      substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
-    )
-      test_descriptions = pack(test_descriptions, substring_in_subject .or. substring_in_description)
-    end associate
-    test_results = test_descriptions%run()
+    ])
   end function
 
   function double_precision_construction() result(test_diagnosis)

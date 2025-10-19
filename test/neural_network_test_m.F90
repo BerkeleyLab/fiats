@@ -12,7 +12,6 @@ module neural_network_test_m
      ,operator(.approximates.) &
      ,operator(.within.) &
      ,string_t &
-     ,test_description_substring &
      ,test_description_t &
      ,test_diagnosis_t &
      ,test_result_t &
@@ -41,23 +40,16 @@ contains
 
   function results() result(test_results)
     type(test_result_t), allocatable :: test_results(:)
-    type(test_description_t), allocatable :: test_descriptions(:)
+    type(neural_network_test_t) neural_network_test
 
-    test_descriptions = [ &
+    test_results = neural_network_test%run([ &
        test_description_t("performing elemental inference with 1 hidden layer", elemental_infer_with_1_hidden_layer_xor_net) &
       ,test_description_t("performing elemental inference with 2 hidden layers", elemental_infer_with_2_hidden_layer_xor_net) &
       ,test_description_t("converting a network with 2 hidden layers to and from JSON format", multi_hidden_layer_net_to_from_json) &
       ,test_description_t("converting a network with varying-width hidden layers to/from JSON", varying_width_net_to_from_json) &
       ,test_description_t("performing inference with a network with hidden layers of varying width", infer_with_varying_width_net) &
       ,test_description_t("double-precision inference", double_precision_inference) &
-    ]
-    associate( &
-      substring_in_subject => index(subject(), test_description_substring) /= 0, &
-      substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
-    )
-      test_descriptions = pack(test_descriptions, substring_in_subject .or. substring_in_description)
-    end associate
-    test_results = test_descriptions%run()
+    ])
   end function
 
   function single_hidden_layer_xor_network() result(neural_network)
