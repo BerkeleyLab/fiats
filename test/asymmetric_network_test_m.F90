@@ -15,7 +15,6 @@ module asymmetric_network_test_m
     ,operator(.equalsExpected.) &
     ,operator(.within.) &
     ,string_t &
-    ,test_description_substring &
     ,test_description_t &
     ,test_diagnosis_t &
     ,test_result_t &
@@ -43,19 +42,12 @@ contains
   end function
 
   function results() result(test_results)
+    type(asymmetric_network_test_t) asymmetric_network_test
     type(test_result_t), allocatable :: test_results(:)
-    type(test_description_t), allocatable :: test_descriptions(:)
 
-    test_descriptions = [ &
+    test_results = asymmetric_network_test%run([ &
       test_description_t("learning the truth table for XOR-AND-the-2nd-input logic", xor_and_2nd_input_truth_table) &
-    ]
-    associate( &
-      substring_in_subject => index(subject(), test_description_substring) /= 0, &
-      substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
-    )
-      test_descriptions = pack(test_descriptions, substring_in_subject .or. substring_in_description)
-    end associate
-    test_results = test_descriptions%run()
+    ])
   end function
 
   function xor_and_2nd_input_network() result(neural_network)

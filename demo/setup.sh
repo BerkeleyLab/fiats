@@ -91,7 +91,11 @@ PREFIX=`realpath $PREFIX`
 
 fpm_fc_version=$($FPM_FC --version)
 if [[ $fpm_fc_version = flang* ]]; then
-  FPM_FLAG="-mmlir -allow-assumed-rank -O3 -L$NETCDF_LIB_PATH -L$HDF5_LIB_PATH"
+  if [[ $fpm_fc_version = *19* ]]; then
+    FPM_FLAG="-mmlir -allow-assumed-rank -O3 -L$NETCDF_LIB_PATH -L$HDF5_LIB_PATH"
+  else
+    FPM_FLAG="-O3 -L$NETCDF_LIB_PATH -L$HDF5_LIB_PATH"
+  fi
 elif [[ $fpm_fc_version = GNU* ]]; then
   echo
   echo "$FPM_FC appears to be gfortran, which is currently unsupported due to compiler bugs for parameterized derived types."

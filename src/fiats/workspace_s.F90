@@ -1,10 +1,10 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 submodule(neural_network_m) workspace_s
-  use assert_m
+  use julienne_m, only : call_julienne_assert_
   implicit none
 
   integer, parameter :: input_layer = 0
@@ -35,7 +35,7 @@ contains
       allocate(workspace%a(maxval(neural_network%nodes_), input_layer:output_layer)) ! Activations
     end associate
 
-    call_assert(workspace%fully_allocated())
+    call_julienne_assert(workspace%fully_allocated())
 
   end procedure
 

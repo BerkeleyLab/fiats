@@ -8,7 +8,6 @@ module network_configuration_test_m
   use julienne_m, only : &
     string_t &
    ,test_description_t &
-   ,test_description_substring &
    ,test_diagnosis_t &
    ,test_result_t &
    ,test_t
@@ -34,41 +33,25 @@ contains
   end function
 
   function results() result(test_results)
+    type(network_configuration_test_t) network_configuration_test
     type(test_result_t), allocatable :: test_results(:)
-    type(test_description_t), allocatable :: test_descriptions(:)
 
-    test_descriptions = [ & 
+    test_results = network_configuration_test%run([ & 
       test_description_t("component-wise construction and then conversion to and from JSON", write_then_read_network_configuration) &
-    ]
-    associate( &
-      substring_in_subject => index(subject(), test_description_substring) /= 0, &
-      substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
-    )
-      test_descriptions = pack(test_descriptions, substring_in_subject .or. substring_in_description)
-    end associate
-    test_results = test_descriptions%run()
+    ])
   end function
 
   function write_then_read_network_configuration() result(test_diagnosis)
     type(test_diagnosis_t) test_diagnosis
-#ifdef _CRAYFTN
-    type(network_configuration_t) :: constructed_from_components, constructed_from_json
-    constructed_from_components= &
-      network_configuration_t(skip_connections=.false., nodes_per_layer=[2,72,2], activation_name="sigmoid")
-    constructed_from_json = network_configuration_t(constructed_from_components%to_json())
-#else
     associate(constructed_from_components=> &
       network_configuration_t(skip_connections=.false., nodes_per_layer=[2,72,2], activation_name="sigmoid"))
       associate(constructed_from_json => network_configuration_t(constructed_from_components%to_json()))
-#endif
         test_diagnosis = test_diagnosis_t( &
            test_passed =         constructed_from_components == constructed_from_json  &
           ,diagnostics_string = "constructed_from_components /= constructed_from_json" &
         )
-#ifndef _CRAYFTN
       end associate
     end associate
-#endif
   end function
 
 end module network_configuration_test_m

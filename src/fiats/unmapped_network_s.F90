@@ -1,11 +1,9 @@
 ! Copyright (c) 2023-20225, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
 #include "compound_assertions.h"
 
 submodule(neural_network_m) unmapped_network_s
-  use assert_m
   implicit none
 
   integer, parameter :: input_layer = 0 

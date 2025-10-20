@@ -1,14 +1,21 @@
-! Copyright (c), The Regents of the University of California
+! Copyright (c) 2022-2025, The Regents of the University of California and Sourcery Institute
 ! Terms of use are as specified in LICENSE.txt
-
-#include "assert_macros.h"
 
 module NetCDF_file_test_m
   !! Define asymmetric tests for the NetCDF file interface
 
-  ! External dependencies
-  use assert_m
-  use julienne_m, only : test_t, test_result_t, test_description_t, test_description_substring, string_t
+  !! External dependencies
+  use julienne_m, only : &
+    julienne_assert &
+   ,operator(.all.) &
+   ,operator(.approximates.) &
+   ,operator(.equalsExpected.) &
+   ,operator(.within.) &
+   ,operator(//) &
+   ,test_description_t &
+   ,test_diagnosis_t &
+   ,test_result_t &
+   ,test_t
   use netcdf, only : &
      nf90_create, nf90_def_dim, nf90_def_var, nf90_enddef, nf90_put_var, nf90_inquire_dimension, & ! functions
      nf90_close, nf90_open, nf90_inq_varid, nf90_get_var, nf90_inquire_variable, &
@@ -40,24 +47,13 @@ contains
   end function
 
   function results() result(test_results)
+    type(NetCDF_file_test_t) NetCDF_file_test
     type(test_result_t), allocatable :: test_results(:)
-    type(test_description_t), allocatable :: test_descriptions(:)
 
-    character(len=*), parameter :: longest_description = &
-          "writing and then reading gives input matching the output for a 1D double precision array"
-
-    test_descriptions = &
-      [ test_description_t("writing and then reading gives input matching the output for a 2D integer array", write_then_read_2D_integer), &
-        test_description_t("writing and then reading gives input matching the output for a 1D double precision array", write_then_read_1D_double) &
-      ]
-    associate( &
-      substring_in_subject => index(subject(), test_description_substring) /= 0, &
-      substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
-    )
-      test_descriptions = pack(test_descriptions, substring_in_subject .or. substring_in_description)
-    end associate
-    test_results = test_descriptions%run()
-       
+    test_results = NetCDF_file_test%run([ &
+       test_description_t("writing and then reading gives input matching the output for a 2D integer array", write_then_read_2D_integer) &
+      ,test_description_t("writing and then reading gives input matching the output for a 1D double precision array", write_then_read_1D_double) &
+    ])
   end function
 
   subroutine output_2D_integer(file_name, data_out)
@@ -67,25 +63,25 @@ contains
     integer ncid, varid, x_dimid, y_dimid
 
     associate(nf_status => nf90_create(file_name, nf90_clobber, ncid)) ! create or ovewrite file
-      call_assert_diagnose(nf_status == nf90_noerr, "nf90_create(file_name, nf90_clobber, ncid) succeeds",trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_dim(ncid, "x", size(data_out,2), x_dimid)) ! define x dimension & get its ID
-      call_assert_diagnose(nf_status == nf90_noerr,'nf90_def_dim(ncid,"x",size(data_out,2),x_dimid) succeeds',trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ",  " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_dim(ncid, "y", size(data_out,1), y_dimid)) ! define y dimension & get its ID
-      call_assert_diagnose(nf_status==nf90_noerr, 'nf90_def_dim(ncid,"y",size(data_out,2),y_dimid) succeeds', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_var(ncid, "data", nf90_int, [y_dimid, x_dimid], varid))!define integer 'data' variable & get ID
-      call_assert_diagnose(nf_status == nf90_noerr, 'nf90_def_var(ncid,"data",nf90_int,[y_dimid,x_dimid],varid) succeds', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_enddef(ncid)) ! exit define mode: tell NetCDF we are done defining metadata
-      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_enddef(ncid)', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_put_var(ncid, varid, data_out)) ! write all data to file
-      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_put_var(ncid, varid, data_out)', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_close(ncid)) ! close file to free associated NetCDF resources and flush buffers
-      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_close(ncid)', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
   end subroutine
 
@@ -96,27 +92,27 @@ contains
     integer ncid, varid, x_dimid, y_dimid
 
     associate(nf_status => nf90_create(file_name, nf90_clobber, ncid)) ! create or ovewrite file
-      call_assert_diagnose(nf_status == nf90_noerr, "nf90_create(file_name, nf90_clobber, ncid) succeeds",trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_dim(ncid, "x", size(data_out,1), x_dimid)) ! define x dimension & get its ID
-      call_assert_diagnose(nf_status == nf90_noerr,'nf90_def_dim(ncid,"x",size(data_out,2),x_dimid) succeeds',trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_var(ncid, "data", nf90_int, [x_dimid], varid))!define integer 'data' variable & get ID
-      call_assert_diagnose(nf_status == nf90_noerr, 'nf90_def_var(ncid,"data",nf90_int,[y_dimid,x_dimid],varid) succeds', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_enddef(ncid)) ! exit define mode: tell NetCDF we are done defining metadata
-      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_enddef(ncid)', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_put_var(ncid, varid, data_out)) ! write all data to file
-      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_put_var(ncid, varid, data_out)', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_close(ncid)) ! close file to free associated NetCDF resources and flush buffers
-      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_close(ncid)', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
   end subroutine
 
-  function write_then_read_2D_integer() result(test_passes)
-    logical test_passes
+  function write_then_read_2D_integer() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     integer i, j
     integer, parameter :: ny = 12,  nx = 6
     integer, parameter :: data_written(*,*) = reshape([((i*j, i=1,nx), j=1,ny)], [ny,nx])
@@ -129,12 +125,11 @@ contains
       call NetCDF_file%input("data", data_read)
     end associate
 
-    test_passes = all(data_written == data_read)
-
+    test_diagnosis = .all. (data_written .equalsExpected. data_read) // "data_written /= data_read"
   end function
 
-  function write_then_read_1D_double() result(test_passes)
-    logical test_passes
+  function write_then_read_1D_double() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
     integer i
     integer, parameter :: nx = 6
     double precision, parameter :: data_written(*) = dble([(i, i=1,nx)]), tolerance = 1.E-15
@@ -147,8 +142,7 @@ contains
       call NetCDF_file%input("data", data_read)
     end associate
 
-    test_passes = all(abs(data_written - data_read)<tolerance)
-
+    test_diagnosis = .all. (data_read .approximates. data_written .within. tolerance) // "data_written /= data_read"
   end function
 
 end module NetCDF_file_test_m

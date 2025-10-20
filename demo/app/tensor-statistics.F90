@@ -1,7 +1,7 @@
-! Copyright (c), The Regents of the University of California
+! Copyright (c), 2022-2025 The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 program tensor_statistics
   !! This program
@@ -10,8 +10,7 @@ program tensor_statistics
   !! 2. Saves the resulting statistics to text files with space-separated columns and column labels.
 
   ! External dependencies:
-  use julienne_m, only : command_line_t, file_t, string_t
-  use assert_m
+  use julienne_m, only : command_line_t, file_t, string_t, call_julienne_assert_
   use ieee_arithmetic, only : ieee_is_nan
   use iso_fortran_env, only : int64, real64
     
@@ -138,7 +137,7 @@ contains
       end do
 
       do v = 2, size(input_variable)
-        call_assert(input_variable(v)%conformable_with(input_variable(1)))
+        call_julienne_assert(input_variable(v)%conformable_with(input_variable(1)))
       end do
 
       print '(a)',"- reading time from NetCDF file"
@@ -188,7 +187,7 @@ contains
       end do
 
       do v = 2, size(output_variable)
-        call_assert(output_variable(v)%conformable_with(output_variable(1)))
+        call_julienne_assert(output_variable(v)%conformable_with(output_variable(1)))
       end do
 
       print '(a)',"- reading time"
@@ -207,7 +206,7 @@ contains
         associate(derivative_name => "d" // output_component_names(v)%string() // "_dt")
           print '(a)',"- " // derivative_name
           derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=time_data%dt())
-          call_assert(.not. derivative(v)%any_nan())
+          call_julienne_assert(.not. derivative(v)%any_nan())
         end associate derivative_name
       end do
     end associate

@@ -8,7 +8,6 @@ module training_data_files_test_m
   use julienne_m, only : &
      string_t &
     ,test_description_t &
-    ,test_description_substring &
     ,test_diagnosis_t &
     ,test_result_t &
     ,test_t
@@ -35,19 +34,12 @@ contains
   end function
 
   function results() result(test_results)
-    type(test_description_t), allocatable :: test_descriptions(:)
+    type(training_data_files_test_t) training_data_files_test
     type(test_result_t), allocatable :: test_results(:)
 
-    test_descriptions = [ & 
+    test_results = training_data_files_test%run([ & 
       test_description_t( string_t("round-trip to/from JSON yielding equivalent objects"), check_json_round_trip) &
-    ]
-    associate( &
-      substring_in_subject => index(subject(), test_description_substring) /= 0, &
-      substring_in_description => test_descriptions%contains_text(string_t(test_description_substring)) &
-    )
-      test_descriptions = pack(test_descriptions, substring_in_subject .or. substring_in_description)
-    end associate
-    test_results = test_descriptions%run()
+    ])
   end function
 
   function check_json_round_trip() result(test_diagnosis)

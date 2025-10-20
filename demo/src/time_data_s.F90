@@ -1,11 +1,10 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 submodule(time_data_m) time_data_s
-  use assert_m
-  use julienne_m, only : separated_values, operator(.csv.)
+  use julienne_m, only : call_julienne_assert_, operator(.all.), operator(.csv.), operator(.equalsExpected.), separated_values
   implicit none
 contains
 
@@ -23,14 +22,14 @@ contains
 
     associate(lines => file%lines())
       i = 1
-      call_assert_diagnose(adjustl(lines(i)%string())=='{'," default_real_json(time_data_s): object start", lines(i)%string())
+      call_julienne_assert(adjustl(lines(i)%string()) .equalsExpected. '{')
       i = 3
       time_data%date_ = lines(i)%get_json_value(key="dates", mold=[string_t::])
       i = 4
       time_data%time_ = lines(i)%get_json_value(key="times", mold=[string_t::])
       i = 5
       time_data%dt_= lines(i)%get_json_value(key="dt", mold=[real::])
-      call_assert(all(size(time_data%date_) == [size(time_data%time_), size(time_data%dt_)]))
+      call_julienne_assert(.all. (size(time_data%date_) .equalsExpected. [size(time_data%time_), size(time_data%dt_)]))
     end associate
   end procedure
 
@@ -51,7 +50,7 @@ contains
       block 
         integer line
         integer, parameter :: space = 1, date_length = len("2010/10/01"), time_length = len("03:16:00")
-        character(len=*), parameter :: preface = " training data dt="
+        character(len=*), parameter :: preface = "training data dt="
         integer, parameter :: preface_end = len(preface)
         integer, parameter :: date_start = preface_end + space + 1, date_end = date_start + date_length - 1
         integer, parameter :: time_start =    date_end + space + 1, time_end = time_start + time_length - 1
@@ -65,7 +64,7 @@ contains
 
           do line = 1, num_lines
             associate(raw_line => lines(line)%string())
-              call_assert(raw_line(1:len(preface))==preface)
+              call_julienne_assert(raw_line(1:len(preface)) .equalsExpected. preface)
               time_data%date_(line) = raw_line(date_start:date_end)
               time_data%time_(line) = raw_line(time_start:time_end)
               read(raw_line(dt_start:),*) time_data%dt_(line)
@@ -82,10 +81,10 @@ contains
     character(len=*), parameter :: indent = repeat(" ",ncopies=12)
     character(len=:), allocatable :: csv_format, date_string, time_string, dt_string
 
-    call_assert(allocated(self%date_))
-    call_assert(allocated(self%time_))
-    call_assert(allocated(self%dt_))
-    call_assert(all(size(self%date_) == [size(self%time_), size(self%dt_)]))
+    call_julienne_assert(allocated(self%date_))
+    call_julienne_assert(allocated(self%time_))
+    call_julienne_assert(allocated(self%dt_))
+    call_julienne_assert(all(size(self%date_) == [size(self%time_), size(self%dt_)]))
 
     associate( &
        quoted_dates => self%date_%bracket('"') &

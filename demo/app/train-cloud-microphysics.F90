@@ -1,7 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 program train_cloud_microphysics
   !! Train a neural network to represent a cloud microphysics model from
@@ -11,8 +11,7 @@ program train_cloud_microphysics
   use iso_fortran_env, only : int64, real64
 
   !! External dependencies:
-  use julienne_m, only : string_t, file_t, command_line_t, bin_t
-  use assert_m
+  use julienne_m, only : string_t, file_t, command_line_t, bin_t, call_julienne_assert_
   use fiats_m, only : tensor_t, trainable_network_t, input_output_pair_t, mini_batch_t, &
     tensor_map_t, training_configuration_t, training_data_files_t, shuffle
 
@@ -193,7 +192,7 @@ contains
           end do
 
           do v = 2, size(input_variable)
-            call_assert(input_variable(v)%conformable_with(input_variable(1)))
+            call_julienne_assert(input_variable(v)%conformable_with(input_variable(1)))
           end do
 
           print *,"- reading time"
@@ -222,13 +221,13 @@ contains
           end do
 
           do v = 1, size(output_variable)
-            call_assert(output_variable(v)%conformable_with(input_variable(1)))
+            call_julienne_assert(output_variable(v)%conformable_with(input_variable(1)))
           end do
 
           print *,"- reading time"
           call output_time%input("time", output_file, rank=1)
 
-          call_assert(output_time%conformable_with(input_time))
+          call_julienne_assert(output_time%conformable_with(input_time))
 
         end associate output_file
       end associate output_file_name
@@ -244,7 +243,7 @@ contains
           associate(derivative_name => "d" // output_names(v)%string() // "/dt")
             print *,"- " // derivative_name
             derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=time_data%dt())
-            call_assert(.not. derivative(v)%any_nan())
+            call_julienne_assert(.not. derivative(v)%any_nan())
           end associate derivative_name
         end do
       end associate

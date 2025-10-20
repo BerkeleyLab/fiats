@@ -1,10 +1,10 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 submodule(occupancy_m) occupancy_s
-  use assert_m
+  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
   implicit none
 
 contains
@@ -86,7 +86,7 @@ contains
       error stop "occupancy_s(vacate): unsupported rank"
     end select
 
-    call_assert(self%allocated_dim()==size(dims))
+    call_julienne_assert(self%allocated_dim() .equalsExpected. size(dims))
   
   end procedure vacate
 
@@ -176,7 +176,7 @@ contains
 
   module procedure num_occupied
 
-      call_assert(count(allocations(self))==1)
+      call_julienne_assert(count(allocations(self)) .equalsExpected. 1)
 
       select case(self%allocated_dim())
       case(1)
@@ -257,7 +257,7 @@ contains
   module procedure allocated_dim
 
     associate(my_allocations => allocations(self))
-      call_assert(count(my_allocations)==1)
+      call_julienne_assert(count(my_allocations) .equalsExpected. 1)
       my_dim = findloc(my_allocations, .true., dim=1)
     end associate
 

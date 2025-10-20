@@ -1,11 +1,9 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
 #include "julienne-assert-macros.h"
 
 submodule(metadata_m) metadata_s
-  use assert_m
   use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
   implicit none
 
@@ -51,7 +49,7 @@ contains
       end associate
     end do
 
-    call_julienne_assert(any(trim(adjustl(lines(size(lines))%string())) .equalsExpected. ["},","} "]))
+    call_julienne_assert(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]))
   end procedure
 
   module procedure double_precision_from_json
@@ -78,7 +76,7 @@ contains
       end associate
     end do
 
-    call_assert(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]))
+    call_julienne_assert(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]))
   end procedure
 
   module procedure to_json

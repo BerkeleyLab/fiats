@@ -1,11 +1,10 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 submodule(tensor_names_m) tensor_names_s
-  use assert_m
-  use julienne_m, only : operator(.csv.), operator(.cat.)
+  use julienne_m, only : call_julienne_assert_, operator(.all.), operator(.cat.), operator(.csv.), operator(.expect.)
   implicit none
 
   character(len=*), parameter :: inputs_key = "inputs"
@@ -19,7 +18,7 @@ contains
   end procedure 
 
   module procedure equals
-    call_assert(all([allocated(lhs%inputs_), allocated(rhs%inputs_), allocated(lhs%outputs_), allocated(rhs%outputs_)]))
+    call_julienne_assert(.all. (.expect. [allocated(lhs%inputs_), allocated(rhs%inputs_), allocated(lhs%outputs_), allocated(rhs%outputs_)]))
     lhs_equals_rhs = all(lhs%inputs_ == rhs%inputs_) .and. all(lhs%outputs_ == rhs%outputs_)
   end procedure 
 
@@ -38,7 +37,7 @@ contains
       end if
     end do
 
-    call_assert(tensor_names_key_found)
+    call_julienne_assert(tensor_names_key_found)
   end procedure
 
   module procedure to_json
