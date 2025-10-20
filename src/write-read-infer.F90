@@ -29,23 +29,12 @@ contains
     type(neural_network_t) neural_network
     integer, parameter :: nodes_per_layer(*) = [2, 2, 2]
     integer, parameter :: max_n = maxval(nodes_per_layer), layers = size(nodes_per_layer)
-#ifdef _CRAYFTN
-    real, allocatable :: weights(:,:,:)
-    weights = reshape([real :: [1,0, 0,1], [1,0, 0,1]], [max_n, max_n, layers-1])
-    neural_network = neural_network_t( &
-      metadata = [string_t("Identity"), string_t("Damian Rouson"), string_t("2023-09-18"), string_t("relu"), string_t("false")], &
-      weights = weights, &
-      biases = reshape([real:: [0,0], [0,0]], [max_n, layers-1]), &
-      nodes = nodes_per_layer &
-    )
-#else
     neural_network = neural_network_t( &
       metadata = [string_t("Identity"), string_t("Damian Rouson"), string_t("2023-09-18"), string_t("relu"), string_t("false")], &
       weights = reshape([real :: [1,0, 0,1], [1,0, 0,1]], [max_n, max_n, layers-1]), &
       biases = reshape([real :: [0,0], [0,0]], [max_n, layers-1]), &
       nodes = nodes_per_layer &
     )
-#endif
   end function
 
   subroutine write_read_query_infer(output_file_name)

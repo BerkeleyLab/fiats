@@ -1,11 +1,10 @@
 ! Copyright (c) 2023-2025, The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
-#include "assert_macros.h"
+#include "julienne-assert-macros.h"
 
 submodule(training_data_files_m) training_data_files_s
-  use assert_m
-  use julienne_m, only : operator(.csv.)
+  use julienne_m, only : operator(.csv.), call_julienne_assert_
   implicit none
 
   character(len=*), parameter :: training_data_files_key = "training data files"
@@ -58,7 +57,7 @@ contains
       end do
     end associate
 
-    call_assert(training_data_files_key_found)
+    call_julienne_assert(training_data_files_key_found)
   end procedure
 
   module procedure from_components

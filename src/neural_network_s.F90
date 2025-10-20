@@ -2,12 +2,10 @@
 ! Terms of use are as specified in LICENSE.txt
 
 #include "julienne-assert-macros.h"
-#include "assert_macros.h"
 #include "compound_assertions.h"
 
 submodule(neural_network_m) neural_network_s
-  use assert_m
-  use julienne_m, only : call_julienne_assert_ , operator(.all.), operator(.equalsExpected.)
+  use julienne_m, only : call_julienne_assert_ , operator(.all.), operator(.equalsExpected.), operator(.expect.)
   use double_precision_string_m, only : double_precision_string_t
   use kind_parameters_m, only : double_precision
   use layer_m, only : layer_t
@@ -62,17 +60,9 @@ contains
 
       allocate(a(maxval(n), input_layer:output_layer))
 
-#ifndef _CRAYFTN
       associate(normalized_inputs => self%input_map_%map_to_training_range(inputs))
         a(1:n(input_layer),input_layer) = normalized_inputs%values()
       end associate
-#else
-      block
-        type(tensor_t) normalized_inputs
-        normalized_inputs = self%input_map_%map_to_training_range(inputs)
-        a(1:n(input_layer),input_layer) = normalized_inputs%values()
-      end block
-#endif
 
       feed_forward: &
       do l = input_layer+1, output_layer
@@ -81,17 +71,9 @@ contains
         end associate
       end do feed_forward
 
-#ifndef _CRAYFTN
       associate(normalized_outputs => tensor_t(a(1:n(output_layer), output_layer)))
         outputs = self%output_map_%map_from_training_range(normalized_outputs)
       end associate
-#else
-      block
-        type(tensor_t) :: normalized_outputs
-        normalized_outputs = tensor_t(a(1:n(output_layer), output_layer))
-        outputs = self%output_map_%map_from_training_range(normalized_outputs)
-      end block
-#endif
 
     end associate
 
@@ -108,17 +90,9 @@ contains
 
       allocate(a(maxval(n), input_layer:output_layer))
 
-#ifndef _CRAYFTN
       associate(normalized_inputs => self%input_map_%map_to_training_range(inputs))
         a(1:n(input_layer),input_layer) = normalized_inputs%values()
       end associate
-#else
-      block
-        type(tensor_t) normalized_inputs
-        normalized_inputs = self%input_map_%map_to_training_range(inputs)
-        a(1:n(input_layer),input_layer) = normalized_inputs%values()
-      end block
-#endif
 
       feed_forward: &
       do l = input_layer+1, output_layer
@@ -127,19 +101,9 @@ contains
         end associate
       end do feed_forward
 
-#ifdef _CRAYFTN
-      block
-        type(tensor_t) :: normalized_outputs
-        normalized_outputs = tensor_t(a(1:n(output_layer), output_layer))
-#else
       associate(normalized_outputs => tensor_t(a(1:n(output_layer), output_layer)))
-#endif
         outputs = self%output_map_%map_from_training_range(normalized_outputs)
-#ifdef _CRAYFTN
-      end block
-#else
       end associate
-#endif
 
     end associate
 
@@ -147,9 +111,7 @@ contains
 
   module procedure default_real_consistency
 
-    call_assert(allocated(self%weights_))
-    call_assert(allocated(self%biases_))
-    call_assert(allocated(self%nodes_))
+    call_julienne_assert(.all. (.expect. [allocated(self%weights_), allocated(self%biases_), allocated(self%nodes_)]))
 
     associate(max_width=>maxval(self%nodes_), component_sizes=>[size(self%biases_,1), size(self%weights_,1), size(self%weights_,2)])
       call_julienne_assert(.all. (component_sizes .equalsExpected. max_width))
@@ -163,12 +125,10 @@ contains
 
   module procedure double_precision_consistency
 
-    call_assert(allocated(self%weights_))
-    call_assert(allocated(self%biases_))
-    call_assert(allocated(self%nodes_))
+    call_julienne_assert(.all. (.expect. [allocated(self%weights_), allocated(self%biases_), allocated(self%nodes_)]))
 
     associate(max_width=>maxval(self%nodes_), component_sizes=>[size(self%biases_,1), size(self%weights_,1), size(self%weights_,2)])
-      call_julienne_assert(all(component_sizes .equalsExpected. max_width))
+      call_julienne_assert(.all. (component_sizes .equalsExpected. max_width))
     end associate
 
     associate(input_subscript => lbound(self%nodes_,1))
@@ -255,15 +215,6 @@ contains
 
   module procedure default_real_to_json
 
-#ifdef _CRAYFTN
-    type(tensor_map_t) proto_map
-    type(metadata_t) proto_meta
-    type(neuron_t) proto_neuron
-    proto_map = tensor_map_t("",[0.],[1.])
-    proto_meta = metadata_t(string_t(""),string_t(""),string_t(""),string_t(""),string_t(""))
-    proto_neuron = neuron_t([0.],1.)
-#endif
-
     call_assert_consistency(self)
 
     associate( &
@@ -272,11 +223,9 @@ contains
       ,num_inputs => self%num_inputs() &
       ,first_hidden => lbound(self%nodes_,1) + 1 &
       ,last_hidden => ubound(self%nodes_,1) - 1 &
-#ifndef _CRAYFTN
       ,proto_map => tensor_map_t("",[0.],[1.]) &
       ,proto_meta => metadata_t(string_t(""),string_t(""),string_t(""),string_t(""),string_t("")) &
       ,proto_neuron => neuron_t([0.],0.) &
-#endif
     )
       associate( &
         metadata_lines => size(proto_meta%to_json()), &
@@ -371,15 +320,6 @@ contains
 
   module procedure double_precision_to_json
 
-#ifdef _CRAYFTN
-    type(tensor_map_t) proto_map
-    type(metadata_t) proto_meta
-    type(neuron_t) proto_neuron
-    proto_map = tensor_map_t("",[0D0],[1D0])
-    proto_meta = metadata_t(string_t(""),string_t(""),string_t(""),string_t(""),string_t(""))
-    proto_neuron = neuron_t([0D0],1D0)
-#endif
-
     call_assert_consistency(self)
 
     associate( &
@@ -388,11 +328,9 @@ contains
       ,num_inputs => self%num_inputs() &
       ,first_hidden => lbound(self%nodes_,1) + 1 &
       ,last_hidden => ubound(self%nodes_,1) - 1 &
-#ifndef _CRAYFTN
       ,proto_map => tensor_map_t("",[0D0],[0D0]) &
       ,proto_meta => metadata_t(string_t(""),string_t(""),string_t(""),string_t(""),string_t("")) &
       ,proto_neuron => neuron_t([0D0],0D0) &
-#endif
     )
       associate( &
         metadata_lines => size(proto_meta%to_json()), &
@@ -666,7 +604,7 @@ contains
     call_julienne_assert(.all. (shape(self%weights_) .equalsExpected. shape(neural_network%weights_)))
     call_julienne_assert(.all. (shape(self%biases_) .equalsExpected. shape(neural_network%biases_)))
     call_julienne_assert(.all. (shape(self%nodes_) .equalsExpected. shape(neural_network%nodes_)))
-    call_assert(self%activation_ == neural_network%activation_)
+    call_julienne_assert(self%activation_ == neural_network%activation_)
     
   end procedure
 
@@ -810,7 +748,7 @@ contains
     type(tensor_t), allocatable :: inputs(:), expected_outputs(:)
 
     call_assert_consistency(self)
-    call_assert(workspace%fully_allocated())
+    call_julienne_assert(workspace%fully_allocated())
 
     associate(output_layer => ubound(self%nodes_,1))
 
@@ -830,21 +768,11 @@ contains
 
             dcdw = 0.; dcdb = 0.
 
-#ifndef _CRAYFTN
             associate(input_output_pairs => mini_batches_arr(batch)%input_output_pairs())
-#else
-            block
-              type(input_output_pair_t), allocatable :: input_output_pairs(:)
-              input_output_pairs = mini_batches_arr(batch)%input_output_pairs()
-#endif  
               inputs = input_output_pairs%inputs()
               expected_outputs = input_output_pairs%expected_outputs()
               mini_batch_size = size(input_output_pairs)
-#ifndef _CRAYFTN
             end associate
-#else
-            end block
-#endif  
             sum_cost: &
             block
               real, allocatable :: pair_cost(:)

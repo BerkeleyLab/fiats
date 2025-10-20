@@ -2,11 +2,9 @@
 ! Terms of use are as specified in LICENSE.txt
 
 #include "julienne-assert-macros.h"
-#include "assert_macros.h"
 
 submodule(tensor_map_m) tensor_map_s
-  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
-  use julienne_m, only : separated_values
+  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.), operator(.all.), operator(.expect.), separated_values
   use kind_parameters_m, only : default_real
   implicit none
   
@@ -58,7 +56,7 @@ contains
       end if
     end do 
 
-    call_assert(tensor_map_key_found)
+    call_julienne_assert(tensor_map_key_found)
   end procedure
 
   module procedure double_precision_from_json
@@ -77,15 +75,16 @@ contains
       end if
     end do
 
-    call_assert(tensor_map_key_found)
+    call_julienne_assert(tensor_map_key_found)
   end procedure
 
   module procedure default_real_equals
     real, parameter :: tolerance = 1.E-08
 
-    call_assert(allocated(lhs%layer_    ) .and. allocated(rhs%layer_    ))
-    call_assert(allocated(lhs%intercept_) .and. allocated(rhs%intercept_))
-    call_assert(allocated(lhs%slope_    ) .and. allocated(rhs%slope_    ))
+    call_julienne_assert(.all. (.expect. [allocated(lhs%layer_    ), allocated(rhs%layer_    )]))
+    call_julienne_assert(.all. (.expect. [allocated(lhs%intercept_), allocated(rhs%intercept_)]))
+    call_julienne_assert(.all. (.expect. [allocated(lhs%slope_    ), allocated(rhs%slope_    )]))
+
     call_julienne_assert(size(lhs%intercept_) .equalsExpected. size(rhs%intercept_))
     call_julienne_assert(size(lhs%slope_    ) .equalsExpected. size(rhs%slope_    ))
 
@@ -98,9 +97,10 @@ contains
   module procedure double_precision_equals
     double precision, parameter :: tolerance = 1.D-015
 
-    call_assert(allocated(lhs%layer_    ) .and. allocated(rhs%layer_    ))
-    call_assert(allocated(lhs%intercept_) .and. allocated(rhs%intercept_))
-    call_assert(allocated(lhs%slope_    ) .and. allocated(rhs%slope_    ))
+    call_julienne_assert(.all. (.expect. [allocated(lhs%layer_    ), allocated(rhs%layer_    )]))
+    call_julienne_assert(.all. (.expect. [allocated(lhs%intercept_), allocated(rhs%intercept_)]))
+    call_julienne_assert(.all. (.expect. [allocated(lhs%slope_    ), allocated(rhs%slope_    )]))
+
     call_julienne_assert(size(lhs%intercept_) .equalsExpected. size(rhs%intercept_))
     call_julienne_assert(size(lhs%slope_    ) .equalsExpected. size(rhs%slope_    ))
 
@@ -115,8 +115,7 @@ contains
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
     character(len=:), allocatable :: csv_format, intercept_string, slope_string
 
-    call_assert(allocated(self%layer_))
-    call_assert(allocated(self%intercept_) .and. allocated(self%slope_))
+    call_julienne_assert(.all. (.expect. [allocated(self%layer_), allocated(self%intercept_), allocated(self%slope_)]))
 
     csv_format = separated_values(separator=",", mold=[real(default_real)::])
     allocate(character(len=size(self%intercept_)*(characters_per_value+1)-1)::intercept_string)
@@ -142,8 +141,7 @@ contains
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
     character(len=:), allocatable :: csv_format, intercept_string, slope_string
 
-    call_assert(allocated(self%layer_))
-    call_assert(allocated(self%intercept_) .and. allocated(self%slope_))
+    call_julienne_assert(.all. (.expect. [allocated(self%layer_), allocated(self%intercept_) .and. allocated(self%slope_)]))
 
     csv_format = separated_values(separator=",", mold=[double precision::])
     allocate(character(len=size(self%intercept_)*(characters_per_value+1)-1)::intercept_string)

@@ -30,7 +30,7 @@ end module
 program learn_multiplication
   !! This trains a neural network to learn the following six polynomial functions of its eight inputs.
   use fiats_m, only : neural_network_t, trainable_network_t, mini_batch_t, tensor_t, input_output_pair_t, shuffle
-  use julienne_m, only : string_t, file_t, command_line_t, bin_t, call_julienne_assert_, operator(.equalsExpected.)
+  use julienne_m, only : string_t, file_t, command_line_t, bin_t, call_julienne_assert_, operator(.equalsExpected.), operator(.all.)
   use multiply_inputs, only : y
   implicit none
 
@@ -66,7 +66,7 @@ program learn_multiplication
         inputs = [(tensor_t(real([(j*i, j = 1,num_inputs)])/(num_inputs*num_pairs)), i = 1, num_pairs)]
         desired_outputs = y(inputs)
         output_sizes = [(size(desired_outputs(i)%values()),i=1,size(desired_outputs))]
-        call_julienne_assert(.all. (num_outputs .equalsExpectd. output_sizes))
+        call_julienne_assert(.all. (num_outputs .equalsExpected. output_sizes))
       end block
       input_output_pairs = input_output_pair_t(inputs, desired_outputs)
       block 

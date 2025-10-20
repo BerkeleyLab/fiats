@@ -2,10 +2,8 @@
 ! Terms of use are as specified in LICENSE.txt
 
 #include "julienne-assert-macros.h"
-#include "assert_macros.h"
 
 submodule(neuron_m) neuron_s
-  use assert_m
   use julienne_m, only : operator(.equalsExpected.), call_julienne_assert_, separated_values
   implicit none
 
@@ -16,7 +14,7 @@ contains
     character(len=*), parameter :: indent = repeat(" ",ncopies=12)
     character(len=:), allocatable :: csv_format, weights_string, bias_string
 
-    call_assert(allocated(self%weights_))
+    call_julienne_assert(allocated(self%weights_))
 
     csv_format = separated_values(separator=",", mold=[real::])
     allocate(character(len=size(self%weights_)*(characters_per_value+1)-1)::weights_string)
@@ -36,7 +34,7 @@ contains
     character(len=*), parameter :: indent = repeat(" ",ncopies=12)
     character(len=:), allocatable :: csv_format, weights_string, bias_string
 
-    call_assert(allocated(self%weights_))
+    call_julienne_assert(allocated(self%weights_))
 
     csv_format = separated_values(separator=",", mold=[double precision::])
     allocate(character(len=size(self%weights_)*(characters_per_value+1)-1)::weights_string)
