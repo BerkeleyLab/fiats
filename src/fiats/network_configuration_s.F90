@@ -4,7 +4,7 @@
 #include "julienne-assert-macros.h"
 
 submodule(network_configuration_m) network_configuration_s
-  use julienne_m, only : csv, call_julienne_assert_
+  use julienne_m, only : csv, call_julienne_assert_, operator(.all.), operator(.expect.)
   implicit none
 
   character(len=*), parameter :: skip_connections_key  = "skip connections"
@@ -21,7 +21,7 @@ contains
 
   module procedure equals
 
-    call_julienne_assert(allocated(lhs%activation_name_) .and. allocated(rhs%activation_name_))
+    call_julienne_assert(.all. (.expect. [allocated(lhs%activation_name_), allocated(rhs%activation_name_)]))
 
     lhs_equals_rhs = &
       lhs%skip_connections_ .eqv. rhs%skip_connections_ .and. &
@@ -76,15 +76,7 @@ contains
 
     allocate(character(len=size(self%nodes_per_layer_)*char_per_elem + brackets) :: nodes_per_layer_string)
 
-#ifdef _CRAYFTN
-    if (self%skip_connections_) then
-      write(skip_connections_string,*) "true"
-    else
-      write(skip_connections_string,*) "false"
-    end if
-#else
     write(skip_connections_string,*) trim(merge("true ","false",self%skip_connections_))
-#endif
     write(nodes_per_layer_string, csv) self%nodes_per_layer_
 
     lines = [ &

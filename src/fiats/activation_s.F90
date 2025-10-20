@@ -4,7 +4,7 @@
 #include "julienne-assert-macros.h"
 
 submodule(activation_m) activation_s
-  use julienne_m ,only : call_julienne_assert_
+  use julienne_m ,only : call_julienne_assert_, operator(.also.), operator(.isAtMost.)
   implicit none
 
   real            , parameter :: pi    = 3.141592653589793
@@ -21,7 +21,7 @@ contains
     end procedure
 
     module procedure function_name
-      call_julienne_assert(lbound(activation_name,1) <= self%selection_ .and. self%selection_ <= ubound(activation_name,1))
+      call_julienne_assert((lbound(activation_name,1) .isAtMost. self%selection_) .also. (self%selection_ .isAtMost. ubound(activation_name,1)))
       string = string_t(trim(activation_name(self%selection_)))
     end procedure
 

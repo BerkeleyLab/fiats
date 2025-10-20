@@ -4,7 +4,7 @@
 #include "julienne-assert-macros.h"
 
 submodule(hyperparameters_m) hyperparameters_s
-  use julienne_m, only : call_julienne_assert_
+  use julienne_m, only : call_julienne_assert_, operator(.all.), operator(.expect.)
   implicit none
 
   character(len=*), parameter :: mini_batches_key  = "mini-batches"
@@ -29,7 +29,7 @@ contains
 
     real, parameter :: tolerance = 1.E-08
 
-    call_julienne_assert(allocated(lhs%optimizer_) .and. allocated(rhs%optimizer_))
+    call_julienne_assert(.all. (.expect. [allocated(lhs%optimizer_), allocated(rhs%optimizer_)]))
 
     lhs_equals_rhs = &
       lhs%mini_batches_ == rhs%mini_batches_ .and. &
@@ -42,7 +42,7 @@ contains
 
     double precision, parameter :: tolerance = 1.D-15
 
-    call_julienne_assert(allocated(lhs%optimizer_) .and. allocated(rhs%optimizer_))
+    call_julienne_assert(.all. (.expect. [allocated(lhs%optimizer_), allocated(rhs%optimizer_)]))
 
     lhs_equals_rhs = &
       lhs%mini_batches_ == rhs%mini_batches_ .and. &

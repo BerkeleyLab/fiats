@@ -4,7 +4,7 @@
 #include "julienne-assert-macros.h"
 
 submodule(tensor_names_m) tensor_names_s
-  use julienne_m, only : operator(.csv.), operator(.cat.), call_julienne_assert_
+  use julienne_m, only : call_julienne_assert_, operator(.all.), operator(.cat.), operator(.csv.), operator(.expect.)
   implicit none
 
   character(len=*), parameter :: inputs_key = "inputs"
@@ -18,7 +18,7 @@ contains
   end procedure 
 
   module procedure equals
-    call_julienne_assert(all([allocated(lhs%inputs_), allocated(rhs%inputs_), allocated(lhs%outputs_), allocated(rhs%outputs_)]))
+    call_julienne_assert(.all. (.expect. [allocated(lhs%inputs_), allocated(rhs%inputs_), allocated(lhs%outputs_), allocated(rhs%outputs_)]))
     lhs_equals_rhs = all(lhs%inputs_ == rhs%inputs_) .and. all(lhs%outputs_ == rhs%outputs_)
   end procedure 
 

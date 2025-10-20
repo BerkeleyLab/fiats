@@ -4,7 +4,7 @@
 #include "julienne-assert-macros.h"
 
 submodule(layer_m) layer_s
-  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
+  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.), operator(.expect.)
   implicit none
 
 contains
@@ -19,7 +19,7 @@ contains
     line = adjustl(layer_lines(start)%string())
     hidden_layers = line == '['
     output_layer = line == '"output_layer": ['
-    call_julienne_assert(hidden_layers .or. output_layer)
+    call_julienne_assert(any([hidden_layers, output_layer]))
 
     layer%neuron = neuron_t(layer_lines, start+1)
     num_inputs = size(layer%neuron%weights())
@@ -52,7 +52,7 @@ contains
     line = adjustl(layer_lines(start)%string())
     hidden_layers = line == '['
     output_layer = line == '"output_layer": ['
-    call_julienne_assert(hidden_layers .or. output_layer)
+    call_julienne_assert(any([hidden_layers, output_layer]))
 
     layer%neuron = neuron_t(layer_lines, start+1)
     num_inputs = size(layer%neuron%weights())
