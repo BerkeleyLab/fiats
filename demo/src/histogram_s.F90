@@ -84,6 +84,10 @@ contains
   end function
 
   module procedure construct
+    histogram = construct_in_range(variable_name, v, minval(v), maxval(v), num_bins, raw)
+  end procedure
+
+  module procedure construct_in_range
 
     integer i, j, k, n
     integer, parameter :: performance_threshold = 80
@@ -91,8 +95,8 @@ contains
     real, allocatable :: v_mapped(:,:,:,:)
 
     histogram%variable_name_ = variable_name
-    histogram%unmapped_min_ = minval(v)
-    histogram%unmapped_max_ = maxval(v)
+    histogram%unmapped_min_  = v_min
+    histogram%unmapped_max_  = v_max
 
     allocate(histogram%bin_value_(num_bins))
     allocate(histogram%bin_count_(num_bins))

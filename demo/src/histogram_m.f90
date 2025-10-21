@@ -32,6 +32,15 @@ module histogram_m
       type(histogram_t) histogram
     end function
 
+    pure module function construct_in_range(variable_name, v, v_min, v_max, num_bins, raw) result(histogram)
+      implicit none
+      real, intent(in) :: v(:,:,:,:), v_min, v_max
+      character(len=*), intent(in) :: variable_name
+      integer, intent(in) :: num_bins
+      logical, intent(in) :: raw
+      type(histogram_t) histogram
+    end function
+
   end interface
 
   interface to_file

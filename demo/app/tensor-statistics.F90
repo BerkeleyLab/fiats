@@ -17,7 +17,7 @@ program tensor_statistics
   ! Internal dependencies:
   use NetCDF_file_m, only: NetCDF_file_t
   use NetCDF_variable_m, only: NetCDF_variable_t, time_derivative_t
-  use histogram_m, only: histogram_t, to_file
+  use histogram_m, only: to_file
   use time_data_m, only: time_data_t, icar_output_file_t
   use fiats_m, only : training_configuration_t, training_data_files_t
   implicit none
