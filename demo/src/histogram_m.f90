@@ -13,9 +13,12 @@ module histogram_m
     private
     character(len=:), allocatable :: variable_name_
     real unmapped_min_, unmapped_max_
-    real, allocatable :: bin_frequency_(:), bin_value_(:)
+    real, allocatable :: bin_value_(:)
+    integer, allocatable :: bin_count_(:)
+    integer cardinality_
   contains
     procedure variable_name
+    procedure bin_frequency
   end type
 
   interface histogram_t
@@ -53,6 +56,13 @@ module histogram_m
       implicit none
       class(histogram_t), intent(in) :: self
       character(len=:), allocatable :: name
+    end function
+
+    pure module function bin_frequency(self, bin) result(frequency)
+      implicit none
+      class(histogram_t), intent(in) :: self
+      integer, intent(in) :: bin
+      real frequency
     end function
 
   end interface
