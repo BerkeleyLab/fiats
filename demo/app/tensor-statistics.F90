@@ -117,36 +117,36 @@ contains
     logical, intent(in) :: raw
 
     type(time_derivative_t), allocatable :: derivative(:)
-    type(NetCDF_variable_t), allocatable :: input_variable(:), output_variable(:)
     type(NetCDF_variable_t) input_time, output_time
+    type(NetCDF_variable_t), allocatable :: input_variable(:), output_variable(:)
+    type(NetCDF_file_t), allocatable :: NetCDF_input_file(:), NetCDF_output_file(:)
     double precision, allocatable, dimension(:) :: dt
     double precision, parameter :: tolerance = 1.E-07
     integer(int64) t_histo_start, t_histo_finish 
-    integer t, t_end, v
+    integer t, t_end, v, f
 
     allocate(input_variable(size(input_component_names)))
+    allocate(NetCDF_input_file(size(input_tensor_file_names)))
 
-    print '(a)',"Reading physics-based model inputs from " // input_tensor_file_names(1)%string()
+    do f = 1, size(NetCDF_input_file)
+      print '(a)',"Reading physics-based model inputs from " // input_tensor_file_names(f)%string()
+      NetCDF_input_file(f) = netCDF_file_t(input_tensor_file_names(f))
+    end do
 
-    input_file: &
-    associate(NetCDF_file => netCDF_file_t(input_tensor_file_names(1)))
+    do v=1, size(input_variable) 
+      print '(a)',"- reading " // input_component_names(v)%string()
+      call input_variable(v)%input(input_component_names(v), NetCDF_input_file(1), rank=4)
+    end do
 
-      do v=1, size(input_variable) 
-        print '(a)',"- reading " // input_component_names(v)%string()
-        call input_variable(v)%input(input_component_names(v), NetCDF_file, rank=4)
-      end do
+    do v = 2, size(input_variable)
+      call_julienne_assert(input_variable(v)%conformable_with(input_variable(1)))
+    end do
 
-      do v = 2, size(input_variable)
-        call_julienne_assert(input_variable(v)%conformable_with(input_variable(1)))
-      end do
-
-      print '(a)',"- reading time from NetCDF file"
-      call input_time%input("time", NetCDF_file, rank=1)
-
-    end associate input_file
+    print '(a)',"- reading time from NetCDF file"
+    call input_time%input("time", NetCDF_input_file(1), rank=1)
 
     print '(a)',"Calculating input tensor histograms."
-    call system_clock(t_histo_start)
+    call system_clock(t_histo_start, clock_rate)
     associate(histograms => [(input_variable(v)%histogram(num_bins, raw), v = 1, size(input_variable))])
       call system_clock(t_histo_finish)
       print '(i0,a,g0,a)',size(histograms), " input histograms done in ", real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
@@ -175,25 +175,24 @@ contains
     end associate
 
     allocate(output_variable(size(output_component_names)))
+    allocate(NetCDF_output_file(size(output_tensor_file_names)))
 
-    print '(a)',"Reading physics-based model outputs from " // output_tensor_file_names(1)%string()
+    do f = 1, size(NetCDF_output_file)
+      print '(a)',"Reading physics-based model outputs from " // output_tensor_file_names(f)%string()
+      NetCDF_output_file(f) = netCDF_file_t(output_tensor_file_names(f))
+    end do
 
-    output_file: &
-    associate(NetCDF_file => netCDF_file_t(output_tensor_file_names(1)))
+    do v=1, size(output_variable)
+      print '(a)', "- reading " // output_component_names(v)%string()
+      call output_variable(v)%input(output_component_names(v), NetCDF_output_file(1), rank=4)
+    end do
 
-      do v=1, size(output_variable)
-        print '(a)', "- reading " // output_component_names(v)%string()
-        call output_variable(v)%input(output_component_names(v), NetCDF_file, rank=4)
-      end do
+    do v = 2, size(output_variable)
+      call_julienne_assert(output_variable(v)%conformable_with(output_variable(1)))
+    end do
 
-      do v = 2, size(output_variable)
-        call_julienne_assert(output_variable(v)%conformable_with(output_variable(1)))
-      end do
-
-      print '(a)',"- reading time"
-      call output_time%input("time", NetCDF_file, rank=1)
-
-    end associate output_file
+    print '(a)',"- reading time"
+    call output_time%input("time", NetCDF_output_file(1), rank=1)
 
     print '(a)',"Calculating the desired neural-network model outputs: time derivatives of a subset of the inputs"
 
@@ -212,7 +211,7 @@ contains
     end associate
 
     print '(a)',"Calculating histograms for the desired neural-network outputs."
-    call system_clock(t_histo_start)
+    call system_clock(t_histo_start, clock_rate)
     associate(histograms => [(derivative(v)%histogram(num_bins, raw), v = 1, size(derivative))])
       call system_clock(t_histo_finish)
       print '(i0,a,g0,a)',size(histograms), " output histograms done in ", real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
