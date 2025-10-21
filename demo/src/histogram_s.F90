@@ -19,30 +19,6 @@ contains
     name = self%variable_name_
   end procedure
 
-  module procedure unmapped_range
-    raw_range = [self%unmapped_min_, self%unmapped_max_]
-  end procedure
-
-  module procedure unmapped_max
-    range_maximum = self%unmapped_max_
-  end procedure
-
-  module procedure unmapped_min
-    range_minimum = self%unmapped_min_
-  end procedure
-
-  module procedure num_bins
-    bins = size(self%bin_value_)
-  end procedure
-
-  module procedure bin_value
-    v = self%bin_value_(bin)
-  end procedure
-
-  module procedure bin_frequency
-    frequency = self%bin_frequency_(bin)
-  end procedure
-
   module procedure to_separate_file
      file = to_common_file([histogram])
   end procedure
@@ -60,8 +36,8 @@ contains
         do line  = 1, size(comments)
           associate( &
             mode_frequency => string_t(int(100*maxval(histograms(line)%bin_frequency_))), &
-            range_min => string_t(histograms(line)%unmapped_min()), &
-            range_max =>  string_t(histograms(line)%unmapped_max()) &
+            range_min => string_t(histograms(line)%unmapped_min_), &
+            range_max =>  string_t(histograms(line)%unmapped_max_) &
            )
              comments(line) = "# " &
                // trim(histograms(line)%variable_name_) &
@@ -71,26 +47,21 @@ contains
         end do
       end block
 
-      block
-        integer h
-        column_headings = "    bin    " // .cat. [("    " // string_t(histograms(h)%variable_name()) // "    ", h=1,num_histograms)]
-      end block
-
-      associate(num_bins =>  histograms(1)%num_bins())
-
+      associate(num_bins => size(histograms(1)%bin_value_))
         block 
           integer h, b ! histogram number, bin number
 
+          column_headings = "    bin    " // .cat. [("    " // string_t(histograms(h)%variable_name_) // "    ", h=1,num_histograms)]
+
           call_julienne_assert(num_bins .isAtLeast. 1)
-          call_julienne_assert(.all. (histograms(1)%num_bins() .equalsExpected. [(histograms(h)%num_bins() , h=1,size(histograms))]))
+          call_julienne_assert(.all. (num_bins .equalsExpected. [(size(histograms(h)%bin_value_) , h=1,size(histograms))]))
             
           allocate(columns(num_bins))
           do b = 1, num_bins
             columns(b) =  string_t(histograms(1)%bin_value_(b)) // &
-              .cat. [("  " // string_t(histograms(h)%bin_frequency(b)), h=1,num_histograms)]
+              .cat. [("  " // string_t(histograms(h)%bin_frequency_(b)), h=1,num_histograms)]
           end do
         end block
-
       end associate
 
       file = file_t([comments, column_headings, columns])

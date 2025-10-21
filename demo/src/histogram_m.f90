@@ -16,12 +16,6 @@ module histogram_m
     real, allocatable :: bin_frequency_(:), bin_value_(:)
   contains
     procedure variable_name
-    procedure unmapped_range
-    procedure unmapped_min
-    procedure unmapped_max
-    procedure num_bins
-    procedure bin_value
-    procedure bin_frequency
   end type
 
   interface histogram_t
@@ -55,49 +49,10 @@ module histogram_m
 
   interface
 
-    pure module function num_bins(self) result(bins)
-      implicit none
-      class(histogram_t), intent(in) :: self
-      integer bins
-    end function
-
     pure module function variable_name(self) result(name)
       implicit none
       class(histogram_t), intent(in) :: self
       character(len=:), allocatable :: name
-    end function
-
-    pure module function unmapped_range(self) result(raw_range)
-      implicit none
-      class(histogram_t), intent(in) :: self
-      integer, parameter :: num_end_points = 2
-      real raw_range(num_end_points)
-    end function
-
-    elemental module function unmapped_min(self) result(range_minimum)
-      implicit none
-      class(histogram_t), intent(in) :: self
-      real range_minimum
-    end function
-
-    elemental module function unmapped_max(self) result(range_maximum)
-      implicit none
-      class(histogram_t), intent(in) :: self
-      real range_maximum
-    end function
-
-    elemental module function bin_value(self, bin) result(v)
-      implicit none
-      class(histogram_t), intent(in) :: self
-      integer, intent(in) :: bin
-      real v
-    end function
-
-    pure module function bin_frequency(self, bin) result(frequency)
-      implicit none
-      class(histogram_t), intent(in) :: self
-      integer, intent(in) :: bin
-      real frequency
     end function
 
   end interface
