@@ -25,27 +25,22 @@ program tensor_statistics
   character(len=*), parameter :: usage = new_line('') &
     // new_line('') // 'Usage: ' &
     // new_line('') &
-    // new_line('') // './build/run-fpm.sh run tensor-statistics -- --bins <integer> \'  &
-    // new_line('') // '  [--disaggregate] [--unified] [--start <integer>] [--end <integer>] [--stride <integer>]' &
+    // new_line('') // './build/run-fpm.sh run tensor-statistics -- --bins <integer> [[--disaggregate] | [--unified]]' &
     // new_line('') &
-    // new_line('') // 'where angular brackets (<>) denote user-provided values, square brackets denote optional' &
-    // new_line('') // 'arguments, and flags have the following meanings:' &
+    // new_line('') // 'where angular brackets (<>) denote user-provided values, square brackets ([]) denote optional' &
+    // new_line('') // 'arguments, a pipe (|) separates exclusive alternatives, and flags have the following meanings:' &
     // new_line('') &
     // new_line('') // '--bins         number of histogram bins in which to collect variable values' &
     // new_line('') // '--disaggregate generates one histogram plot file per variable per training-data file' &
-    // new_line('') // '--end          last time step' &
-    // new_line('') // '--start        first time step' &
-    // new_line('') // '--stride       interval between time steps' &
     // new_line('') // '--unified      maps all domains to [0,1] on one histogram plot per training-data file' &
     // new_line('')
   integer(int64) t_start, t_finish, clock_rate
-  integer num_bins, start_step, stride
-  integer, allocatable :: end_step
+  integer num_bins
   character(len=*), parameter :: data_json = "training_data_files.json", configuration_json = "training_configuration.json"
   logical disaggregated, unified
 
   call system_clock(t_start, clock_rate)
-  call get_command_line_arguments(num_bins, start_step, end_step, stride, disaggregated, unified)
+  call get_command_line_arguments(num_bins, disaggregated, unified)
   call compute_histograms(training_data_files_t(file_t(data_json)), training_configuration_t(file_t(configuration_json)), disaggregated)
   call system_clock(t_finish)
 
@@ -64,19 +59,15 @@ program tensor_statistics
 
 contains
 
-  subroutine get_command_line_arguments(num_bins, start_step, end_step, stride, disaggregated, unified)
-    integer, intent(out) :: num_bins, start_step, stride
-    integer, intent(out), allocatable :: end_step
+  subroutine get_command_line_arguments(num_bins, disaggregated, unified)
+    integer, intent(out) :: num_bins
     logical, intent(out) :: disaggregated, unified
 
     ! local variables
     type(command_line_t) command_line
-    character(len=:), allocatable :: stride_string, bins_string, start_string, end_string
+    character(len=:), allocatable :: bins_string
 
     bins_string = command_line%flag_value("--bins")
-    start_string = command_line%flag_value("--start")
-    end_string = command_line%flag_value("--end")
-    stride_string = command_line%flag_value("--stride")
     disaggregated = command_line%argument_present(["--disaggregated"])
     unified = command_line%argument_present(["--unified"])
 
@@ -86,23 +77,6 @@ contains
 
     read(bins_string,*) num_bins
 
-    if (len(stride_string)==0) then
-      stride = 1
-    else
-      read(stride_string,*) stride
-    end if
-
-    if (len(start_string)==0) then
-      start_step = 1
-    else
-      read(start_string,*) start_step
-    end if
-
-    if (len(end_string)/=0) then
-      if (.not. allocated(end_step)) allocate(end_step)
-      read(end_string,*) end_step
-    end if
- 
   end subroutine get_command_line_arguments
 
   subroutine compute_histograms(training_data_files, training_configuration, disaggregated)
