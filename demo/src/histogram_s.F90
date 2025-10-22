@@ -84,7 +84,7 @@ contains
   end function
 
   module procedure construct
-    histogram = construct_in_range(variable_name, v, minval(v), maxval(v), num_bins, raw)
+    histogram = construct_in_range(variable_name, v, minval(v), maxval(v), num_bins, disaggregated)
   end procedure
 
   module procedure construct_in_range
@@ -103,12 +103,12 @@ contains
 
     histogram%cardinality_ = size(v)
     associate(v_min => (histogram%unmapped_min_), v_max => (histogram%unmapped_max_))
-      if (raw)  then
+      if (disaggregated)  then
         v_mapped = v
       else
         v_mapped = normalize(v, v_min, v_max)
       end if
-      associate(v_mapped_min => merge(v_min, 0., raw), v_mapped_max => capture_maxval*merge(v_max, 1., raw))
+      associate(v_mapped_min => merge(v_min, 0., disaggregated), v_mapped_max => capture_maxval*merge(v_max, 1., disaggregated))
         associate(dv => (v_mapped_max - v_mapped_min)/real(num_bins))
           associate(v_bin_min => [(v_mapped_min + (i-1)*dv, i=1,num_bins)])
             associate(v_bin_max => [v_bin_min(2:), v_mapped_max])

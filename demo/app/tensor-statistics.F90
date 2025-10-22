@@ -22,43 +22,52 @@ program tensor_statistics
   use fiats_m, only : training_configuration_t, training_data_files_t
   implicit none
 
-  character(len=*), parameter :: usage =                new_line('') // new_line('') // & 
-    'Usage: '                                        // new_line('') // new_line('') // &
-    './build/run-fpm.sh run tensor-statistics -- --bins <integer> \' // new_line('') // &
-    '  [--raw] [--start <integer>] [--end <integer>] [--stride <integer>]'           // &
-                                                        new_line('') // new_line('') // &
-    'where angular brackets denote user-provided values and square brackets denote optional arguments.' // new_line('')
-
+  character(len=*), parameter :: usage = new_line('') &
+    // new_line('') // 'Usage: ' &
+    // new_line('') &
+    // new_line('') // './build/run-fpm.sh run tensor-statistics -- --bins <integer> \'  &
+    // new_line('') // '  [--disaggregate] [--unified] [--start <integer>] [--end <integer>] [--stride <integer>]' &
+    // new_line('') &
+    // new_line('') // 'where angular brackets (<>) denote user-provided values, square brackets denote optional' &
+    // new_line('') // 'arguments, and flags have the following meanings:' &
+    // new_line('') &
+    // new_line('') // '--bins         number of histogram bins in which to collect variable values' &
+    // new_line('') // '--disaggregate generates one histogram plot file per variable per training-data file' &
+    // new_line('') // '--end          last time step' &
+    // new_line('') // '--start        first time step' &
+    // new_line('') // '--stride       interval between time steps' &
+    // new_line('') // '--unified      maps all domains to [0,1] on one histogram plot per training-data file' &
+    // new_line('')
   integer(int64) t_start, t_finish, clock_rate
   integer num_bins, start_step, stride
   integer, allocatable :: end_step
   character(len=*), parameter :: data_json = "training_data_files.json", configuration_json = "training_configuration.json"
-  logical raw
+  logical disaggregated, unified
 
   call system_clock(t_start, clock_rate)
-  call get_command_line_arguments(num_bins, start_step, end_step, stride, raw)
-  call compute_histograms(training_data_files_t(file_t(data_json)), training_configuration_t(file_t(configuration_json)), raw)
+  call get_command_line_arguments(num_bins, start_step, end_step, stride, disaggregated, unified)
+  call compute_histograms(training_data_files_t(file_t(data_json)), training_configuration_t(file_t(configuration_json)), disaggregated)
   call system_clock(t_finish)
 
   print '(a,g0)',"System clock time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
   print *
   print '(a)',"______________________________________________________"
   print '(a)',"The *.plt files contain tensor ranges and histograms."
-  print '(a)',"If you have gnuplot installed, please execute the"
-  print '(a)',"following command to produce histogram visualizations:"
+  print '(a)',"If you have gnuplot installed, please execute a command"
+  print '(a)',"command to produce histogram visualizations:"
   print *
-  associate(file_name => trim(merge("plot-raw-histograms       ", "plot-normalized-histograms", raw)) // ".gnu")
-   print*,"  gnuplot app/" // file_name
+  associate(file_name => trim(merge("unified-", "        ", unified)) // "histogram-plot.gnu")
+    print*,"  gnuplot app/" // file_name
   end associate
   print *
   print '(a)',"_______________ tensor_statistics done________________"
 
 contains
 
-  subroutine get_command_line_arguments(num_bins, start_step, end_step, stride, raw)
+  subroutine get_command_line_arguments(num_bins, start_step, end_step, stride, disaggregated, unified)
     integer, intent(out) :: num_bins, start_step, stride
     integer, intent(out), allocatable :: end_step
-    logical, intent(out) :: raw
+    logical, intent(out) :: disaggregated, unified
 
     ! local variables
     type(command_line_t) command_line
@@ -68,7 +77,8 @@ contains
     start_string = command_line%flag_value("--start")
     end_string = command_line%flag_value("--end")
     stride_string = command_line%flag_value("--stride")
-    raw = command_line%argument_present(["--raw"])
+    disaggregated = command_line%argument_present(["--disaggregated"])
+    unified = command_line%argument_present(["--unified"])
 
     associate(required_arguments => len(bins_string)/=0)
        if (.not. required_arguments) error stop usage 
@@ -95,10 +105,10 @@ contains
  
   end subroutine get_command_line_arguments
 
-  subroutine compute_histograms(training_data_files, training_configuration, raw)
+  subroutine compute_histograms(training_data_files, training_configuration, disaggregated)
     type(training_data_files_t), intent(in) :: training_data_files
     type(training_configuration_t), intent(in) :: training_configuration
-    logical, intent(in) :: raw
+    logical, intent(in) :: disaggregated
 
     type(time_derivative_t), allocatable :: derivative(:)
     type(NetCDF_variable_t), allocatable :: input_variable(:,:), output_variable(:,:)
@@ -143,7 +153,7 @@ contains
 
       compute_histograms: &
       associate( histograms => reshape( &
-         [( [(input_variable(v,f)%histogram(num_bins, raw), v = 1, num_variables)], f = 1, num_input_files )] &
+         [( [(input_variable(v,f)%histogram(num_bins, disaggregated), v = 1, num_variables)], f = 1, num_input_files )] &
         , shape = [num_variables, num_input_files] &
       ))
         call system_clock(t_histo_finish)
@@ -156,10 +166,10 @@ contains
         associate(input_file_names => training_data_files%inputs_files())
           do f = 1, num_input_files
             associate(gnuplot_file_name => input_file_names(f) // "-" // "inputs_stats.plt")
-              if (raw) then
+              if (disaggregated) then
                 do v = 1, num_variables
                   associate(histograms_file => to_file(histograms(v,f)))
-                    associate(variable_file_name => histograms(v,f)%variable_name() // gnuplot_file_name)
+                    associate(variable_file_name => histograms(v,f)%variable_name() // "-" // gnuplot_file_name)
                       print '(a)',"- writing " // variable_file_name%string()
                       call histograms_file%write_lines(variable_file_name)
                     end associate
@@ -227,7 +237,7 @@ contains
 
     print '(a)',"Calculating histograms for the desired neural-network outputs."
     call system_clock(t_histo_start, clock_rate)
-    associate(histograms => [(derivative(v)%histogram(num_bins, raw), v = 1, size(derivative))])
+    associate(histograms => [(derivative(v)%histogram(num_bins, disaggregated), v = 1, size(derivative))])
       call system_clock(t_histo_finish)
       print '(i0,a,g0,a)',size(histograms), " output histograms done in ", real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
 
@@ -236,7 +246,7 @@ contains
         type(file_t) histograms_file
         integer h
 
-        if (raw) then
+        if (disaggregated) then
           do h = 1, size(histograms)
             histograms_file = to_file(histograms(h))
             associate(gnuplot_file_name => histograms(h)%variable_name() // ".plt")
