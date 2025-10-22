@@ -84,4 +84,14 @@ contains
     names = [(self%path_ // "/" // self%outputs_prefix_ //self%infixes_(i) // suffix, i=1, size(self%infixes_))]
   end procedure
 
+  module procedure inputs_files
+    integer i
+    names = [(self%inputs_prefix_ //self%infixes_(i) // suffix, i=1, size(self%infixes_))]
+  end procedure
+
+  module procedure outputs_files
+    integer i
+    names = [(self%outputs_prefix_ //self%infixes_(i) // suffix, i=1, size(self%infixes_))]
+  end procedure
+
 end submodule training_data_files_s
