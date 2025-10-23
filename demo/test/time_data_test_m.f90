@@ -1,8 +1,6 @@
 ! Copyright (c) 2022-2025, The Regents of the University of California and Sourcery Institute
 ! Terms of use are as specified in LICENSE.txt
 
-#include "language-support.F90"
-
 module time_data_test_m
   !! Unit test for the time_data subroutine
   use julienne_m, only : &
