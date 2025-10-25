@@ -19,8 +19,12 @@ contains
     name = self%variable_name_
   end procedure
 
+  module procedure bin_count
+    counts = self%bin_count_
+  end procedure
+
   module procedure bin_frequency
-    frequency = real(self%bin_count_(bin))/real(self%cardinality_)
+    frequency = self%bin_count_(bin)/real(sum(self%bin_count_))
   end procedure
 
   module procedure to_separate_file
@@ -101,7 +105,6 @@ contains
     allocate(histogram%bin_value_(num_bins))
     allocate(histogram%bin_count_(num_bins))
 
-    histogram%cardinality_ = size(v)
     associate(v_min => (histogram%unmapped_min_), v_max => (histogram%unmapped_max_))
       if (disaggregated)  then
         v_mapped = v
@@ -136,9 +139,7 @@ contains
         end associate
       end associate
 #ifdef ASSERTIONS
-      associate(binned => sum(histogram%bin_count_))
-        call_julienne_assert(histogram%cardinality_ .equalsExpected. binned)
-      end associate
+      call_julienne_assert(sum(histogram%bin_count_) .equalsExpected. sum(v))
 #endif
     end associate
 

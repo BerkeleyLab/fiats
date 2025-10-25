@@ -15,10 +15,10 @@ module histogram_m
     real unmapped_min_, unmapped_max_
     real, allocatable :: bin_value_(:)
     integer, allocatable :: bin_count_(:)
-    integer cardinality_
   contains
     procedure variable_name
     procedure bin_frequency
+    procedure bin_count
   end type
 
   interface histogram_t
@@ -72,6 +72,12 @@ module histogram_m
       class(histogram_t), intent(in) :: self
       integer, intent(in) :: bin
       real frequency
+    end function
+
+    pure module function bin_count(self) result(counts)
+      implicit none
+      class(histogram_t), intent(in) :: self
+      integer, allocatable :: counts(:)
     end function
 
   end interface
