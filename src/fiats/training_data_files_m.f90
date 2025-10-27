@@ -15,6 +15,8 @@ module training_data_files_m
     procedure :: to_json
     procedure :: fully_qualified_inputs_files
     procedure :: fully_qualified_outputs_files
+    procedure :: inputs_files
+    procedure :: outputs_files
     procedure :: fully_qualified_time_file
     procedure :: path
     generic :: operator(==) => equals
@@ -64,7 +66,19 @@ module training_data_files_m
       type(string_t), allocatable :: names(:)
     end function
 
+    pure module function inputs_files(self) result(names)
+      implicit none
+      class(training_data_files_t), intent(in) :: self
+      type(string_t), allocatable :: names(:)
+    end function
+
     pure module function fully_qualified_outputs_files(self) result(names)
+      implicit none
+      class(training_data_files_t), intent(in) :: self
+      type(string_t), allocatable :: names(:)
+    end function
+
+    pure module function outputs_files(self) result(names)
       implicit none
       class(training_data_files_t), intent(in) :: self
       type(string_t), allocatable :: names(:)

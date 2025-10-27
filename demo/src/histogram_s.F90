@@ -19,28 +19,12 @@ contains
     name = self%variable_name_
   end procedure
 
-  module procedure unmapped_range
-    raw_range = [self%unmapped_min_, self%unmapped_max_]
-  end procedure
-
-  module procedure unmapped_max
-    range_maximum = self%unmapped_max_
-  end procedure
-
-  module procedure unmapped_min
-    range_minimum = self%unmapped_min_
-  end procedure
-
-  module procedure num_bins
-    bins = size(self%bin_value_)
-  end procedure
-
-  module procedure bin_value
-    v = self%bin_value_(bin)
+  module procedure bin_count
+    counts = self%bin_count_
   end procedure
 
   module procedure bin_frequency
-    frequency = self%bin_frequency_(bin)
+    frequency = self%bin_count_(bin)/real(sum(self%bin_count_))
   end procedure
 
   module procedure to_separate_file
@@ -56,12 +40,14 @@ contains
       allocate(comments(num_histograms))
 
       block
-        integer line
+        integer line, b
         do line  = 1, size(comments)
           associate( &
-            mode_frequency => string_t(int(100*maxval(histograms(line)%bin_frequency_))), &
-            range_min => string_t(histograms(line)%unmapped_min()), &
-            range_max =>  string_t(histograms(line)%unmapped_max()) &
+            mode_frequency => string_t(int(100*maxval( &
+              [( histograms(line)%bin_frequency(b), b = 1, size(histograms(line)%bin_count_) )] &
+            ))), &
+            range_min => string_t(histograms(line)%variable_min_), &
+            range_max =>  string_t(histograms(line)%variable_max_) &
            )
              comments(line) = "# " &
                // trim(histograms(line)%variable_name_) &
@@ -71,18 +57,14 @@ contains
         end do
       end block
 
-      block
-        integer h
-        column_headings = "    bin    " // .cat. [("    " // string_t(histograms(h)%variable_name()) // "    ", h=1,num_histograms)]
-      end block
-
-      associate(num_bins =>  histograms(1)%num_bins())
-
+      associate(num_bins => size(histograms(1)%bin_value_))
         block 
           integer h, b ! histogram number, bin number
 
+          column_headings = "    bin    " // .cat. [("    " // string_t(histograms(h)%variable_name_) // "    ", h=1,num_histograms)]
+
           call_julienne_assert(num_bins .isAtLeast. 1)
-          call_julienne_assert(.all. (histograms(1)%num_bins() .equalsExpected. [(histograms(h)%num_bins() , h=1,size(histograms))]))
+          call_julienne_assert(.all. (num_bins .equalsExpected. [(size(histograms(h)%bin_value_) , h=1,size(histograms))]))
             
           allocate(columns(num_bins))
           do b = 1, num_bins
@@ -90,7 +72,6 @@ contains
               .cat. [("  " // string_t(histograms(h)%bin_frequency(b)), h=1,num_histograms)]
           end do
         end block
-
       end associate
 
       file = file_t([comments, column_headings, columns])
@@ -99,67 +80,45 @@ contains
  
   end procedure
 
-  pure function normalize(x, x_min, x_max) result(x_normalized)
-    real, intent(in) :: x(:,:,:,:), x_min, x_max
-    real, allocatable :: x_normalized(:,:,:,:)
-    call_julienne_assert(x_min/=x_max)
-    x_normalized = (x - x_min)/(x_max - x_min)
-  end function
-
   module procedure construct
+    histogram = construct_in_range(v, variable_name, num_bins, minval(v), maxval(v))
+  end procedure
 
-    integer i, j, k, n
-    integer, allocatable :: bin_count(:)
+  module procedure construct_in_range
+
+    integer b
     integer, parameter :: performance_threshold = 80
     real, parameter :: capture_maxval = 1.0001 ! ensure maxval(v_max) falls within the highest bin
-    real, allocatable :: v_mapped(:,:,:,:)
 
     histogram%variable_name_ = variable_name
-    histogram%unmapped_min_ = minval(v)
-    histogram%unmapped_max_ = maxval(v)
+    histogram%variable_min_  = v_min
+    histogram%variable_max_  = v_max
 
-    allocate(histogram%bin_frequency_(num_bins))
     allocate(histogram%bin_value_(num_bins))
-    allocate(bin_count(num_bins))
+    allocate(histogram%bin_count_(num_bins))
 
-    associate(v_min => (histogram%unmapped_min_), v_max => (histogram%unmapped_max_), cardinality => size(v))
-      if (raw)  then
-        v_mapped = v
-      else
-        v_mapped = normalize(v, v_min, v_max)
-      end if
-      associate(v_mapped_min => merge(v_min, 0., raw), v_mapped_max => capture_maxval*merge(v_max, 1., raw))
-        associate(dv => (v_mapped_max - v_mapped_min)/real(num_bins))
-          associate(v_bin_min => [(v_mapped_min + (i-1)*dv, i=1,num_bins)])
-            associate(v_bin_max => [v_bin_min(2:), v_mapped_max])
-              histogram%bin_value_ = 0.5*[v_bin_min + v_bin_max] ! switching to average yields problems likely related to roundoff
-              if (num_bins < performance_threshold) then
-                do concurrent(i = 1:num_bins)
-                  bin_count(i) = count(v_mapped >= v_bin_min(i) .and. v_mapped < v_bin_max(i))
-                end do
-              else
-                bin_count = 0
-                do i = 1,size(v_mapped,1)
-                  do j = 1,size(v_mapped,2)
-                    do k = 1,size(v_mapped,3)
-                      do n = 1,size(v_mapped,4)
-                        associate(bin => floor((v_mapped(i,j,k,n) - v_mapped_min)/dv) + 1)
-                          bin_count(bin) = bin_count(bin) + 1
-                        end associate
-                      end do
-                    end do
-                  end do
-                end do
-              end if
-              histogram%bin_frequency_ = real(bin_count) / real(cardinality)
-            end associate
+    associate(v_max_expanded => capture_maxval*v_max)
+      associate(dv => (v_max_expanded - v_min)/real(num_bins))
+        associate(v_bin_min => [(v_min + (b-1)*dv, b=1,num_bins)])
+          associate(v_bin_max => [v_bin_min(2:), v_max_expanded])
+            histogram%bin_value_ = 0.5*[v_bin_min + v_bin_max]
+            if (num_bins < performance_threshold) then
+              do concurrent(b = 1:num_bins) default(none) shared(histogram, v, v_bin_min, v_bin_max)
+                histogram%bin_count_(b) = count(v >= v_bin_min(b) .and. v < v_bin_max(b))
+              end do
+            else
+              histogram%bin_count_ = 0
+              do b = 1,size(v)
+                associate(bin => floor((v(b) - v_min)/dv) + 1)
+                  histogram%bin_count_(bin) = histogram%bin_count_(bin) + 1
+                end associate
+              end do
+            end if
           end associate
         end associate
       end associate
 #ifdef ASSERTIONS
-      associate(binned => sum(bin_count))
-        call_julienne_assert(cardinality .equalsExpected. binned)
-      end associate
+      call_julienne_assert(sum(histogram%bin_count_) .equalsExpected. size(v))
 #endif
     end associate
 

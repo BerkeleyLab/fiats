@@ -12,26 +12,30 @@ module histogram_m
     !! encapsulate the primary data associated with histograms
     private
     character(len=:), allocatable :: variable_name_
-    real unmapped_min_, unmapped_max_
-    real, allocatable :: bin_frequency_(:), bin_value_(:)
+    real variable_min_, variable_max_
+    real, allocatable :: bin_value_(:)
+    integer, allocatable :: bin_count_(:)
   contains
     procedure variable_name
-    procedure unmapped_range
-    procedure unmapped_min
-    procedure unmapped_max
-    procedure num_bins
-    procedure bin_value
     procedure bin_frequency
+    procedure bin_count
   end type
 
   interface histogram_t
 
-    pure module function construct(v, variable_name, num_bins, raw) result(histogram)
+    module function construct(v, variable_name, num_bins) result(histogram)
       implicit none
-      real, intent(in) :: v(:,:,:,:)
+      real, intent(in) :: v(:)
       character(len=*), intent(in) :: variable_name
       integer, intent(in) :: num_bins
-      logical, intent(in) :: raw
+      type(histogram_t) histogram
+    end function
+
+    pure module function construct_in_range(v, variable_name, num_bins, v_min, v_max) result(histogram)
+      implicit none
+      real, intent(in) :: v(:), v_min, v_max
+      character(len=*), intent(in) :: variable_name
+      integer, intent(in) :: num_bins
       type(histogram_t) histogram
     end function
 
@@ -55,42 +59,10 @@ module histogram_m
 
   interface
 
-    pure module function num_bins(self) result(bins)
-      implicit none
-      class(histogram_t), intent(in) :: self
-      integer bins
-    end function
-
     pure module function variable_name(self) result(name)
       implicit none
       class(histogram_t), intent(in) :: self
       character(len=:), allocatable :: name
-    end function
-
-    pure module function unmapped_range(self) result(raw_range)
-      implicit none
-      class(histogram_t), intent(in) :: self
-      integer, parameter :: num_end_points = 2
-      real raw_range(num_end_points)
-    end function
-
-    elemental module function unmapped_min(self) result(range_minimum)
-      implicit none
-      class(histogram_t), intent(in) :: self
-      real range_minimum
-    end function
-
-    elemental module function unmapped_max(self) result(range_maximum)
-      implicit none
-      class(histogram_t), intent(in) :: self
-      real range_maximum
-    end function
-
-    elemental module function bin_value(self, bin) result(v)
-      implicit none
-      class(histogram_t), intent(in) :: self
-      integer, intent(in) :: bin
-      real v
     end function
 
     pure module function bin_frequency(self, bin) result(frequency)
@@ -98,6 +70,12 @@ module histogram_m
       class(histogram_t), intent(in) :: self
       integer, intent(in) :: bin
       real frequency
+    end function
+
+    pure module function bin_count(self) result(counts)
+      implicit none
+      class(histogram_t), intent(in) :: self
+      integer, allocatable :: counts(:)
     end function
 
   end interface

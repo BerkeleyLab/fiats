@@ -6,7 +6,10 @@
 submodule(NetCDF_variable_m) NetCDF_variable_s
   use ieee_arithmetic, only : ieee_is_nan
   use kind_parameters_m, only : default_real
-  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
+  use julienne_m, only : &
+     call_julienne_assert_ &
+    ,operator(.all.) &
+    ,operator(.equalsExpected.)
   use default_m, only : default_or_present_value
   implicit none
 
@@ -66,16 +69,22 @@ contains
    end procedure
 
   module procedure default_real_histogram
-    select case(self%rank())
+
+    integer v
+
+    call_julienne_assert(.all. (variables(1)%rank() .equalsExpected.   variables%rank()))
+    call_julienne_assert(.all. (variables(1)%name_  .equalsExpected. [(variables(v)%name_, v = 1, size(variables))]))
+
+    select case(variables(1)%rank())
     case (4)
-      histogram = histogram_t(self%values_4D_ , self%name_, num_bins, raw)
+      aggregate = histogram_t([(variables(v)%values_4D_, v = 1, size(variables))], variables(1)%name_, num_bins)
     case default
       error stop 'NetCDF_variable_s(default_real_histogram): unsupported rank'
     end select 
   end procedure 
 
   module procedure double_precision_histogram
-      error stop 'NetCDF_variable_s(double_precision_histogram): unsupported rank'
+      error stop 'NetCDF_variable_s(double_precision_histogram): unsupported kind'
   end procedure 
 
   module procedure default_real_copy

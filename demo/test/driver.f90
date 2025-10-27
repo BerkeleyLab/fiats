@@ -5,11 +5,13 @@ program test_suite_driver
   use julienne_m, only : test_fixture_t, test_harness_t
   use netCDF_file_test_m, only : netCDF_file_test_t
   use time_data_test_m, only : time_data_test_t
+  use histogram_test_m, only : histogram_test_t
   implicit none
 
   associate(test_harness => test_harness_t([ &
      test_fixture_t(netCDF_file_test_t()) &
     ,test_fixture_t(time_data_test_t()) &
+    ,test_fixture_t(histogram_test_t()) &
   ]))
     call test_harness%report_results
   end associate
