@@ -66,9 +66,11 @@ contains
    end procedure
 
   module procedure default_real_histogram
+    real, pointer :: values_1D(:)
     select case(self%rank())
     case (4)
-      histogram = histogram_t(self%values_4D_ , self%name_, num_bins)
+      values_1D(1:size(self%values_4D_)) => self%values_4D_
+      histogram = histogram_t(values_1D , self%name_, num_bins)
     case default
       error stop 'NetCDF_variable_s(default_real_histogram): unsupported rank'
     end select 

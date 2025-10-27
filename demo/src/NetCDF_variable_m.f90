@@ -148,13 +148,13 @@ module NetCDF_variable_m
 
     elemental module function default_real_end_step(self) result(end_step)
       implicit none
-      class(NetCDF_variable_t), intent(inout) :: self
+      class(NetCDF_variable_t), intent(in) :: self
       integer end_step
     end function
 
     elemental module function double_precision_end_step(self) result(end_step)
       implicit none
-      class(NetCDF_variable_t(double_precision)), intent(inout) :: self
+      class(NetCDF_variable_t(double_precision)), intent(in) :: self
       integer end_step
     end function
 
@@ -215,26 +215,26 @@ module NetCDF_variable_m
 
     elemental module function default_real_end_time(self) result(end_time)
       implicit none
-      class(NetCDF_variable_t), intent(inout) :: self
+      class(NetCDF_variable_t), intent(in) :: self
       integer end_time
     end function
 
     elemental module function double_precision_end_time(self) result(end_time)
       implicit none
-      class(NetCDF_variable_t), intent(inout) :: self
+      class(NetCDF_variable_t), intent(in) :: self
       integer end_time
     end function
 
-    elemental module function default_real_histogram(self, num_bins) result(histogram)
+    impure elemental module function default_real_histogram(self, num_bins) result(histogram)
       implicit none
-      class(NetCDF_variable_t), intent(inout) :: self
+      class(NetCDF_variable_t), intent(in), target :: self
       integer, intent(in) :: num_bins
       type(histogram_t) histogram
     end function
 
     elemental module function double_precision_histogram(self, num_bins) result(histogram)
       implicit none
-      class(NetCDF_variable_t(double_precision)), intent(inout) :: self
+      class(NetCDF_variable_t(double_precision)), intent(in) :: self
       integer, intent(in) :: num_bins
       type(histogram_t) histogram
     end function

@@ -23,9 +23,9 @@ module histogram_m
 
   interface histogram_t
 
-    pure module function construct(v, variable_name, num_bins) result(histogram)
+    module function construct(v, variable_name, num_bins) result(histogram)
       implicit none
-      real, intent(in) :: v(:,:,:,:)
+      real, intent(in) :: v(:)
       character(len=*), intent(in) :: variable_name
       integer, intent(in) :: num_bins
       type(histogram_t) histogram
@@ -33,7 +33,7 @@ module histogram_m
 
     pure module function construct_in_range(v, variable_name, num_bins, v_min, v_max) result(histogram)
       implicit none
-      real, intent(in) :: v(:,:,:,:), v_min, v_max
+      real, intent(in) :: v(:), v_min, v_max
       character(len=*), intent(in) :: variable_name
       integer, intent(in) :: num_bins
       type(histogram_t) histogram

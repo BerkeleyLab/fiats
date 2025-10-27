@@ -86,7 +86,7 @@ contains
 
   module procedure construct_in_range
 
-    integer i, j, k, n
+    integer b
     integer, parameter :: performance_threshold = 80
     real, parameter :: capture_maxval = 1.0001 ! ensure maxval(v_max) falls within the highest bin
 
@@ -99,25 +99,19 @@ contains
 
     associate(v_max_expanded => capture_maxval*v_max)
       associate(dv => (v_max_expanded - v_min)/real(num_bins))
-        associate(v_bin_min => [(v_min + (i-1)*dv, i=1,num_bins)])
+        associate(v_bin_min => [(v_min + (b-1)*dv, b=1,num_bins)])
           associate(v_bin_max => [v_bin_min(2:), v_max_expanded])
             histogram%bin_value_ = 0.5*[v_bin_min + v_bin_max]
             if (num_bins < performance_threshold) then
-              do concurrent(i = 1:num_bins) default(none) shared(histogram, v, v_bin_min, v_bin_max)
-                histogram%bin_count_(i) = count(v >= v_bin_min(i) .and. v < v_bin_max(i))
+              do concurrent(b = 1:num_bins) default(none) shared(histogram, v, v_bin_min, v_bin_max)
+                histogram%bin_count_(b) = count(v >= v_bin_min(b) .and. v < v_bin_max(b))
               end do
             else
               histogram%bin_count_ = 0
-              do i = 1,size(v,1)
-                do j = 1,size(v,2)
-                  do k = 1,size(v,3)
-                    do n = 1,size(v,4)
-                      associate(bin => floor((v(i,j,k,n) - v_min)/dv) + 1)
-                        histogram%bin_count_(bin) = histogram%bin_count_(bin) + 1
-                      end associate
-                    end do
-                  end do
-                end do
+              do b = 1,size(v)
+                associate(bin => floor((v(b) - v_min)/dv) + 1)
+                  histogram%bin_count_(bin) = histogram%bin_count_(bin) + 1
+                end associate
               end do
             end if
           end associate

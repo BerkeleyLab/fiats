@@ -52,10 +52,8 @@ contains
 
     v_1D(1:num_points) => v
     v_1D = [( [( v_min + dv/2 + (b-1)*dv, p = 1, num_points/num_bins + merge(0, 1, b > remainder))], b = 1, num_bins)]
-    v_1D(1) = v_min
-    v_1D(num_points) = v_max
 
-    associate(histogram => histogram_t(v, "uniform", num_bins))
+    associate(histogram => histogram_t(v_1D, "uniform", num_bins))
       associate(block_distribution => num_points/num_bins + [(merge(0, 1, p > remainder), p = 1, num_bins)])
         test_diagnosis = .all. (histogram%bin_count() .equalsExpected. block_distribution)
       end associate
