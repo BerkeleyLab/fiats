@@ -68,6 +68,14 @@ contains
   module procedure default_real_histogram
     real, pointer :: values_1D(:)
     select case(self%rank())
+    case (1)
+      histogram = histogram_t(self%values_1D_ , self%name_, num_bins)
+    case (2)
+      values_1D(1:size(self%values_2D_)) => self%values_2D_
+      histogram = histogram_t(values_1D , self%name_, num_bins)
+    case (3)
+      values_1D(1:size(self%values_3D_)) => self%values_3D_
+      histogram = histogram_t(values_1D , self%name_, num_bins)
     case (4)
       values_1D(1:size(self%values_4D_)) => self%values_4D_
       histogram = histogram_t(values_1D , self%name_, num_bins)
