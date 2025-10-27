@@ -101,9 +101,9 @@ contains
       associate(dv => (v_max_expanded - v_min)/real(num_bins))
         associate(v_bin_min => [(v_min + (i-1)*dv, i=1,num_bins)])
           associate(v_bin_max => [v_bin_min(2:), v_max_expanded])
-            histogram%bin_value_ = 0.5*[v_bin_min + v_bin_max] ! switching to average yields problems likely related to roundoff
+            histogram%bin_value_ = 0.5*[v_bin_min + v_bin_max]
             if (num_bins < performance_threshold) then
-              do concurrent(i = 1:num_bins)
+              do concurrent(i = 1:num_bins) default(none) shared(histogram, v, v_bin_min, v_bin_max)
                 histogram%bin_count_(i) = count(v >= v_bin_min(i) .and. v < v_bin_max(i))
               end do
             else
