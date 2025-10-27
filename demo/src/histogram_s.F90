@@ -46,8 +46,8 @@ contains
             mode_frequency => string_t(int(100*maxval( &
               [( histograms(line)%bin_frequency(b), b = 1, size(histograms(line)%bin_count_) )] &
             ))), &
-            range_min => string_t(histograms(line)%unmapped_min_), &
-            range_max =>  string_t(histograms(line)%unmapped_max_) &
+            range_min => string_t(histograms(line)%variable_min_), &
+            range_max =>  string_t(histograms(line)%variable_max_) &
            )
              comments(line) = "# " &
                // trim(histograms(line)%variable_name_) &
@@ -80,13 +80,6 @@ contains
  
   end procedure
 
-  pure function normalize(x, x_min, x_max) result(x_normalized)
-    real, intent(in) :: x(:,:,:,:), x_min, x_max
-    real, allocatable :: x_normalized(:,:,:,:)
-    call_julienne_assert(x_min/=x_max)
-    x_normalized = (x - x_min)/(x_max - x_min)
-  end function
-
   module procedure construct
     histogram = construct_in_range(v, variable_name, num_bins, minval(v), maxval(v))
   end procedure
@@ -96,33 +89,30 @@ contains
     integer i, j, k, n
     integer, parameter :: performance_threshold = 80
     real, parameter :: capture_maxval = 1.0001 ! ensure maxval(v_max) falls within the highest bin
-    real, allocatable :: v_mapped(:,:,:,:)
 
     histogram%variable_name_ = variable_name
-    histogram%unmapped_min_  = v_min
-    histogram%unmapped_max_  = v_max
+    histogram%variable_min_  = v_min
+    histogram%variable_max_  = v_max
 
     allocate(histogram%bin_value_(num_bins))
     allocate(histogram%bin_count_(num_bins))
 
-    associate(v_min => (histogram%unmapped_min_), v_max => (histogram%unmapped_max_))
-      v_mapped = v
-      associate(v_mapped_min => v_min, v_mapped_max => capture_maxval*v_max)
-        associate(dv => (v_mapped_max - v_mapped_min)/real(num_bins))
-          associate(v_bin_min => [(v_mapped_min + (i-1)*dv, i=1,num_bins)])
-            associate(v_bin_max => [v_bin_min(2:), v_mapped_max])
+      associate(v_max_expanded => capture_maxval*v_max)
+        associate(dv => (v_max_expanded - v_min)/real(num_bins))
+          associate(v_bin_min => [(v_min + (i-1)*dv, i=1,num_bins)])
+            associate(v_bin_max => [v_bin_min(2:), v_max_expanded])
               histogram%bin_value_ = 0.5*[v_bin_min + v_bin_max] ! switching to average yields problems likely related to roundoff
               if (num_bins < performance_threshold) then
                 do concurrent(i = 1:num_bins)
-                  histogram%bin_count_(i) = count(v_mapped >= v_bin_min(i) .and. v_mapped < v_bin_max(i))
+                  histogram%bin_count_(i) = count(v >= v_bin_min(i) .and. v < v_bin_max(i))
                 end do
               else
                 histogram%bin_count_ = 0
-                do i = 1,size(v_mapped,1)
-                  do j = 1,size(v_mapped,2)
-                    do k = 1,size(v_mapped,3)
-                      do n = 1,size(v_mapped,4)
-                        associate(bin => floor((v_mapped(i,j,k,n) - v_mapped_min)/dv) + 1)
+                do i = 1,size(v,1)
+                  do j = 1,size(v,2)
+                    do k = 1,size(v,3)
+                      do n = 1,size(v,4)
+                        associate(bin => floor((v(i,j,k,n) - v_min)/dv) + 1)
                           histogram%bin_count_(bin) = histogram%bin_count_(bin) + 1
                         end associate
                       end do
@@ -133,7 +123,6 @@ contains
             end associate
           end associate
         end associate
-      end associate
 #ifdef ASSERTIONS
       call_julienne_assert(sum(histogram%bin_count_) .equalsExpected. sum(v))
 #endif

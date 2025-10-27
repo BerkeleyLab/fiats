@@ -12,7 +12,7 @@ module histogram_m
     !! encapsulate the primary data associated with histograms
     private
     character(len=:), allocatable :: variable_name_
-    real unmapped_min_, unmapped_max_
+    real variable_min_, variable_max_
     real, allocatable :: bin_value_(:)
     integer, allocatable :: bin_count_(:)
   contains
