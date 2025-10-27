@@ -5,6 +5,7 @@ module histogram_test_m
   !! Unit test for the histogram subroutine
   use julienne_m, only : &
      operator(.all.) &
+    ,operator(.also.) &
     ,operator(.approximates.) &
     ,operator(.equalsExpected.) &
     ,operator(.within.) &
@@ -44,18 +45,24 @@ contains
 
   type(test_diagnosis_t) function check_uniform_distribution() result(test_diagnosis)
       
-    real, target :: v(5,4,3,2)
+    real u(1,2,3,4), w(  size(u,1), size(u,2), size(u,3), size(u,4))
+    real, target ::  v(2*size(u,1), size(u,2), size(u,3), size(u,4))
     real, pointer :: v_1D(:)
     integer, parameter :: num_points = size(v), num_bins = 7, remainder = mod(num_points,num_bins)
     real, parameter :: v_min = -10., v_max = 10., dv = (v_max - v_min)/num_bins
     integer b, p
 
     v_1D(1:num_points) => v
-    v_1D = [( [( v_min + dv/2 + (b-1)*dv, p = 1, num_points/num_bins + merge(0, 1, b > remainder))], b = 1, num_bins)]
+    v_1D = [( [(v_min + dv/2 + (b-1)*dv, p = 1, num_points/num_bins + merge(0, 1, b > remainder))], b = 1, num_bins )]
+    u = v(1:1,:,:,:)
+    w = v(2:2,:,:,:)
 
-    associate(histogram => histogram_t(v_1D, "uniform", num_bins))
-      associate(block_distribution => num_points/num_bins + [(merge(0, 1, p > remainder), p = 1, num_bins)])
+    associate(block_distribution => num_points/num_bins + [(merge(0, 1, p > remainder), p = 1, num_bins)])
+      associate(histogram => histogram_t([v], "uniform", num_bins))
         test_diagnosis = .all. (histogram%bin_count() .equalsExpected. block_distribution)
+      end associate
+      associate(histogram => histogram_t([u,v,w], "uniform", num_bins))
+        test_diagnosis = test_diagnosis .also. (.all. (histogram%bin_count() .equalsExpected. 2*block_distribution))
       end associate
     end associate
 
