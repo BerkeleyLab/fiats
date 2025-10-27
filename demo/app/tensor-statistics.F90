@@ -149,6 +149,9 @@ contains
         print '(a)',"- reading time from JSON file"
         associate(time_data => time_data_t(file_t(time_data_file_name)))
 
+          print '(a)',"Calculating the desired neural-network model outputs: time derivatives of the outputs"
+          allocate(derivative(num_output_variables, num_output_files))
+
           read_files: &
           do f = 1, num_output_files
 
@@ -162,12 +165,9 @@ contains
               call output_variable(v,f)%input(output_component_names(v), NetCDF_output_file(f), rank=4)
               call_julienne_assert(output_variable(v,f)%conformable_with(output_variable(1,f)))
 
-              print '(a)',"Calculating the desired neural-network model outputs: time derivatives of the outputs"
-              allocate(derivative(num_output_variables, num_output_files))
-
               derivative_name: &
               associate(derivative_name => "d" // output_component_names(v)%string() // "_dt")
-                print '(a)',"- " // derivative_name
+                print '(a)',"- calculating " // derivative_name
                 derivative(v,f) = time_derivative_t(old = input_variable(v,1), new = output_variable(v,1), dt=time_data%dt())
                 call_julienne_assert(.not. derivative(v,f)%any_nan())
               end associate derivative_name
