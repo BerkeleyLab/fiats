@@ -230,7 +230,7 @@ module NetCDF_variable_m
 
     module function default_real_histogram(variables, num_bins) result(aggregate)
       implicit none
-      type(NetCDF_variable_t), intent(in), target :: variables(:)
+      class(NetCDF_variable_t), intent(in), target :: variables(:)
       integer, intent(in) :: num_bins
       type(histogram_t) aggregate
     end function

@@ -74,10 +74,10 @@ contains
     type(training_data_files_t)   , intent(in) :: training_data_files
     type(training_configuration_t), intent(in) :: training_configuration
 
-    type(time_derivative_t), allocatable, dimension(:)   :: derivative
     type(NetCDF_file_t)    , allocatable, dimension(:)   :: NetCDF_input_file, NetCDF_output_file
+    type(time_derivative_t), allocatable, dimension(:,:) :: derivative
     type(NetCDF_variable_t), allocatable, dimension(:,:) :: input_variable, output_variable
-    integer(int64) t_histo_start, t_histo_finish 
+    integer(int64) t_histo_start, t_histo_finish
     integer v, f
 
     associate( &
@@ -114,7 +114,7 @@ contains
         compute_histograms: &
         associate(histograms => [(histogram(input_variable(v,:), args%num_bins), v = 1, num_variables)])
           call system_clock(t_histo_finish)
-          print '(a,i0,a,g0,a)',"computed ", size(histograms), " histograms done in " &
+          print '(a,i0,a,g0,a)',"computed ", size(histograms), " histograms in " &
             ,real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
 
           print '(a)',"Writing input tensor histogram file(s)"
@@ -133,8 +133,6 @@ contains
         end associate compute_histograms
       end associate input_variable_histograms
 
-      stop "---> made it"
-
       ! Currently unused because time stamps were not recorded correctly in the training-data files
       ! type(NetCDF_variable_t) input_time, output_time
       ! print '(a)',"- reading time from NetCDF file"
@@ -142,66 +140,66 @@ contains
       ! print '(a)',"- reading time"
       ! call output_time%input("time", NetCDF_output_file(1), rank=1)
 
-      !allocate(NetCDF_output_file(size(output_tensor_file_names)))
-      !allocate(output_variable(size(output_component_names), size(NetCDF_output_file)))
+      allocate(NetCDF_output_file(size(output_tensor_file_names)))
+      allocate(output_variable(size(output_component_names), size(NetCDF_output_file)))
 
-      !read_output_variable_files: &
-      !associate(num_files => size(NetCDF_output_file))
-      !  do f = 1, num_files
+      derivative_histograms: &
+      associate(num_output_files => size(NetCDF_output_file), num_output_variables => size(output_variable,1))
 
-      !    print '(a)',"Reading physics-based model outputs from " // output_tensor_file_names(f)%string()
-      !    NetCDF_output_file(f) = netCDF_file_t(output_tensor_file_names(f))
+        print '(a)',"- reading time from JSON file"
+        associate(time_data => time_data_t(file_t(time_data_file_name)))
 
-      !    read_output_variables: &
-      !    associate(num_variables => size(output_variable,1))
-      !      do v = 1, num_variables
-      !        print '(a)',"- reading " // output_component_names(v)%string() // " from " // output_tensor_file_names(f)%string()
-      !        call output_variable(v,f)%input(output_component_names(v), NetCDF_output_file(f), rank=4)
-      !        call_julienne_assert(output_variable(v,f)%conformable_with(output_variable(1,f)))
-      !      end do
-      !    end associate read_output_variables
+          read_files: &
+          do f = 1, num_output_files
 
-      !  end do
-      !end associate read_output_variable_files
+            print '(a)',"Reading physics-based model outputs from " // output_tensor_file_names(f)%string()
+            NetCDF_output_file(f) = netCDF_file_t(output_tensor_file_names(f))
 
-      !print '(a)',"Calculating the desired neural-network model outputs: time derivatives of the outputs"
+            read_variables: &
+            do v = 1, num_output_variables
 
-      !allocate(derivative(size(output_variable,1)))
+              print '(a)',"- reading " // output_component_names(v)%string() // " from " // output_tensor_file_names(f)%string()
+              call output_variable(v,f)%input(output_component_names(v), NetCDF_output_file(f), rank=4)
+              call_julienne_assert(output_variable(v,f)%conformable_with(output_variable(1,f)))
 
-      !print '(a)',"- reading time from JSON file"
-      !associate(time_data => time_data_t(file_t(time_data_file_name)))
-      !  do v = 1, size(derivative)
-      !    derivative_name: &
-      !    associate(derivative_name => "d" // output_component_names(v)%string() // "_dt")
-      !      print '(a)',"- " // derivative_name
-      !      derivative(v) = time_derivative_t(old = input_variable(v,1), new = output_variable(v,1), dt=time_data%dt())
-      !      call_julienne_assert(.not. derivative(v)%any_nan())
-      !    end associate derivative_name
-      !  end do
-      !end associate
+              print '(a)',"Calculating the desired neural-network model outputs: time derivatives of the outputs"
+              allocate(derivative(num_output_variables, num_output_files))
 
-      !print '(a)',"Calculating histograms for the desired neural-network outputs."
-      !call system_clock(t_histo_start, clock_rate)
-      !associate(histograms => [(derivative(v)%histogram(args%num_bins), v = 1, size(derivative))])
-      !  call system_clock(t_histo_finish)
-      !  print '(i0,a,g0,a)',size(histograms), " output histograms done in ", real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
+              derivative_name: &
+              associate(derivative_name => "d" // output_component_names(v)%string() // "_dt")
+                print '(a)',"- " // derivative_name
+                derivative(v,f) = time_derivative_t(old = input_variable(v,1), new = output_variable(v,1), dt=time_data%dt())
+                call_julienne_assert(.not. derivative(v,f)%any_nan())
+              end associate derivative_name
+            end do read_variables
+          end do read_files
+        end associate
 
-      !  print '(a)',"Writing desired-output tensor histograms file"
-      !  block
-      !    type(file_t) histograms_file
-      !    integer h
+        print '(a)',"Calculating histograms for the desired neural-network outputs."
+        call system_clock(t_histo_start, clock_rate)
 
-      !    do h = 1, size(histograms)
-      !      histograms_file = to_file(histograms(h))
-      !      associate(gnuplot_file_name => histograms(h)%variable_name() // ".plt")
-      !        print '(a)',"- writing " // gnuplot_file_name
-      !        call histograms_file%write_lines(string_t(gnuplot_file_name))
-      !      end associate
-      !    end do
-      !  end block
-      !end associate
+        compute_histograms: &
+        associate(histograms => [(histogram(derivative(v,:), args%num_bins), v = 1, num_output_variables)])
+          call system_clock(t_histo_finish)
+          print '(a,i0,a,g0,a)',"computed ", size(histograms), " histograms in " &
+            ,real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
+
+          print '(a)',"Writing desired-output tensor histograms file"
+          block
+            type(file_t) histograms_file
+            integer h
+
+            do h = 1, size(histograms)
+              histograms_file = to_file(histograms(h))
+              associate(gnuplot_file_name => histograms(h)%variable_name() // ".plt")
+                print '(a)',"- writing " // gnuplot_file_name
+                call histograms_file%write_lines(string_t(gnuplot_file_name))
+              end associate
+            end do
+          end block
+        end associate compute_histograms
+      end associate derivative_histograms
     end associate
-
   end subroutine
 
 end program tensor_statistics
