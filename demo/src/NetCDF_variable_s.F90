@@ -6,7 +6,10 @@
 submodule(NetCDF_variable_m) NetCDF_variable_s
   use ieee_arithmetic, only : ieee_is_nan
   use kind_parameters_m, only : default_real
-  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
+  use julienne_m, only : &
+     call_julienne_assert_ &
+    ,operator(.all.) &
+    ,operator(.equalsExpected.)
   use default_m, only : default_or_present_value
   implicit none
 
@@ -70,7 +73,7 @@ contains
     integer v
 
     call_julienne_assert(.all. (variables(1)%rank() .equalsExpected.   variables%rank()))
-    call_julienne_assert(.all. (variables(1)%name_  .equalsExpected. variables(:)%name_))
+    call_julienne_assert(.all. (variables(1)%name_  .equalsExpected. [(variables(v)%name_, v = 1, size(variables))]))
 
     select case(variables(1)%rank())
     case (4)

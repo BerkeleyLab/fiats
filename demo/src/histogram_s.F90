@@ -118,7 +118,7 @@ contains
         end associate
       end associate
 #ifdef ASSERTIONS
-      call_julienne_assert(sum(histogram%bin_count_) .equalsExpected. sum(v))
+      call_julienne_assert(sum(histogram%bin_count_) .equalsExpected. size(v))
 #endif
     end associate
 
