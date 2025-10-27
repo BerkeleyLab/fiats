@@ -24,19 +24,15 @@ program tensor_statistics
   character(len=*), parameter :: usage = new_line('') &
     // new_line('') // 'Usage: ' &
     // new_line('') &
-    // new_line('') // './build/run-fpm.sh run tensor-statistics -- --bins <integer> [[--disaggregate] | [--unified]]' &
+    // new_line('') // './build/run-fpm.sh run tensor-statistics -- --bins <integer>' &
     // new_line('') &
-    // new_line('') // 'where angular brackets (<>) denote user-provided values, square brackets ([]) denote optional' &
-    // new_line('') // 'arguments, a pipe (|) separates exclusive alternatives, and flags have the following meanings:' &
+    // new_line('') // 'where angular brackets (<>) denote a user-provided value.' &
     // new_line('') &
-    // new_line('') // '--bins         number of histogram bins in which to collect variable values' &
-    // new_line('') // '--disaggregate generates one histogram plot file per variable per training-data file' &
-    // new_line('') // '--unified      maps all domains to [0,1] on one histogram plot per training-data file' &
+    // new_line('') // '--bins  number of histogram bins in which to collect variable values' &
     // new_line('')
 
   type command_line_arguments_t
     integer :: num_bins = 0
-    logical disaggregated, unified
   end type
   integer(int64) t_start, t_finish, clock_rate
 
@@ -53,8 +49,6 @@ contains
   type(command_line_arguments_t) function command_line_arguments()
     type(command_line_t) command_line
     character(len=:), allocatable :: bins_string
-    command_line_arguments%disaggregated = command_line%argument_present(["--disaggregated"])
-    command_line_arguments%unified = command_line%argument_present(["--unified"])
     bins_string = command_line%flag_value("--bins")
     if (len(bins_string) /= 0) read(bins_string,*) command_line_arguments%num_bins
   end function
@@ -67,12 +61,10 @@ contains
     print *
     print '(a)',"______________________________________________________"
     print '(a)',"The *.plt files contain tensor ranges and histograms."
-    print '(a)',"If you have gnuplot installed, please execute a command"
-    print '(a)',"command to produce histogram visualizations:"
+    print '(a)',"With gnuplot installed, please execute the following"
+    print '(a)',"following command to produce histogram visualizations:"
     print *
-    associate(file_name => trim(merge("unified-", "        ", args%unified)) // "histogram-plot.gnu")
-      print*,"  gnuplot app/" // file_name
-    end associate
+    print '(a)',"  gnuplot app/histogram-plot.gnu"
     print *
     print '(a)',"_______________ tensor_statistics done________________"
   end subroutine
@@ -121,7 +113,7 @@ contains
 
         compute_histograms: &
         associate( histograms => reshape( &
-           [( [(input_variable(v,f)%histogram(args%num_bins, args%disaggregated), v = 1, num_variables)], f = 1, num_input_files )] &
+           [( [(input_variable(v,f)%histogram(args%num_bins), v = 1, num_variables)], f = 1, num_input_files )] &
           , shape = [num_variables, num_input_files] &
         ))
           call system_clock(t_histo_finish)
@@ -134,23 +126,14 @@ contains
           associate(input_file_names => training_data_files%inputs_files())
             do f = 1, num_input_files
               associate(gnuplot_file_name => input_file_names(f) // "-" // "inputs_stats.plt")
-                if (args%disaggregated) then
-                  do v = 1, num_variables
-                    associate(histograms_file => to_file(histograms(v,f)))
-                      associate(variable_file_name => histograms(v,f)%variable_name() // "-" // gnuplot_file_name)
-                        print '(a)',"- writing " // variable_file_name%string()
-                        call histograms_file%write_lines(variable_file_name)
-                      end associate
+                do v = 1, num_variables
+                  associate(histograms_file => to_file(histograms(v,f)))
+                    associate(variable_file_name => histograms(v,f)%variable_name() // "-" // gnuplot_file_name)
+                      print '(a)',"- writing " // variable_file_name%string()
+                      call histograms_file%write_lines(variable_file_name)
                     end associate
-                  end do
-                else if (args%unified) then
-                  print '(a)',"- writing " // gnuplot_file_name%string()
-                  associate(histograms_file => to_file(histograms(:,f)))
-                    call histograms_file%write_lines(gnuplot_file_name)
                   end associate
-                else
-                 error stop "aggregating histograms across files not yet implemented"
-                end if
+                end do
               end associate
             end do
           end associate write_histograms
@@ -206,7 +189,7 @@ contains
 
       print '(a)',"Calculating histograms for the desired neural-network outputs."
       call system_clock(t_histo_start, clock_rate)
-      associate(histograms => [(derivative(v)%histogram(args%num_bins, args%disaggregated), v = 1, size(derivative))])
+      associate(histograms => [(derivative(v)%histogram(args%num_bins), v = 1, size(derivative))])
         call system_clock(t_histo_finish)
         print '(i0,a,g0,a)',size(histograms), " output histograms done in ", real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
 
@@ -215,21 +198,13 @@ contains
           type(file_t) histograms_file
           integer h
 
-          if (args%disaggregated) then
-            do h = 1, size(histograms)
-              histograms_file = to_file(histograms(h))
-              associate(gnuplot_file_name => histograms(h)%variable_name() // ".plt")
-                print '(a)',"- writing " // gnuplot_file_name
-                call histograms_file%write_lines(string_t(gnuplot_file_name))
-              end associate
-            end do
-          else
-            histograms_file = to_file(histograms)
-            associate(gnuplot_file_name => "outputs_stats.plt")
+          do h = 1, size(histograms)
+            histograms_file = to_file(histograms(h))
+            associate(gnuplot_file_name => histograms(h)%variable_name() // ".plt")
               print '(a)',"- writing " // gnuplot_file_name
               call histograms_file%write_lines(string_t(gnuplot_file_name))
             end associate
-          end if
+          end do
         end block
       end associate
     end associate

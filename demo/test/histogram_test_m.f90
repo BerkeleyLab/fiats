@@ -55,7 +55,7 @@ contains
     v_1D(1) = v_min
     v_1D(num_points) = v_max
 
-    associate(histogram => histogram_t("uniform", v, minval(v), maxval(v), num_bins=num_bins, disaggregated=.true.))
+    associate(histogram => histogram_t("uniform", v, minval(v), maxval(v), num_bins=num_bins))
       associate(block_distribution => num_points/num_bins + [(merge(0, 1, p > remainder), p = 1, num_bins)])
         test_diagnosis = .all. (histogram%bin_count() .equalsExpected. block_distribution)
       end associate
