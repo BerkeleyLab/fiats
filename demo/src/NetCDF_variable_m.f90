@@ -12,6 +12,7 @@ module NetCDF_variable_m
   public :: NetCDF_variable_t
   public :: tensors
   public :: time_derivative_t
+  public :: histogram
 
   type NetCDF_variable_t(k)
     integer, kind :: k = default_real
@@ -35,8 +36,6 @@ module NetCDF_variable_m
     procedure, private, non_overridable :: default_real_maximum         , double_precision_maximum
     generic :: operator(-)              => default_real_subtract        , double_precision_subtract
     procedure, private, non_overridable :: default_real_subtract        , double_precision_subtract
-    generic :: histogram                => default_real_histogram       , double_precision_histogram
-    procedure, private, non_overridable :: default_real_histogram       , double_precision_histogram
     generic :: compare                  => default_real_compare         , double_precision_compare
     procedure, private, non_overridable :: default_real_compare         , double_precision_compare
   end type
@@ -225,19 +224,27 @@ module NetCDF_variable_m
       integer end_time
     end function
 
-    impure elemental module function default_real_histogram(self, num_bins) result(histogram)
+  end interface
+
+  interface histogram
+
+    module function default_real_histogram(variables, num_bins) result(aggregate)
       implicit none
-      class(NetCDF_variable_t), intent(in), target :: self
+      type(NetCDF_variable_t), intent(in), target :: variables(:)
       integer, intent(in) :: num_bins
-      type(histogram_t) histogram
+      type(histogram_t) aggregate
     end function
 
-    elemental module function double_precision_histogram(self, num_bins) result(histogram)
+    module function double_precision_histogram(variables, num_bins) result(aggregate)
       implicit none
-      class(NetCDF_variable_t(double_precision)), intent(in) :: self
+      class(NetCDF_variable_t(double_precision)), intent(in) :: variables
       integer, intent(in) :: num_bins
-      type(histogram_t) histogram
+      type(histogram_t) aggregate
     end function
+
+  end interface
+
+  interface
 
     module subroutine default_real_compare(self, values)
       implicit none

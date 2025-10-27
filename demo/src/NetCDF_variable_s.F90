@@ -66,26 +66,22 @@ contains
    end procedure
 
   module procedure default_real_histogram
-    real, pointer :: values_1D(:)
-    select case(self%rank())
-    case (1)
-      histogram = histogram_t(self%values_1D_ , self%name_, num_bins)
-    case (2)
-      values_1D(1:size(self%values_2D_)) => self%values_2D_
-      histogram = histogram_t(values_1D , self%name_, num_bins)
-    case (3)
-      values_1D(1:size(self%values_3D_)) => self%values_3D_
-      histogram = histogram_t(values_1D , self%name_, num_bins)
+
+    integer v
+
+    call_julienne_assert(.all. (variables(1)%rank() .equalsExpected.   variables%rank()))
+    call_julienne_assert(.all. (variables(1)%name_  .equalsExpected. variables(:)%name_))
+
+    select case(variables(1)%rank())
     case (4)
-      values_1D(1:size(self%values_4D_)) => self%values_4D_
-      histogram = histogram_t(values_1D , self%name_, num_bins)
+      aggregate = histogram_t([(variables(v)%values_4D_, v = 1, size(variables))], variables(1)%name_, num_bins)
     case default
       error stop 'NetCDF_variable_s(default_real_histogram): unsupported rank'
     end select 
   end procedure 
 
   module procedure double_precision_histogram
-      error stop 'NetCDF_variable_s(double_precision_histogram): unsupported rank'
+      error stop 'NetCDF_variable_s(double_precision_histogram): unsupported kind'
   end procedure 
 
   module procedure default_real_copy
