@@ -88,7 +88,7 @@ contains
   end function
 
   module procedure construct
-    histogram = construct_in_range(variable_name, v, minval(v), maxval(v), num_bins)
+    histogram = construct_in_range(v, variable_name, num_bins, minval(v), maxval(v))
   end procedure
 
   module procedure construct_in_range

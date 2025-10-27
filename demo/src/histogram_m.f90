@@ -31,7 +31,7 @@ module histogram_m
       type(histogram_t) histogram
     end function
 
-    pure module function construct_in_range(variable_name, v, v_min, v_max, num_bins) result(histogram)
+    pure module function construct_in_range(v, variable_name, num_bins, v_min, v_max) result(histogram)
       implicit none
       real, intent(in) :: v(:,:,:,:), v_min, v_max
       character(len=*), intent(in) :: variable_name
