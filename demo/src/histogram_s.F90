@@ -97,32 +97,32 @@ contains
     allocate(histogram%bin_value_(num_bins))
     allocate(histogram%bin_count_(num_bins))
 
-      associate(v_max_expanded => capture_maxval*v_max)
-        associate(dv => (v_max_expanded - v_min)/real(num_bins))
-          associate(v_bin_min => [(v_min + (i-1)*dv, i=1,num_bins)])
-            associate(v_bin_max => [v_bin_min(2:), v_max_expanded])
-              histogram%bin_value_ = 0.5*[v_bin_min + v_bin_max] ! switching to average yields problems likely related to roundoff
-              if (num_bins < performance_threshold) then
-                do concurrent(i = 1:num_bins)
-                  histogram%bin_count_(i) = count(v >= v_bin_min(i) .and. v < v_bin_max(i))
-                end do
-              else
-                histogram%bin_count_ = 0
-                do i = 1,size(v,1)
-                  do j = 1,size(v,2)
-                    do k = 1,size(v,3)
-                      do n = 1,size(v,4)
-                        associate(bin => floor((v(i,j,k,n) - v_min)/dv) + 1)
-                          histogram%bin_count_(bin) = histogram%bin_count_(bin) + 1
-                        end associate
-                      end do
+    associate(v_max_expanded => capture_maxval*v_max)
+      associate(dv => (v_max_expanded - v_min)/real(num_bins))
+        associate(v_bin_min => [(v_min + (i-1)*dv, i=1,num_bins)])
+          associate(v_bin_max => [v_bin_min(2:), v_max_expanded])
+            histogram%bin_value_ = 0.5*[v_bin_min + v_bin_max] ! switching to average yields problems likely related to roundoff
+            if (num_bins < performance_threshold) then
+              do concurrent(i = 1:num_bins)
+                histogram%bin_count_(i) = count(v >= v_bin_min(i) .and. v < v_bin_max(i))
+              end do
+            else
+              histogram%bin_count_ = 0
+              do i = 1,size(v,1)
+                do j = 1,size(v,2)
+                  do k = 1,size(v,3)
+                    do n = 1,size(v,4)
+                      associate(bin => floor((v(i,j,k,n) - v_min)/dv) + 1)
+                        histogram%bin_count_(bin) = histogram%bin_count_(bin) + 1
+                      end associate
                     end do
                   end do
                 end do
-              end if
-            end associate
+              end do
+            end if
           end associate
         end associate
+      end associate
 #ifdef ASSERTIONS
       call_julienne_assert(sum(histogram%bin_count_) .equalsExpected. sum(v))
 #endif
