@@ -101,22 +101,10 @@ To explore how new language features and novel uses of longstanding features can
 Fiats thus facilitates studying deep learning for science and studying programming paradigms and patterns for deep learning in Fortran 2023.
 
 # Statement of need
-Fortran 2008 introduced two forms of parallelism: `do concurrent` for loop-level parallelism and multi-image execution for SPMD/PGAS parallelism in shared or distributed memory.
-Fortran 2018 and 2023 expanded and refined these features by adding, for example,
-
-1. `Do concurrent` iteration locality specifiers, including reductions and
-2. Collective subroutines, image teams, events (semaphores), atomic subroutines, and more,
-
-which creates a need for libraries and frameworks that support users who adopt these features.
-For example, one requirement impacting library design stems from the aforementioned language constraint allowing only side-effect-free (`pure`) procedure invocations inside `do concurrent`.
-
-All intrinsic functions defined in the Fortran 2023 standard are `simple`, an attribute that implies `pure` plus additional constraints.
-Libraries that export `pure` procedures thus behave like extensions of the language.
-To wit, the Fortran 2023 standard states: "It is expected that most library procedures will conform to the constraints required of pure procedures, and so can be declared pure and referenced in `do concurrent` constructs... and within user-defined `pure` procedures."
-
-Conversely, multi-image execution in a library places a requirement on the client code.
-The Fortran standard defines steps for synchronized image launch, synchronized normal termination, and single-image initiation of global error termination.
-Multi-image execution in a library thus requires support for multi-image execution in the main program.
+Fortran 2008 introduced two forms of parallelism: `do concurrent` for loop-level parallelism and multi-image execution for SPMD/PGAS parallelism in shared or distributed memory. This creates a need for libraries and frameworks that support users who adopt these features.
+For example, one requirement impacting library design stems from a language constraint allowing only side-effect-free (`pure`) procedure invocations inside `do concurrent`.
+Conversely, multi-image execution in a library places a requirement on the client code;
+multi-image execution in a library thus requires support for multi-image execution in the main program.
 
 A surrogate model's utility hinges upon inference calculations executing faster than the physics-based model the surrogate replaces.
 This commonly restricts the surrogate neural network to a few thousand tunable parameters.
