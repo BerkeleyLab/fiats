@@ -129,7 +129,7 @@ At least six open-source software packages provide deep learning services to For
 Three provide Fortran application programming interfaces (APIs) that wrap C++ libraries:
 
 * [Fortran-TF-Lib](https://github.com/Cambridge-ICCS/fortran-tf-lib) is a Fortran API for [TensorFlow](https://tensorflow.org),
-* [FTorch](https://github.com/Cambridge-ICCS/FTorch) is a Fortran API for libtorch, the PyTorch back-end, and
+* [FTorch](https://github.com/Cambridge-ICCS/FTorch) [@Atkinson-FTorch] is a Fortran API for libtorch, the PyTorch back-end, and
 * [TorchFort](https://github.com/NVIDIA/TorchFort) is also a Fortran API for libtorch.
 
 As of this writing, recursive searches in the root directories of the these three projects find no `pure` procedures.
