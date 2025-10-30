@@ -96,7 +96,7 @@ To explore how new language features and novel uses of longstanding features can
   - Studying performance [@rouson2025automatically],
   - Isolating and reporting compiler bugs and fixing front-end bugs,
   - Publishing and updating the Parallel Runtime Interface for Fortran (PRIF) [@bonachea2024prif; @prif-0.5], and
-  - Developing the first PRIF implementation: [Caffeine](https://go.lbl.gov/caffeine) [@rouson2022caffeine; @bonachea2025caffeine].
+  - Developing the first PRIF implementation: [Caffeine](https://go.lbl.gov/caffeine) [@rouson2022caffeine; @bonachea2025caffeine; @bonachea2025llvm].
 
 Fiats thus facilitates studying deep learning for science and studying programming paradigms and patterns for deep learning in Fortran 2023.
 
