@@ -171,12 +171,6 @@ The derived types in the Unified Modeling Language (UML) class diagram in \autor
 
 ![Class diagram: derived types (named in bordered white boxes), type relationships (connecting lines), type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (in an unbordered gray box) followed by the type named at the arrow's head as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview){ width=100% }
 
-![String class diagram \label{fig:string_t}](string_t){ width=50% }
-
-![File class diagram \label{fig:file_t}](file_t){ width=35% }
-
-![Neural network class diagram \label{fig:neural_network_t}](neural_network_t){ width=70% }
-
 \autoref{fig:derived-types} includes two of the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework's derived types, `string_t` and `file_t`.
 These are included because other parts of the figure reference these types.
 The rightmost four types in \autoref{fig:derived-types} exist primarily to support inference.
@@ -184,53 +178,32 @@ The leftmost six support training.
 Because inference is considerably simpler, it makes sense to describe the right side of the diagram before the left side.
 
 The `concurrent-inferences` example program performs batch inference using the `string_t`, `file_t`, and `neural_network_t` types.
-\autoref{fig:string_t} through \autoref{fig:neural_network_t} show class diagrams with more details on these types.
-Each detailed diagram displays a top panel listing the type name, an empty middle panel with private components omitted, and a bottom panel listing public procedure bindings.
-
-The bottom panel also lists what the Fortran 2023 standard describes as user-defined structure constructors, which are generic interfaces through which to invoke functions that define a result of the named type [@fortran2023]. 
-We henceforth refer to these as "constructors."
 From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `concurrent-inferences` program does the following:
-
-![Tensor class diagram \label{fig:tensor_t}](tensor_t){ width=60% }
-
-![Unmapped network class diagram \label{fig:unmapped_network_t}](unmapped_network_t){ width=100% }
-
-![Double precision file class diagram \label{fig:double_precision_file_t}](double_precision_file_t){ width=80% }
 
 1. Gets a `character` file name from the command line,
 2. Passes the name to a `string_t` constructor,
 3. Passes the resulting `string_t` object to a `file_t` constructor, and
 4. Passes the resulting `file_t` object to a `neural_network_t` constructor.
 
-The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects (see \autoref{fig:tensor_t}) using OpenMP directives or `do concurrent` or an array statement.
+The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects using OpenMP directives or `do concurrent` or an array statement.
 The array statement takes advantage of `infer` being `elemental`.
 Line [101](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L101) of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrates neural-network construction from a file.
 Line [109](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L109) demonstrates using the network for inference.
 
-The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t` (see \autoref{fig:unmapped_network_t}), a parameterized derived type (PDT) that has a `kind` type parameter.
+The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t`, a parameterized derived type (PDT) that has a `kind` type parameter.
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
-The `double_precision_file_t` (see \autoref{fig:double_precision_file_t}) type controls the interpretation of the JSON network file: JSON does not distinguish between categories of numerical values such as `real`, `double precision`, or even `integer`, so something external to the file must determine the interpretation of the numbers in a JSON file.
+The `double_precision_file_t` type controls the interpretation of the JSON network file: JSON does not distinguish between categories of numerical values such as `real`, `double precision`, or even `integer`, so something external to the file must determine the interpretation of the numbers in a JSON file.
 
-![Trainable network class diagram \label{fig:trainable_network_t}](trainable_network_t){ width=100% }
-
-![Training configuration class diagram \label{fig:training_configuration_t}](training_configuration_t){ width=80% }
-
-![Mini-batch class diagram \label{fig:mini_batch_t}](mini_batch_t){ width=80% }
-
-The `learn-saturated-mixing-ratio` and `train-cloud-microphysics` programs focus on using a `trainable_network_t` object (see \autoref{fig:trainable_network_t}) for training.
+The `learn-saturated-mixing-ratio` and `train-cloud-microphysics` programs focus on using a `trainable_network_t` object for training.
 The former trains neural network surrogates for a thermodynamic function from ICAR: the saturated mixing ratio, a scalar function of temperature and pressure.
 The latter trains surrogates for the complete cloud microphysics models in ICAR -- models implemented in thousands of lines of code.
 Whereas diagrammed relationships of `neural_network_t` reflect direct dependencies of only two types (`file_t` and `tensor_t`), even describing the basic behaviors of `trainable_network_t` requires showing dependencies on five types:
 
-* A `training_configuration_t` object (see \autoref{fig:training_configuration_t}), which holds hyperparameters such as the learning rate and choice of optimization algorithms,
+* A `training_configuration_t` object, which holds hyperparameters such as the learning rate and choice of optimization algorithms,
 * A `file_t` object from which the `training_configuration` is read inside the `trainable_network_t` constructor,
-* A `mini_batch_t` object (see \autoref{fig:mini_batch_t}) that stores an array of `input_output_pair` objects (see \autoref{fig:input_output_pair_t}) from the training data set,
-* Two `tensor_map_t` objects (see \autoref{fig:tensor_map_t}) storing the linear functions that map inputs to the training data range and map outputs from the training data range back to the application range, and
+* A `mini_batch_t` object that stores an array of `input_output_pair` objects from the training data set,
+* Two `tensor_map_t` objects storing the linear functions that map inputs to the training data range and map outputs from the training data range back to the application range, and
 * A parent `neural_network_t` object storing the network architecture, including weights, biases, layer widths, etc.
-
-![Input/Output tensor pair class diagram \label{fig:input_output_pair_t}](input_output_pair_t){ width=100% }
-
-![Tensor map class diagram \label{fig:tensor_map_t}](tensor_map_t){ width=100% }
 
 The `trainable_network_t` type stores a `workspace_t` (not shown) as a scratch-pad for training purposes.
 The workspace is not needed for inference.
