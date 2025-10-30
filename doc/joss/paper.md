@@ -101,16 +101,10 @@ To explore how new language features and novel uses of longstanding features can
 Fiats thus facilitates studying deep learning for science and studying programming paradigms and patterns for deep learning in Fortran 2023.
 
 # Statement of need
-Fortran 2008 introduced two forms of parallelism: `do concurrent` for loop-level parallelism and multi-image execution for SPMD/PGAS parallelism in shared or distributed memory. This creates a need for libraries and frameworks that support users who adopt these features.
-For example, one requirement impacting library design stems from a language constraint allowing only side-effect-free (`pure`) procedure invocations inside `do concurrent`.
-Conversely, multi-image execution in a library places a requirement on the client code;
-multi-image execution in a library thus requires support for multi-image execution in the main program.
-
-A surrogate model's utility hinges upon inference calculations executing faster than the physics-based model the surrogate replaces.
-This commonly restricts the surrogate neural network to a few thousand tunable parameters.
-For networks of modest size, useful insights can sometimes be gleaned from visually inspecting the network parameters.
-Fiats therefore stores networks in human-readable JavaScript Object Notation (JSON) format.
-The Fiats companion package [Nexport](https://go.lbl.gov/nexport) exports Fiats JSON files [PyTorch](https://pytorch.org).
+Developers of computational science software lack widespread support for adopting Fortran's native parallel programming features.
+Those features take two forms: `do concurrent` for loop-level parallelism and multi-image execution for SPMD/PGAS parallelism in shared or distributed memory.
+Fiats addresses this problem by providing inference and training procedures that are compatible with both forms of parallel language features.
+The next section covers related work.
 
 # State of the field
 At least six open-source software packages provide deep learning services to Fortran.
