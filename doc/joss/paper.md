@@ -153,7 +153,6 @@ Both use multi-image features minimally, leaving considerable room for researchi
 
 Each of the Fortran deep learning APIs and libraries discussed in this paper is actively developed except Fortran-TF-Lib.
 Fortran-TF-Lib's most recent commit was in 2023 and no releases have been posted.
-The other mentioned projects have most-recent commits no older than two months as of June 2025.
 
 # Recent research and scholarly publications
 Fiats supports research in training surrogate models and parallelizing batch inference calculations for atmospheric sciences.
