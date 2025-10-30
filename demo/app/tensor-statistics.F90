@@ -34,14 +34,15 @@ program tensor_statistics
   type command_line_arguments_t
     integer :: num_bins = 0
   end type
-  integer(int64) t_start, t_finish, clock_rate
+  integer(int64) start_time, end_time, clock_rate
+  character(len=*), parameter :: data_file_name = "training_data_files.json", configuration_file_name = "training_configuration.json"
 
   associate(args => command_line_arguments())
     if (args%num_bins < 1) error stop usage
-    call system_clock(t_start, clock_rate)
-    call calc_write_stats(args, training_data_files_t(file_t("training_data_files.json")), training_configuration_t(file_t("training_configuration.json")))
-    call system_clock(t_finish)
-    call print_trailer(args, elapsed_time = real(t_finish - t_start, real64)/real(clock_rate, real64))
+    call system_clock(start_time, clock_rate)
+    call write_stats(args, training_data_files_t(file_t(data_file_name)), training_configuration_t(file_t(configuration_file_name)))
+    call system_clock(end_time)
+    call print_trailer(args, elapsed_time = real(end_time - start_time, real64)/clock_rate)
   end associate
 
 contains
@@ -57,7 +58,7 @@ contains
     type(command_line_arguments_t), intent(in) :: args
     real(real64), intent(in) :: elapsed_time
 
-    print '(a,g0)',"System clock time: ", elapsed_time
+    print '(a,en10.2)',"Elapsed system-clock time: ", elapsed_time, " sec."
     print *
     print '(a)',"______________________________________________________"
     print '(a)',"The *.plt files contain tensor ranges and histograms."
@@ -69,7 +70,7 @@ contains
     print '(a)',"_______________ tensor_statistics done________________"
   end subroutine
 
-  subroutine calc_write_stats(args, training_data_files, training_configuration)
+  subroutine write_stats(args, training_data_files, training_configuration)
     type(command_line_arguments_t), intent(in) :: args
     type(training_data_files_t)   , intent(in) :: training_data_files
     type(training_configuration_t), intent(in) :: training_configuration
@@ -114,8 +115,8 @@ contains
         compute_histograms: &
         associate(histograms => [(histogram(input_variable(v,:), args%num_bins), v = 1, num_variables)])
           call system_clock(t_histo_finish)
-          print '(a,i0,a,g0,a)',"computed ", size(histograms), " histograms in " &
-            ,real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
+          print '(a,i0,a,en10.2,a)', &
+            "computed ", size(histograms), " histograms in ", real(t_histo_finish - t_histo_start, real64)/clock_rate, " sec."
 
           print '(a)',"Writing input tensor histogram file(s)"
 
@@ -181,8 +182,8 @@ contains
         compute_histograms: &
         associate(histograms => [(histogram(derivative(v,:), args%num_bins), v = 1, num_output_variables)])
           call system_clock(t_histo_finish)
-          print '(a,i0,a,g0,a)',"computed ", size(histograms), " histograms in " &
-            ,real(t_histo_finish - t_histo_start, real64)/real(clock_rate, real64), " sec."
+          print '(a,i0,a,en10.2,a)', &
+            "computed ", size(histograms), " histograms in ",real(t_histo_finish - t_histo_start, real64)/clock_rate, " sec."
 
           print '(a)',"Writing desired-output tensor histograms file"
           block
