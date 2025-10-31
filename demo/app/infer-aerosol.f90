@@ -93,7 +93,7 @@ contains
 
         allocate(branch_outputs(samples))
 
-        print*, "Starting branch inference via `do concurrent` with ", samples, " samples of size ",size(branch_inputs,2)
+        print '(2(a,i))', "Starting branch inference via `do concurrent` with ", samples, " samples of size ",size(branch_inputs,2)
         call system_clock(t_start_dc, clock_rate)
         do concurrent(integer :: s = 1:samples) default(none) shared(branch_outputs, branch_network, branch_inputs)
           branch_outputs(s) = branch_network%infer(tensor_t(branch_inputs(s,:)))
@@ -119,25 +119,34 @@ contains
         call system_clock(t_end_dc)
         print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
 
+
+! [m, 20] -> [m,20,1]
+! aug_v: [m, 20, 20]
+! Concat(aug_v, trunk_3d) -> [m, 20, 21]
+
+! We aim to start with a basis array of shape [m, 20]
+! and end up with an aug_v array of shape [m, 20, 20]
+! m = size(trunk_outputs,1) ?
+
+
         print*, "Starting concatenation" 
         block
           double precision, allocatable, dimension(:,:,:) :: aug_v, concat, aug_trunk
           integer i, j, k
           allocate(aug_v(size(trunk_outputs,1), size(basis,1), size(basis,2)))
-          do concurrent(i=1:size(trunk_outputs,1), j=1:size(basis,1), k=1:size(basis,2) )
+          print*, "Defining aug_v arary of shape " , shape(aug_v), "from basis arary of shape ", shape(basis)
+          do concurrent(integer :: i=1:size(trunk_outputs,1), j=1:size(basis,1), k=1:size(basis,2) )
             aug_v(i,j,k) = basis(j,k)
           end do
 
           allocate(aug_trunk(size(trunk_outputs,1), size(basis,1), size(basis,2)+1))
           aug_trunk(:,:,1:size(basis,2)) = aug_v(:,:,1:size(basis,2))
 
-          do concurrent(i=1:size(aug_trunk,1), j=1:size(aug_trunk,2), m=1:size(trunk_outputs))
-            associate(trunk_values => trunk_outputs(m)%values())
-              aug_trunk(i,j,size(basis,2)+1) = 
-            end associate
+          print*, "Defining aug_trunk array of shape " , shape(aug_trunk)
+          do concurrent(integer :: i=1:size(aug_trunk,1), j=1:size(aug_trunk,2), m=1:size(trunk_outputs))
+            aug_trunk(i,j,1:size(basis,2)+1) = trunk_outputs(m)%values()
           end do
 
-          print *, "shape(aug_v): ", shape(aug_v)
           print *, "size(trunk_outputs): ", size(trunk_outputs)
           print *, "size(trunk_outputs(1)%values): ", size(trunk_outputs(1)%values())
 
