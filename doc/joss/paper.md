@@ -101,7 +101,7 @@ To explore how new language features and novel uses of longstanding features can
 Fiats thus facilitates studying deep learning for science and studying programming paradigms and patterns for deep learning in Fortran 2023.
 
 # Statement of need
-Developers of computational science software lack widespread support for adopting Fortran's native parallel programming features.
+Developers of computational science software lack widespread support for adopting Fortran's built-in parallel programming features.
 Those features take two forms: `do concurrent` for loop-level parallelism and multi-image execution for SPMD/PGAS parallelism in shared or distributed memory.
 Fiats addresses this problem by providing inference and training procedures that are compatible with both forms of parallel language features.
 The next section covers related work.
