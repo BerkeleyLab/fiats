@@ -42,51 +42,40 @@ set -u # error on use of undefined variable
 FPM_FC=${FPM_FC:-"flang-new"}
 FPM_CC=${FPM_CC:-"clang"}
 
-if [ $(uname) = "Darwin" ]; then
-  if command -v brew ; then
-    brew install netcdf netcdf-fortran pkg-config coreutils # coreutils supports `realpath` below
-    NETCDF_LIB_PATH="`brew --prefix netcdf`/lib"
-    HDF5_LIB_PATH="`brew --prefix hdf5`/lib"
-    NETCDFF_LIB_PATH="`brew --prefix netcdf-fortran`/lib"
-    fpm_cc_version=$($FPM_CC --version)
-    if [[ $fpm_cc_version = Apple* ]]; then
-      echo "$FPM_CC appears to be an Apple compiler.  Please set FPM_CC to the location of LLVM clang."
-      exit 1
-    fi
-    if [[ -z ${LC_RPATH:-} ]]; then
-      printf "Please set LC_RPATH=\$DYLD_LIBRARY_PATH path and restart this script.\n\n"
-      exit 1
-    fi
-  else
-    cat <<'EOF'
+# brew install netcdf netcdf-fortran pkg-config coreutils # coreutils supports `realpath` below
 
-      Command 'brew' not found. On macOS, this script uses Homebrew (https://brew.sh) to 
-      install the prerequisite packages netcdf, netcdf-fortran, pkg-config, and coreutils.
-      Please install Homebrew and restart this script."
-EOF
-  fi
-elif [ $(uname) = "Linux" ]; then
-  if [[ -z ${HDF5_LIB_PATH:-}    ]]; then 
-    printf "Please set HDF5_LIB_PATH to the HDF5 library path and restart this script.\n\n"
-    exit 1
-  fi
-  if [[ -z ${NETCDF_LIB_PATH:-}  ]]; then
-    printf "Please set NETCDF_LIB_PATH to the NetCDF library path and restart this script.\n\n"
-     exit 1
-  fi
-  if [[ -z ${NETCDFF_LIB_PATH:-} ]]; then
-    printf "Please set NETCDFF_LIB_PATH to the NetCDF-Fortran library path and restart this script.\n\n"
-    exit 1
-  fi
-  if [[ -z ${LC_RPATH:-} ]]; then
-    printf "Please set LC_RPATH=\$LD_LIBRARY_PATH path and restart this script.\n\n"
-    exit 1
-  fi
+fpm_cc_version=$($FPM_CC --version)
+if [[ $fpm_cc_version = Apple* ]]; then
+  echo "$FPM_CC appears to be an Apple compiler.  Please set FPM_CC to the location of LLVM clang."
+  exit 1
 fi
 
+if [[ -z ${LC_RPATH:-} ]]; then
+  if [ $(uname) = "Darwin" ]; then
+    printf "Please set LC_RPATH=\$DYLD_LIBRARY_PATH path and restart this script.\n\n"
+  elif [ $(uname) = "Linux" ]; then
+    printf "Please set LC_RPATH=\$LD_LIBRARY_PATH path and restart this script.\n\n"
+  fi
+  exit 1
+fi
+
+if [[ -z ${HDF5_LIB_PATH:-}    ]]; then
+  printf "Please set HDF5_LIB_PATH to the HDF5 library path and restart this script.\n\n"
+  printf "If Homebrew installed HDF5, try the following: export HDF5_LIB_PATH=\"\`brew --prefix hdf5\`/lib\"\n\n"
+  exit 1
+fi
+if [[ -z ${NETCDF_LIB_PATH:-}  ]]; then
+  printf "Please set NETCDF_LIB_PATH to the NetCDF library path and restart this script.\n\n"
+  printf "If Homebrew installed NetCDF, try the following: export NETCDF_LIB_PATH=\"\`brew --prefix netcdf\`/lib\"\n\n"
+  exit 1
+fi
+if [[ -z ${NETCDFF_LIB_PATH:-} ]]; then
+  printf "Please set NETCDFF_LIB_PATH to the NetCDF-Fortran library path and restart this script.\n\n"
+  printf "If Homebrew installed NetCDF-Fortran, try the following: export NETCDFF_LIB_PATH=\"\`brew --prefix netcdf-fortran\`/lib\"\n\n"
+  exit 1
+fi
 
 FPM_LD_FLAG=" -L$NETCDF_LIB_PATH -L$HDF5_LIB_PATH -L$NETCDFF_LIB_PATH -rpath $LC_RPATH"
-
 PREFIX=`realpath $PREFIX`
 
 fpm_fc_version=$($FPM_FC --version)
@@ -168,13 +157,13 @@ if [ $CI = true ]; then
   echo "---------------"
 fi
 
-$RUN_FPM_SH build
+$RUN_FPM_SH test
 
 echo ""
-echo "____________________ The fiats demo apps build succeeded! _______________________"
+echo "____________________ Fiats demo app setup has completed _______________________"
 echo ""
-echo "Run the following command to see a list of available apps:"
+echo "To see usage information for a program in the fiats/demo/app subdirectory, run"
 echo ""
-echo "./build/run-fpm.sh run"
+echo "./build/run-fpm.sh run <base-name>"
 echo ""
-echo "Append a space followed by an app's name to see basic app usage information."
+echo "where <base-name> is the portion of the file name preceding .f90 or .F90."
