@@ -155,7 +155,7 @@ The derived types in the Unified Modeling Language (UML) class diagram in \autor
 \autoref{fig:derived-types} includes two of the [Julienne](https://go.lbl.gov/julienne) correctness-checking framework's derived types, `string_t` and `file_t`.
 These are included because other parts of the figure reference these types.
 The rightmost four types in \autoref{fig:derived-types} exist primarily to support inference.
-The leftmost six support training.
+The leftmost five support training.
 Because inference is considerably simpler, it makes sense to describe the right side of the diagram before the left side.
 
 The `concurrent-inferences` example program performs batch inference using the `string_t`, `file_t`, and `neural_network_t` types.
