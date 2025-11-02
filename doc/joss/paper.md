@@ -181,7 +181,7 @@ The latter trains surrogates for the complete cloud microphysics models in ICAR 
 Whereas diagrammed relationships of `neural_network_t` reflect direct dependencies of only two types (`file_t` and `tensor_t`), even describing the basic behaviors of `trainable_network_t` requires showing dependencies on five types:
 
 * A `training_configuration_t` object, which holds hyperparameters such as the learning rate and choice of optimization algorithms,
-* A `file_t` object from which the `training_configuration` is read inside the `trainable_network_t` constructor,
+* A `file_t` object representing a JSON input file from which the training configuration can alternatively be read inside the `trainable_network_t` constructor,
 * A `mini_batch_t` object that stores an array of `input_output_pair` objects from the training data set,
 * Two `tensor_map_t` objects storing the linear functions that map inputs to the training data range and map outputs from the training data range back to the application range, and
 * A parent `neural_network_t` object storing the network architecture, including weights, biases, layer widths, etc.
