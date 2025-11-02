@@ -138,8 +138,8 @@ Fortran-TF-Lib's most recent commit was in 2023 and no releases have been posted
 
 # Recent research and scholarly publications
 Fiats supports research in training surrogate models and parallelizing batch inference calculations for atmospheric sciences.
-This research has generated two peer-reviewed paper submissions: one accepted to appear in workshop proceedings [@rouson2025automatically] and one in open review [@rouson2025cloud].  
-Four programs in the Fiats repository played significant roles in these two papers:
+This research recently generated two peer-reviewed papers described in this section.
+Four programs in the Fiats repository played significant roles in these papers:
 
 1. [`example/concurrent-inferences.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90),
 2. [`example/learn-saturated-mixing-ratio.f90`](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/learn-saturated-mixing-ratio.F90),
