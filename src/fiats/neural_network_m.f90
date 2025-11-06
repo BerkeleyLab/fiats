@@ -7,7 +7,6 @@ module neural_network_m
   use kind_parameters_m, only : default_real, double_precision
   use julienne_m, only : file_t, string_t
   use metadata_m, only : metadata_t
-  use mini_batch_m, only : mini_batch_t
   use tensor_m, only : tensor_t
   use tensor_map_m, only : tensor_map_t
   implicit none
@@ -38,10 +37,8 @@ module neural_network_m
     generic :: nodes_per_layer          => default_real_nodes_per_layer,         double_precision_nodes_per_layer
     generic :: skip                     => default_real_skip,                    double_precision_skip
     generic :: activation_function_name => default_real_activation_name,         double_precision_activation_name
-    generic :: learn                    => default_real_learn
     procedure, private, non_overridable :: default_real_approximately_equal,     double_precision_approximately_equal
     procedure, private, non_overridable :: default_real_infer,                   double_precision_infer
-    procedure, private, non_overridable :: default_real_learn
     procedure, private, non_overridable :: default_real_to_json,                 double_precision_to_json
     procedure, private, non_overridable :: default_real_map_to_input_range,      double_precision_map_to_input_range
     procedure, private, non_overridable :: default_real_map_from_output_range,   double_precision_map_from_output_range
@@ -272,16 +269,6 @@ module neural_network_m
       class(neural_network_t(double_precision)), intent(in) :: self
       logical use_skip_connections
     end function
-
-    pure module subroutine default_real_learn(self, mini_batches_arr, cost, adam, learning_rate, workspace)
-      implicit none
-      class(neural_network_t), intent(inout) :: self
-      type(mini_batch_t), intent(in) :: mini_batches_arr(:)
-      real, intent(out), allocatable, optional :: cost(:)
-      logical, intent(in) :: adam
-      real, intent(in) :: learning_rate
-      type(workspace_t), intent(inout) :: workspace
-    end subroutine
 
   end interface
 
