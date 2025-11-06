@@ -36,3 +36,7 @@
 
 # macOS
 .DS_Store
+
+# Graphics
+*.plt
+*.png
