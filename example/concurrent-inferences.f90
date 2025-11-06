@@ -73,7 +73,7 @@ contains
     associate(n => size(x))
       associate(mean => sum(x)/real(n))
         associate(stdev => sum((x-mean)**2)/real(n))
-          print *, label, mean, stdev
+          print '(1x,a,2(en10.2,:,", "))', label, mean, stdev
         end associate
       end associate
     end associate
@@ -120,7 +120,7 @@ contains
     end do
     call system_clock(t_finish)
     do_concurrent_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
-    print *,"Elapsed system clock during `do concurrent` inference: ", do_concurrent_time
+    print '(1x,a,en10.2)',"Elapsed system clock during `do concurrent` inference: ", do_concurrent_time
   end function
 
   real(real64) function openmp_time()
@@ -139,7 +139,7 @@ contains
     end do
     call system_clock(t_finish)
     openmp_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
-    print *,"Elapsed system clock during `OpenMP` inference: ", openmp_time
+    print '(1x,a,en10.2)',"Elapsed system clock during `OpenMP` inference: ", openmp_time
   end function
 
   real(real64) function elemental_time()
@@ -152,7 +152,7 @@ contains
     !$omp end workshare
     call system_clock(t_finish)
     elemental_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
-    print *,"Elapsed system clock during `elemental` inference: ", elemental_time
+    print '(1x,a,en10.2)',"Elapsed system clock during `elemental` inference: ", elemental_time
   end function
 
   real(real64) function double_precision_do_concurrent_time()
@@ -182,7 +182,7 @@ contains
     end do
     call system_clock(t_finish)
     double_precision_do_concurrent_time = real(t_finish - t_start, real64)/real(clock_rate, real64)
-    print *,"Elapsed system clock during double precision concurrent inference: ", double_precision_do_concurrent_time
+    print '(1x,a,en10.2)',"Elapsed system clock during double precision concurrent inference: ", double_precision_do_concurrent_time
   end function
 
 end program
