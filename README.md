@@ -77,7 +77,7 @@ The remainder of this section contains commands for building Fiats with a recent
 ##### LLVM (`flang-new`)
 Testing Fiats with LLVM `flang-new` version 20 or later with the following command should report that all tests pass:
 ```
-fpm test --compiler flang-new --flag "-O3"
+fpm test --compiler flang-new --flag "-cpp -O3"
 ```
 With LLVM 19, add `-mmlir -allow-assumed-rank` to the `--flag` argument.
 With LLVM 21, it should be possible to automatically parallelize batch inferences on central processing units (CPUs).
@@ -86,7 +86,7 @@ For example, run [concurrent-inferences](./example/concurrent-inferences.f90) in
 fpm run \
   --example concurrent-inferences \
   --compiler flang-new \
-  --flag "-O3 -fopenmp -fdo-concurrent-to-openmp=host" \
+  --flag "-cpp -O3 -fopenmp -fdo-concurrent-to-openmp=host" \
   -- --network model.json
 ```
 where `model.json` must be a neural network in the [JSON] format used by Fiats and the companion [nexport] package.
@@ -96,7 +96,7 @@ Work is under way to automatically parallelize training on CPUs and to offload i
 ##### NAG (`nagfor`)
 With `nagfor` 7.2 Build 7235 or later, the following command builds Fiats and reports that all tests pass:
 ```
-fpm test --compiler nagfor --flag -fpp
+fpm test --compiler nagfor --flag "-fpp -O3"
 ```
 
 #### Partially Supported Compilers
@@ -123,7 +123,7 @@ Please submit an issue if you would like to use `ifx` and require hidden layers 
 ##### _Experimental:_ Automatic offloading of `do concurrent` to GPUs
 This capability is under development with the goal to facilitate automatic GPU offloading via the following command:
 ```
-fpm test --compiler ifx --profile release --flag "-fopenmp-target-do-concurrent -qopenmp -fopenmp-targets=spir64 -O3"
+fpm test --compiler ifx --profile release --flag "-fpp -fopenmp-target-do-concurrent -qopenmp -fopenmp-targets=spir64 -O3"
 ```
 
 #### Under Development
@@ -169,7 +169,7 @@ Project is up to date
         "outputs" : ["saturated mixing ratio"]
     },  
      "training data file names": {
-         "path" : "dates-20101001-2011076",
+         "path" : "fiats-training-data",
          "inputs prefix"  : "training_input-image-",
          "outputs prefix" : "training_output-image-",
          "infixes" : ["000001", "000002", "000003", "000004", "000005", "000006", "000007", "000008", "000009", "000010"]
