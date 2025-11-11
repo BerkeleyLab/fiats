@@ -82,7 +82,7 @@ Fiats thus aims to achieve performance portability through standard language mec
 
 In addition to an `example` subdirectory with illustrative codes, the Fiats `demo/app` subdirectory contains three demonstration applications:
 
-1. One trains a cloud-microphysics surrogate for the Berkeley Lab [fork](https://go.lbl.gov/icar) of the Intermediate Complexity Atmospheric Research (ICAR) model.
+1. One trains a cloud-microphysics surrogate for the Lawrence Berkeley National Laboratory [fork](https://go.lbl.gov/icar) of the Intermediate Complexity Atmospheric Research (ICAR) model.
 2. Another calculates input- and output-tensor statistics for ICAR's physics-based microphysics models.
 3. A third performs batch inference using an aerosols surrogate for the Energy Exascale Earth Systems Model ([E3SM](https://e3sm.org)).
 
