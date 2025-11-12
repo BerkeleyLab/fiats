@@ -104,6 +104,7 @@ Fiats thus facilitates studying deep learning for science and studying programmi
 Developers of computational science software lack widespread support for adopting Fortran's built-in parallel programming features.
 Those features take two forms: `do concurrent` for loop-level parallelism and multi-image execution for SPMD/PGAS parallelism in shared or distributed memory.
 Fiats addresses this problem by providing inference and training procedures that are compatible with both forms of parallel language features.
+Fiats also provides a vehicle for contributors to ensure that Fortran supports the algorithms that are central to the emerging field of deep learning and to drive improvements in the Fortran language to best support this domain.
 The next section covers related work.
 
 # State of the field
@@ -129,6 +130,7 @@ Searching the Athena, Fiats, and neural-fortran `src` subdirectories finds that 
 Included in these tallies are procedures explicitly marked as `pure` along with `simple` procedures and `elemental` procedures without the `impure` attribute.
 Athena, Fiats, and neural-fortran each employ `do concurrent` extensively.
 Only Fiats, however, leverages the locality specifiers introduced in Fortran 2018 and expanded in Fortran 2023 to include parallel reductions.
+These annotations make it more tractable for compilers to correctly parallelize code on processors or offload code to accelerators such as GPUs. 
 
 Of the APIs and libraries discussed here, only neural-fortran and Fiats use multi-image features: neural-fortran in its core library and Fiats in a demonstration application.
 Both use multi-image features minimally, leaving considerable room for researching parallelization strategies.
@@ -166,10 +168,16 @@ From the bottom of the class hierarchy in \autoref{fig:derived-types}, the `conc
 3. Passes the resulting `string_t` object to a `file_t` constructor, and
 4. Passes the resulting `file_t` object to a `neural_network_t` constructor.
 
-The program then repeatedly invokes the `infer` type-bound procedure on a three-dimensional (3D) array of `tensor_t` objects using OpenMP directives or `do concurrent` or an array statement.
+The program then repeatedly invokes the `infer` type-bound procedure on each element of a three-dimensional (3D) array of `tensor_t` objects using OpenMP directives or `do concurrent` or an array statement.
 The array statement takes advantage of `infer` being `elemental`.
-Line [101](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L101) of `example/concurrent-inferences.f90` at `git` tag `joss-line-references` demonstrates neural-network construction from a file.
-Line [109](https://github.com/BerkeleyLab/fiats/blob/joss-line-references/example/concurrent-inferences.f90#L109) demonstrates using the network for inference.
+The following line `example/concurrent-inferences.f90` at demonstrates neural-network construction from a file:
+```
+   neural_network = neural_network_t(file_t(network_file_name)) 
+```
+In the same example, the following line  demonstrates using the network for inference:
+```
+   outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
+```
 
 The `infer-aerosols` program performs inferences by invoking `double precision` versions of the `infer` generic binding on an object of type `unmapped_network_t`, a parameterized derived type (PDT) that has a `kind` type parameter.
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
