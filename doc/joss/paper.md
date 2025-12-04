@@ -88,22 +88,11 @@ In addition to an `example` subdirectory with illustrative codes, the Fiats `dem
 
 Ongoing research explores how Fiats can exploit multi-image execution, a set of Fortran features for Single-Program, Multiple-Data (SPMD) parallel programming with a Partitioned Global Address Space (PGAS) [@numrich2018co-arrays], where the PGAS features center around "coarray" distributed data structures.
 
-To explore how new language features and novel uses of longstanding features can power deep learning, Fiats contributors work to advance Fortran by
-
-* Participating in the Fortran standardization process and
-* Contributing to compiler development through
-  - Writing unit tests [@rasmussen2022agile],
-  - Studying performance [@rouson2025automatically],
-  - Isolating and reporting compiler bugs and fixing front-end bugs,
-  - Publishing and updating the Parallel Runtime Interface for Fortran (PRIF) [@bonachea2024prif; @prif-0.5], and
-  - Developing the [Caffeine](https://go.lbl.gov/caffeine) PRIF library [@rouson2022caffeine; @bonachea2025caffeine; @bonachea2025llvm].
-
-Fiats thus facilitates studying deep learning for science and studying programming paradigms and patterns for deep learning in Fortran 2023.
-
 # Statement of need
 Developers of computational science software lack widespread support for adopting Fortran's built-in parallel programming features.
 Those features take two forms: `do concurrent` for loop-level parallelism and multi-image execution for SPMD/PGAS parallelism in shared or distributed memory.
 Fiats addresses this problem by providing inference and training procedures that are compatible with both forms of parallel language features.
+Fiats thus facilitates studying deep learning for science and programming paradigms and patterns for deep learning in Fortran 2023.
 Fiats also provides a vehicle for contributors to ensure that Fortran supports the algorithms that are central to the emerging field of deep learning and to drive improvements in the Fortran language to best support this domain.
 The next section covers related work.
 
