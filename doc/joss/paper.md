@@ -170,8 +170,6 @@ The `infer-aerosols` program performs inferences by invoking `double precision` 
 To match the expected behavior of the aerosol model, which was trained in PyTorch, the `unmapped_network_t` implementation ensures the use of raw network input and output tensors without the normalizations and remappings that are performed by default for a `neural_network_t` object.
 The `double_precision_file_t` type controls the interpretation of the JSON network file: JSON does not distinguish between categories of numerical values such as `real`, `double precision`, or even `integer`, so something external to the file must determine the interpretation of the numbers in a JSON file.
 
-![Class diagram: derived types (named in bordered white boxes), type relationships (connecting lines), type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (in an unbordered gray box) followed by the type named at the arrow's head as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview-rot){ height=90% }
-
 The `learn-saturated-mixing-ratio` and `train-cloud-microphysics` programs focus on using a `trainable_network_t` object for training.
 The former trains neural network surrogates for a thermodynamic function from ICAR: the saturated mixing ratio, a scalar function of temperature and pressure.
 The latter trains surrogates for the complete cloud microphysics models in ICAR -- models implemented in thousands of lines of code.
@@ -182,6 +180,8 @@ Whereas diagrammed relationships of `neural_network_t` reflect direct dependenci
 * A `mini_batch_t` object that stores an array of `input_output_pair` objects from the training data set,
 * Two `tensor_map_t` objects storing the linear functions that map inputs to the training data range and map outputs from the training data range back to the application range, and
 * A parent `neural_network_t` object storing the network architecture, including weights, biases, layer widths, etc.
+
+![Class diagram: derived types (named in bordered white boxes), type relationships (connecting lines), type extension (open triangles), composition (solid diamonds), or directional relationship (arrows).  Read relationships as sentences wherein the type named at the base of an arrow is the subject followed by an annotation (in an unbordered gray box) followed by the type named at the arrow's head as the object.  Type extension reads with the type adjacent to the open triangle as the subject.  Composition reads with the type adjacent to the closed diamond as the subject. \label{fig:derived-types}](class-overview-rot){ height=90% }
 
 The `trainable_network_t` type stores a `workspace_t` (not shown) as a scratch-pad for training purposes.
 The workspace is not needed for inference.
