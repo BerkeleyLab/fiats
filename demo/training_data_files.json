@@ -1,8 +1,0 @@
- {
-     "training data files": {
-         "path" : "fiats-training-data",
-         "inputs prefix"  : "training_input-image-_",
-         "outputs prefix" : "training_output-image-_",
-         "infixes" : ["0", "50"]
-     }
- }
