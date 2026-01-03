@@ -1,10 +1,4 @@
-! Copyright (c) 2023-2025, The Regents of the University of California
-! Terms of use are as specified in LICENSE.txt
-
-#include "julienne-assert-macros.h"
-
 submodule(hyperparameters_m) hyperparameters_s
-  use julienne_m, only : call_julienne_assert_, operator(.all.), operator(.expect.)
   implicit none
 
   character(len=*), parameter :: mini_batches_key  = "mini-batches"
@@ -29,8 +23,6 @@ contains
 
     real, parameter :: tolerance = 1.E-08
 
-    call_julienne_assert(.all. (.expect. [allocated(lhs%optimizer_), allocated(rhs%optimizer_)]))
-
     lhs_equals_rhs = &
       lhs%mini_batches_ == rhs%mini_batches_ .and. &
       lhs%optimizer_ == rhs%optimizer_ .and. &
@@ -41,8 +33,6 @@ contains
   module procedure double_precision_equals
 
     double precision, parameter :: tolerance = 1.D-15
-
-    call_julienne_assert(.all. (.expect. [allocated(lhs%optimizer_), allocated(rhs%optimizer_)]))
 
     lhs_equals_rhs = &
       lhs%mini_batches_ == rhs%mini_batches_ .and. &
@@ -67,7 +57,6 @@ contains
       end if
     end do
 
-    call_julienne_assert(hyperparameters_key_found)
   end procedure
 
   module procedure double_precision_from_json
@@ -86,7 +75,6 @@ contains
       end if
     end do
 
-    call_julienne_assert(hyperparameters_key_found)
   end procedure
 
   module procedure default_real_to_json

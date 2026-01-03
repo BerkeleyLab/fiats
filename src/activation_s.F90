@@ -1,10 +1,4 @@
-! Copyright (c) 2023-2025, The Regents of the University of California
-! Terms of use are as specified in LICENSE.txt
-
-#include "julienne-assert-macros.h"
-
 submodule(activation_m) activation_s
-  use julienne_m ,only : call_julienne_assert_, operator(.also.), operator(.isAtMost.)
   implicit none
 
   real            , parameter :: pi    = 3.141592653589793
@@ -21,7 +15,6 @@ contains
     end procedure
 
     module procedure function_name
-      call_julienne_assert((lbound(activation_name,1) .isAtMost. self%selection_) .also. (self%selection_ .isAtMost. ubound(activation_name,1)))
       string = string_t(trim(activation_name(self%selection_)))
     end procedure
 

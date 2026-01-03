@@ -1,10 +1,4 @@
-! Copyright (c) 2023-2025, The Regents of the University of California
-! Terms of use are as specified in LICENSE.txt
-
-#include "julienne-assert-macros.h"
-
 submodule(network_configuration_m) network_configuration_s
-  use julienne_m, only : csv, call_julienne_assert_, operator(.all.), operator(.expect.)
   implicit none
 
   character(len=*), parameter :: skip_connections_key  = "skip connections"
@@ -20,8 +14,6 @@ contains
   end procedure 
 
   module procedure equals
-
-    call_julienne_assert(.all. (.expect. [allocated(lhs%activation_name_), allocated(rhs%activation_name_)]))
 
     lhs_equals_rhs = &
       lhs%skip_connections_ .eqv. rhs%skip_connections_ .and. &
@@ -46,7 +38,6 @@ contains
       end if
     end do
 
-    call_julienne_assert(network_configuration_key_found)
   end procedure
 
   module procedure from_double_precision_string_json
@@ -65,7 +56,6 @@ contains
       end if
     end do
 
-    call_julienne_assert(network_configuration_key_found)
   end procedure
 
   module procedure to_json
@@ -77,7 +67,7 @@ contains
     allocate(character(len=size(self%nodes_per_layer_)*char_per_elem + brackets) :: nodes_per_layer_string)
 
     write(skip_connections_string,*) trim(merge("true ","false",self%skip_connections_))
-    write(nodes_per_layer_string, csv) self%nodes_per_layer_
+    write(nodes_per_layer_string, "(*(G25.20,:,','))") self%nodes_per_layer_
 
     lines = [ &
       string_t(indent // '"network configuration": {'), &

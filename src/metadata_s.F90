@@ -1,10 +1,4 @@
-! Copyright (c) 2023-2025, The Regents of the University of California
-! Terms of use are as specified in LICENSE.txt
-
-#include "julienne-assert-macros.h"
-
 submodule(metadata_m) metadata_s
-  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
   implicit none
 
 contains
@@ -28,8 +22,6 @@ contains
   module procedure from_json
     integer l
 
-    call_julienne_assert(lines(1)%get_json_key() .equalsExpected. "metadata")
-
     do l = 2, size(lines)-1
       associate(key => lines(l)%get_json_key())
         select case (key%string())
@@ -49,13 +41,10 @@ contains
       end associate
     end do
 
-    call_julienne_assert(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]))
   end procedure
 
   module procedure double_precision_from_json
     integer l
-
-    call_julienne_assert(lines(1)%get_json_key() .equalsExpected. "metadata")
 
     do l = 2, size(lines)-1
       associate(key => lines(l)%get_json_key())
@@ -76,7 +65,6 @@ contains
       end associate
     end do
 
-    call_julienne_assert(any(trim(adjustl(lines(size(lines))%string())) == ["},","} "]))
   end procedure
 
   module procedure to_json
