@@ -1,11 +1,25 @@
 program test_suite_driver
-  use julienne_m, only : test_fixture_t, test_harness_t
-  use training_configuration_test_m, only : training_configuration_test_t
+  use fiats_m, only : training_configuration_t, hyperparameters_t, network_configuration_t, tensor_names_t
+  use julienne_m, only : &
+     file_t &
+    ,string_t &
+    ,test_description_t &
+    ,test_diagnosis_t &
+    ,test_result_t &
+    ,test_t
   implicit none
 
-  associate(test_harness => test_harness_t([ &
-     test_fixture_t(training_configuration_test_t()) &
-  ]))
-    call test_harness%report_results
+
+  associate(training_configuration => training_configuration_t( &
+     hyperparameters_t(mini_batches=5, learning_rate=1., optimizer = "adam") &
+    ,network_configuration_t(skip_connections=.false., nodes_per_layer=[2,72,2], activation_name="sigmoid") &
+    ,tensor_names_t(inputs=[string_t("pressure"), string_t("temperature")], outputs=[string_t("saturated mixing ratio")]) &
+  ))
+    block
+      type(training_configuration_t) from_json
+      from_json = training_configuration_t(file_t(training_configuration%to_json()))
+      stop "--------> made it"
+    end block
   end associate
+
 end program test_suite_driver
