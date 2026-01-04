@@ -48,49 +48,4 @@ contains
       lhs%tensor_names_ == rhs%tensor_names_
   end procedure
 
-  module procedure default_real_mini_batches
-    num_mini_batches = self%hyperparameters_%mini_batches()
-  end procedure
-
-  module procedure default_real_optimizer_name
-    identifier = self%hyperparameters_%optimizer_name()
-  end procedure
-
-  module procedure default_real_learning_rate
-    rate = self%hyperparameters_%learning_rate()
-  end procedure
-
-  module procedure default_real_nodes_per_layer
-    nodes = self%network_configuration_%nodes_per_layer()
-  end procedure
-
-  module procedure default_real_skip_connections
-    using_skip = self%network_configuration_%skip_connections()
-  end procedure
-
-  module procedure default_real_activation
-    associate(activation_name => self%network_configuration_%activation_name())
-      select case(activation_name%string())
-        case ("gelu")
-          activation = activation_t(gelu)
-        case ("relu")
-          activation = activation_t(relu)
-        case ("sigmoid")
-          activation = activation_t(sigmoid)
-        case ("swish")
-          activation = activation_t(swish)
-        case default
-          error stop 'activation_factory_s(factory): unrecognized activation name "' // activation_name%string() // '"' 
-      end select
-    end associate
-  end procedure
-
-  module procedure default_real_input_names
-    input_names = self%tensor_names_%input_names()
-  end procedure
-
-  module procedure default_real_output_names
-    output_names = self%tensor_names_%output_names()
-  end procedure
-
 end submodule training_configuration_s
