@@ -1,3 +1,1 @@
 name = "fiats"
-[dependencies]
-julienne = {git = "https://github.com/berkeleylab/julienne", tag = "3.6.0"}

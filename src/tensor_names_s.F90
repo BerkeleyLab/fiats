@@ -1,4 +1,5 @@
 submodule(tensor_names_m) tensor_names_s
+  use julienne_m, only : operator(.csv.)
   implicit none
 
   character(len=*), parameter :: inputs_key = "inputs"
