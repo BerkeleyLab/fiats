@@ -11,10 +11,7 @@ program test_suite_driver
   )
   block
     type(training_configuration_t) from_json
-    type(file_t) json_file
-    json_file = file_t(training_configuration%to_json())
-    call json_file%write_lines()
-    from_json = training_configuration_t(json_file)
+    from_json = training_configuration_t(file_t(training_configuration%to_json()))
   end block
 
 end program
