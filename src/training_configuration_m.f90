@@ -1,5 +1,4 @@
 module training_configuration_m
-  use activation_m, only : activation_t
   use julienne_string_m, only : string_t
   use julienne_file_m, only : file_t
   use hyperparameters_m, only : hyperparameters_t
