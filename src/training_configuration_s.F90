@@ -12,13 +12,10 @@ contains
   module procedure default_real_from_components
 
     training_configuration%hyperparameters_ = hyperparameters
-    training_configuration%network_configuration_ = network_configuration
 
     training_configuration%file_t = file_t([ &
       string_t(header), &
       training_configuration%hyperparameters_%to_json(), &
-      string_t(separator), &
-      training_configuration%network_configuration_%to_json(), &
       string_t(footer) &
     ])
 
@@ -29,7 +26,6 @@ contains
 
     associate(lines => training_configuration%file_t%lines())
       training_configuration%hyperparameters_ = hyperparameters_t(lines)
-      training_configuration%network_configuration_= network_configuration_t(lines)
     end associate
   end procedure
 
@@ -39,8 +35,7 @@ contains
 
   module procedure default_real_equals
     lhs_eq_rhs = &
-      lhs%hyperparameters_ == rhs%hyperparameters_ .and. &
-      lhs%network_configuration_ == rhs%network_configuration_
+      lhs%hyperparameters_ == rhs%hyperparameters_
   end procedure
 
 end submodule training_configuration_s

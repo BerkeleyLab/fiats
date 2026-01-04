@@ -3,7 +3,6 @@ module training_configuration_m
   use julienne_string_m, only : string_t
   use julienne_file_m, only : file_t
   use hyperparameters_m, only : hyperparameters_t
-  use network_configuration_m, only : network_configuration_t
   use double_precision_file_m, only : double_precision_file_t
   implicit none
 
@@ -13,7 +12,6 @@ module training_configuration_m
   type, extends(double_precision_file_t) :: training_configuration_t(m)
     integer, kind :: m = kind(1.)
     type(hyperparameters_t(m)),    private :: hyperparameters_
-    type(network_configuration_t), private :: network_configuration_
   contains
     generic :: operator(==)     => default_real_equals           
     procedure, private          :: default_real_equals           
@@ -22,11 +20,10 @@ module training_configuration_m
   end type
   interface training_configuration_t
 
-    pure module function default_real_from_components(hyperparameters, network_configuration) &
+    pure module function default_real_from_components(hyperparameters) &
       result(training_configuration)
       implicit none
       type(hyperparameters_t), intent(in) :: hyperparameters
-      type(network_configuration_t), intent(in) :: network_configuration
       type(training_configuration_t) training_configuration
     end function
 

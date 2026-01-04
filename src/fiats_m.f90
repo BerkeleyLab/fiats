@@ -4,7 +4,6 @@ module fiats_m
  use hyperparameters_m, only : hyperparameters_t
  use kind_parameters_m, only : default_real, double_precision
  use metadata_m, only : metadata_t
- use network_configuration_m, only : network_configuration_t
  use training_configuration_m, only : training_configuration_t
  implicit none
 end module fiats_m
