@@ -10,10 +10,6 @@ contains
     raw_string = self%string_
   end procedure
 
-  module procedure is_allocated
-    string_allocated = allocated(self%string_)
-  end procedure
-
   module procedure from_characters
     new_string%string_ = string
   end procedure
@@ -40,39 +36,6 @@ contains
     allocate(character(len=double_precision_width_supremum) :: string%string_)
     write(string%string_, '(g20.13)') x
     string%string_ = trim(adjustl(string%string_))
-  end procedure
-
-  module procedure from_default_logical
-    allocate(character(len=logical_width) :: string%string_)
-    write(string%string_, '(g0)') b
-    string%string_ = trim(adjustl(string%string_))
-  end procedure
-
-  module procedure from_logical_c_bool
-    allocate(character(len=logical_width) :: string%string_)
-    write(string%string_, '(g0)') b
-    string%string_ = trim(adjustl(string%string_))
-  end procedure
-
-  module procedure from_default_complex
-    allocate(character(len=2*default_real_width_supremum + 2*parenthesis_width + comma_width) :: string%string_)
-    write(string%string_, '("(",g20.13,",",g20.13,")")') z
-    string%string_ = trim(adjustl(string%string_))
-  end procedure
-
-  module procedure from_double_precision_complex
-    allocate(character(len=space + 2*double_precision_width_supremum + 2*parenthesis_width + comma_width) :: string%string_)
-    write(string%string_, '("(",g20.13,",",g20.13,")")') z
-    string%string_ = trim(adjustl(string%string_))
-  end procedure
-
-  module procedure concatenate_elements
-    integer s 
-
-    concatenated_strings = ""
-    do s = 1, size(strings)
-      concatenated_strings = concatenated_strings // strings(s)%string()
-    end do
   end procedure
 
   module procedure strings_with_comma_separator
@@ -113,28 +76,6 @@ contains
 
   end procedure
 
-  module procedure array_of_strings
-    character(len=:), allocatable :: remainder, next_string
-    integer next_delimiter, string_end
-
-    remainder = trim(adjustl(delimited_strings))
-    allocate(strings_array(0))
-
-    do
-      next_delimiter = index(remainder, delimiter)
-      string_end = merge(len(remainder), next_delimiter-1, next_delimiter==0)
-      next_string = trim(adjustl(remainder(:string_end)))
-      if (len(next_string)==0) exit
-      strings_array = [strings_array, string_t(next_string)]
-      if (next_delimiter==0) then
-        remainder = ""
-      else
-        remainder = trim(adjustl(remainder(next_delimiter+1:)))
-      end if
-    end do
-
-  end procedure
-
   module procedure get_json_key
     character(len=:), allocatable :: raw_line
   
@@ -145,42 +86,6 @@ contains
       end associate
     end associate
 
-  end procedure
-
-  module procedure file_extension
-    character(len=:), allocatable :: name_
-
-    name_ = trim(adjustl(self%string()))
-
-    associate( dot_location => index(name_, '.', back=.true.) )
-      if (dot_location < len(name_)) then
-        extension = trim(adjustl(name_(dot_location+1:)))
-      else
-        extension = ""
-      end if
-    end associate
-  end procedure
-
-  module procedure base_name
-    character(len=:), allocatable :: name_
-
-    name_ = self%string()
-    
-    associate(dot_location => index(name_, '.', back=.true.) )
-      if (dot_location < len(name_)) then
-        base = trim(adjustl(name_(1:dot_location-1)))
-      else
-        base = ""
-      end if
-    end associate
-  end procedure
-
-  module procedure get_real_with_character_key
-    value_ = self%get_real(string_t(key), mold)
-  end procedure
-
-  module procedure get_double_precision_with_character_key
-    value_ = self%get_double_precision(string_t(key), mold)
   end procedure
 
 #ifndef NAGFOR
@@ -260,23 +165,10 @@ contains
     end associate
   end procedure
 
-  module procedure get_character_with_character_key
-    associate(string_value => self%get_string_with_string_key(string_t(key), string_t(mold)))
-      value_ = string_value%string()
-    end associate
-  end procedure
-
-  module procedure get_string_with_character_key
-    associate(string_value => self%get_string_with_string_key(string_t(key), mold))
-      value_ = string_value%string()
-    end associate
-  end procedure
-
   module procedure get_string_t_array_with_string_t_key
     value_ = self%get_string_t_array_with_character_key(key%string(), mold)
   end procedure
 
-#ifndef NAGFOR
   module procedure get_string_t_array_with_character_key
 
     character(len=:), allocatable :: raw_line
@@ -303,33 +195,6 @@ contains
       end associate
     end associate
   end procedure
-#else
-  module procedure get_string_t_array_with_character_key
-
-    character(len=:), allocatable :: raw_line
-    integer i, comma, opening_quotes, closing_quotes, opening_bracket
-
-    raw_line = self%string()
-
-    associate(colon => index(raw_line, ':'))
-      opening_bracket = colon + index(raw_line(colon+1:), '[')
-      associate(closing_bracket => opening_bracket + index(raw_line(opening_bracket+1:), ']'))
-        associate(commas => count([(raw_line(i:i)==",", i = opening_bracket+1, closing_bracket-1)]))
-          allocate(value_(commas+1))
-          opening_quotes = opening_bracket + index(raw_line(opening_bracket+1:), '"')
-          closing_quotes = opening_quotes + index(raw_line(opening_quotes+1:), '"')
-          value_(1) = raw_line(opening_quotes+1:closing_quotes-1)
-          do i = 1, commas
-            comma = closing_quotes + index(raw_line(closing_quotes+1:), ',')
-            opening_quotes = comma + index(raw_line(comma+1:), '"')
-            closing_quotes = opening_quotes + index(raw_line(opening_quotes+1:), '"')
-            value_(i+1) = raw_line(opening_quotes+1:closing_quotes-1)
-          end do
-        end associate
-      end associate
-    end associate
-  end procedure
-#endif
 
 #ifndef NAGFOR
   module procedure get_string_with_string_key
@@ -370,9 +235,6 @@ contains
   end procedure
 #endif
 
-  module procedure get_logical_with_character_key
-    value_ = self%get_logical(string_t(key), mold)
-  end procedure
 
 #ifndef NAGFOR
   module procedure get_logical
@@ -444,24 +306,8 @@ contains
   end procedure
 #endif
 
-  module procedure get_integer_with_character_key
-    value_ = self%get_integer(string_t(key), mold)
-  end procedure
-
-  module procedure get_integer_array_with_character_key
-    value_ = int(self%get_integer_array(string_t(key), mold))
-  end procedure
-
   module procedure get_integer_array
     value_ = int(self%get_real_array(key,mold=[0.]))
-  end procedure
-
-  module procedure get_real_array_with_character_key
-    value_ = self%get_real_array(string_t(key), mold)
-  end procedure
-
-  module procedure get_double_precision_array_with_character_key
-    value_ = self%get_double_precision_array(string_t(key), mold)
   end procedure
 
   module procedure get_real_array
@@ -487,29 +333,6 @@ contains
 
   end procedure
 
-  module procedure get_double_precision_array
-    character(len=:), allocatable :: raw_line
-    double precision, allocatable :: double_precision_array(:)
-    integer i
-
-    raw_line = self%string()
-    associate(colon => index(raw_line, ":"))
-      associate(opening_bracket => colon + index(raw_line(colon+1:), "["))
-        associate(closing_bracket => opening_bracket + index(raw_line(opening_bracket+1:), "]"))
-          i = 0 ! silence a harmless/bogus warning from gfortran
-          associate(commas => count("," == [(raw_line(i:i), i=opening_bracket+1,closing_bracket-1)]))
-            associate(num_inputs => commas + 1)
-              allocate(double_precision_array(num_inputs))
-              read(raw_line(opening_bracket+1:closing_bracket-1), fmt=*) double_precision_array
-              value_ = double_precision_array
-            end associate
-          end associate
-        end associate
-      end associate
-    end associate
-
-  end procedure
-
   module procedure string_t_eq_string_t
     lhs_eq_rhs = lhs%string() == rhs%string()
   end procedure
@@ -518,22 +341,6 @@ contains
     lhs_eq_rhs = lhs%string() == rhs
   end procedure
 
-  module procedure character_eq_string_t
-    lhs_eq_rhs = lhs == rhs%string()
-  end procedure
-   
-  module procedure string_t_ne_string_t
-    lhs_ne_rhs = lhs%string() /= rhs%string()
-  end procedure
-   
-  module procedure string_t_ne_character
-    lhs_ne_rhs = lhs%string() /= rhs
-  end procedure
-
-  module procedure character_ne_string_t
-    lhs_ne_rhs = lhs /= rhs%string()
-  end procedure
-   
   module procedure assign_string_t_to_character
     lhs = rhs%string()
   end procedure
