@@ -46,36 +46,13 @@ module julienne_string_m
     procedure, private, pass(rhs) :: assign_string_t_to_character
   end type
 
+
   interface string_t
 
     elemental module function from_characters(string) result(new_string)
       implicit none
       character(len=*), intent(in) :: string
       type(string_t) new_string
-    end function
-
-    elemental module function from_default_integer(i) result(string)
-      implicit none
-      integer, intent(in) :: i
-      type(string_t) string
-    end function
-
-    elemental module function from_integer_c_size_t(i) result(string)
-      implicit none
-      integer(c_size_t), intent(in) :: i
-      type(string_t) string
-    end function
-
-    elemental module function from_default_real(x) result(string)
-      implicit none
-      real, intent(in) :: x
-      type(string_t) string
-    end function
-
-    elemental module function from_double_precision(x) result(string)
-      implicit none
-      double precision, intent(in) :: x
-      type(string_t) string
     end function
 
   end interface
@@ -105,18 +82,9 @@ module julienne_string_m
       type(string_t) sv
     end function
 
-    pure module function characters_with_character_separator(strings, separator) result(sv)
-      implicit none
-      character(len=*), intent(in) :: strings(:), separator
-      type(string_t) sv
-    end function
+  end interface
 
-    pure module function characters_with_string_separator(strings, separator) result(sv)
-      implicit none
-      character(len=*), intent(in) :: strings(:)
-      type(string_t)  , intent(in) :: separator
-      type(string_t) sv
-    end function
+  interface
 
     pure module function strings_with_string_t_separator(strings, separator) result(sv)
       implicit none
@@ -128,7 +96,6 @@ module julienne_string_m
 
   interface operator(.separatedBy.)
     module procedure strings_with_character_separator, strings_with_string_t_separator
-    module procedure characters_with_character_separator, characters_with_string_separator
   end interface
 
   interface
