@@ -111,28 +111,4 @@ contains
     ]
   end procedure
 
-  module procedure default_real_mini_batches
-    num_mini_batches = self%mini_batches_
-  end procedure
-
-  module procedure double_precision_mini_batches
-    num_mini_batches = self%mini_batches_
-  end procedure
-
-  module procedure default_real_optimizer_name
-    identifier = string_t(self%optimizer_)
-  end procedure
-
-  module procedure double_precision_optimizer_name
-    identifier = string_t(self%optimizer_)
-  end procedure
-
-  module procedure default_real_learning_rate
-    rate = self%learning_rate_
-  end procedure
-
-  module procedure double_precision_learning_rate
-    rate = self%learning_rate_
-  end procedure
-
 end submodule hyperparameters_s

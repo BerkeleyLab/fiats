@@ -18,12 +18,6 @@ module hyperparameters_m
     procedure, private :: default_real_to_json, double_precision_to_json
     generic :: operator(==) => default_real_equals, double_precision_equals
     procedure, private ::      default_real_equals, double_precision_equals
-    generic :: mini_batches => default_real_mini_batches, double_precision_mini_batches
-    procedure, private ::      default_real_mini_batches, double_precision_mini_batches
-    generic :: optimizer_name => default_real_optimizer_name, double_precision_optimizer_name
-    procedure, private ::        default_real_optimizer_name, double_precision_optimizer_name
-    generic :: learning_rate => default_real_learning_rate, double_precision_learning_rate
-    procedure, private ::       default_real_learning_rate, double_precision_learning_rate
   end type
 
   interface hyperparameters_t
@@ -83,42 +77,6 @@ module hyperparameters_m
       class(hyperparameters_t(double_precision)), intent(in) :: lhs, rhs
       logical lhs_equals_rhs
     end function
-
-    elemental module function default_real_mini_batches(self) result(num_mini_batches)
-      implicit none
-      class(hyperparameters_t), intent(in) :: self
-      integer num_mini_batches
-    end function
-
-    elemental module function double_precision_mini_batches(self) result(num_mini_batches)
-      implicit none
-      class(hyperparameters_t(double_precision)), intent(in) :: self
-      integer num_mini_batches
-    end function
-
-     elemental module function default_real_learning_rate(self) result(rate)
-       implicit none
-       class(hyperparameters_t), intent(in) :: self
-       real rate
-     end function
-
-     elemental module function double_precision_learning_rate(self) result(rate)
-       implicit none
-       class(hyperparameters_t(double_precision)), intent(in) :: self
-       double precision rate
-     end function
-
-    elemental module function default_real_optimizer_name(self) result(identifier)
-      implicit none
-      class(hyperparameters_t), intent(in) :: self
-      type(string_t) identifier
-     end function
-
-    elemental module function double_precision_optimizer_name(self) result(identifier)
-      implicit none
-      class(hyperparameters_t(double_precision)), intent(in) :: self
-      type(string_t) identifier
-     end function
 
   end interface
 
