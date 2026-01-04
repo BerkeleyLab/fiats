@@ -8,14 +8,6 @@ contains
     my_lines = self%lines_
   end procedure
 
-  module procedure write_to_output_unit
-    integer l
-
-    do l = 1, size(self%lines_)
-      write(output_unit, '(a)') self%lines_(l)%string()
-    end do
-  end procedure
-
   module procedure write_to_character_file_name
     integer file_unit, l
 
