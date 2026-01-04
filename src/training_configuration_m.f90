@@ -5,7 +5,6 @@ module training_configuration_m
   use hyperparameters_m, only : hyperparameters_t
   use network_configuration_m, only : network_configuration_t
   use double_precision_file_m, only : double_precision_file_t
-  use tensor_names_m, only : tensor_names_t
   implicit none
 
   private
@@ -15,7 +14,6 @@ module training_configuration_m
     integer, kind :: m = kind(1.)
     type(hyperparameters_t(m)),    private :: hyperparameters_
     type(network_configuration_t), private :: network_configuration_
-    type(tensor_names_t), private :: tensor_names_
   contains
     generic :: operator(==)     => default_real_equals           
     procedure, private          :: default_real_equals           
@@ -24,13 +22,12 @@ module training_configuration_m
   end type
   interface training_configuration_t
 
-    pure module function default_real_from_components(hyperparameters, network_configuration, tensor_names) &
+    pure module function default_real_from_components(hyperparameters, network_configuration) &
       result(training_configuration)
       implicit none
       type(hyperparameters_t), intent(in) :: hyperparameters
       type(network_configuration_t), intent(in) :: network_configuration
       type(training_configuration_t) training_configuration
-      type(tensor_names_t), intent(in) :: tensor_names
     end function
 
     module function default_real_from_file(file_object) result(training_configuration)
