@@ -11,7 +11,7 @@ module julienne_file_m
 
 contains
 
-  type(file_t) pure module function from_lines(lines)
+  type(file_t) pure function from_lines(lines)
     type(string_t), intent(in) :: lines(:)
     allocate(from_lines%lines_, source=lines) ! switching this to an assignment (from_lines%lines_ = lines) prevents the seg fault
   end function

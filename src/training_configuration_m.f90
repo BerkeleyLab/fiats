@@ -10,41 +10,24 @@ module training_configuration_m
   end type
 
   interface training_configuration_t
-
-    pure module function default_real_from_components(hyperparameters) &
-      result(training_configuration)
-      implicit none
-      type(hyperparameters_t), intent(in) :: hyperparameters
-      type(training_configuration_t) training_configuration
-    end function
-
-    module function default_real_from_file(file_object) result(training_configuration)
-      implicit none
-      type(file_t), intent(in) :: file_object
-      type(training_configuration_t) training_configuration
-    end function
-
+    module procedure default_real_from_components
+    module procedure default_real_from_file
   end interface
-
 
 contains
 
-  module procedure default_real_from_components
-
+  pure function default_real_from_components(hyperparameters) result(training_configuration)
+    type(hyperparameters_t), intent(in) :: hyperparameters
+    type(training_configuration_t) training_configuration
     training_configuration%hyperparameters_ = hyperparameters
+    training_configuration%file_t = file_t([ string_t("{"), training_configuration%hyperparameters_%to_json(), string_t("}") ])
+  end function
 
-    training_configuration%file_t = file_t([ &
-      string_t("{"), &
-      training_configuration%hyperparameters_%to_json(), &
-      string_t("}") &
-    ])
-
-  end procedure
-
-  module procedure default_real_from_file
+  function default_real_from_file(file_object) result(training_configuration)
+    type(file_t), intent(in) :: file_object
+    type(training_configuration_t) training_configuration
     training_configuration%file_t = file_object
     training_configuration%hyperparameters_ = hyperparameters_t(training_configuration%file_t%lines_)
-  end procedure
-
+  end function
 
 end module

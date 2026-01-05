@@ -10,9 +10,7 @@ module hyperparameters_m
   end type
 
   interface hyperparameters_t
-
     module procedure default_real_from_json
-
   end interface
 
   character(len=*), parameter :: mini_batches_key  = "mini-batches"
