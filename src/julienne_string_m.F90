@@ -6,11 +6,9 @@ module julienne_string_m
   contains
     procedure :: get_json_key
     generic :: operator(==)   => string_t_eq_character
-    generic :: assignment(= ) => assign_character_to_string_t
     generic :: get_json_value => get_integer
-    procedure, private :: get_integer 
-    procedure, private :: string_t_eq_character
-    procedure, private :: assign_character_to_string_t
+    procedure get_integer
+    procedure string_t_eq_character
   end type
 
   interface
@@ -34,12 +32,6 @@ module julienne_string_m
       character(len=*), intent(in) :: rhs
       logical lhs_eq_rhs
     end function
-
-    elemental module subroutine assign_character_to_string_t(lhs, rhs)
-      implicit none
-      class(string_t), intent(inout) :: lhs
-      character(len=*), intent(in) :: rhs
-    end subroutine
 
   end interface
   
@@ -76,10 +68,6 @@ contains
 
   module procedure string_t_eq_character
     lhs_eq_rhs = lhs%string_ == rhs
-  end procedure
-
-  module procedure assign_character_to_string_t
-    lhs%string_ = rhs
   end procedure
 
 end module
