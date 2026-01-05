@@ -12,7 +12,6 @@ module julienne_string_m
     procedure :: as_character
     generic :: string => as_character
     procedure :: get_json_key
-    generic :: operator(//)   => string_t_cat_string_t, string_t_cat_character, character_cat_string_t
     generic :: operator(==)   => string_t_eq_string_t, string_t_eq_character
     generic :: assignment(= ) => assign_character_to_string_t
     generic :: get_json_value => get_string_with_string_key &
@@ -21,8 +20,6 @@ module julienne_string_m
     procedure, private :: get_integer 
     procedure, private :: string_t_eq_string_t, string_t_eq_character
     procedure, private :: assign_character_to_string_t
-    procedure, private :: string_t_cat_string_t, string_t_cat_character
-    procedure, private, pass(rhs) :: character_cat_string_t
   end type
 
 
@@ -74,26 +71,6 @@ module julienne_string_m
       class(string_t), intent(in) :: lhs
       character(len=*), intent(in) :: rhs
       logical lhs_eq_rhs
-    end function
-
-    elemental module function string_t_cat_string_t(lhs, rhs) result(lhs_cat_rhs)
-      implicit none
-      class(string_t), intent(in) :: lhs, rhs
-      type(string_t) lhs_cat_rhs
-    end function
-
-    elemental module function string_t_cat_character(lhs, rhs) result(lhs_cat_rhs)
-      implicit none
-      class(string_t), intent(in) :: lhs
-      character(len=*), intent(in) :: rhs
-      type(string_t) lhs_cat_rhs
-    end function
-
-    elemental module function character_cat_string_t(lhs, rhs) result(lhs_cat_rhs)
-      implicit none
-      character(len=*), intent(in) :: lhs
-      class(string_t), intent(in) :: rhs
-      type(string_t) lhs_cat_rhs
     end function
 
     elemental module subroutine assign_character_to_string_t(lhs, rhs)
@@ -174,16 +151,4 @@ contains
     lhs%string_ = rhs
   end procedure
 
-  module procedure string_t_cat_string_t
-    lhs_cat_rhs = string_t(lhs%string_ // rhs%string_)
-  end procedure
-   
-  module procedure string_t_cat_character
-    lhs_cat_rhs = string_t(lhs%string_ // rhs)
-  end procedure
-
-  module procedure character_cat_string_t
-    lhs_cat_rhs = string_t(lhs // rhs%string_)
-  end procedure
-   
-end module julienne_string_m
+end module
