@@ -1,8 +1,6 @@
 module hyperparameters_m
   use julienne_string_m, only : string_t
   implicit none
-  private
-  public :: hyperparameters_t
 
   type hyperparameters_t(k)
     integer, kind :: k = kind(1.)
@@ -10,8 +8,6 @@ module hyperparameters_m
   contains
     generic :: to_json => default_real_to_json
     procedure, private :: default_real_to_json
-    generic :: operator(==) => default_real_equals
-    procedure, private ::      default_real_equals
   end type
 
   interface hyperparameters_t
@@ -32,25 +28,11 @@ module hyperparameters_m
       type(string_t), allocatable :: lines(:)
     end function
 
-    elemental module function default_real_equals(lhs, rhs) result(lhs_equals_rhs)
-      implicit none
-      class(hyperparameters_t), intent(in) :: lhs, rhs
-      logical lhs_equals_rhs
-    end function
-
   end interface
 
   character(len=*), parameter :: mini_batches_key  = "mini-batches"
 
 contains
-
-  module procedure default_real_equals
-
-    real, parameter :: tolerance = 1.E-08
-
-    lhs_equals_rhs = &
-      lhs%mini_batches_ == rhs%mini_batches_
-  end procedure
 
   module procedure default_real_from_json
     integer l
