@@ -7,8 +7,6 @@ module hyperparameters_m
   type hyperparameters_t(k)
     integer, kind :: k = kind(1.)
     integer, private:: mini_batches_ = 10
-    real(k), private :: learning_rate_ = real(1.5,k)
-    character(len=:), allocatable :: optimizer_
   contains
     generic :: to_json => default_real_to_json
     procedure, private :: default_real_to_json
@@ -24,11 +22,9 @@ module hyperparameters_m
       type(hyperparameters_t) hyperparameters
     end function
 
-    pure module function default_real_from_components(mini_batches, learning_rate, optimizer) result(hyperparameters)
+    pure module function default_real_from_components(mini_batches) result(hyperparameters)
       implicit none
       integer, intent(in) :: mini_batches
-      real, intent(in) :: learning_rate
-      character(len=*), intent(in) :: optimizer
       type(hyperparameters_t) hyperparameters
     end function
 
