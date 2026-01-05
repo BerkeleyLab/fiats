@@ -11,36 +11,6 @@ contains
     new_string%string_ = string
   end procedure
 
-  module procedure strings_with_comma_separator
-    csv = strings_with_string_t_separator(strings, string_t(","))
-  end procedure 
-
-  module procedure characters_with_comma_separator
-    csv = strings_with_string_t_separator(string_t(strings), string_t(","))
-  end procedure 
-
-  module procedure strings_with_character_separator
-    sv = strings_with_string_t_separator(strings, string_t(separator))
-  end procedure 
-
-  module procedure strings_with_string_t_separator
-
-    integer s 
-
-    associate(num_elements => size(strings))
-
-      sv = ""
-
-      do s = 1, num_elements - 1
-        sv = sv // strings(s) // separator
-      end do
-
-      sv = sv // strings(num_elements)
-
-    end associate
-
-  end procedure
-
   module procedure get_json_key
     character(len=:), allocatable :: raw_line
   
