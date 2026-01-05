@@ -1,12 +1,7 @@
 module julienne_string_m
-  use iso_c_binding, only : c_bool, c_size_t
   implicit none
   
-  private
-  public :: string_t
-
   type string_t
-    private
     character(len=:), allocatable :: string_
   contains
     procedure :: as_character
@@ -21,17 +16,6 @@ module julienne_string_m
     procedure, private :: string_t_eq_string_t, string_t_eq_character
     procedure, private :: assign_character_to_string_t
   end type
-
-
-  interface string_t
-
-    elemental module function from_characters(string) result(new_string)
-      implicit none
-      character(len=*), intent(in) :: string
-      type(string_t) new_string
-    end function
-
-  end interface
 
   interface
 
@@ -85,10 +69,6 @@ contains
 
   module procedure as_character
     raw_string = self%string_
-  end procedure
-
-  module procedure from_characters
-    new_string%string_ = string
   end procedure
 
   module procedure get_json_key
