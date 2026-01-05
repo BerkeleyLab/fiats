@@ -22,7 +22,7 @@ contains
     training_configuration%hyperparameters_ = hyperparameters_t(training_configuration%file_t%lines_)
   end procedure
 
-  module procedure default_real_to_json
+  module procedure to_json
     json_lines = self%lines_
   end procedure
 

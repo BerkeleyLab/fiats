@@ -8,8 +8,7 @@ module training_configuration_m
     integer, kind :: m = kind(1.)
     type(hyperparameters_t(m)) hyperparameters_
   contains
-    generic :: to_json          => default_real_to_json          
-    procedure, private          :: default_real_to_json          
+    procedure to_json          
   end type
   interface training_configuration_t
 
@@ -30,7 +29,7 @@ module training_configuration_m
 
   interface
 
-    pure module function default_real_to_json(self) result(json_lines)
+    pure module function to_json(self) result(json_lines)
       implicit none
       class(training_configuration_t), intent(in) :: self
       type(string_t), allocatable :: json_lines(:)
