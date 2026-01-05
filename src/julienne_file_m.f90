@@ -1,8 +1,4 @@
-! Copyright (c) 2024-2025, The Regents of the University of California and Sourcery Institute
-! Terms of use are as specified in LICENSE.txt
-
 module julienne_file_m
-  !! A representation of a file as an object
   use julienne_string_m, only : string_t
 
   private

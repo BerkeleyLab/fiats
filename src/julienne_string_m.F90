@@ -1,6 +1,3 @@
-! Copyright (c) 2024-2025, The Regents of the University of California and Sourcery Institute
-! Terms of use are as specified in LICENSE.txt
-
 module julienne_string_m
   use iso_c_binding, only : c_bool, c_size_t
   implicit none
