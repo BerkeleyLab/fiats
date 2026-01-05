@@ -1,12 +1,11 @@
 module hyperparameters_m
   use julienne_string_m, only : string_t
-  use kind_parameters_m, only : default_real
   implicit none
   private
   public :: hyperparameters_t
 
   type hyperparameters_t(k)
-    integer, kind :: k = default_real
+    integer, kind :: k = kind(1.)
     integer, private:: mini_batches_ = 10
     real(k), private :: learning_rate_ = real(1.5,k)
     character(len=:), allocatable :: optimizer_
