@@ -4,10 +4,9 @@ module hyperparameters_m
 
   type hyperparameters_t(k)
     integer, kind :: k = kind(1.)
-    integer, private:: mini_batches_ = 10
+    integer :: mini_batches_ = 10
   contains
-    generic :: to_json => default_real_to_json
-    procedure, private :: default_real_to_json
+    procedure to_json
   end type
 
   interface hyperparameters_t
@@ -16,16 +15,6 @@ module hyperparameters_m
       implicit none
       type(string_t), intent(in) :: lines(:)
       type(hyperparameters_t) hyperparameters
-    end function
-
-  end interface
-
-  interface
-
-    pure module function default_real_to_json(self) result(lines)
-      implicit none
-      class(hyperparameters_t), intent(in) :: self
-      type(string_t), allocatable :: lines(:)
     end function
 
   end interface
@@ -50,7 +39,9 @@ contains
 
   end procedure
 
-  module procedure default_real_to_json
+  pure function to_json(self) result(lines)
+    class(hyperparameters_t), intent(in) :: self
+    type(string_t), allocatable :: lines(:)
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
     integer, parameter :: max_width= 18
     character(len=max_width) mini_batches_string
@@ -62,6 +53,6 @@ contains
       string_t(indent // indent // '"' // mini_batches_key  // '" : '  // trim(adjustl(mini_batches_string))  // "," ), &
       string_t(indent // '}') &
     ]
-  end procedure
+  end function
 
 end module
