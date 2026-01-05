@@ -4,12 +4,9 @@ module training_configuration_m
   use hyperparameters_m, only : hyperparameters_t
   implicit none
 
-  private
-  public :: training_configuration_t
-
   type, extends(file_t) :: training_configuration_t(m)
     integer, kind :: m = kind(1.)
-    type(hyperparameters_t(m)),    private :: hyperparameters_
+    type(hyperparameters_t(m)) hyperparameters_
   contains
     generic :: operator(==)     => default_real_equals           
     procedure, private          :: default_real_equals           

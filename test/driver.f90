@@ -1,7 +1,7 @@
 program test_suite_driver
   use training_configuration_m, only : training_configuration_t
   use hyperparameters_m, only : hyperparameters_t
-  use julienne_m, only : file_t, string_t
+  use julienne_file_m, only : file_t
   implicit none
 
   type(training_configuration_t) training_configuration 

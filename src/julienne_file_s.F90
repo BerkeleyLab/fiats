@@ -4,10 +4,6 @@ submodule(julienne_file_m) julienne_file_s
 
 contains
 
-  module procedure lines
-    my_lines = self%lines_
-  end procedure
-
   module procedure from_lines
     allocate(file_object%lines_, source=lines)
   end procedure

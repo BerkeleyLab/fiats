@@ -1,14 +1,8 @@
 module julienne_file_m
   use julienne_string_m, only : string_t
 
-  private
-  public :: file_t
-
   type file_t
-    private
     type(string_t), allocatable :: lines_(:)
-  contains
-    procedure :: lines
   end type
 
   interface file_t
@@ -33,14 +27,4 @@ module julienne_file_m
 
   end interface
 
-  interface
-
-    pure module function lines(self)  result(my_lines)
-      implicit none
-      class(file_t), intent(in) :: self
-      type(string_t), allocatable :: my_lines(:)
-    end function
-
-  end interface
-
-end module julienne_file_m
+end module

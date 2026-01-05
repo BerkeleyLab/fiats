@@ -20,13 +20,13 @@ contains
   module procedure default_real_from_file
     training_configuration%file_t = file_object
 
-    associate(lines => training_configuration%file_t%lines())
+    associate(lines => training_configuration%file_t%lines_)
       training_configuration%hyperparameters_ = hyperparameters_t(lines)
     end associate
   end procedure
 
   module procedure default_real_to_json
-    json_lines = self%lines()
+    json_lines = self%lines_
   end procedure
 
   module procedure default_real_equals
