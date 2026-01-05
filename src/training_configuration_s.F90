@@ -1,4 +1,5 @@
 submodule(training_configuration_m) training_configuration_s
+  use julienne_string_m, only : string_t
   implicit none
 
   character(len=*), parameter :: header="{", footer="}", separator = ","
