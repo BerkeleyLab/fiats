@@ -2,13 +2,12 @@ module training_configuration_m
   use julienne_string_m, only : string_t
   use julienne_file_m, only : file_t
   use hyperparameters_m, only : hyperparameters_t
-  use double_precision_file_m, only : double_precision_file_t
   implicit none
 
   private
   public :: training_configuration_t
 
-  type, extends(double_precision_file_t) :: training_configuration_t(m)
+  type, extends(file_t) :: training_configuration_t(m)
     integer, kind :: m = kind(1.)
     type(hyperparameters_t(m)),    private :: hyperparameters_
   contains
