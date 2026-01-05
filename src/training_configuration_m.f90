@@ -1,5 +1,6 @@
 module training_configuration_m
   use julienne_file_m, only : file_t
+  use julienne_string_m, only : string_t
   use hyperparameters_m, only : hyperparameters_t
   implicit none
 
@@ -24,5 +25,26 @@ module training_configuration_m
     end function
 
   end interface
+
+
+contains
+
+  module procedure default_real_from_components
+
+    training_configuration%hyperparameters_ = hyperparameters
+
+    training_configuration%file_t = file_t([ &
+      string_t("{"), &
+      training_configuration%hyperparameters_%to_json(), &
+      string_t("}") &
+    ])
+
+  end procedure
+
+  module procedure default_real_from_file
+    training_configuration%file_t = file_object
+    training_configuration%hyperparameters_ = hyperparameters_t(training_configuration%file_t%lines_)
+  end procedure
+
 
 end module
