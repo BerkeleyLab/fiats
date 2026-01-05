@@ -7,13 +7,13 @@ module julienne_string_m
     procedure :: as_character
     generic :: string => as_character
     procedure :: get_json_key
-    generic :: operator(==)   => string_t_eq_string_t, string_t_eq_character
+    generic :: operator(==)   => string_t_eq_character
     generic :: assignment(= ) => assign_character_to_string_t
     generic :: get_json_value => get_string_with_string_key &
                                 ,get_integer
     procedure, private :: get_string_with_string_key
     procedure, private :: get_integer 
-    procedure, private :: string_t_eq_string_t, string_t_eq_character
+    procedure, private :: string_t_eq_character
     procedure, private :: assign_character_to_string_t
   end type
 
@@ -42,12 +42,6 @@ module julienne_string_m
       class(string_t), intent(in) :: self, key
       integer, intent(in) ::  mold
       integer value_
-    end function
-
-    elemental module function string_t_eq_string_t(lhs, rhs) result(lhs_eq_rhs)
-      implicit none
-      class(string_t), intent(in) :: lhs, rhs
-      logical lhs_eq_rhs
     end function
 
     elemental module function string_t_eq_character(lhs, rhs) result(lhs_eq_rhs)
@@ -119,10 +113,6 @@ contains
 
   end procedure
 
-  module procedure string_t_eq_string_t
-    lhs_eq_rhs = lhs%string() == rhs%string()
-  end procedure
-   
   module procedure string_t_eq_character
     lhs_eq_rhs = lhs%string() == rhs
   end procedure
