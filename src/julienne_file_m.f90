@@ -9,8 +9,6 @@ module julienne_file_m
     type(string_t), allocatable :: lines_(:)
   contains
     procedure :: lines
-    generic :: write_lines => write_to_character_file_name, write_to_string_file_name
-    procedure, private ::     write_to_character_file_name, write_to_string_file_name
   end type
 
   interface file_t
@@ -42,19 +40,6 @@ module julienne_file_m
       class(file_t), intent(in) :: self
       type(string_t), allocatable :: my_lines(:)
     end function
-
-    impure elemental module subroutine write_to_string_file_name(self, file_name)
-      implicit none
-      class(file_t), intent(in) :: self
-      type(string_t), intent(in) :: file_name
-    end subroutine
-
-    impure elemental module subroutine write_to_character_file_name(self, file_name)
-      implicit none
-      class(file_t), intent(in) :: self
-      character(len=*), intent(in) :: file_name
-    end subroutine
-
 
   end interface
 

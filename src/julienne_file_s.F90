@@ -8,20 +8,6 @@ contains
     my_lines = self%lines_
   end procedure
 
-  module procedure write_to_character_file_name
-    integer file_unit, l
-
-    open(newunit=file_unit, file=file_name, form='formatted', status='unknown', action='write')
-
-    do l = 1, size(self%lines_)
-      write(file_unit, '(a)') self%lines_(l)%string()
-    end do
-  end procedure
-  
-  module procedure write_to_string_file_name
-    call self%write_to_character_file_name(file_name%string())
-  end procedure
-
   module procedure from_lines
     allocate(file_object%lines_, source=lines)
   end procedure
