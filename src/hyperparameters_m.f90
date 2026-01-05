@@ -22,12 +22,6 @@ module hyperparameters_m
       type(hyperparameters_t) hyperparameters
     end function
 
-    pure module function default_real_from_components(mini_batches) result(hyperparameters)
-      implicit none
-      integer, intent(in) :: mini_batches
-      type(hyperparameters_t) hyperparameters
-    end function
-
   end interface
 
   interface
@@ -46,14 +40,9 @@ module hyperparameters_m
 
   end interface
 
-
   character(len=*), parameter :: mini_batches_key  = "mini-batches"
 
 contains
-
-  module procedure default_real_from_components
-    hyperparameters%mini_batches_ = mini_batches
-  end procedure
 
   module procedure default_real_equals
 
