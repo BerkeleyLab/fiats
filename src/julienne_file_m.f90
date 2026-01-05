@@ -6,19 +6,14 @@ module julienne_file_m
   end type
 
   interface file_t
-
-    pure module function from_lines(lines) result(file_object)
-      implicit none
-      type(string_t), intent(in) :: lines(:)
-      type(file_t) file_object
-    end function
-
+    module procedure from_lines
   end interface
 
 contains
 
-  module procedure from_lines
-    allocate(file_object%lines_, source=lines)
-  end procedure
+  type(file_t) pure module function from_lines(lines)
+    type(string_t), intent(in) :: lines(:)
+    allocate(from_lines%lines_, source=lines) ! switching this to an assignment (from_lines%lines_ = lines) prevents the seg fault
+  end function
 
 end module
