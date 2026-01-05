@@ -19,19 +19,11 @@ contains
 
   module procedure default_real_from_file
     training_configuration%file_t = file_object
-
-    associate(lines => training_configuration%file_t%lines_)
-      training_configuration%hyperparameters_ = hyperparameters_t(lines)
-    end associate
+    training_configuration%hyperparameters_ = hyperparameters_t(training_configuration%file_t%lines_)
   end procedure
 
   module procedure default_real_to_json
     json_lines = self%lines_
-  end procedure
-
-  module procedure default_real_equals
-    lhs_eq_rhs = &
-      lhs%hyperparameters_ == rhs%hyperparameters_
   end procedure
 
 end submodule training_configuration_s
