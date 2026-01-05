@@ -6,12 +6,11 @@ program test_suite_driver
 
   type(training_configuration_t) training_configuration 
 
-  training_configuration = training_configuration_t( &
-    hyperparameters_t(mini_batches=5, learning_rate=1., optimizer = "adam") &
-  )
+  training_configuration = training_configuration_t(hyperparameters_t(mini_batches=5, learning_rate=1., optimizer = "adam"))
+
   block
     type(training_configuration_t) from_json
-    from_json = training_configuration_t(file_t(training_configuration%to_json()))
+    from_json = training_configuration_t(file_t(training_configuration%file_t%lines_))
   end block
 
 end program

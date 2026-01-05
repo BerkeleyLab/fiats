@@ -7,18 +7,6 @@ module julienne_file_m
 
   interface file_t
 
-    module function from_file_with_string_name(file_name) result(file_object)
-      implicit none
-      type(string_t), intent(in) :: file_name
-      type(file_t) file_object
-    end function
-
-    module function from_file_with_character_name(file_name) result(file_object)
-      implicit none
-      character(len=*), intent(in) :: file_name
-      type(file_t) file_object
-    end function
-
     pure module function from_lines(lines) result(file_object)
       implicit none
       type(string_t), intent(in) :: lines(:)
@@ -26,5 +14,11 @@ module julienne_file_m
     end function
 
   end interface
+
+contains
+
+  module procedure from_lines
+    allocate(file_object%lines_, source=lines)
+  end procedure
 
 end module

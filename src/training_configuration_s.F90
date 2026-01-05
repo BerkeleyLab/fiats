@@ -22,8 +22,4 @@ contains
     training_configuration%hyperparameters_ = hyperparameters_t(training_configuration%file_t%lines_)
   end procedure
 
-  module procedure to_json
-    json_lines = self%lines_
-  end procedure
-
-end submodule training_configuration_s
+end submodule
