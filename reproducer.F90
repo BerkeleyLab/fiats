@@ -13,10 +13,9 @@ module julienne_string_m
     procedure :: get_json_key
     generic :: operator(==)   => string_t_eq_character
     generic :: assignment(= ) => assign_string_t_to_character
-    generic :: get_json_value => get_string_with_string_key, get_real, get_integer
+    generic :: get_json_value => get_string_with_string_key, get_real
     procedure, private :: get_string_with_string_key
     procedure, private :: get_real 
-    procedure, private :: get_integer 
     procedure, private :: string_t_eq_character
     procedure, private, pass(rhs) :: assign_string_t_to_character
   end type
@@ -57,13 +56,6 @@ module julienne_string_m
       implicit none
       class(string_t), intent(in) :: self, key, mold
       type(string_t) :: value_
-    end function
-
-    pure module function get_integer(self, key, mold) result(value_)
-      implicit none
-      class(string_t), intent(in) :: self, key
-      integer, intent(in) ::  mold
-      integer value_
     end function
 
     elemental module function string_t_eq_character(lhs, rhs) result(lhs_eq_rhs)
@@ -139,23 +131,6 @@ contains
             value_ = string_t(text_after_colon(opening_value_quotes+1:closing_value_quotes-1))
           end if
         end associate
-      end associate
-    end associate
-
-  end procedure
-
-  module procedure get_integer
-    character(len=:), allocatable :: raw_line, string_value
-
-    raw_line = self%string()
-    associate(text_after_colon => raw_line(index(raw_line, ':')+1:))
-      associate(trailing_comma => index(text_after_colon, ','))
-        if (trailing_comma == 0) then
-          string_value = trim(adjustl((text_after_colon)))
-        else 
-          string_value = trim(adjustl((text_after_colon(:trailing_comma-1))))
-        end if
-        read(string_value, fmt=*) value_
       end associate
     end associate
 
@@ -297,7 +272,6 @@ module hyperparameters_m
 
   type hyperparameters_t(k)
     integer, kind :: k = kind(1.)
-    integer, private:: mini_batches_ = 10
     real(k), private :: learning_rate_ = real(1.5,k)
     character(len=:), allocatable :: optimizer_
   contains
@@ -313,9 +287,8 @@ module hyperparameters_m
       type(hyperparameters_t) hyperparameters
     end function
 
-    pure module function default_real_from_components(mini_batches, learning_rate, optimizer) result(hyperparameters)
+    pure module function default_real_from_components(learning_rate, optimizer) result(hyperparameters)
       implicit none
-      integer, intent(in) :: mini_batches
       real, intent(in) :: learning_rate
       character(len=*), intent(in) :: optimizer
       type(hyperparameters_t) hyperparameters
@@ -338,14 +311,12 @@ end module
 submodule(hyperparameters_m) hyperparameters_s
   implicit none
 
-  character(len=*), parameter :: mini_batches_key  = "mini-batches"
   character(len=*), parameter :: learning_rate_key = "learning rate"
   character(len=*), parameter :: optimizer_key     = "optimizer"
 
 contains
 
   module procedure default_real_from_components
-    hyperparameters%mini_batches_ = mini_batches
     hyperparameters%learning_rate_ = learning_rate
     hyperparameters%optimizer_ = optimizer
   end procedure 
@@ -359,9 +330,8 @@ contains
     do l=1,size(lines)
       if (lines(l)%get_json_key() == "hyperparameters") then
         hyperparameters_key_found = .true.
-        hyperparameters%mini_batches_  = lines(l+1)%get_json_value(string_t(mini_batches_key), mold=0)
-        hyperparameters%learning_rate_ = lines(l+2)%get_json_value(string_t(learning_rate_key), mold=0.)
-        hyperparameters%optimizer_ = lines(l+3)%get_json_value(string_t(optimizer_key), mold=string_t(""))
+        hyperparameters%learning_rate_ = lines(l+1)%get_json_value(string_t(learning_rate_key), mold=0.)
+        hyperparameters%optimizer_ = lines(l+2)%get_json_value(string_t(optimizer_key), mold=string_t(""))
         return
       end if
     end do
@@ -371,14 +341,12 @@ contains
   module procedure default_real_to_json
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
     integer, parameter :: max_width= 18
-    character(len=max_width) mini_batches_string, learning_rate_string
+    character(len=max_width) learning_rate_string
 
-    write(mini_batches_string,*) self%mini_batches_
     write(learning_rate_string,*) self%learning_rate_
 
     lines = [ &
       string_t(indent // '"hyperparameters": {'), &
-      string_t(indent // indent // '"' // mini_batches_key  // '" : '  // trim(adjustl(mini_batches_string))  // "," ), &
       string_t(indent // indent // '"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," ), &
       string_t(indent // indent // '"' // optimizer_key     // '" : "' // trim(adjustl(self%optimizer_     )) // '"'), &
       string_t(indent // '}') &
@@ -471,7 +439,7 @@ program test_suite_driver
 
   type(training_configuration_t) training_configuration 
 
-  training_configuration = training_configuration_t( hyperparameters_t(mini_batches=5, learning_rate=1., optimizer = "adam"))
+  training_configuration = training_configuration_t( hyperparameters_t(learning_rate=1., optimizer = "adam"))
   ! Removing the above assignment eliminates the segmentation fault even though the segmentation fault occurs
   ! when executing the assignment below, which does not reference the object define above.
 
@@ -482,7 +450,6 @@ program test_suite_driver
     from_json = training_configuration_t(file_t( &
        [ string_t('{') &
         ,string_t('    "hyperparameters": {') &
-        ,string_t('        "mini-batches" : 5,') &
         ,string_t('        "learning rate" : 1.00000000,') &
         ,string_t('        "optimizer" : "adam"') &
         ,string_t('    }') &
