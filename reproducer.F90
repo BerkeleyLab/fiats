@@ -1,5 +1,4 @@
 module julienne_string_m
-  use iso_c_binding, only : c_bool, c_size_t
   implicit none
   
   private
@@ -195,9 +194,6 @@ end module julienne_string_m
 submodule(julienne_string_m) julienne_string_s
   implicit none
 
-  integer, parameter :: default_integer_width_supremum = 11, default_real_width_supremum = 20, double_precision_width_supremum = 25
-  integer, parameter :: integer_c_size_t_width_supremum = 19, logical_width=2, comma_width = 1, parenthesis_width = 1, space=1
-  
 contains
 
   module procedure as_character
