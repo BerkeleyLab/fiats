@@ -4,8 +4,6 @@ module julienne_string_m
   
   private
   public :: string_t
-  public :: operator(.csv.)  ! comma-separated values unary operator
-  public :: operator(.separatedBy.), operator(.sv.)   ! separated-values binary operator
 
   type string_t
     private
@@ -52,47 +50,6 @@ module julienne_string_m
       type(string_t) new_string
     end function
 
-  end interface
-
-  interface operator(.csv.)
-
-    pure module function strings_with_comma_separator(strings) result(csv)
-      implicit none
-      type(string_t), intent(in) :: strings(:)
-      type(string_t) csv
-    end function
-
-    pure module function characters_with_comma_separator(strings) result(csv)
-      implicit none
-      character(len=*), intent(in) :: strings(:)
-      type(string_t) csv
-    end function
-
-  end interface
-
-  interface operator(.sv.)
-
-    pure module function strings_with_character_separator(strings, separator) result(sv)
-      implicit none
-      type(string_t)  , intent(in) :: strings(:)
-      character(len=*), intent(in) :: separator
-      type(string_t) sv
-    end function
-
-  end interface
-
-  interface
-
-    pure module function strings_with_string_t_separator(strings, separator) result(sv)
-      implicit none
-      type(string_t), intent(in) :: strings(:), separator
-      type(string_t) sv 
-    end function
-
-  end interface
-
-  interface operator(.separatedBy.)
-    module procedure strings_with_character_separator, strings_with_string_t_separator
   end interface
 
   interface
@@ -249,36 +206,6 @@ contains
 
   module procedure from_characters
     new_string%string_ = string
-  end procedure
-
-  module procedure strings_with_comma_separator
-    csv = strings_with_string_t_separator(strings, string_t(","))
-  end procedure 
-
-  module procedure characters_with_comma_separator
-    csv = strings_with_string_t_separator(string_t(strings), string_t(","))
-  end procedure 
-
-  module procedure strings_with_character_separator
-    sv = strings_with_string_t_separator(strings, string_t(separator))
-  end procedure 
-
-  module procedure strings_with_string_t_separator
-
-    integer s 
-
-    associate(num_elements => size(strings))
-
-      sv = ""
-
-      do s = 1, num_elements - 1
-        sv = sv // strings(s) // separator
-      end do
-
-      sv = sv // strings(num_elements)
-
-    end associate
-
   end procedure
 
   module procedure get_json_key
