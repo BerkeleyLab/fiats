@@ -303,8 +303,6 @@ module hyperparameters_m
   contains
     generic :: to_json => default_real_to_json
     procedure, private :: default_real_to_json
-    generic :: operator(==) => default_real_equals
-    procedure, private ::      default_real_equals
   end type
 
   interface hyperparameters_t
@@ -333,12 +331,6 @@ module hyperparameters_m
       type(string_t), allocatable :: lines(:)
     end function
 
-    elemental module function default_real_equals(lhs, rhs) result(lhs_equals_rhs)
-      implicit none
-      class(hyperparameters_t), intent(in) :: lhs, rhs
-      logical lhs_equals_rhs
-    end function
-
   end interface
 
 end module
@@ -357,17 +349,6 @@ contains
     hyperparameters%learning_rate_ = learning_rate
     hyperparameters%optimizer_ = optimizer
   end procedure 
-
-  module procedure default_real_equals
-
-    real, parameter :: tolerance = 1.E-08
-
-    lhs_equals_rhs = &
-      lhs%mini_batches_ == rhs%mini_batches_ .and. &
-      lhs%optimizer_ == rhs%optimizer_ .and. &
-      abs(lhs%learning_rate_ - rhs%learning_rate_) <= tolerance
-
-  end procedure
 
   module procedure default_real_from_json
     integer l
