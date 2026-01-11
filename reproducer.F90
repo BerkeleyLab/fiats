@@ -14,7 +14,7 @@ module julienne_string_m
     procedure :: bracket
     generic :: operator(//)   => string_t_cat_string_t, string_t_cat_character, character_cat_string_t
     generic :: operator(==)   => string_t_eq_character
-    generic :: assignment(= ) => assign_string_t_to_character, assign_character_to_string_t
+    generic :: assignment(= ) => assign_string_t_to_character
     generic :: get_json_value => get_string_with_string_key &
                                 ,get_real &
                                 ,get_integer
@@ -22,7 +22,6 @@ module julienne_string_m
     procedure, private :: get_real 
     procedure, private :: get_integer 
     procedure, private :: string_t_eq_character
-    procedure, private :: assign_character_to_string_t
     procedure, private :: string_t_cat_string_t, string_t_cat_character
     procedure, private, pass(rhs) :: character_cat_string_t
     procedure, private, pass(rhs) :: assign_string_t_to_character
@@ -99,12 +98,6 @@ module julienne_string_m
       class(string_t), intent(in) :: rhs
       type(string_t) lhs_cat_rhs
     end function
-
-    elemental module subroutine assign_character_to_string_t(lhs, rhs)
-      implicit none
-      class(string_t), intent(inout) :: lhs
-      character(len=*), intent(in) :: rhs
-    end subroutine
 
     pure module subroutine assign_string_t_to_character(lhs, rhs)
       implicit none
@@ -209,10 +202,6 @@ contains
     lhs = rhs%string()
   end procedure
    
-  module procedure assign_character_to_string_t
-    lhs%string_ = rhs
-  end procedure
-
   module procedure string_t_cat_string_t
     lhs_cat_rhs = string_t(lhs%string_ // rhs%string_)
   end procedure
