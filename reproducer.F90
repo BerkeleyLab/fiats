@@ -11,7 +11,6 @@ module julienne_string_m
     procedure :: as_character
     generic :: string => as_character
     procedure :: get_json_key
-    procedure :: bracket
     generic :: operator(==)   => string_t_eq_character
     generic :: assignment(= ) => assign_string_t_to_character
     generic :: get_json_value => get_string_with_string_key, get_real, get_integer
@@ -79,13 +78,6 @@ module julienne_string_m
       class(string_t), intent(in) :: rhs
       character(len=:), intent(out), allocatable :: lhs
     end subroutine
-
-    elemental module function bracket(self, opening, closing) result(bracketed_self)
-      implicit none
-      class(string_t), intent(in) :: self
-      character(len=*), intent(in), optional :: opening, closing
-      type(string_t) bracketed_self
-    end function
 
   end interface
   
@@ -175,32 +167,6 @@ contains
 
   module procedure assign_string_t_to_character
     lhs = rhs%string()
-  end procedure
-   
-  module procedure bracket
-  
-    character(len=:), allocatable :: actual_opening, actual_closing
-
-    associate(opening_present => present(opening))
-
-      if (opening_present) then
-        actual_opening = opening
-      else
-        actual_opening = "["
-      end if
-
-      if (present(closing)) then
-        actual_closing = closing
-      else if(opening_present) then
-        actual_closing = actual_opening
-      else
-        actual_closing = "]"
-      end if
-
-    end associate
-
-    bracketed_self = string_t(actual_opening // self%string_ // actual_closing)
-
   end procedure
    
 end submodule julienne_string_s
