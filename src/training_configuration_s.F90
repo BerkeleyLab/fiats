@@ -29,9 +29,4 @@ contains
     json_lines = self%lines_
   end procedure
 
-  module procedure default_real_equals
-    lhs_eq_rhs = &
-      lhs%hyperparameters_ == rhs%hyperparameters_
-  end procedure
-
 end submodule training_configuration_s

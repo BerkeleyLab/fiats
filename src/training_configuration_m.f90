@@ -8,8 +8,6 @@ module training_configuration_m
     integer, kind :: m = kind(1.)
     type(hyperparameters_t(m)) hyperparameters_
   contains
-    generic :: operator(==)     => default_real_equals           
-    procedure, private          :: default_real_equals           
     generic :: to_json          => default_real_to_json          
     procedure, private          :: default_real_to_json          
   end type
@@ -36,12 +34,6 @@ module training_configuration_m
       implicit none
       class(training_configuration_t), intent(in) :: self
       type(string_t), allocatable :: json_lines(:)
-    end function
-
-    elemental module function default_real_equals(lhs, rhs) result(lhs_eq_rhs)
-      implicit none
-      class(training_configuration_t), intent(in) :: lhs, rhs
-      logical lhs_eq_rhs
     end function
 
   end interface
