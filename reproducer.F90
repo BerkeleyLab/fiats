@@ -62,8 +62,6 @@ module fiats_m
   type, extends(file_t) :: training_configuration_t(m)
     integer, kind :: m = kind(1.)
     type(hyperparameters_t(m)) hyperparameters_
-  contains
-    procedure training_configuration_to_json          
   end type
 
 contains
@@ -95,12 +93,6 @@ contains
     type(training_configuration_t) training_configuration
     training_configuration%file_t = file_t(lines)
     training_configuration%hyperparameters_ = hyperparameters_t(training_configuration%file_t%lines_)
-  end function
-
-  pure function training_configuration_to_json(self) result(json_lines)
-    class(training_configuration_t), intent(in) :: self
-    type(string_t), allocatable :: json_lines(:)
-    json_lines = self%lines_
   end function
 
 end module
