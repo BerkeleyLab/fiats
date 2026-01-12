@@ -4,7 +4,6 @@ module julienne_m
   type string_t
     character(len=:), allocatable :: string_
   contains
-    procedure get_json_key
     procedure get_json_value 
   end type
 
@@ -17,18 +16,6 @@ module julienne_m
   end interface                  ! the first executable statement in the main program.
 
 contains
-
-  elemental function get_json_key(self) result(unquoted_key)
-    class(string_t), intent(in) :: self
-    type(string_t) unquoted_key
-    character(len=:), allocatable :: raw_line
-    raw_line = self%string_
-    associate(opening_key_quotes => index(raw_line, '"'))
-      associate(closing_key_quotes => opening_key_quotes + index(raw_line(opening_key_quotes+1:), '"'))
-        unquoted_key = string_t(trim(raw_line(opening_key_quotes+1:closing_key_quotes-1)))
-      end associate
-    end associate
-  end function
 
   pure function get_json_value(self, key) result(value_)
     class(string_t), intent(in) :: self, key
