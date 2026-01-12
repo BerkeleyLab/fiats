@@ -20,74 +20,40 @@ module julienne_string_m
   end type
 
   interface string_t
-
-    elemental module function from_characters(string) result(new_string)
-      implicit none
-      character(len=*), intent(in) :: string
-      type(string_t) new_string
-    end function
-
+    module procedure from_characters
   end interface
 
-  interface
-
-    pure module function as_character(self) result(raw_string)
-      implicit none
-      class(string_t), intent(in) :: self
-      character(len=:), allocatable :: raw_string
-    end function
-
-    elemental module function get_json_key(self) result(unquoted_key)
-     implicit none
-      class(string_t), intent(in) :: self
-      type(string_t) unquoted_key
-    end function
-
-    pure module function get_real(self, key, mold) result(value_)
-      implicit none
-      class(string_t), intent(in) :: self, key
-      real, intent(in) :: mold
-      real value_
-    end function
-
-    elemental module function string_t_eq_character(lhs, rhs) result(lhs_eq_rhs)
-      implicit none
-      class(string_t), intent(in) :: lhs
-      character(len=*), intent(in) :: rhs
-      logical lhs_eq_rhs
-    end function
-
-    pure module subroutine assign_string_t_to_character(lhs, rhs)
-      implicit none
-      class(string_t), intent(in) :: rhs
-      character(len=:), intent(out), allocatable :: lhs
-    end subroutine
-
-  end interface
-  
 contains
 
-  module procedure as_character
+  pure function as_character(self) result(raw_string)
+    class(string_t), intent(in) :: self
+    character(len=:), allocatable :: raw_string
     raw_string = self%string_
-  end procedure
+  end function
 
-  module procedure from_characters
+  elemental function from_characters(string) result(new_string)
+    character(len=*), intent(in) :: string
+    type(string_t) new_string
     new_string%string_ = string
-  end procedure
+  end function
 
-  module procedure get_json_key
+  elemental function get_json_key(self) result(unquoted_key)
+    class(string_t), intent(in) :: self
+    type(string_t) unquoted_key
     character(len=:), allocatable :: raw_line
-  
+    
     raw_line = self%string()
     associate(opening_key_quotes => index(raw_line, '"'))
       associate(closing_key_quotes => opening_key_quotes + index(raw_line(opening_key_quotes+1:), '"'))
         unquoted_key = string_t(trim(raw_line(opening_key_quotes+1:closing_key_quotes-1)))
       end associate
     end associate
+  end function
 
-  end procedure
-
-  module procedure get_real
+  pure function get_real(self, key, mold) result(value_)
+    class(string_t), intent(in) :: self, key
+    real, intent(in) :: mold
+    real value_
     character(len=:), allocatable :: raw_line, string_value
 
     raw_line = self%string()
@@ -101,16 +67,20 @@ contains
         read(string_value, fmt=*) value_
       end associate
     end associate
+  end function
 
-  end procedure
-
-  module procedure string_t_eq_character
+  elemental function string_t_eq_character(lhs, rhs) result(lhs_eq_rhs)
+    class(string_t), intent(in) :: lhs
+    character(len=*), intent(in) :: rhs
+    logical lhs_eq_rhs
     lhs_eq_rhs = lhs%string() == rhs
-  end procedure
+  end function
 
-  module procedure assign_string_t_to_character
+  pure subroutine assign_string_t_to_character(lhs, rhs)
+    class(string_t), intent(in) :: rhs
+    character(len=:), intent(out), allocatable :: lhs
     lhs = rhs%string()
-  end procedure
+  end subroutine
    
 end module
 
@@ -122,20 +92,16 @@ module julienne_file_m
   end type
 
   interface file_t
-
-    pure module function from_lines(lines) result(file_object)
-      implicit none
-      type(string_t), intent(in) :: lines(:)
-      type(file_t) file_object
-    end function
-
+    module procedure from_lines
   end interface
 
 contains
 
-  module procedure from_lines
+  pure function from_lines(lines) result(file_object)
+    type(string_t), intent(in) :: lines(:)
+    type(file_t) file_object
     allocate(file_object%lines_, source=lines)
-  end procedure
+  end function
 
 end module
 
@@ -154,40 +120,22 @@ module hyperparameters_m
   end type
 
   interface hyperparameters_t
-
-    pure module function default_real_from_json(lines) result(hyperparameters)
-      implicit none
-      type(string_t), intent(in) :: lines(:)
-      type(hyperparameters_t) hyperparameters
-    end function
-
-    pure module function default_real_from_components(learning_rate) result(hyperparameters)
-      implicit none
-      real, intent(in) :: learning_rate
-      type(hyperparameters_t) hyperparameters
-    end function
-
-  end interface
-
-  interface
-
-    pure module function default_real_to_json(self) result(lines)
-      implicit none
-      class(hyperparameters_t), intent(in) :: self
-      type(string_t), allocatable :: lines(:)
-    end function
-
+    module procedure default_real_from_json, default_real_from_components
   end interface
 
   character(len=*), parameter :: learning_rate_key = "learning rate"
 
 contains
 
-  module procedure default_real_from_components
+  pure function default_real_from_components(learning_rate) result(hyperparameters)
+    real, intent(in) :: learning_rate
+    type(hyperparameters_t) hyperparameters
     hyperparameters%learning_rate_ = learning_rate
-  end procedure 
+  end function
 
-  module procedure default_real_from_json
+  pure function default_real_from_json(lines) result(hyperparameters)
+    type(string_t), intent(in) :: lines(:)
+    type(hyperparameters_t) hyperparameters
     integer l
 
     do l=1,size(lines)
@@ -196,22 +144,22 @@ contains
         return
       end if
     end do
+  end function
 
-  end procedure
-
-  module procedure default_real_to_json
+  pure function default_real_to_json(self) result(lines)
+    class(hyperparameters_t), intent(in) :: self
+    type(string_t), allocatable :: lines(:)
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
     integer, parameter :: max_width= 18
     character(len=max_width) learning_rate_string
 
     write(learning_rate_string,*) self%learning_rate_
-
     lines = [ &
       string_t(indent // '"hyperparameters": {'), &
       string_t(indent // indent // '"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," ), &
       string_t(indent // '}') &
     ]
-  end procedure
+  end function
 
 end module
 
@@ -228,58 +176,40 @@ module training_configuration_m
     generic :: to_json          => default_real_to_json          
     procedure, private          :: default_real_to_json          
   end type
+
   interface training_configuration_t
-
-    pure module function default_real_from_components(hyperparameters) &
-      result(training_configuration)
-      implicit none
-      type(hyperparameters_t), intent(in) :: hyperparameters
-      type(training_configuration_t) training_configuration
-    end function
-
-    module function default_real_from_file(file_object) result(training_configuration)
-      implicit none
-      type(file_t), intent(in) :: file_object
-      type(training_configuration_t) training_configuration
-    end function
-
-  end interface
-
-  interface
-
-    pure module function default_real_to_json(self) result(json_lines)
-      implicit none
-      class(training_configuration_t), intent(in) :: self
-      type(string_t), allocatable :: json_lines(:)
-    end function
-
+    module procedure default_real_from_components, default_real_from_file
   end interface
 
 contains
 
-  module procedure default_real_from_components
+  pure function default_real_from_components(hyperparameters) result(training_configuration)
+    type(hyperparameters_t), intent(in) :: hyperparameters
+    type(training_configuration_t) training_configuration
 
     training_configuration%hyperparameters_ = hyperparameters
-
     training_configuration%file_t = file_t([ &
       string_t("{"), &
       training_configuration%hyperparameters_%to_json(), &
       string_t("}") &
     ])
+  end function
 
-  end procedure
+  function default_real_from_file(file_object) result(training_configuration)
+    type(file_t), intent(in) :: file_object
+    type(training_configuration_t) training_configuration
 
-  module procedure default_real_from_file
     training_configuration%file_t = file_object
-
     associate(lines => training_configuration%file_t%lines_)
       training_configuration%hyperparameters_ = hyperparameters_t(lines)
     end associate
-  end procedure
+  end function
 
-  module procedure default_real_to_json
+  pure function default_real_to_json(self) result(json_lines)
+    class(training_configuration_t), intent(in) :: self
+    type(string_t), allocatable :: json_lines(:)
     json_lines = self%lines_
-  end procedure
+  end function
 
 end module
 
