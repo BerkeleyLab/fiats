@@ -37,7 +37,7 @@ contains
   pure function from_lines(lines) result(file_object)
     type(string_t), intent(in) :: lines(:)
     type(file_t) file_object
-    allocate(file_object%lines_, source=lines)
+    file_object%lines_ = lines
   end function
 
 end module
