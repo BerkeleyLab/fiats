@@ -15,15 +15,15 @@ module julienne_m
 
 contains
 
-  function get_json_value(self ) result(value_)
-    type(string_t), intent(in) :: self
+  function get_json_value(string) result(value_)
+    character(len=*) string
     real value_
-    read(self%string_, fmt=*) value_
+    read(string, fmt=*) value_
     print *," value_ ", value_
   end function
 
-  pure function from_lines(lines) result(file_object)
-    type(string_t), intent(in) :: lines(:)
+  function from_lines(lines) result(file_object)
+    type(string_t) lines(:)
     type(file_t) file_object
     file_object%lines_ = lines
   end function
@@ -48,14 +48,8 @@ module fiats_m
 
 contains
 
-  function hyperparameters_from_json(lines) result(hyperparameters)
-    type(string_t), intent(in) :: lines(:)
-    type(hyperparameters_t) hyperparameters
-    hyperparameters%learning_rate_ = get_json_value(lines(1))
-  end function
-
-  pure function hyperparameters_to_json(self) result(lines)
-    type(hyperparameters_t), intent(in) :: self
+  function hyperparameters_to_json(self) result(lines)! invoked only by training_configuration_from_components
+    type(hyperparameters_t) self
     type(string_t), allocatable :: lines(:)
     integer, parameter :: max_width= 18
     character(len=max_width) learning_rate_string
@@ -63,11 +57,16 @@ contains
     lines = [string_t(learning_rate_string)]
   end function
 
-  pure function training_configuration_from_components(hyperparameters) result(training_configuration)
-    type(hyperparameters_t), intent(in) :: hyperparameters
-    type(training_configuration_t) training_configuration
+  type(training_configuration_t) function training_configuration_from_components(hyperparameters) result(training_configuration)
+    type(hyperparameters_t) hyperparameters
     training_configuration%hyperparameters_ = hyperparameters
     training_configuration%file_t = file_t([hyperparameters_to_json(training_configuration%hyperparameters_)])
+  end function
+
+  function hyperparameters_from_json(lines) result(hyperparameters) ! invoked only by training_configuration_from_file
+    type(string_t) lines(:)
+    type(hyperparameters_t) hyperparameters
+    hyperparameters%learning_rate_ = get_json_value(lines(1)%string_)
   end function
 
   function training_configuration_from_file(line) result(training_configuration)
