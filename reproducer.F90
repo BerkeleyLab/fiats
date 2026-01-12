@@ -47,8 +47,6 @@ module fiats_m
   type hyperparameters_t(k)
     integer, kind :: k = kind(1.)
     real(k) :: learning_rate_ = real(1.5,k)
-  contains
-    procedure hyperparameters_to_json
   end type
 
   interface hyperparameters_t
@@ -83,7 +81,7 @@ contains
     type(hyperparameters_t), intent(in) :: hyperparameters
     type(training_configuration_t) training_configuration
     training_configuration%hyperparameters_ = hyperparameters
-    training_configuration%file_t = file_t([training_configuration%hyperparameters_%hyperparameters_to_json()])
+    training_configuration%file_t = file_t([hyperparameters_to_json(training_configuration%hyperparameters_)])
   end function
 
   function training_configuration_from_file(line) result(training_configuration)
