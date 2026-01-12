@@ -89,9 +89,9 @@ module julienne_file_m
     type(string_t), allocatable :: lines_(:)
   end type
 
-  interface file_t
-    module procedure from_lines
-  end interface
+  interface file_t               ! If this generic interface
+    module procedure from_lines  ! is removed, the program
+  end interface                  ! seg faults sooner.
 
 contains
 
