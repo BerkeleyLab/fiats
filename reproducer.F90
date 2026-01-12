@@ -104,7 +104,7 @@ module fiats_m
   end type
 
   interface hyperparameters_t
-    module procedure hyperparameters_from_json, hyperparameters_from_components
+    module procedure hyperparameters_from_json
   end interface
 
   character(len=*), parameter :: learning_rate_key = "learning rate"
@@ -121,12 +121,6 @@ module fiats_m
   end interface
 
 contains
-
-  pure function hyperparameters_from_components(learning_rate) result(hyperparameters)
-    real, intent(in) :: learning_rate
-    type(hyperparameters_t) hyperparameters
-    hyperparameters%learning_rate_ = learning_rate
-  end function
 
   pure function hyperparameters_from_json(lines) result(hyperparameters)
     type(string_t), intent(in) :: lines(:)
@@ -176,7 +170,7 @@ program test_suite_driver
 
   type(training_configuration_t) training_configuration 
 
-  training_configuration = training_configuration_t(hyperparameters_t(learning_rate=1.))
+  training_configuration = training_configuration_t(hyperparameters_t(learning_rate_=1.))
   ! Removing the above assignment eliminates the segmentation fault even though the segmentation fault occurs
   ! when executing the assignment below, which does not reference the object define above.
 
