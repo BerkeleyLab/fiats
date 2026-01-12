@@ -66,10 +66,6 @@ module fiats_m
     procedure training_configuration_to_json          
   end type
 
-  interface training_configuration_t
-    module procedure training_configuration_from_components, training_configuration_from_file
-  end interface
-
 contains
 
   pure function hyperparameters_from_json(lines) result(hyperparameters)
@@ -109,12 +105,12 @@ contains
 
 end module
 
-  use fiats_m, only : hyperparameters_t, training_configuration_t
+  use fiats_m, only : hyperparameters_t, training_configuration_from_components, training_configuration_from_file, training_configuration_t
   use julienne_m, only : string_t
   implicit none
   type(training_configuration_t) training_configuration, from_json
 
-  training_configuration = training_configuration_t(hyperparameters_t(learning_rate_=1.))
+  training_configuration = training_configuration_from_components(hyperparameters_t(learning_rate_=1.))
 
   ! Removing the above assignment eliminates the segmentation fault even though the segmentation fault
   ! occurs when executing the assignment below, which does not reference the object defined above.
@@ -123,5 +119,5 @@ end module
   ! the above use statement.
 
   print *,new_line(''), "Heading down the rabbit hole..." ! print to demonstrate that execution continues past the above line
-  from_json = training_configuration_t([string_t('        "learning rate" : 1.00000000,')])
+  from_json = training_configuration_from_file([string_t('        "learning rate" : 1.00000000,')])
 end
