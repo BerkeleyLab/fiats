@@ -169,14 +169,12 @@ contains
     training_configuration%file_t = file_t([training_configuration%hyperparameters_%to_json()])
   end function
 
-  function default_real_from_file(file_object) result(training_configuration)
-    type(file_t), intent(in) :: file_object
+  function default_real_from_file(lines) result(training_configuration)
+    type(string_t), intent(in) :: lines(:)
     type(training_configuration_t) training_configuration
 
-    training_configuration%file_t = file_object
-    associate(lines => training_configuration%file_t%lines_)
-      training_configuration%hyperparameters_ = hyperparameters_t(lines)
-    end associate
+    training_configuration%file_t = file_t(lines)
+    training_configuration%hyperparameters_ = hyperparameters_t(training_configuration%file_t%lines_)
   end function
 
   pure function to_json(self) result(json_lines)
@@ -190,7 +188,7 @@ end module
 program test_suite_driver
   use training_configuration_m, only : training_configuration_t
   use hyperparameters_m, only : hyperparameters_t
-  use julienne_m, only : string_t, file_t
+  use julienne_m, only : string_t
   implicit none
 
   type(training_configuration_t) training_configuration 
@@ -203,7 +201,7 @@ program test_suite_driver
 
   block
     type(training_configuration_t) from_json
-    from_json = training_configuration_t(file_t([string_t('        "learning rate" : 1.00000000,')]))
+    from_json = training_configuration_t([string_t('        "learning rate" : 1.00000000,')])
   end block
 
 end program
