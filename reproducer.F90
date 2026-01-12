@@ -129,16 +129,17 @@ contains
 
 end module
 
-program test_suite_driver
   use fiats_m, only : hyperparameters_t, training_configuration_t
   use julienne_m, only : string_t
   implicit none
-
   type(training_configuration_t) training_configuration 
 
   training_configuration = training_configuration_t(hyperparameters_t(learning_rate_=1.))
   ! Removing the above assignment eliminates the segmentation fault even though the segmentation fault occurs
   ! when executing the assignment below, which does not reference the object define above.
+  ! Alternatively, changing the above line to an `associate` statement gives the compile-time
+  ! message: "Error: Invalid kind for REAL at (1)", where "1" is between `use` and `fiats_m` in the above
+  ! use statement.
 
   print *,new_line(''), "Heading down the rabbit hole..." ! print to demonstrate that execution continues past the above line
 
@@ -146,5 +147,4 @@ program test_suite_driver
     type(training_configuration_t) from_json
     from_json = training_configuration_t([string_t('        "learning rate" : 1.00000000,')])
   end block
-
-end program
+end
