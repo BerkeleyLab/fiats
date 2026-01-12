@@ -13,10 +13,6 @@ module julienne_m
     procedure, pass(rhs) :: assign_string_t_to_character
   end type
 
-  interface string_t
-    module procedure from_characters
-  end interface
-
   type file_t
     type(string_t), allocatable :: lines_(:)
   end type
@@ -31,12 +27,6 @@ contains
     class(string_t), intent(in) :: self
     character(len=:), allocatable :: raw_string
     raw_string = self%string_
-  end function
-
-  elemental function from_characters(string) result(new_string)
-    character(len=*), intent(in) :: string
-    type(string_t) new_string
-    new_string%string_ = string
   end function
 
   elemental function get_json_key(self) result(unquoted_key)
