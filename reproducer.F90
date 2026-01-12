@@ -140,7 +140,6 @@ module julienne_file_m
 end module
 
 submodule(julienne_file_m) julienne_file_s
-  use iso_fortran_env, only : iostat_end, iostat_eor, output_unit
   implicit none
 
 contains
