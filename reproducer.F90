@@ -13,8 +13,7 @@ module julienne_string_m
     procedure :: get_json_key
     generic :: operator(==)   => string_t_eq_character
     generic :: assignment(= ) => assign_string_t_to_character
-    generic :: get_json_value => get_string_with_string_key, get_real
-    procedure, private :: get_string_with_string_key
+    generic :: get_json_value => get_real
     procedure, private :: get_real 
     procedure, private :: string_t_eq_character
     procedure, private, pass(rhs) :: assign_string_t_to_character
@@ -50,12 +49,6 @@ module julienne_string_m
       class(string_t), intent(in) :: self, key
       real, intent(in) :: mold
       real value_
-    end function
-
-    pure module function get_string_with_string_key(self, key, mold) result(value_)
-      implicit none
-      class(string_t), intent(in) :: self, key, mold
-      type(string_t) :: value_
     end function
 
     elemental module function string_t_eq_character(lhs, rhs) result(lhs_eq_rhs)
@@ -117,25 +110,6 @@ contains
 
   end procedure
 
-  module procedure get_string_with_string_key
-
-    character(len=:), allocatable :: raw_line
-
-    raw_line = self%string()
-    associate(text_after_colon => raw_line(index(raw_line, ':')+1:))
-      associate(opening_value_quotes => index(text_after_colon, '"'))
-        associate(closing_value_quotes => opening_value_quotes + index(text_after_colon(opening_value_quotes+1:), '"'))
-          if (any([opening_value_quotes, closing_value_quotes] == 0)) then
-            value_ = string_t(trim(adjustl((text_after_colon))))
-          else
-            value_ = string_t(text_after_colon(opening_value_quotes+1:closing_value_quotes-1))
-          end if
-        end associate
-      end associate
-    end associate
-
-  end procedure
-
   module procedure string_t_eq_character
     lhs_eq_rhs = lhs%string() == rhs
   end procedure
@@ -186,7 +160,6 @@ module hyperparameters_m
   type hyperparameters_t(k)
     integer, kind :: k = kind(1.)
     real(k), private :: learning_rate_ = real(1.5,k)
-    character(len=:), allocatable :: optimizer_
   contains
     generic :: to_json => default_real_to_json
     procedure, private :: default_real_to_json
@@ -200,10 +173,9 @@ module hyperparameters_m
       type(hyperparameters_t) hyperparameters
     end function
 
-    pure module function default_real_from_components(learning_rate, optimizer) result(hyperparameters)
+    pure module function default_real_from_components(learning_rate) result(hyperparameters)
       implicit none
       real, intent(in) :: learning_rate
-      character(len=*), intent(in) :: optimizer
       type(hyperparameters_t) hyperparameters
     end function
 
@@ -225,13 +197,11 @@ submodule(hyperparameters_m) hyperparameters_s
   implicit none
 
   character(len=*), parameter :: learning_rate_key = "learning rate"
-  character(len=*), parameter :: optimizer_key     = "optimizer"
 
 contains
 
   module procedure default_real_from_components
     hyperparameters%learning_rate_ = learning_rate
-    hyperparameters%optimizer_ = optimizer
   end procedure 
 
   module procedure default_real_from_json
@@ -244,7 +214,6 @@ contains
       if (lines(l)%get_json_key() == "hyperparameters") then
         hyperparameters_key_found = .true.
         hyperparameters%learning_rate_ = lines(l+1)%get_json_value(string_t(learning_rate_key), mold=0.)
-        hyperparameters%optimizer_ = lines(l+2)%get_json_value(string_t(optimizer_key), mold=string_t(""))
         return
       end if
     end do
@@ -261,7 +230,6 @@ contains
     lines = [ &
       string_t(indent // '"hyperparameters": {'), &
       string_t(indent // indent // '"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," ), &
-      string_t(indent // indent // '"' // optimizer_key     // '" : "' // trim(adjustl(self%optimizer_     )) // '"'), &
       string_t(indent // '}') &
     ]
   end procedure
@@ -352,7 +320,7 @@ program test_suite_driver
 
   type(training_configuration_t) training_configuration 
 
-  training_configuration = training_configuration_t( hyperparameters_t(learning_rate=1., optimizer = "adam"))
+  training_configuration = training_configuration_t(hyperparameters_t(learning_rate=1.))
   ! Removing the above assignment eliminates the segmentation fault even though the segmentation fault occurs
   ! when executing the assignment below, which does not reference the object define above.
 
@@ -364,7 +332,6 @@ program test_suite_driver
        [ string_t('{') &
         ,string_t('    "hyperparameters": {') &
         ,string_t('        "learning rate" : 1.00000000,') &
-        ,string_t('        "optimizer" : "adam"') &
         ,string_t('    }') &
         ,string_t('}') &
        ] &
