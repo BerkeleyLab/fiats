@@ -178,9 +178,7 @@ contains
 
     training_configuration%hyperparameters_ = hyperparameters
     training_configuration%file_t = file_t([ &
-      string_t("{"), &
-      training_configuration%hyperparameters_%to_json(), &
-      string_t("}") &
+      training_configuration%hyperparameters_%to_json() &
     ])
   end function
 
@@ -219,11 +217,10 @@ program test_suite_driver
   block
     type(training_configuration_t) from_json
     from_json = training_configuration_t(file_t( &
-       [ string_t('{') &
-        ,string_t('    "hyperparameters": {') &
+       [ &
+         string_t('    "hyperparameters": {') &
         ,string_t('        "learning rate" : 1.00000000,') &
         ,string_t('    }') &
-        ,string_t('}') &
        ] &
     ))
   end block
