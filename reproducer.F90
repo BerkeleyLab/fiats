@@ -127,14 +127,7 @@ contains
   pure function default_real_from_json(lines) result(hyperparameters)
     type(string_t), intent(in) :: lines(:)
     type(hyperparameters_t) hyperparameters
-    integer l
-
-    do l=1,size(lines)
-      if (lines(l)%get_json_key() == "hyperparameters") then
-        hyperparameters%learning_rate_ = lines(l+1)%get_json_value(string_t(learning_rate_key), mold=0.)
-        return
-      end if
-    end do
+    hyperparameters%learning_rate_ = lines(1)%get_json_value(string_t(learning_rate_key), mold=0.)
   end function
 
   pure function to_json(self) result(lines)
@@ -146,9 +139,7 @@ contains
 
     write(learning_rate_string,*) self%learning_rate_
     lines = [ &
-      string_t(indent // '"hyperparameters": {'), &
-      string_t(indent // indent // '"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," ), &
-      string_t(indent // '}') &
+      string_t(indent // indent // '"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," ) &
     ]
   end function
 
@@ -218,9 +209,7 @@ program test_suite_driver
     type(training_configuration_t) from_json
     from_json = training_configuration_t(file_t( &
        [ &
-         string_t('    "hyperparameters": {') &
-        ,string_t('        "learning rate" : 1.00000000,') &
-        ,string_t('    }') &
+         string_t('        "learning rate" : 1.00000000,') &
        ] &
     ))
   end block
