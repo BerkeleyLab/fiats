@@ -21,14 +21,13 @@ module julienne_fiats_m
 
 contains
 
-  function get_json_value(string) result(value_)
+  real function get_json_value(string)
     character(len=*) string
-    real value_
-    read(string, fmt=*) value_
-    print *," value_ ", value_
+    read(string, fmt=*) get_json_value
+    print *,"expecting 1.000000, read ", get_json_value
   end function
 
-  function hyperparameters_to_json(self) result(lines)! invoked only by training_configuration_from_components
+  function hyperparameters_to_json(self) result(lines)! invoked only by training_config_from_component
     type(hyperparameters_t) self
     type(string_t), allocatable :: lines(:)
     integer, parameter :: max_width= 18
@@ -37,23 +36,22 @@ contains
     lines = [string_t(learning_rate_string)]
   end function
 
-  type(training_configuration_t) function training_configuration_from_components(hyperparameters) result(training_configuration)
+  type(training_configuration_t) function training_config_from_component(hyperparameters)
     type(hyperparameters_t) hyperparameters
-    training_configuration%hyperparameters_ = hyperparameters
-    training_configuration%file_t = file_t([hyperparameters_to_json(training_configuration%hyperparameters_)])
+    training_config_from_component%hyperparameters_ = hyperparameters
+    training_config_from_component%file_t = file_t([hyperparameters_to_json(training_config_from_component%hyperparameters_)])
   end function
 
-  function hyperparameters_from_json(lines) result(hyperparameters) ! invoked only by training_configuration_from_file
+  function hyperparameters_from_json(lines) result(hyperparameters) ! invoked only by training_config_from_file
     type(string_t) lines(:)
     type(hyperparameters_t) hyperparameters
     hyperparameters%learning_rate_ = get_json_value(lines(1)%string_)
   end function
 
-  function training_configuration_from_file(line) result(training_configuration)
-    character(len=*), intent(in) :: line
-    type(training_configuration_t) training_configuration
-    training_configuration%file_t = file_t([string_t(line)])
-    training_configuration%hyperparameters_ = hyperparameters_from_json(training_configuration%file_t%lines_)
+  type(training_configuration_t) function training_config_from_file(line)
+    character(len=*) line
+    training_config_from_file%file_t = file_t([string_t(line)])
+    training_config_from_file%hyperparameters_ = hyperparameters_from_json(training_config_from_file%file_t%lines_)
   end function
 
 end module
@@ -62,7 +60,7 @@ end module
   implicit none
   type(training_configuration_t) training_configuration, from_json
 
-  training_configuration = training_configuration_from_components(hyperparameters_t(learning_rate_=1.))
+  training_configuration = training_config_from_component(hyperparameters_t(learning_rate_=1.))
 
   ! Removing the above assignment eliminates the segmentation fault even though the segmentation fault
   ! occurs when executing the assignment below, which does not reference the object defined above.
@@ -71,5 +69,5 @@ end module
   ! the above use statement.
 
   print *,new_line(''), "Heading down the rabbit hole..." ! print to demonstrate that execution continues past the above line
-  from_json = training_configuration_from_file('1.00000000')
+  from_json = training_config_from_file('1.00000000')
 end
