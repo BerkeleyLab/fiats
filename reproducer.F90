@@ -13,14 +13,12 @@ module julienne_fiats_m
     module procedure from_lines  ! segmentation fault results during or just after
   end interface                  ! the first executable statement in the main program.
 
-  type hyperparameters_t(k)
+  type hyperparameters_t(k) ! making this and the type below non-PDTs eliminates the segmentation fault
     integer, kind :: k = kind(1.)
     real(k) :: learning_rate_ = real(1.5,k)
   end type
 
-  character(len=*), parameter :: learning_rate_key = "learning rate"
-
-  type, extends(file_t) :: training_configuration_t(m)
+  type, extends(file_t) :: training_configuration_t(m) ! making this a non-PDT gives a compile-time error
     integer, kind :: m = kind(1.)
     type(hyperparameters_t(m)) hyperparameters_
   end type
