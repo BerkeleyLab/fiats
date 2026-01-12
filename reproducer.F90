@@ -3,8 +3,6 @@ module julienne_m
   
   type string_t
     character(len=:), allocatable :: string_
-  contains
-    procedure get_json_value 
   end type
 
   type file_t
@@ -43,7 +41,7 @@ contains
 end module
 
 module fiats_m
-  use julienne_m, only : string_t, file_t
+  use julienne_m
   implicit none
 
   type hyperparameters_t(k)
@@ -69,7 +67,7 @@ contains
   pure function hyperparameters_from_json(lines) result(hyperparameters)
     type(string_t), intent(in) :: lines(:)
     type(hyperparameters_t) hyperparameters
-    hyperparameters%learning_rate_ = lines(1)%get_json_value(string_t(learning_rate_key))
+    hyperparameters%learning_rate_ = get_json_value(lines(1), string_t(learning_rate_key))
   end function
 
   pure function hyperparameters_to_json(self) result(lines)
