@@ -1,21 +1,16 @@
 module julienne_m
   implicit none
   
-  private
-  public string_t
-  public file_t
-
   type string_t
-    private
     character(len=:), allocatable :: string_
   contains
     procedure string 
     procedure get_json_key
     procedure get_json_value 
     generic :: operator(==)   => string_t_eq_character
+    procedure string_t_eq_character
     generic :: assignment(= ) => assign_string_t_to_character
-    procedure, private :: string_t_eq_character
-    procedure, private, pass(rhs) :: assign_string_t_to_character
+    procedure, pass(rhs) :: assign_string_t_to_character
   end type
 
   interface string_t
@@ -100,13 +95,10 @@ end module
 module fiats_m
   use julienne_m, only : string_t, file_t
   implicit none
-  private
-  public hyperparameters_t
-  public training_configuration_t
 
   type hyperparameters_t(k)
     integer, kind :: k = kind(1.)
-    real(k), private :: learning_rate_ = real(1.5,k)
+    real(k) :: learning_rate_ = real(1.5,k)
   contains
     procedure hyperparameters_to_json
   end type
