@@ -30,9 +30,8 @@ contains
     end associate
   end function
 
-  pure function get_json_value(self, key, mold) result(value_)
+  pure function get_json_value(self, key) result(value_)
     class(string_t), intent(in) :: self, key
-    real, intent(in) :: mold
     real value_
     character(len=:), allocatable :: raw_line, string_value
     raw_line = self%string_
@@ -89,7 +88,7 @@ contains
   pure function hyperparameters_from_json(lines) result(hyperparameters)
     type(string_t), intent(in) :: lines(:)
     type(hyperparameters_t) hyperparameters
-    hyperparameters%learning_rate_ = lines(1)%get_json_value(string_t(learning_rate_key), mold=0.)
+    hyperparameters%learning_rate_ = lines(1)%get_json_value(string_t(learning_rate_key))
   end function
 
   pure function hyperparameters_to_json(self) result(lines)
