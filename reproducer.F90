@@ -111,20 +111,20 @@ module hyperparameters_m
   end type
 
   interface hyperparameters_t
-    module procedure default_real_from_json, default_real_from_components
+    module procedure hyperparameters_from_json, hyperparameters_from_components
   end interface
 
   character(len=*), parameter :: learning_rate_key = "learning rate"
 
 contains
 
-  pure function default_real_from_components(learning_rate) result(hyperparameters)
+  pure function hyperparameters_from_components(learning_rate) result(hyperparameters)
     real, intent(in) :: learning_rate
     type(hyperparameters_t) hyperparameters
     hyperparameters%learning_rate_ = learning_rate
   end function
 
-  pure function default_real_from_json(lines) result(hyperparameters)
+  pure function hyperparameters_from_json(lines) result(hyperparameters)
     type(string_t), intent(in) :: lines(:)
     type(hyperparameters_t) hyperparameters
     hyperparameters%learning_rate_ = lines(1)%get_json_value(string_t(learning_rate_key), mold=0.)
@@ -156,12 +156,12 @@ module training_configuration_m
   end type
 
   interface training_configuration_t
-    module procedure default_real_from_components, default_real_from_file
+    module procedure training_configuration_from_components, training_configuration_from_file
   end interface
 
 contains
 
-  pure function default_real_from_components(hyperparameters) result(training_configuration)
+  pure function training_configuration_from_components(hyperparameters) result(training_configuration)
     type(hyperparameters_t), intent(in) :: hyperparameters
     type(training_configuration_t) training_configuration
 
@@ -169,7 +169,7 @@ contains
     training_configuration%file_t = file_t([training_configuration%hyperparameters_%to_json()])
   end function
 
-  function default_real_from_file(lines) result(training_configuration)
+  function training_configuration_from_file(lines) result(training_configuration)
     type(string_t), intent(in) :: lines(:)
     type(training_configuration_t) training_configuration
 
