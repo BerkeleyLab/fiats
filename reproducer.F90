@@ -95,11 +95,10 @@ contains
   pure function hyperparameters_to_json(self) result(lines)
     class(hyperparameters_t), intent(in) :: self
     type(string_t), allocatable :: lines(:)
-    character(len=*), parameter :: indent = repeat(" ",ncopies=4)
     integer, parameter :: max_width= 18
     character(len=max_width) learning_rate_string
     write(learning_rate_string,*) self%learning_rate_
-    lines = [string_t(indent // indent // '"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," )]
+    lines = [string_t('"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," )]
   end function
 
   pure function training_configuration_from_components(hyperparameters) result(training_configuration)
