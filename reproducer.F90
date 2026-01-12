@@ -97,17 +97,18 @@ contains
 
 end module
 
-module hyperparameters_m
-  use julienne_m, only : string_t
+module fiats_m
+  use julienne_m, only : string_t, file_t
   implicit none
   private
-  public :: hyperparameters_t
+  public hyperparameters_t
+  public training_configuration_t
 
   type hyperparameters_t(k)
     integer, kind :: k = kind(1.)
     real(k), private :: learning_rate_ = real(1.5,k)
   contains
-    procedure to_json
+    procedure hyperparameters_to_json
   end type
 
   interface hyperparameters_t
@@ -115,6 +116,17 @@ module hyperparameters_m
   end interface
 
   character(len=*), parameter :: learning_rate_key = "learning rate"
+
+  type, extends(file_t) :: training_configuration_t(m)
+    integer, kind :: m = kind(1.)
+    type(hyperparameters_t(m)) hyperparameters_
+  contains
+    procedure training_configuration_to_json          
+  end type
+
+  interface training_configuration_t
+    module procedure training_configuration_from_components, training_configuration_from_file
+  end interface
 
 contains
 
@@ -130,7 +142,7 @@ contains
     hyperparameters%learning_rate_ = lines(1)%get_json_value(string_t(learning_rate_key), mold=0.)
   end function
 
-  pure function to_json(self) result(lines)
+  pure function hyperparameters_to_json(self) result(lines)
     class(hyperparameters_t), intent(in) :: self
     type(string_t), allocatable :: lines(:)
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
@@ -141,32 +153,12 @@ contains
     lines = [string_t(indent // indent // '"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," )]
   end function
 
-end module
-
-module training_configuration_m
-  use julienne_m, only : string_t, file_t
-  use hyperparameters_m, only : hyperparameters_t
-  implicit none
-
-  type, extends(file_t) :: training_configuration_t(m)
-    integer, kind :: m = kind(1.)
-    type(hyperparameters_t(m)) hyperparameters_
-  contains
-    procedure to_json          
-  end type
-
-  interface training_configuration_t
-    module procedure training_configuration_from_components, training_configuration_from_file
-  end interface
-
-contains
-
   pure function training_configuration_from_components(hyperparameters) result(training_configuration)
     type(hyperparameters_t), intent(in) :: hyperparameters
     type(training_configuration_t) training_configuration
 
     training_configuration%hyperparameters_ = hyperparameters
-    training_configuration%file_t = file_t([training_configuration%hyperparameters_%to_json()])
+    training_configuration%file_t = file_t([training_configuration%hyperparameters_%hyperparameters_to_json()])
   end function
 
   function training_configuration_from_file(lines) result(training_configuration)
@@ -177,7 +169,7 @@ contains
     training_configuration%hyperparameters_ = hyperparameters_t(training_configuration%file_t%lines_)
   end function
 
-  pure function to_json(self) result(json_lines)
+  pure function training_configuration_to_json(self) result(json_lines)
     class(training_configuration_t), intent(in) :: self
     type(string_t), allocatable :: json_lines(:)
     json_lines = self%lines_
@@ -186,8 +178,7 @@ contains
 end module
 
 program test_suite_driver
-  use training_configuration_m, only : training_configuration_t
-  use hyperparameters_m, only : hyperparameters_t
+  use fiats_m, only : hyperparameters_t, training_configuration_t
   use julienne_m, only : string_t
   implicit none
 
