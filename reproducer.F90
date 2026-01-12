@@ -4,7 +4,6 @@ module julienne_m
   type string_t
     character(len=:), allocatable :: string_
   contains
-    procedure string 
     procedure get_json_key
     procedure get_json_value 
   end type
@@ -19,18 +18,12 @@ module julienne_m
 
 contains
 
-  pure function string(self) result(raw_string)
-    class(string_t), intent(in) :: self
-    character(len=:), allocatable :: raw_string
-    raw_string = self%string_
-  end function
-
   elemental function get_json_key(self) result(unquoted_key)
     class(string_t), intent(in) :: self
     type(string_t) unquoted_key
     character(len=:), allocatable :: raw_line
     
-    raw_line = self%string()
+    raw_line = self%string_
     associate(opening_key_quotes => index(raw_line, '"'))
       associate(closing_key_quotes => opening_key_quotes + index(raw_line(opening_key_quotes+1:), '"'))
         unquoted_key = string_t(trim(raw_line(opening_key_quotes+1:closing_key_quotes-1)))
@@ -44,7 +37,7 @@ contains
     real value_
     character(len=:), allocatable :: raw_line, string_value
 
-    raw_line = self%string()
+    raw_line = self%string_
     associate(text_after_colon => raw_line(index(raw_line, ':')+1:))
       associate(trailing_comma => index(text_after_colon, ','))
         if (trailing_comma == 0) then
