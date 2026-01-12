@@ -88,17 +88,16 @@ contains
     training_configuration%file_t = file_t([training_configuration%hyperparameters_%hyperparameters_to_json()])
   end function
 
-  function training_configuration_from_file(lines) result(training_configuration)
-    type(string_t), intent(in) :: lines(:)
+  function training_configuration_from_file(line) result(training_configuration)
+    character(len=*), intent(in) :: line
     type(training_configuration_t) training_configuration
-    training_configuration%file_t = file_t(lines)
-    training_configuration%hyperparameters_ = hyperparameters_t(training_configuration%file_t%lines_)
+    training_configuration%file_t = file_t([string_t(line)])
+    training_configuration%hyperparameters_ = hyperparameters_from_json(training_configuration%file_t%lines_)
   end function
 
 end module
 
   use fiats_m, only : hyperparameters_t, training_configuration_from_components, training_configuration_from_file, training_configuration_t
-  use julienne_m, only : string_t
   implicit none
   type(training_configuration_t) training_configuration, from_json
 
@@ -111,5 +110,5 @@ end module
   ! the above use statement.
 
   print *,new_line(''), "Heading down the rabbit hole..." ! print to demonstrate that execution continues past the above line
-  from_json = training_configuration_from_file([string_t('        "learning rate" : 1.00000000,')])
+  from_json = training_configuration_from_file('        "learning rate" : 1.00000000,')
 end
