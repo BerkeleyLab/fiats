@@ -8,13 +8,11 @@ module julienne_string_m
     private
     character(len=:), allocatable :: string_
   contains
-    procedure :: as_character
-    generic :: string => as_character
-    procedure :: get_json_key
+    procedure string 
+    procedure get_json_key
+    procedure get_json_value 
     generic :: operator(==)   => string_t_eq_character
     generic :: assignment(= ) => assign_string_t_to_character
-    generic :: get_json_value => get_real
-    procedure, private :: get_real 
     procedure, private :: string_t_eq_character
     procedure, private, pass(rhs) :: assign_string_t_to_character
   end type
@@ -25,7 +23,7 @@ module julienne_string_m
 
 contains
 
-  pure function as_character(self) result(raw_string)
+  pure function string(self) result(raw_string)
     class(string_t), intent(in) :: self
     character(len=:), allocatable :: raw_string
     raw_string = self%string_
@@ -50,7 +48,7 @@ contains
     end associate
   end function
 
-  pure function get_real(self, key, mold) result(value_)
+  pure function get_json_value(self, key, mold) result(value_)
     class(string_t), intent(in) :: self, key
     real, intent(in) :: mold
     real value_
@@ -115,8 +113,7 @@ module hyperparameters_m
     integer, kind :: k = kind(1.)
     real(k), private :: learning_rate_ = real(1.5,k)
   contains
-    generic :: to_json => default_real_to_json
-    procedure, private :: default_real_to_json
+    procedure to_json
   end type
 
   interface hyperparameters_t
@@ -146,7 +143,7 @@ contains
     end do
   end function
 
-  pure function default_real_to_json(self) result(lines)
+  pure function to_json(self) result(lines)
     class(hyperparameters_t), intent(in) :: self
     type(string_t), allocatable :: lines(:)
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
@@ -173,8 +170,7 @@ module training_configuration_m
     integer, kind :: m = kind(1.)
     type(hyperparameters_t(m)) hyperparameters_
   contains
-    generic :: to_json          => default_real_to_json          
-    procedure, private          :: default_real_to_json          
+    procedure to_json          
   end type
 
   interface training_configuration_t
@@ -205,7 +201,7 @@ contains
     end associate
   end function
 
-  pure function default_real_to_json(self) result(json_lines)
+  pure function to_json(self) result(json_lines)
     class(training_configuration_t), intent(in) :: self
     type(string_t), allocatable :: json_lines(:)
     json_lines = self%lines_
