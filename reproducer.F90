@@ -138,9 +138,7 @@ contains
     character(len=max_width) learning_rate_string
 
     write(learning_rate_string,*) self%learning_rate_
-    lines = [ &
-      string_t(indent // indent // '"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," ) &
-    ]
+    lines = [string_t(indent // indent // '"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," )]
   end function
 
 end module
@@ -168,9 +166,7 @@ contains
     type(training_configuration_t) training_configuration
 
     training_configuration%hyperparameters_ = hyperparameters
-    training_configuration%file_t = file_t([ &
-      training_configuration%hyperparameters_%to_json() &
-    ])
+    training_configuration%file_t = file_t([training_configuration%hyperparameters_%to_json()])
   end function
 
   function default_real_from_file(file_object) result(training_configuration)
@@ -207,11 +203,7 @@ program test_suite_driver
 
   block
     type(training_configuration_t) from_json
-    from_json = training_configuration_t(file_t( &
-       [ &
-         string_t('        "learning rate" : 1.00000000,') &
-       ] &
-    ))
+    from_json = training_configuration_t(file_t([string_t('        "learning rate" : 1.00000000,')]))
   end block
 
 end program
