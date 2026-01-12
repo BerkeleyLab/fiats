@@ -12,9 +12,9 @@ module julienne_m
     type(string_t), allocatable :: lines_(:)
   end type
 
-  interface file_t               ! If this generic interface
-    module procedure from_lines  ! is removed, the program
-  end interface                  ! seg faults sooner.
+  interface file_t               ! If this generic interface is removed, a
+    module procedure from_lines  ! segmentation fault results during or just after
+  end interface                  ! the first executable statement in the main program.
 
 contains
 
@@ -22,7 +22,6 @@ contains
     class(string_t), intent(in) :: self
     type(string_t) unquoted_key
     character(len=:), allocatable :: raw_line
-    
     raw_line = self%string_
     associate(opening_key_quotes => index(raw_line, '"'))
       associate(closing_key_quotes => opening_key_quotes + index(raw_line(opening_key_quotes+1:), '"'))
@@ -36,7 +35,6 @@ contains
     real, intent(in) :: mold
     real value_
     character(len=:), allocatable :: raw_line, string_value
-
     raw_line = self%string_
     associate(text_after_colon => raw_line(index(raw_line, ':')+1:))
       associate(trailing_comma => index(text_after_colon, ','))
@@ -100,7 +98,6 @@ contains
     character(len=*), parameter :: indent = repeat(" ",ncopies=4)
     integer, parameter :: max_width= 18
     character(len=max_width) learning_rate_string
-
     write(learning_rate_string,*) self%learning_rate_
     lines = [string_t(indent // indent // '"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," )]
   end function
@@ -108,7 +105,6 @@ contains
   pure function training_configuration_from_components(hyperparameters) result(training_configuration)
     type(hyperparameters_t), intent(in) :: hyperparameters
     type(training_configuration_t) training_configuration
-
     training_configuration%hyperparameters_ = hyperparameters
     training_configuration%file_t = file_t([training_configuration%hyperparameters_%hyperparameters_to_json()])
   end function
@@ -116,7 +112,6 @@ contains
   function training_configuration_from_file(lines) result(training_configuration)
     type(string_t), intent(in) :: lines(:)
     type(training_configuration_t) training_configuration
-
     training_configuration%file_t = file_t(lines)
     training_configuration%hyperparameters_ = hyperparameters_t(training_configuration%file_t%lines_)
   end function
