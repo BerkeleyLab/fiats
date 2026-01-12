@@ -7,8 +7,6 @@ module julienne_m
     procedure string 
     procedure get_json_key
     procedure get_json_value 
-    generic :: assignment(= ) => assign_string_t_to_character
-    procedure, pass(rhs) :: assign_string_t_to_character
   end type
 
   type file_t
@@ -59,12 +57,6 @@ contains
     end associate
   end function
 
-  pure subroutine assign_string_t_to_character(lhs, rhs)
-    class(string_t), intent(in) :: rhs
-    character(len=:), intent(out), allocatable :: lhs
-    lhs = rhs%string()
-  end subroutine
-   
   pure function from_lines(lines) result(file_object)
     type(string_t), intent(in) :: lines(:)
     type(file_t) file_object
