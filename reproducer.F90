@@ -39,10 +39,6 @@ module fiats_m
     real(k) :: learning_rate_ = real(1.5,k)
   end type
 
-  interface hyperparameters_t
-    module procedure hyperparameters_from_json
-  end interface
-
   character(len=*), parameter :: learning_rate_key = "learning rate"
 
   type, extends(file_t) :: training_configuration_t(m)
