@@ -1,8 +1,9 @@
-module julienne_string_m
+module julienne_m
   implicit none
   
   private
-  public :: string_t
+  public string_t
+  public file_t
 
   type string_t
     private
@@ -20,6 +21,14 @@ module julienne_string_m
   interface string_t
     module procedure from_characters
   end interface
+
+  type file_t
+    type(string_t), allocatable :: lines_(:)
+  end type
+
+  interface file_t               ! If this generic interface
+    module procedure from_lines  ! is removed, the program
+  end interface                  ! seg faults sooner.
 
 contains
 
@@ -80,21 +89,6 @@ contains
     lhs = rhs%string()
   end subroutine
    
-end module
-
-module julienne_file_m
-  use julienne_string_m, only : string_t
-
-  type file_t
-    type(string_t), allocatable :: lines_(:)
-  end type
-
-  interface file_t               ! If this generic interface
-    module procedure from_lines  ! is removed, the program
-  end interface                  ! seg faults sooner.
-
-contains
-
   pure function from_lines(lines) result(file_object)
     type(string_t), intent(in) :: lines(:)
     type(file_t) file_object
@@ -104,7 +98,7 @@ contains
 end module
 
 module hyperparameters_m
-  use julienne_string_m, only : string_t
+  use julienne_m, only : string_t
   implicit none
   private
   public :: hyperparameters_t
@@ -161,8 +155,7 @@ contains
 end module
 
 module training_configuration_m
-  use julienne_string_m, only : string_t
-  use julienne_file_m, only : file_t
+  use julienne_m, only : string_t, file_t
   use hyperparameters_m, only : hyperparameters_t
   implicit none
 
@@ -212,8 +205,7 @@ end module
 program test_suite_driver
   use training_configuration_m, only : training_configuration_t
   use hyperparameters_m, only : hyperparameters_t
-  use julienne_file_m, only : file_t
-  use julienne_string_m, only : string_t
+  use julienne_m, only : string_t, file_t
   implicit none
 
   type(training_configuration_t) training_configuration 
