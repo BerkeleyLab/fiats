@@ -1,4 +1,4 @@
-module julienne_m
+module julienne_fiats_m
   implicit none
   
   type string_t
@@ -12,6 +12,18 @@ module julienne_m
   interface file_t               ! If this generic interface is removed, a
     module procedure from_lines  ! segmentation fault results during or just after
   end interface                  ! the first executable statement in the main program.
+
+  type hyperparameters_t(k)
+    integer, kind :: k = kind(1.)
+    real(k) :: learning_rate_ = real(1.5,k)
+  end type
+
+  character(len=*), parameter :: learning_rate_key = "learning rate"
+
+  type, extends(file_t) :: training_configuration_t(m)
+    integer, kind :: m = kind(1.)
+    type(hyperparameters_t(m)) hyperparameters_
+  end type
 
 contains
 
@@ -27,26 +39,6 @@ contains
     type(file_t) file_object
     file_object%lines_ = lines
   end function
-
-end module
-
-module fiats_m
-  use julienne_m
-  implicit none
-
-  type hyperparameters_t(k)
-    integer, kind :: k = kind(1.)
-    real(k) :: learning_rate_ = real(1.5,k)
-  end type
-
-  character(len=*), parameter :: learning_rate_key = "learning rate"
-
-  type, extends(file_t) :: training_configuration_t(m)
-    integer, kind :: m = kind(1.)
-    type(hyperparameters_t(m)) hyperparameters_
-  end type
-
-contains
 
   function hyperparameters_to_json(self) result(lines)! invoked only by training_configuration_from_components
     type(hyperparameters_t) self
@@ -78,7 +70,7 @@ contains
 
 end module
 
-  use fiats_m
+  use julienne_fiats_m
   implicit none
   type(training_configuration_t) training_configuration, from_json
 
