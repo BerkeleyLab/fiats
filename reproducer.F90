@@ -65,11 +65,6 @@ module julienne_string_m
 
   end interface
   
-end module julienne_string_m
-
-submodule(julienne_string_m) julienne_string_s
-  implicit none
-
 contains
 
   module procedure as_character
@@ -117,7 +112,7 @@ contains
     lhs = rhs%string()
   end procedure
    
-end submodule julienne_string_s
+end module
 
 module julienne_file_m
   use julienne_string_m, only : string_t
@@ -136,18 +131,13 @@ module julienne_file_m
 
   end interface
 
-end module
-
-submodule(julienne_file_m) julienne_file_s
-  implicit none
-
 contains
 
   module procedure from_lines
     allocate(file_object%lines_, source=lines)
   end procedure
 
-end submodule julienne_file_s
+end module
 
 module hyperparameters_m
   use julienne_string_m, only : string_t
@@ -189,11 +179,6 @@ module hyperparameters_m
 
   end interface
 
-end module
-
-submodule(hyperparameters_m) hyperparameters_s
-  implicit none
-
   character(len=*), parameter :: learning_rate_key = "learning rate"
 
 contains
@@ -228,7 +213,7 @@ contains
     ]
   end procedure
 
-end submodule hyperparameters_s
+end module
 
 module training_configuration_m
   use julienne_string_m, only : string_t
@@ -270,11 +255,6 @@ module training_configuration_m
 
   end interface
 
-end module
-
-submodule(training_configuration_m) training_configuration_s
-  implicit none
-
 contains
 
   module procedure default_real_from_components
@@ -301,7 +281,7 @@ contains
     json_lines = self%lines_
   end procedure
 
-end submodule training_configuration_s
+end module
 
 program test_suite_driver
   use training_configuration_m, only : training_configuration_t
