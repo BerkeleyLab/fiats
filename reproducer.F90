@@ -9,10 +9,6 @@ module julienne_fiats_m
     type(string_t), allocatable :: lines_(:)
   end type
 
-  interface file_t               ! If this generic interface is removed, a
-    module procedure from_lines  ! segmentation fault results during or just after
-  end interface                  ! the first executable statement in the main program.
-
   type hyperparameters_t(k) ! making this and the type below non-PDTs eliminates the segmentation fault
     integer, kind :: k = kind(1.)
     real(k) :: learning_rate_ = real(1.5,k)
@@ -30,12 +26,6 @@ contains
     real value_
     read(string, fmt=*) value_
     print *," value_ ", value_
-  end function
-
-  function from_lines(lines) result(file_object)
-    type(string_t) lines(:)
-    type(file_t) file_object
-    file_object%lines_ = lines
   end function
 
   function hyperparameters_to_json(self) result(lines)! invoked only by training_configuration_from_components
