@@ -50,7 +50,7 @@ contains
 
   type(training_configuration_t) function training_config_from_file(line)
     character(len=*) line
-    training_config_from_file%file_t = file_t([string_t(line)])
+    training_config_from_file%file_t = file_t([string_t(line)]) ! segmentation fault
     training_config_from_file%hyperparameters_ = hyperparameters_from_json(training_config_from_file%file_t%lines_)
   end function
 
