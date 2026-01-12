@@ -15,21 +15,11 @@ module julienne_m
 
 contains
 
-  pure function get_json_value(self, key) result(value_)
-    class(string_t), intent(in) :: self, key
+  function get_json_value(self ) result(value_)
+    type(string_t), intent(in) :: self
     real value_
-    character(len=:), allocatable :: raw_line, string_value
-    raw_line = self%string_
-    associate(text_after_colon => raw_line(index(raw_line, ':')+1:))
-      associate(trailing_comma => index(text_after_colon, ','))
-        if (trailing_comma == 0) then
-          string_value = trim(adjustl((text_after_colon)))
-        else
-          string_value = trim(adjustl((text_after_colon(:trailing_comma-1))))
-        end if
-        read(string_value, fmt=*) value_
-      end associate
-    end associate
+    read(self%string_, fmt=*) value_
+    print *," value_ ", value_
   end function
 
   pure function from_lines(lines) result(file_object)
@@ -62,19 +52,19 @@ module fiats_m
 
 contains
 
-  pure function hyperparameters_from_json(lines) result(hyperparameters)
+  function hyperparameters_from_json(lines) result(hyperparameters)
     type(string_t), intent(in) :: lines(:)
     type(hyperparameters_t) hyperparameters
-    hyperparameters%learning_rate_ = get_json_value(lines(1), string_t(learning_rate_key))
+    hyperparameters%learning_rate_ = get_json_value(lines(1))
   end function
 
   pure function hyperparameters_to_json(self) result(lines)
-    class(hyperparameters_t), intent(in) :: self
+    type(hyperparameters_t), intent(in) :: self
     type(string_t), allocatable :: lines(:)
     integer, parameter :: max_width= 18
     character(len=max_width) learning_rate_string
     write(learning_rate_string,*) self%learning_rate_
-    lines = [string_t('"' // learning_rate_key // '" : '  // trim(adjustl(learning_rate_string)) // "," )]
+    lines = [string_t(learning_rate_string)]
   end function
 
   pure function training_configuration_from_components(hyperparameters) result(training_configuration)
@@ -93,7 +83,7 @@ contains
 
 end module
 
-  use fiats_m, only : hyperparameters_t, training_configuration_from_components, training_configuration_from_file, training_configuration_t
+  use fiats_m
   implicit none
   type(training_configuration_t) training_configuration, from_json
 
@@ -106,5 +96,5 @@ end module
   ! the above use statement.
 
   print *,new_line(''), "Heading down the rabbit hole..." ! print to demonstrate that execution continues past the above line
-  from_json = training_configuration_from_file('        "learning rate" : 1.00000000,')
+  from_json = training_configuration_from_file('1.00000000')
 end
