@@ -204,13 +204,9 @@ contains
 
   module procedure default_real_from_json
     integer l
-    logical hyperparameters_key_found 
-
-    hyperparameters_key_found = .false.
 
     do l=1,size(lines)
       if (lines(l)%get_json_key() == "hyperparameters") then
-        hyperparameters_key_found = .true.
         hyperparameters%learning_rate_ = lines(l+1)%get_json_value(string_t(learning_rate_key), mold=0.)
         return
       end if
