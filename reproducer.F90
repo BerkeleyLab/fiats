@@ -7,8 +7,6 @@ module julienne_m
     procedure string 
     procedure get_json_key
     procedure get_json_value 
-    generic :: operator(==)   => string_t_eq_character
-    procedure string_t_eq_character
     generic :: assignment(= ) => assign_string_t_to_character
     procedure, pass(rhs) :: assign_string_t_to_character
   end type
@@ -59,13 +57,6 @@ contains
         read(string_value, fmt=*) value_
       end associate
     end associate
-  end function
-
-  elemental function string_t_eq_character(lhs, rhs) result(lhs_eq_rhs)
-    class(string_t), intent(in) :: lhs
-    character(len=*), intent(in) :: rhs
-    logical lhs_eq_rhs
-    lhs_eq_rhs = lhs%string() == rhs
   end function
 
   pure subroutine assign_string_t_to_character(lhs, rhs)
