@@ -19,7 +19,6 @@ module julienne_string_m
     procedure, private, pass(rhs) :: assign_string_t_to_character
   end type
 
-
   interface string_t
 
     elemental module function from_characters(string) result(new_string)
@@ -280,8 +279,6 @@ end module
 submodule(training_configuration_m) training_configuration_s
   implicit none
 
-  character(len=*), parameter :: header="{", footer="}", separator = ","
-
 contains
 
   module procedure default_real_from_components
@@ -289,9 +286,9 @@ contains
     training_configuration%hyperparameters_ = hyperparameters
 
     training_configuration%file_t = file_t([ &
-      string_t(header), &
+      string_t("{"), &
       training_configuration%hyperparameters_%to_json(), &
-      string_t(footer) &
+      string_t("}") &
     ])
 
   end procedure
