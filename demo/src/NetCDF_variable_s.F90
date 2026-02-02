@@ -213,6 +213,36 @@ contains
     end associate
   end procedure
 
+  module procedure default_real_start_step
+    select case(self%rank())
+    case(1)
+      start_step = lbound(self%values_1D_,1)
+    case(2)
+      start_step = lbound(self%values_2D_,2)
+    case(3)
+      start_step = lbound(self%values_3D_,3)
+    case(4)
+      start_step = lbound(self%values_4D_,4)
+    case default
+      error stop "NetCDF_variable_s(default_real_start_step): unsupported rank"
+    end select
+  end procedure
+
+  module procedure double_precision_start_step
+    select case(self%rank())
+    case(1)
+      start_step = lbound(self%values_1D_,1)
+    case(2)
+      start_step = lbound(self%values_2D_,2)
+    case(3)
+      start_step = lbound(self%values_3D_,3)
+    case(4)
+      start_step = lbound(self%values_4D_,4)
+    case default
+      error stop "NetCDF_variable_s(double_precision_start_step): unsupported rank"
+    end select
+  end procedure
+
   module procedure default_real_end_step
     select case(self%rank())
     case(1)
