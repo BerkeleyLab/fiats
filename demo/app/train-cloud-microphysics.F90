@@ -254,8 +254,6 @@ contains
       network_file => args%base_name // "_network.json" &
     )
 
-    stop "-----> WIP <-------"
-
       check_for_network_file: &
       block
         logical preexisting_network_file
@@ -280,28 +278,27 @@ contains
 
             activation: &
             associate(activation => training_configuration%activation())
-    !          trainable_network = trainable_network_t( &
-    !             training_configuration                &
-    !            ,perturbation_magnitude = 0.05         &
-    !            ,metadata = [                          &
-    !               string_t("ICAR microphysics" )      &
-    !              ,string_t("max-entropy-filter")      &
-    !              ,string_t(date                )      &
-    !              ,activation%function_name(    )      &
-    !              ,string_t(trim(merge("true ", "false", training_configuration%skip_connections()))) &
-    !            ]                                      &
-    !            ,input_map  = tensor_map_t(            &
-    !               layer    = "inputs"                &
-    !              ,minima   = [( input_variable(v)%minimum(),  v=1, size( input_variable) )] &
-    !              ,maxima   = [( input_variable(v)%maximum(),  v=1, size( input_variable) )] &
-    !            )                        &
-    !            ,output_map = output_map &
-    !          )
+              trainable_network = trainable_network_t( &
+                 training_configuration                &
+                ,perturbation_magnitude = 0.05         &
+                ,metadata = [                          &
+                   string_t("ICAR microphysics" )      &
+                  ,string_t("max-entropy-filter")      &
+                  ,string_t(date                )      &
+                  ,activation%function_name(    )      &
+                  ,string_t(trim(merge("true ", "false", training_configuration%skip_connections()))) &
+                ]                                      &
+                ,input_map = tensor_map_t(             &
+                   layer   = "inputs"                  &
+                  ,minima  = [( [( input_variable(v,f)%minimum(), v = 1, size(input_variable,1) )], f = 1, size(input_variable,2) )] &
+                  ,maxima  = [( [( input_variable(v,f)%maximum(), v = 1, size(input_variable,1) )], f = 1, size(input_variable,2) )] &
+                )                        &
+                ,output_map = output_map &
+              )
             end associate activation
           end block initialize_network
 
         end if read_or_initialize_network
-
       end block  check_for_network_file
 
     !  print *, "Conditionally sampling for a flat distribution of output values"
