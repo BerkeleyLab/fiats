@@ -35,8 +35,7 @@ program train_cloud_microphysics
     'The presence of a file named "stop" halts execution gracefully.'                                          // new_line('')
 
   type command_line_arguments_t 
-    integer num_epochs, start_step, stride, num_bins, report_step
-    integer, allocatable :: end_step
+    integer num_epochs, stride, num_bins, report_step
     character(len=:), allocatable :: base_name
     real cost_tolerance
   end type
@@ -112,8 +111,7 @@ contains
     character(len=:), allocatable :: &
       base_name, epochs_string, start_string, end_string, stride_string, bins_string, report_string, tolerance_string
     real cost_tolerance
-    integer, allocatable :: end_step
-    integer num_epochs, num_bins, start_step, stride, report_step
+    integer num_epochs, num_bins, stride, report_step
 
     base_name = command_line%flag_value("--base")
     epochs_string = command_line%flag_value("--epochs")
@@ -131,26 +129,12 @@ contains
     read(epochs_string,*) num_epochs
 
     stride         = default_or_internal_read(1,    stride_string)
-    start_step     = default_or_internal_read(1,     start_string)
     report_step    = default_or_internal_read(1,    report_string)
     num_bins       = default_or_internal_read(3,      bins_string)
     cost_tolerance = default_or_internal_read(5E-8, tolerance_string)
 
-    if (len(end_string)/=0) then
-      allocate(end_step)
-      read(end_string,*) end_step
-    end if
- 
-    if (allocated(end_step)) then 
-      command_line_arguments = command_line_arguments_t( &
-        num_epochs, start_step, stride, num_bins, report_step, end_step, base_name, cost_tolerance &
-      )
-    else
-      command_line_arguments = command_line_arguments_t( &
-        num_epochs, start_step, stride, num_bins, report_step, null(), base_name, cost_tolerance &
-      )
-    end if
-    
+    command_line_arguments = command_line_arguments_t(num_epochs, stride, num_bins, report_step, base_name, cost_tolerance)
+
   end function get_command_line_arguments
 
   subroutine read_train_write(training_configuration, training_data_files, args, plot_file)
@@ -170,7 +154,7 @@ contains
     type(input_output_pair_t), allocatable :: input_output_pairs(:)
     type(tensor_t), allocatable, dimension(:) :: input_tensors, output_tensors
     real, allocatable :: cost(:)
-    integer f, v, network_unit, io_status, epoch, end_step, t, b, t_end
+    integer f, v, network_unit, io_status, epoch, t, b, t_end
     integer(int64) start_training, finish_training
     logical stop_requested
 
@@ -248,12 +232,6 @@ contains
       end associate output_file_and_variable_count
     end associate output_variable_and_time_files
 
-    if (allocated(args%end_step)) then
-      end_step = args%end_step
-    else
-      end_step = input_variable(1,1)%end_step()
-    end if
-
     associate(num_steps => sum( (input_variable(1,:)%end_step()+1) - input_variable(1,:)%start_step()))
       print *,"Defining input tensors for ", num_steps, "time steps"
     end associate
@@ -262,7 +240,7 @@ contains
 
     !input_tensors  = tensors(input_variable,  step_start = args%start_step, step_end = end_step, step_stride = args%stride)
 
-    print *,"Defining output tensors for time step", args%start_step, "through", end_step, "with strides of", args%stride
+    !print *,"Defining output tensors for time step", args%start_step, "through", end_step, "with strides of", args%stride
     !output_tensors = tensors(derivative, step_start = args%start_step, step_end = end_step, step_stride = args%stride)
 
     !output_map_and_network_file:  &
