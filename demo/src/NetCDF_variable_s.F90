@@ -429,30 +429,34 @@ contains
 
   module procedure tensors
 
-    integer t_start, t_end, t_stride
+     integer v, f, lon, lat, lev, time
 
-    select case(NetCDF_variables(1)%rank())
-    case(4)
+    associate(component_rank => NetCDF_variables(1,1)%rank())
 
-      t_start  = default_or_present_value(1, step_start )
-      t_stride = default_or_present_value(1, step_stride)
-      t_end    = default_or_present_value(size(NetCDF_variables(1)%values_4D_,4), step_end)
+      call_julienne_assert(.all. (NetCDF_variables(:,:)%rank() .equalsExpected. component_rank))
 
-      associate( longitudes => size(NetCDF_variables(1)%values_4D_,1) &
-                ,latitudes  => size(NetCDF_variables(1)%values_4D_,2) &
-                ,levels     => size(NetCDF_variables(1)%values_4D_,3) &
-      )
-        block
-          integer v, lon, lat, lev, time
+      select case(component_rank)
+      case(4)
+        associate( longitudes => size(NetCDF_variables(1,1)%values_4D_,1) &
+                  ,latitudes  => size(NetCDF_variables(1,1)%values_4D_,2) &
+                  ,levels     => size(NetCDF_variables(1,1)%values_4D_,3) &
+                  ,t_end      => size(NetCDF_variables(1,1)%values_4D_,4) &
+                  ,variables  => size(NetCDF_variables,1) &
+                  ,files      => size(NetCDF_variables,2) &
+        )
+          call_julienne_assert(.all. ([( [( size(NetCDF_variables(v,f)%values_4D_,1), v = 1, variables)], f = 1, files)] .equalsExpected. longitudes))
+          call_julienne_assert(.all. ([( [( size(NetCDF_variables(v,f)%values_4D_,2), v = 1, variables)], f = 1, files)] .equalsExpected.  latitudes))
+          call_julienne_assert(.all. ([( [( size(NetCDF_variables(v,f)%values_4D_,3), v = 1, variables)], f = 1, files)] .equalsExpected.     levels))
+          call_julienne_assert(.all. ([( [( size(NetCDF_variables(v,f)%values_4D_,4), v = 1, variables)], f = 1, files)] .equalsExpected.      t_end))
 
-          tensors = [( [( [( [( tensor_t( [( NetCDF_variables(v)%values_4D_(lon,lat,lev,time),  v=1,size(NetCDF_variables) )] ), &
-                                lon = 1, longitudes)], lat = 1, latitudes)], lev = 1, levels)], time = t_start, t_end, t_stride)]
-        end block
-      end associate    
+          tensors = [( [( [( [( [( tensor_t( [( NetCDF_variables(v,f)%values_4D_(lon,lat,lev,time),  v=1,size(NetCDF_variables,1) )] ), &
+                                  lon = 1, longitudes)], lat = 1, latitudes)], lev = 1, levels)], time = 1, t_end )], f = 1, files )]
+        end associate    
+      case default
+        error stop "NetCDF_variable_s(tensors): unsupported rank)"
+      end select
 
-    case default
-      error stop "NetCDF_variable_s(tensors): unsupported rank)"
-    end select
+    end associate
 
   end procedure
 
