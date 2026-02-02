@@ -158,9 +158,10 @@ contains
     type(training_data_files_t), intent(in) :: training_data_files
     type(command_line_arguments_t), intent(in) :: args
     type(plot_file_t), intent(in), optional :: plot_file 
-    type(NetCDF_variable_t), allocatable :: input_variable(:), output_variable(:)
     type(time_derivative_t), allocatable :: derivative(:)
+    type(NetCDF_variable_t), allocatable, dimension(:,:) :: input_variable, output_variable
     type(NetCDF_variable_t) input_time, output_time
+    type(NetCDF_file_t)    , allocatable, dimension(:)   :: NetCDF_input_file, NetCDF_output_file
 
     ! local variables:
     type(trainable_network_t) trainable_network
@@ -169,14 +170,46 @@ contains
     type(input_output_pair_t), allocatable :: input_output_pairs(:)
     type(tensor_t), allocatable, dimension(:) :: input_tensors, output_tensors
     real, allocatable :: cost(:)
-    integer i, network_unit, io_status, epoch, end_step, t, b, t_end, v
+    integer f, v, network_unit, io_status, epoch, end_step, t, b, t_end
     integer(int64) start_training, finish_training
     logical stop_requested
 
     input_names: &
     associate(input_names => training_configuration%input_variable_names())
 
-      allocate(input_variable(size(input_names)))
+    associate( &
+       input_tensor_file_names  => training_data_files%fully_qualified_inputs_files() &
+      ,output_tensor_file_names => training_data_files%fully_qualified_outputs_files() &
+      ,time_data_file_name      => training_data_files%fully_qualified_time_file() &
+      ,input_component_names    => training_configuration%input_variable_names() &
+      ,output_component_names   => training_configuration%output_variable_names() &
+    ) 
+      allocate(NetCDF_input_file(size(input_tensor_file_names)))
+      allocate(input_variable(size(input_component_names), size(NetCDF_input_file)))
+
+      input_variable_files: &
+      associate(num_input_files => size(NetCDF_input_file), num_variables => size(input_variable,1))
+
+        read_input_files: &
+        do f = 1, num_input_files
+
+          print '(a)',"Reading physics-based model inputs from " // input_tensor_file_names(f)%string()
+          NetCDF_input_file(f) = netCDF_file_t(input_tensor_file_names(f))
+
+          read_variables: &
+          do v = 1, num_variables
+            print '(a)',"- reading " // input_component_names(v)%string() // " from " // input_tensor_file_names(f)%string()
+            call input_variable(v,f)%input(input_component_names(v), NetCDF_input_file(f), rank=4)
+            call_julienne_assert(input_variable(v,f)%conformable_with(input_variable(1,f)))
+          end do read_variables
+
+        end do read_input_files
+
+      end associate input_variable_files
+
+    end associate 
+
+      stop "-----> WIP <-------"
 
       input_file_name: &
       associate(input_file_name => args%base_name // "_input.nc")
@@ -188,11 +221,11 @@ contains
 
           do v=1, size(input_variable) 
             print *,"- reading ", input_names(v)%string()
-            call input_variable(v)%input(input_names(v), input_file, rank=4)
+            !call input_variable(v)%input(input_names(v), input_file, rank=4)
           end do
 
           do v = 2, size(input_variable)
-            call_julienne_assert(input_variable(v)%conformable_with(input_variable(1)))
+            !call_julienne_assert(input_variable(v)%conformable_with(input_variable(1)))
           end do
 
           print *,"- reading time"
@@ -205,7 +238,7 @@ contains
     output_names: &
     associate(output_names => training_configuration%output_variable_names())
 
-      allocate(output_variable(size(output_names)))
+      !allocate(output_variable(size(output_names)))
 
       output_file_name: &
       associate(output_file_name => args%base_name // "_output.nc")
@@ -217,11 +250,11 @@ contains
 
           do v=1, size(output_variable)
             print *,"- reading ", output_names(v)%string()
-            call output_variable(v)%input(output_names(v), output_file, rank=4)
+            !call output_variable(v)%input(output_names(v), output_file, rank=4)
           end do
 
           do v = 1, size(output_variable)
-            call_julienne_assert(output_variable(v)%conformable_with(input_variable(1)))
+            !call_julienne_assert(output_variable(v)%conformable_with(input_variable(1)))
           end do
 
           print *,"- reading time"
@@ -242,7 +275,7 @@ contains
           derivative_name: &
           associate(derivative_name => "d" // output_names(v)%string() // "/dt")
             print *,"- " // derivative_name
-            derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=time_data%dt())
+            !derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=time_data%dt())
             call_julienne_assert(.not. derivative(v)%any_nan())
           end associate derivative_name
         end do
@@ -252,11 +285,11 @@ contains
     if (allocated(args%end_step)) then
       end_step = args%end_step
     else
-      end_step = input_variable(1)%end_step()
+      !end_step = input_variable(1)%end_step()
     end if
 
     print *,"Defining input tensors for time step", args%start_step, "through", end_step, "with strides of", args%stride
-    input_tensors  = tensors(input_variable,  step_start = args%start_step, step_end = end_step, step_stride = args%stride)
+    !input_tensors  = tensors(input_variable,  step_start = args%start_step, step_end = end_step, step_stride = args%stride)
 
     print *,"Defining output tensors for time step", args%start_step, "through", end_step, "with strides of", args%stride
     output_tensors = tensors(derivative, step_start = args%start_step, step_end = end_step, step_stride = args%stride)
@@ -292,26 +325,26 @@ contains
 
             print *,"Defining a new network from training_configuration_t and tensor_map_t objects"
 
-            activation: &
-            associate(activation => training_configuration%activation())
-              trainable_network = trainable_network_t( &
-                 training_configuration                &
-                ,perturbation_magnitude = 0.05         &
-                ,metadata = [                          &
-                   string_t("ICAR microphysics" )      &
-                  ,string_t("max-entropy-filter")      &
-                  ,string_t(date                )      &
-                  ,activation%function_name(    )      &
-                  ,string_t(trim(merge("true ", "false", training_configuration%skip_connections()))) &
-                ]                                      &
-                ,input_map  = tensor_map_t(            &
-                   layer    = "inputs"                &
-                  ,minima   = [( input_variable(v)%minimum(),  v=1, size( input_variable) )] &
-                  ,maxima   = [( input_variable(v)%maximum(),  v=1, size( input_variable) )] &
-                )                        &
-                ,output_map = output_map &
-              )
-            end associate activation
+            !activation: &
+            !associate(activation => training_configuration%activation())
+            !  trainable_network = trainable_network_t( &
+            !     training_configuration                &
+            !    ,perturbation_magnitude = 0.05         &
+            !    ,metadata = [                          &
+            !       string_t("ICAR microphysics" )      &
+            !      ,string_t("max-entropy-filter")      &
+            !      ,string_t(date                )      &
+            !      ,activation%function_name(    )      &
+            !      ,string_t(trim(merge("true ", "false", training_configuration%skip_connections()))) &
+            !    ]                                      &
+            !    ,input_map  = tensor_map_t(            &
+            !       layer    = "inputs"                &
+            !      ,minima   = [( input_variable(v)%minimum(),  v=1, size( input_variable) )] &
+            !      ,maxima   = [( input_variable(v)%maximum(),  v=1, size( input_variable) )] &
+            !    )                        &
+            !    ,output_map = output_map &
+            !  )
+            !end associate activation
           end block initialize_network
 
         end if read_or_initialize_network
