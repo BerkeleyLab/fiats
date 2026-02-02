@@ -26,6 +26,8 @@ module NetCDF_variable_m
     procedure, private, non_overridable :: default_real_conformable_with, double_precision_conformable_with
     generic :: rank                     => default_real_rank            , double_precision_rank
     procedure, private, non_overridable :: default_real_rank            , double_precision_rank
+    generic :: start_step               => default_real_start_step      , double_precision_start_step
+    procedure, private, non_overridable :: default_real_start_step      , double_precision_start_step
     generic :: end_step                 => default_real_end_step        , double_precision_end_step
     procedure, private, non_overridable :: default_real_end_step        , double_precision_end_step
     generic :: any_nan                  => default_real_any_nan         , double_precision_any_nan
@@ -143,6 +145,18 @@ module NetCDF_variable_m
       implicit none
       class(NetCDF_variable_t(double_precision)), intent(in) :: self
       integer my_rank
+    end function
+
+    elemental module function default_real_start_step(self) result(start_step)
+      implicit none
+      class(NetCDF_variable_t), intent(in) :: self
+      integer start_step
+    end function
+
+    elemental module function double_precision_start_step(self) result(start_step)
+      implicit none
+      class(NetCDF_variable_t(double_precision)), intent(in) :: self
+      integer start_step
     end function
 
     elemental module function default_real_end_step(self) result(end_step)
