@@ -3,7 +3,7 @@
          "path" : "fiats-training-data",
          "inputs prefix"  : "training_input-image-_",
          "outputs prefix" : "training_output-image-_",
-         "infixes" : ["450", "500"]
+         "infixes" : ["0", "100", "150", "200", "250", "300", "350", "400", "450", "500", "550"]
      }
  }
 

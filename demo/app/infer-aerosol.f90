@@ -139,6 +139,10 @@ contains
             aug_v(i,j,k) = basis(j,k)
           end do
 
+          do concurrent(integer :: i=1:size(trunk_outputs,1))
+            aug_v(i,:,:) = basis(:,:)
+          end do
+
           allocate(aug_trunk(size(trunk_outputs,1), size(basis,1), size(basis,2)+1))
           aug_trunk(:,:,1:size(basis,2)) = aug_v(:,:,1:size(basis,2))
 
