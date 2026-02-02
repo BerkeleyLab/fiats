@@ -203,6 +203,7 @@ contains
       end associate count_files_and_variables
     end associate input_variable_files
 
+    output_variable_and_time_files: &
     associate( &
        output_tensor_file_names => training_data_files%fully_qualified_outputs_files() &
       ,output_component_names   => training_configuration%output_variable_names() &
@@ -244,94 +245,21 @@ contains
           end do read_files
 
         end associate read_times
-
       end associate output_file_and_variable_count
-
-    end associate 
-
-      stop "-----> WIP <-------"
-
-    input_names: &
-    associate(input_names => training_configuration%input_variable_names())
-
-      input_file_name: &
-      associate(input_file_name => args%base_name // "_input.nc")
-
-        print *,"Reading physics-based model inputs from " // input_file_name 
-
-        input_file: &
-        associate(input_file => netCDF_file_t(input_file_name))
-
-          do v=1, size(input_variable) 
-            print *,"- reading ", input_names(v)%string()
-            !call input_variable(v)%input(input_names(v), input_file, rank=4)
-          end do
-
-          do v = 2, size(input_variable)
-            !call_julienne_assert(input_variable(v)%conformable_with(input_variable(1)))
-          end do
-
-          print *,"- reading time"
-          call input_time%input("time", input_file, rank=1)
-
-        end associate input_file
-      end associate input_file_name
-    end associate input_names
-
-    output_names: &
-    associate(output_names => training_configuration%output_variable_names())
-
-      !allocate(output_variable(size(output_names)))
-
-      output_file_name: &
-      associate(output_file_name => args%base_name // "_output.nc")
-
-        print *,"Reading physics-based model outputs from " // output_file_name 
-
-        output_file: &
-        associate(output_file => netCDF_file_t(output_file_name))
-
-          do v=1, size(output_variable)
-            print *,"- reading ", output_names(v)%string()
-            !call output_variable(v)%input(output_names(v), output_file, rank=4)
-          end do
-
-          do v = 1, size(output_variable)
-            !call_julienne_assert(output_variable(v)%conformable_with(input_variable(1)))
-          end do
-
-          print *,"- reading time"
-          call output_time%input("time", output_file, rank=1)
-
-          call_julienne_assert(output_time%conformable_with(input_time))
-
-        end associate output_file
-      end associate output_file_name
-
-      print *,"Calculating desired neural-network model outputs"
-
-      !allocate(derivative(size(output_variable)))
-
-      !print '(a)',"- reading time from JSON file"
-      !associate(time_data => time_data_t(file_t(training_data_files%fully_qualified_time_file())))
-      !  do v = 1, size(derivative)
-      !    derivative_name: &
-      !    associate(derivative_name => "d" // output_names(v)%string() // "/dt")
-      !      print *,"- " // derivative_name
-      !      !derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=time_data%dt())
-      !      call_julienne_assert(.not. derivative(v)%any_nan())
-      !    end associate derivative_name
-      !  end do
-      !end associate
-    end associate output_names
+    end associate output_variable_and_time_files
 
     if (allocated(args%end_step)) then
       end_step = args%end_step
     else
-      !end_step = input_variable(1)%end_step()
+      end_step = input_variable(1,1)%end_step()
     end if
 
-    print *,"Defining input tensors for time step", args%start_step, "through", end_step, "with strides of", args%stride
+    associate(num_steps => sum( (input_variable(1,:)%end_step()+1) - input_variable(1,:)%start_step()))
+      print *,"Defining input tensors for ", num_steps, "time steps"
+    end associate
+
+    stop "-----> WIP <-------"
+
     !input_tensors  = tensors(input_variable,  step_start = args%start_step, step_end = end_step, step_stride = args%stride)
 
     print *,"Defining output tensors for time step", args%start_step, "through", end_step, "with strides of", args%stride
