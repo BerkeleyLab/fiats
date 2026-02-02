@@ -236,69 +236,73 @@ contains
       print *,"Defining input tensors for ", num_steps, "time steps"
     end associate
 
+    input_tensors  = tensors(input_variable)
+
+    associate(num_steps => sum( (derivative(1,:)%end_step()+1) - derivative(1,:)%start_step()))
+      print *,"Defining output tensors for ", num_steps, "time steps"
+    end associate
+
+    output_tensors = tensors(derivative)
+
+    output_map_and_network_file:  &
+    associate(                    &
+      output_map => tensor_map_t( &
+         layer    = "outputs"     &
+        ,minima   = [( [( derivative(v,f)%minimum(), v=1, size(derivative,1) )], f = 1, size(derivative,2) )] &
+        ,maxima   = [( [( derivative(v,f)%maximum(), v=1, size(derivative,1) )], f = 1, size(derivative,2) )] &
+      ), &
+      network_file => args%base_name // "_network.json" &
+    )
+
     stop "-----> WIP <-------"
 
-    !input_tensors  = tensors(input_variable,  step_start = args%start_step, step_end = end_step, step_stride = args%stride)
+      check_for_network_file: &
+      block
+        logical preexisting_network_file
 
-    !print *,"Defining output tensors for time step", args%start_step, "through", end_step, "with strides of", args%stride
-    !output_tensors = tensors(derivative, step_start = args%start_step, step_end = end_step, step_stride = args%stride)
+        inquire(file=network_file, exist=preexisting_network_file)
 
-    !output_map_and_network_file:  &
-    !associate(                    &
-    !  output_map => tensor_map_t( &
-    !     layer    = "outputs"     &
-    !    ,minima   = [( derivative(v)%minimum(), v=1, size(derivative) )] &
-    !    ,maxima   = [( derivative(v)%maximum(), v=1, size(derivative) )] &
-    !  ), &
-    !  network_file => args%base_name // "_network.json" &
-    !)
-    !  check_for_network_file: &
-    !  block
-    !    logical preexisting_network_file
+        read_or_initialize_network:   &
+        if (preexisting_network_file) then
+          print *,"Reading network from file " // network_file
+          trainable_network = trainable_network_t(file_t(string_t(network_file)))
+          close(network_unit)
+        else
+          close(network_unit)
 
-    !    inquire(file=network_file, exist=preexisting_network_file)
+          initialize_network: &
+          block
+            character(len=len('YYYYMMDD')) date
 
-    !    read_or_initialize_network:   &
-    !    if (preexisting_network_file) then
-    !      print *,"Reading network from file " // network_file
-    !      trainable_network = trainable_network_t(file_t(string_t(network_file)))
-    !      close(network_unit)
-    !    else
-    !      close(network_unit)
+            call date_and_time(date)
 
-    !      initialize_network: &
-    !      block
-    !        character(len=len('YYYYMMDD')) date
+            print *,"Defining a new network from training_configuration_t and tensor_map_t objects"
 
-    !        call date_and_time(date)
+            activation: &
+            associate(activation => training_configuration%activation())
+    !          trainable_network = trainable_network_t( &
+    !             training_configuration                &
+    !            ,perturbation_magnitude = 0.05         &
+    !            ,metadata = [                          &
+    !               string_t("ICAR microphysics" )      &
+    !              ,string_t("max-entropy-filter")      &
+    !              ,string_t(date                )      &
+    !              ,activation%function_name(    )      &
+    !              ,string_t(trim(merge("true ", "false", training_configuration%skip_connections()))) &
+    !            ]                                      &
+    !            ,input_map  = tensor_map_t(            &
+    !               layer    = "inputs"                &
+    !              ,minima   = [( input_variable(v)%minimum(),  v=1, size( input_variable) )] &
+    !              ,maxima   = [( input_variable(v)%maximum(),  v=1, size( input_variable) )] &
+    !            )                        &
+    !            ,output_map = output_map &
+    !          )
+            end associate activation
+          end block initialize_network
 
-    !        print *,"Defining a new network from training_configuration_t and tensor_map_t objects"
+        end if read_or_initialize_network
 
-    !        !activation: &
-    !        !associate(activation => training_configuration%activation())
-    !        !  trainable_network = trainable_network_t( &
-    !        !     training_configuration                &
-    !        !    ,perturbation_magnitude = 0.05         &
-    !        !    ,metadata = [                          &
-    !        !       string_t("ICAR microphysics" )      &
-    !        !      ,string_t("max-entropy-filter")      &
-    !        !      ,string_t(date                )      &
-    !        !      ,activation%function_name(    )      &
-    !        !      ,string_t(trim(merge("true ", "false", training_configuration%skip_connections()))) &
-    !        !    ]                                      &
-    !        !    ,input_map  = tensor_map_t(            &
-    !        !       layer    = "inputs"                &
-    !        !      ,minima   = [( input_variable(v)%minimum(),  v=1, size( input_variable) )] &
-    !        !      ,maxima   = [( input_variable(v)%maximum(),  v=1, size( input_variable) )] &
-    !        !    )                        &
-    !        !    ,output_map = output_map &
-    !        !  )
-    !        !end associate activation
-    !      end block initialize_network
-
-    !    end if read_or_initialize_network
-
-    !  end block  check_for_network_file
+      end block  check_for_network_file
 
     !  print *, "Conditionally sampling for a flat distribution of output values"
 
@@ -418,7 +422,7 @@ contains
     !    end block train_write_and_maybe_exit
 
     !  end associate training_parameters
-    !end associate output_map_and_network_file
+    end associate output_map_and_network_file
 
     call system_clock(finish_training)
     print *,"Training time: ", real(finish_training - start_training, real64)/real(clock_rate, real64),"for", &

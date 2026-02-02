@@ -219,11 +219,10 @@ module NetCDF_variable_m
       real maximum
     end function
 
-    module function tensors(NetCDF_variables, step_start, step_end, step_stride)
+    module function tensors(NetCDF_variables)
       implicit none
-      class(NetCDF_variable_t), intent(in) :: NetCDF_variables(:)
+      class(NetCDF_variable_t), intent(in) :: NetCDF_variables(:,:)
       type(tensor_t), allocatable :: tensors(:)
-      integer, optional :: step_start, step_end, step_stride
     end function
 
     elemental module function default_real_end_time(self) result(end_time)
