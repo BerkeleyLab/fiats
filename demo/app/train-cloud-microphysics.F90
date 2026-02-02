@@ -174,20 +174,15 @@ contains
     integer(int64) start_training, finish_training
     logical stop_requested
 
-    input_names: &
-    associate(input_names => training_configuration%input_variable_names())
-
+    input_variable_files: &
     associate( &
        input_tensor_file_names  => training_data_files%fully_qualified_inputs_files() &
-      ,output_tensor_file_names => training_data_files%fully_qualified_outputs_files() &
-      ,time_data_file_name      => training_data_files%fully_qualified_time_file() &
       ,input_component_names    => training_configuration%input_variable_names() &
-      ,output_component_names   => training_configuration%output_variable_names() &
     ) 
       allocate(NetCDF_input_file(size(input_tensor_file_names)))
       allocate(input_variable(size(input_component_names), size(NetCDF_input_file)))
 
-      input_variable_files: &
+      count_files_and_variables: &
       associate(num_input_files => size(NetCDF_input_file), num_variables => size(input_variable,1))
 
         read_input_files: &
@@ -205,11 +200,33 @@ contains
 
         end do read_input_files
 
-      end associate input_variable_files
+      end associate count_files_and_variables
+    end associate input_variable_files
+
+    associate( &
+       output_tensor_file_names => training_data_files%fully_qualified_outputs_files() &
+      ,output_component_names   => training_configuration%output_variable_names() &
+      ,time_data_file_name      => training_data_files%fully_qualified_time_file() &
+    ) 
+      allocate(NetCDF_output_file(size(output_tensor_file_names)))
+      allocate(output_variable(size(output_component_names), size(NetCDF_output_file)))
+
+      output_file_and_variable_count: &
+      associate(num_output_files => size(NetCDF_output_file), num_output_variables => size(output_variable,1))
+
+        print '(a)',"- reading time from JSON file"
+        associate(time_data => time_data_t(file_t(time_data_file_name)))
+
+        end associate
+
+      end associate output_file_and_variable_count
 
     end associate 
 
       stop "-----> WIP <-------"
+
+    input_names: &
+    associate(input_names => training_configuration%input_variable_names())
 
       input_file_name: &
       associate(input_file_name => args%base_name // "_input.nc")
