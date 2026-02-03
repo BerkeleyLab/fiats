@@ -29,14 +29,13 @@ program train_cloud_microphysics
   character(len=*), parameter :: usage =                                                          new_line('') // new_line('') // &
     'Usage: ' //                                                                                  new_line('') // new_line('') // &
     './build/run-fpm.sh run train-cloud-microphysics -- \'                                                     // new_line('') // &
-    '  --base <string> --epochs <integer> \'                                                                   // new_line('') // &
-    '  [--start <integer>] [--end <integer>] [--stride <integer>] [--bins <integer>] [--report <integer>] [--tolerance <real>]'// &
+    '  --base <string> --epochs <integer> [--bins <integer>] [--report <integer>] [--tolerance <real>] '       // new_line('') // &
                                                                                                   new_line('') // new_line('') // &
     'where angular brackets denote user-provided values and square brackets denote optional arguments.'        // new_line('') // &
     'The presence of a file named "stop" halts execution gracefully.'                                          // new_line('')
 
   type command_line_arguments_t 
-    integer num_epochs, stride, num_bins, report_step
+    integer num_epochs, num_bins, report_step
     character(len=:), allocatable :: base_name
     real cost_tolerance
   end type
@@ -109,15 +108,12 @@ contains
     type(command_line_arguments_t) command_line_arguments
     type(command_line_t) command_line
     character(len=:), allocatable :: &
-      base_name, epochs_string, start_string, end_string, stride_string, bins_string, report_string, tolerance_string
+      base_name, epochs_string, bins_string, report_string, tolerance_string
     real cost_tolerance
-    integer num_epochs, num_bins, stride, report_step
+    integer num_epochs, num_bins, report_step
 
     base_name = command_line%flag_value("--base")
     epochs_string = command_line%flag_value("--epochs")
-    start_string = command_line%flag_value("--start")
-    end_string = command_line%flag_value("--end")
-    stride_string = command_line%flag_value("--stride")
     bins_string = command_line%flag_value("--bins")
     report_string = command_line%flag_value("--report")
     tolerance_string = command_line%flag_value("--tolerance")
@@ -128,12 +124,11 @@ contains
 
     read(epochs_string,*) num_epochs
 
-    stride         = default_or_internal_read(1,    stride_string)
     report_step    = default_or_internal_read(1,    report_string)
     num_bins       = default_or_internal_read(3,      bins_string)
     cost_tolerance = default_or_internal_read(5E-8, tolerance_string)
 
-    command_line_arguments = command_line_arguments_t(num_epochs, stride, num_bins, report_step, base_name, cost_tolerance)
+    command_line_arguments = command_line_arguments_t(num_epochs, num_bins, report_step, base_name, cost_tolerance)
 
   end function get_command_line_arguments
 
