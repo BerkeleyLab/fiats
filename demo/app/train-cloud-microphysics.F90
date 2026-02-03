@@ -1,6 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
+#include "fiats-language-support.F90"
 #include "julienne-assert-macros.h"
 
 program train_cloud_microphysics
@@ -48,16 +49,15 @@ program train_cloud_microphysics
   integer(int64) t_start, t_finish, clock_rate
 
   call system_clock(t_start, clock_rate)
-  
   associate( &
      training_configuration => training_configuration_t(file_t("training_configuration.json")) &
     ,training_data_files => training_data_files_t(file_t("training_data_files.json")) &
   )
-#if defined(MULTI_IMAGE_SUPPORT)
+#if defined(FIATS_MULTI_IMAGE_SUPPORT)
     if (this_image()==1) then
 #endif
       call read_train_write(training_configuration, training_data_files, get_command_line_arguments(), create_or_append_to("cost.plt"))
-#if defined(MULTI_IMAGE_SUPPORT)
+#if defined(FIATS_MULTI_IMAGE_SUPPORT)
     else
       call read_train_write(training_configuration, training_data_files, get_command_line_arguments())
     end if
@@ -301,127 +301,135 @@ contains
         end if read_or_initialize_network
       end block  check_for_network_file
 
-    !  print *, "Conditionally sampling for a flat distribution of output values"
+      print *, "Conditionally sampling for a flat distribution of output values"
 
-    !  flatten_histogram: &
-    !  block
-    !    integer i
-    !    logical occupied(args%num_bins, args%num_bins)
-    !    logical keepers(size(output_tensors))
-    !    type(phase_space_bin_t), allocatable :: bin(:)
-    !    type(occupancy_t) occupancy
-
-    !    ! Determine the phase-space bin that holds each output tensor
-    !    associate(output_minima => output_map%minima(), output_maxima => output_map%maxima())
-    !      bin = [(phase_space_bin_t(output_tensors(i), output_minima, output_maxima, args%num_bins), i = 1, size(output_tensors))]
-    !    end associate
-
-    !    call occupancy%vacate( dims = [( args%num_bins, i = 1, size(output_variable))] )
-
-    !    keepers = .false.
-
-    !    do i = 1, size(output_tensors)
-    !      if (occupancy%occupied(bin(i)%loc)) cycle
-    !      call occupancy%occupy(bin(i)%loc)
-    !      keepers(i) = .true.
-    !    end do
-
-    !    input_output_pairs = input_output_pair_t(pack(input_tensors, keepers), pack(output_tensors, keepers))
-
-    !    print '(*(a,i))' &
-    !     ," Keeping "              , size(input_output_pairs, kind=int64) &
-    !     ," out of "               , size(output_tensors, kind=int64)     &
-    !     ," input/output pairs in ", occupancy%num_occupied()             &
-    !     ," out of "               , occupancy%num_bins()                 &
-    !     ," bins."
-
-    !  end block flatten_histogram
-
-    !  print *,"Normalizing the remaining input and output tensors"
-    !  input_output_pairs = trainable_network%map_to_training_ranges(input_output_pairs)
-
-    !  training_parameters: &
-    !  associate( &
-    !    num_pairs => size(input_output_pairs), &
-    !    n_bins => training_configuration%mini_batches(), &
-    !    adam => merge(.true., .false., training_configuration%optimizer_name() == "adam"), &
-    !    learning_rate => training_configuration%learning_rate() &
-    !  )
-    !    bins = [(bin_t(num_items=num_pairs, num_bins=n_bins, bin_number=b), b = 1, n_bins)]
-
-    !    print *,"Training network"
-    !    print *, "       Epoch  Cost (avg)"
-
-    !    call system_clock(start_training)
-    !  
-    !    train_write_and_maybe_exit: &
-    !    block
-    !      integer first_epoch
-    !      integer me
-#if !defined(MULTI_IMAGE_SUPPORT)
-    !      me = this_image()
+      flatten_histogram: &
+      block
+        integer i
+        logical occupied(args%num_bins, args%num_bins)
+        type(phase_space_bin_t), allocatable :: bin(:)
+        type(occupancy_t) occupancy
+#if !defined(__flang__)
+        logical keepers(size(output_tensors))
+        keepers = .false.
 #else
-    !      me = 1
+        logical, allocatable :: keepers(:)
+        allocate(keepers(size(output_tensors)), source = .false.)
 #endif
-    !      if (me==1) first_epoch = plot_file%previous_epoch + 1
-#if !defined(MULTI_IMAGE_SUPPORT)
-    !      call co_broadcast(first_epoch, source_image=1)
+
+        print *, "Determine the phase-space bin that holds each output tensor"
+        ! Determine the phase-space bin that holds each output tensor
+        associate(output_minima => output_map%minima(), output_maxima => output_map%maxima())
+          bin = [(phase_space_bin_t(output_tensors(i), output_minima, output_maxima, args%num_bins), i = 1, size(output_tensors))]
+        end associate
+
+        call occupancy%vacate( dims = [( args%num_bins, i = 1, size(derivative,1))] )
+
+        print *, "Populate bins"
+        do i = 1, size(output_tensors)
+          if (occupancy%occupied(bin(i)%loc)) cycle
+          call occupancy%occupy(bin(i)%loc)
+          keepers(i) = .true.
+        end do
+
+        print *, "Pack remaining input/output tensor pairs"
+        input_output_pairs = input_output_pair_t(pack(input_tensors, keepers), pack(output_tensors, keepers))
+
+        print '(*(a,i))' &
+         ," Keeping "              , size(input_output_pairs, kind=int64) &
+         ," out of "               , size(output_tensors, kind=int64)     &
+         ," input/output pairs in ", occupancy%num_occupied()             &
+         ," out of "               , occupancy%num_bins()                 &
+         ," bins."
+
+      end block flatten_histogram
+
+      print *,"Normalizing the remaining input and output tensors"
+      input_output_pairs = trainable_network%map_to_training_ranges(input_output_pairs)
+
+      training_parameters: &
+      associate( &
+        num_pairs => size(input_output_pairs), &
+        n_bins => training_configuration%mini_batches(), &
+        adam => merge(.true., .false., training_configuration%optimizer_name() == "adam"), &
+        learning_rate => training_configuration%learning_rate() &
+      )
+        bins = [(bin_t(num_items=num_pairs, num_bins=n_bins, bin_number=b), b = 1, n_bins)]
+
+        print *,"Training network"
+        print *, "       Epoch  Cost (avg)"
+
+        call system_clock(start_training)
+
+        train_write_and_maybe_exit: &
+        block
+          integer first_epoch
+          integer me
+#if defined(FIATS_MULTI_IMAGE_SUPPORT)
+          me = this_image()
+#else
+          me = 1
 #endif
-    !      last_epoch: &
-    !      associate(last_epoch => first_epoch + args%num_epochs - 1)
-    !        epochs: &
-    !        do epoch = first_epoch, last_epoch
+          if (me==1) first_epoch = plot_file%previous_epoch + 1
+#if defined(FIATS_MULTI_IMAGE_SUPPORT)
+          call co_broadcast(first_epoch, source_image=1)
+#endif
+          last_epoch: &
+          associate(last_epoch => first_epoch + args%num_epochs - 1)
+            epochs: &
+            do epoch = first_epoch, last_epoch
 
-    !          if (size(bins)>1) call shuffle(input_output_pairs) ! set up for stochastic gradient descent
-    !          mini_batches = [(mini_batch_t(input_output_pairs(bins(b)%first():bins(b)%last())), b = 1, size(bins))]
+              if (size(bins)>1) call shuffle(input_output_pairs) ! set up for stochastic gradient descent
+              mini_batches = [(mini_batch_t(input_output_pairs(bins(b)%first():bins(b)%last())), b = 1, size(bins))]
 
-    !          call trainable_network%train(mini_batches, cost, adam, learning_rate)
+              call trainable_network%train(mini_batches, cost, adam, learning_rate)
 
-    !          average_cost: &
-    !          associate(average_cost => sum(cost)/size(cost))
-    !            converged: &
-    !            associate(converged => average_cost <= args%cost_tolerance)
+              average_cost: &
+              associate(average_cost => sum(cost)/size(cost))
+                converged: &
+                associate(converged => average_cost <= args%cost_tolerance)
 
-    !              image_1_maybe_writes: &
-    !              if (me==1 .and. any([converged, epoch==[first_epoch,last_epoch], mod(epoch,args%report_step)==0])) then
+                  image_1_maybe_writes: &
+                  if (me==1 .and. any([converged, epoch==[first_epoch,last_epoch], mod(epoch,args%report_step)==0])) then
 
-    !                !print '(*(g0,4x))', epoch, average_cost
-    !                write(plot_file%plot_unit,'(*(g0,4x))') epoch, average_cost
+                    !print '(*(g0,4x))', epoch, average_cost
+                    write(plot_file%plot_unit,'(*(g0,4x))') epoch, average_cost
 
-    !                associate(json_file => trainable_network%to_json())
-    !                  call json_file%write_lines(string_t(network_file))
-    !                end associate
+                    associate(json_file => trainable_network%to_json())
+                      call json_file%write_lines(string_t(network_file))
+                    end associate
 
-    !              end if image_1_maybe_writes
+                  end if image_1_maybe_writes
 
-    !              signal_convergence: & 
-    !              if (converged) then
-    !                block
-    !                  integer unit
-    !                  open(newunit=unit, file="converged", status="unknown") ! The train.sh script detects & removes this file.
-    !                  close(unit)
-    !                  exit epochs
-    !                end block
-    !              end if signal_convergence
-    !            end associate converged
-    !          end associate average_cost
+                  signal_convergence: &
+                  if (converged) then
+                    block
+                      integer unit
+                      open(newunit=unit, file="converged", status="unknown") ! The train.sh script detects & removes this file.
+                      close(unit)
+                      exit epochs
+                    end block
+                  end if signal_convergence
+                end associate converged
+              end associate average_cost
 
-    !          inquire(file="stop", exist=stop_requested)
+              inquire(file="stop", exist=stop_requested)
 
-    !          graceful_exit: &
-    !          if (stop_requested) then
-    !            print *,'Shutting down because a file named "stop" was found.'
-    !            return
-    !          end if graceful_exit
+              graceful_exit: &
+              if (stop_requested) then
+                print *,'Shutting down because a file named "stop" was found.'
+                return
+              end if graceful_exit
 
-    !        end do epochs
-    !      end associate last_epoch
-    !    end block train_write_and_maybe_exit
+            end do epochs
+          end associate last_epoch
+        end block train_write_and_maybe_exit
 
-    !  end associate training_parameters
+      end associate training_parameters
     end associate output_map_and_network_file
 
     call system_clock(finish_training)
+
     print *,"Training time: ", real(finish_training - start_training, real64)/real(clock_rate, real64),"for", &
       args%num_epochs,"epochs"
     close(plot_file%plot_unit)

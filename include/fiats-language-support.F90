@@ -1,6 +1,9 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
+#ifndef FIATS_LANGUAGE_SUPPORT
+#define FIATS_LANGUAGE_SUPPORT
+
 #ifndef F2023_LOCALITY
 #if defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 202400)
 # define F2023_LOCALITY 1
@@ -17,4 +20,6 @@
 #if defined(_CRAYFTN) || defined(__GFORTRAN__) || defined(__INTEL_COMPILER) || defined(NAGFOR)
 # define MULTI_IMAGE_SUPPORT 1
 #endif
+#endif
+
 #endif
