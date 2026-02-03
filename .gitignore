@@ -40,3 +40,11 @@
 # Graphics
 *.plt
 *.png
+
+# archives and compressed files
+*.gz
+*.bz2
+*.tar
+*.tbz2
+*.tgz
+*.zip

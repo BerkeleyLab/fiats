@@ -1,6 +1,6 @@
 name = "Fiats-Demonstration-Applications"
 
 [dependencies]
-julienne = {git = "https://github.com/berkeleylab/julienne", tag = "3.2.1"}
+julienne = {git = "https://github.com/berkeleylab/julienne", tag = "3.6.1"}
 fiats = {path = "../"}
 netcdf-interfaces = {git = "https://github.com/berkeleylab/netcdf-interfaces.git", rev = "d2bbb71ac52b4e346b62572b1ca1620134481096"}

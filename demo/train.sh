@@ -1,6 +1,16 @@
 #!/bin/bash
-min_bins=$1
-max_bins=$2
+
+set -e # exit if any simple command returns a non-zero exit code
+
+min_bins=${1:-3}
+max_bins=${2:-4}
+executable=${3:-"train-cloud-microphysics"}
+
+if [ ! -x $executable ]; then
+  printf "\n $executable not found or not executable.  Search ./build and, if you find $executable, create a soft link to it in this directory.\n\n"
+  exit 1
+fi
+
 let subfloor=$min_bins-1
 j=subfloor
 while (( j++ < max_bins )); do
@@ -19,7 +29,7 @@ while (( j++ < max_bins )); do
 
    echo ""
    echo "---------> Run $i <---------"
-   ./train-cloud-microphysics --base training --epochs 1000000 --bins $j --report 1000 --start 360 --stride 10 --tolerance "5.0E-08"
+   ./"$executable" --base fiats-training-data/training --epochs 1000000 --bins $j --report 1000 --tolerance "5.0E-08"
 
    if [ -f converged ]; then
      echo ""

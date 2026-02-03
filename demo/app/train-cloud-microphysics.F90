@@ -1,6 +1,7 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
+#include "fiats-language-support.F90"
 #include "julienne-assert-macros.h"
 
 program train_cloud_microphysics
@@ -28,15 +29,13 @@ program train_cloud_microphysics
   character(len=*), parameter :: usage =                                                          new_line('') // new_line('') // &
     'Usage: ' //                                                                                  new_line('') // new_line('') // &
     './build/run-fpm.sh run train-cloud-microphysics -- \'                                                     // new_line('') // &
-    '  --base <string> --epochs <integer> \'                                                                   // new_line('') // &
-    '  [--start <integer>] [--end <integer>] [--stride <integer>] [--bins <integer>] [--report <integer>] [--tolerance <real>]'// &
+    '  --base <string> --epochs <integer> [--bins <integer>] [--report <integer>] [--tolerance <real>] '       // new_line('') // &
                                                                                                   new_line('') // new_line('') // &
     'where angular brackets denote user-provided values and square brackets denote optional arguments.'        // new_line('') // &
     'The presence of a file named "stop" halts execution gracefully.'                                          // new_line('')
 
   type command_line_arguments_t 
-    integer num_epochs, start_step, stride, num_bins, report_step
-    integer, allocatable :: end_step
+    integer num_epochs, num_bins, report_step
     character(len=:), allocatable :: base_name
     real cost_tolerance
   end type
@@ -49,16 +48,15 @@ program train_cloud_microphysics
   integer(int64) t_start, t_finish, clock_rate
 
   call system_clock(t_start, clock_rate)
-  
   associate( &
      training_configuration => training_configuration_t(file_t("training_configuration.json")) &
     ,training_data_files => training_data_files_t(file_t("training_data_files.json")) &
   )
-#if defined(MULTI_IMAGE_SUPPORT)
+#if defined(FIATS_MULTI_IMAGE_SUPPORT)
     if (this_image()==1) then
 #endif
       call read_train_write(training_configuration, training_data_files, get_command_line_arguments(), create_or_append_to("cost.plt"))
-#if defined(MULTI_IMAGE_SUPPORT)
+#if defined(FIATS_MULTI_IMAGE_SUPPORT)
     else
       call read_train_write(training_configuration, training_data_files, get_command_line_arguments())
     end if
@@ -110,16 +108,12 @@ contains
     type(command_line_arguments_t) command_line_arguments
     type(command_line_t) command_line
     character(len=:), allocatable :: &
-      base_name, epochs_string, start_string, end_string, stride_string, bins_string, report_string, tolerance_string
+      base_name, epochs_string, bins_string, report_string, tolerance_string
     real cost_tolerance
-    integer, allocatable :: end_step
-    integer num_epochs, num_bins, start_step, stride, report_step
+    integer num_epochs, num_bins, report_step
 
     base_name = command_line%flag_value("--base")
     epochs_string = command_line%flag_value("--epochs")
-    start_string = command_line%flag_value("--start")
-    end_string = command_line%flag_value("--end")
-    stride_string = command_line%flag_value("--stride")
     bins_string = command_line%flag_value("--bins")
     report_string = command_line%flag_value("--report")
     tolerance_string = command_line%flag_value("--tolerance")
@@ -130,27 +124,12 @@ contains
 
     read(epochs_string,*) num_epochs
 
-    stride         = default_or_internal_read(1,    stride_string)
-    start_step     = default_or_internal_read(1,     start_string)
     report_step    = default_or_internal_read(1,    report_string)
     num_bins       = default_or_internal_read(3,      bins_string)
     cost_tolerance = default_or_internal_read(5E-8, tolerance_string)
 
-    if (len(end_string)/=0) then
-      allocate(end_step)
-      read(end_string,*) end_step
-    end if
- 
-    if (allocated(end_step)) then 
-      command_line_arguments = command_line_arguments_t( &
-        num_epochs, start_step, stride, num_bins, report_step, end_step, base_name, cost_tolerance &
-      )
-    else
-      command_line_arguments = command_line_arguments_t( &
-        num_epochs, start_step, stride, num_bins, report_step, null(), base_name, cost_tolerance &
-      )
-    end if
-    
+    command_line_arguments = command_line_arguments_t(num_epochs, num_bins, report_step, base_name, cost_tolerance)
+
   end function get_command_line_arguments
 
   subroutine read_train_write(training_configuration, training_data_files, args, plot_file)
@@ -158,9 +137,10 @@ contains
     type(training_data_files_t), intent(in) :: training_data_files
     type(command_line_arguments_t), intent(in) :: args
     type(plot_file_t), intent(in), optional :: plot_file 
-    type(NetCDF_variable_t), allocatable :: input_variable(:), output_variable(:)
-    type(time_derivative_t), allocatable :: derivative(:)
+    type(time_derivative_t), allocatable, dimension(:,:) :: derivative
+    type(NetCDF_variable_t), allocatable, dimension(:,:) :: input_variable, output_variable
     type(NetCDF_variable_t) input_time, output_time
+    type(NetCDF_file_t)    , allocatable, dimension(:)   :: NetCDF_input_file, NetCDF_output_file
 
     ! local variables:
     type(trainable_network_t) trainable_network
@@ -169,107 +149,106 @@ contains
     type(input_output_pair_t), allocatable :: input_output_pairs(:)
     type(tensor_t), allocatable, dimension(:) :: input_tensors, output_tensors
     real, allocatable :: cost(:)
-    integer i, network_unit, io_status, epoch, end_step, t, b, t_end, v
+    integer f, v, network_unit, io_status, epoch, t, b, t_end
     integer(int64) start_training, finish_training
     logical stop_requested
 
-    input_names: &
-    associate(input_names => training_configuration%input_variable_names())
+    input_variable_files: &
+    associate( &
+       input_tensor_file_names  => training_data_files%fully_qualified_inputs_files() &
+      ,input_component_names    => training_configuration%input_variable_names() &
+    ) 
+      allocate(NetCDF_input_file(size(input_tensor_file_names)))
+      allocate(input_variable(size(input_component_names), size(NetCDF_input_file)))
 
-      allocate(input_variable(size(input_names)))
+      count_files_and_variables: &
+      associate(num_input_files => size(NetCDF_input_file), num_variables => size(input_variable,1))
 
-      input_file_name: &
-      associate(input_file_name => args%base_name // "_input.nc")
+        read_input_files: &
+        do f = 1, num_input_files
 
-        print *,"Reading physics-based model inputs from " // input_file_name 
+          print '(a)',"Reading physics-based model inputs from " // input_tensor_file_names(f)%string()
+          NetCDF_input_file(f) = netCDF_file_t(input_tensor_file_names(f))
 
-        input_file: &
-        associate(input_file => netCDF_file_t(input_file_name))
+          read_variables: &
+          do v = 1, num_variables
+            print '(a)',"- reading " // input_component_names(v)%string() // " from " // input_tensor_file_names(f)%string()
+            call input_variable(v,f)%input(input_component_names(v), NetCDF_input_file(f), rank=4)
+            call_julienne_assert(input_variable(v,f)%conformable_with(input_variable(1,f)))
+          end do read_variables
 
-          do v=1, size(input_variable) 
-            print *,"- reading ", input_names(v)%string()
-            call input_variable(v)%input(input_names(v), input_file, rank=4)
-          end do
+        end do read_input_files
 
-          do v = 2, size(input_variable)
-            call_julienne_assert(input_variable(v)%conformable_with(input_variable(1)))
-          end do
+      end associate count_files_and_variables
+    end associate input_variable_files
 
-          print *,"- reading time"
-          call input_time%input("time", input_file, rank=1)
+    output_variable_and_time_files: &
+    associate( &
+       output_tensor_file_names => training_data_files%fully_qualified_outputs_files() &
+      ,output_component_names   => training_configuration%output_variable_names() &
+      ,time_data_file_name      => training_data_files%fully_qualified_time_file() &
+    ) 
+      allocate(NetCDF_output_file(size(output_tensor_file_names)))
+      allocate(output_variable(size(output_component_names), size(NetCDF_output_file)))
 
-        end associate input_file
-      end associate input_file_name
-    end associate input_names
+      output_file_and_variable_count: &
+      associate(num_output_files => size(NetCDF_output_file), num_output_variables => size(output_variable,1))
 
-    output_names: &
-    associate(output_names => training_configuration%output_variable_names())
+        print '(a)',"- reading time from JSON file"
+        read_times: &
+        associate(time_data => time_data_t(file_t(time_data_file_name)))
 
-      allocate(output_variable(size(output_names)))
+          print '(a)',"Calculating the desired neural-network model outputs: time derivatives of the outputs"
+          allocate(derivative(num_output_variables, num_output_files))
 
-      output_file_name: &
-      associate(output_file_name => args%base_name // "_output.nc")
+          read_files: &
+          do f = 1, num_output_files
 
-        print *,"Reading physics-based model outputs from " // output_file_name 
+            print '(a)',"Reading physics-based model outputs from " // output_tensor_file_names(f)%string()
+            NetCDF_output_file(f) = netCDF_file_t(output_tensor_file_names(f))
 
-        output_file: &
-        associate(output_file => netCDF_file_t(output_file_name))
+            read_variables: &
+            do v = 1, num_output_variables
 
-          do v=1, size(output_variable)
-            print *,"- reading ", output_names(v)%string()
-            call output_variable(v)%input(output_names(v), output_file, rank=4)
-          end do
+              print '(a)',"- reading " // output_component_names(v)%string() // " from " // output_tensor_file_names(f)%string()
+              call output_variable(v,f)%input(output_component_names(v), NetCDF_output_file(f), rank=4)
+              call_julienne_assert(output_variable(v,f)%conformable_with(output_variable(1,f)))
 
-          do v = 1, size(output_variable)
-            call_julienne_assert(output_variable(v)%conformable_with(input_variable(1)))
-          end do
+              derivative_name: &
+              associate(derivative_name => "d" // output_component_names(v)%string() // "_dt")
+                print '(a)',"- calculating " // derivative_name
+                derivative(v,f) = time_derivative_t(old = input_variable(v,1), new = output_variable(v,1), dt=time_data%dt())
+                call_julienne_assert(.not. derivative(v,f)%any_nan())
+              end associate derivative_name
+            end do read_variables
+          end do read_files
 
-          print *,"- reading time"
-          call output_time%input("time", output_file, rank=1)
+        end associate read_times
+      end associate output_file_and_variable_count
+    end associate output_variable_and_time_files
 
-          call_julienne_assert(output_time%conformable_with(input_time))
+    associate(num_steps => sum( (input_variable(1,:)%end_step()+1) - input_variable(1,:)%start_step()))
+      print *,"Defining input tensors for ", num_steps, "time steps"
+    end associate
 
-        end associate output_file
-      end associate output_file_name
+    input_tensors  = tensors(input_variable)
 
-      print *,"Calculating desired neural-network model outputs"
+    associate(num_steps => sum( (derivative(1,:)%end_step()+1) - derivative(1,:)%start_step()))
+      print *,"Defining output tensors for ", num_steps, "time steps"
+    end associate
 
-      allocate(derivative(size(output_variable)))
-
-      print '(a)',"- reading time from JSON file"
-      associate(time_data => time_data_t(file_t(training_data_files%fully_qualified_time_file())))
-        do v = 1, size(derivative)
-          derivative_name: &
-          associate(derivative_name => "d" // output_names(v)%string() // "/dt")
-            print *,"- " // derivative_name
-            derivative(v) = time_derivative_t(old = input_variable(v), new = output_variable(v), dt=time_data%dt())
-            call_julienne_assert(.not. derivative(v)%any_nan())
-          end associate derivative_name
-        end do
-      end associate
-    end associate output_names
-
-    if (allocated(args%end_step)) then
-      end_step = args%end_step
-    else
-      end_step = input_variable(1)%end_step()
-    end if
-
-    print *,"Defining input tensors for time step", args%start_step, "through", end_step, "with strides of", args%stride
-    input_tensors  = tensors(input_variable,  step_start = args%start_step, step_end = end_step, step_stride = args%stride)
-
-    print *,"Defining output tensors for time step", args%start_step, "through", end_step, "with strides of", args%stride
-    output_tensors = tensors(derivative, step_start = args%start_step, step_end = end_step, step_stride = args%stride)
+    output_tensors = tensors(derivative)
 
     output_map_and_network_file:  &
     associate(                    &
       output_map => tensor_map_t( &
          layer    = "outputs"     &
-        ,minima   = [( derivative(v)%minimum(), v=1, size(derivative) )] &
-        ,maxima   = [( derivative(v)%maximum(), v=1, size(derivative) )] &
+        ,minima   = [( [( derivative(v,f)%minimum(), v=1, size(derivative,1) )], f = 1, size(derivative,2) )] &
+        ,maxima   = [( [( derivative(v,f)%maximum(), v=1, size(derivative,1) )], f = 1, size(derivative,2) )] &
       ), &
       network_file => args%base_name // "_network.json" &
     )
+
       check_for_network_file: &
       block
         logical preexisting_network_file
@@ -304,10 +283,10 @@ contains
                   ,activation%function_name(    )      &
                   ,string_t(trim(merge("true ", "false", training_configuration%skip_connections()))) &
                 ]                                      &
-                ,input_map  = tensor_map_t(            &
-                   layer    = "inputs"                &
-                  ,minima   = [( input_variable(v)%minimum(),  v=1, size( input_variable) )] &
-                  ,maxima   = [( input_variable(v)%maximum(),  v=1, size( input_variable) )] &
+                ,input_map = tensor_map_t(             &
+                   layer   = "inputs"                  &
+                  ,minima  = [( [( input_variable(v,f)%minimum(), v = 1, size(input_variable,1) )], f = 1, size(input_variable,2) )] &
+                  ,maxima  = [( [( input_variable(v,f)%maximum(), v = 1, size(input_variable,1) )], f = 1, size(input_variable,2) )] &
                 )                        &
                 ,output_map = output_map &
               )
@@ -315,7 +294,6 @@ contains
           end block initialize_network
 
         end if read_or_initialize_network
-
       end block  check_for_network_file
 
       print *, "Conditionally sampling for a flat distribution of output values"
@@ -324,25 +302,32 @@ contains
       block
         integer i
         logical occupied(args%num_bins, args%num_bins)
-        logical keepers(size(output_tensors))
         type(phase_space_bin_t), allocatable :: bin(:)
         type(occupancy_t) occupancy
+#if !defined(__flang__)
+        logical keepers(size(output_tensors))
+        keepers = .false.
+#else
+        logical, allocatable :: keepers(:)
+        allocate(keepers(size(output_tensors)), source = .false.)
+#endif
 
+        print *, "Determine the phase-space bin that holds each output tensor"
         ! Determine the phase-space bin that holds each output tensor
         associate(output_minima => output_map%minima(), output_maxima => output_map%maxima())
           bin = [(phase_space_bin_t(output_tensors(i), output_minima, output_maxima, args%num_bins), i = 1, size(output_tensors))]
         end associate
 
-        call occupancy%vacate( dims = [( args%num_bins, i = 1, size(output_variable))] )
+        call occupancy%vacate( dims = [( args%num_bins, i = 1, size(derivative,1))] )
 
-        keepers = .false.
-
+        print *, "Populate bins"
         do i = 1, size(output_tensors)
           if (occupancy%occupied(bin(i)%loc)) cycle
           call occupancy%occupy(bin(i)%loc)
           keepers(i) = .true.
         end do
 
+        print *, "Pack remaining input/output tensor pairs"
         input_output_pairs = input_output_pair_t(pack(input_tensors, keepers), pack(output_tensors, keepers))
 
         print '(*(a,i))' &
@@ -370,18 +355,18 @@ contains
         print *, "       Epoch  Cost (avg)"
 
         call system_clock(start_training)
-      
+
         train_write_and_maybe_exit: &
         block
           integer first_epoch
           integer me
-#if defined(MULTI_IMAGE_SUPPORT)
+#if defined(FIATS_MULTI_IMAGE_SUPPORT)
           me = this_image()
 #else
           me = 1
 #endif
           if (me==1) first_epoch = plot_file%previous_epoch + 1
-#if defined(MULTI_IMAGE_SUPPORT)
+#if defined(FIATS_MULTI_IMAGE_SUPPORT)
           call co_broadcast(first_epoch, source_image=1)
 #endif
           last_epoch: &
@@ -402,7 +387,7 @@ contains
                   image_1_maybe_writes: &
                   if (me==1 .and. any([converged, epoch==[first_epoch,last_epoch], mod(epoch,args%report_step)==0])) then
 
-                    !print '(*(g0,4x))', epoch, average_cost
+                    print '(*(g0,4x))', epoch, average_cost
                     write(plot_file%plot_unit,'(*(g0,4x))') epoch, average_cost
 
                     associate(json_file => trainable_network%to_json())
@@ -411,7 +396,7 @@ contains
 
                   end if image_1_maybe_writes
 
-                  signal_convergence: & 
+                  signal_convergence: &
                   if (converged) then
                     block
                       integer unit
@@ -439,6 +424,7 @@ contains
     end associate output_map_and_network_file
 
     call system_clock(finish_training)
+
     print *,"Training time: ", real(finish_training - start_training, real64)/real(clock_rate, real64),"for", &
       args%num_epochs,"epochs"
     close(plot_file%plot_unit)

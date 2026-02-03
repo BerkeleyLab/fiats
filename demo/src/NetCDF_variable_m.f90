@@ -26,6 +26,8 @@ module NetCDF_variable_m
     procedure, private, non_overridable :: default_real_conformable_with, double_precision_conformable_with
     generic :: rank                     => default_real_rank            , double_precision_rank
     procedure, private, non_overridable :: default_real_rank            , double_precision_rank
+    generic :: start_step               => default_real_start_step      , double_precision_start_step
+    procedure, private, non_overridable :: default_real_start_step      , double_precision_start_step
     generic :: end_step                 => default_real_end_step        , double_precision_end_step
     procedure, private, non_overridable :: default_real_end_step        , double_precision_end_step
     generic :: any_nan                  => default_real_any_nan         , double_precision_any_nan
@@ -145,6 +147,18 @@ module NetCDF_variable_m
       integer my_rank
     end function
 
+    elemental module function default_real_start_step(self) result(start_step)
+      implicit none
+      class(NetCDF_variable_t), intent(in) :: self
+      integer start_step
+    end function
+
+    elemental module function double_precision_start_step(self) result(start_step)
+      implicit none
+      class(NetCDF_variable_t(double_precision)), intent(in) :: self
+      integer start_step
+    end function
+
     elemental module function default_real_end_step(self) result(end_step)
       implicit none
       class(NetCDF_variable_t), intent(in) :: self
@@ -205,11 +219,10 @@ module NetCDF_variable_m
       real maximum
     end function
 
-    module function tensors(NetCDF_variables, step_start, step_end, step_stride)
+    module function tensors(NetCDF_variables)
       implicit none
-      class(NetCDF_variable_t), intent(in) :: NetCDF_variables(:)
+      class(NetCDF_variable_t), intent(in) :: NetCDF_variables(:,:)
       type(tensor_t), allocatable :: tensors(:)
-      integer, optional :: step_start, step_end, step_stride
     end function
 
     elemental module function default_real_end_time(self) result(end_time)
