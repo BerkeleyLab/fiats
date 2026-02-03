@@ -387,7 +387,7 @@ contains
                   image_1_maybe_writes: &
                   if (me==1 .and. any([converged, epoch==[first_epoch,last_epoch], mod(epoch,args%report_step)==0])) then
 
-                    !print '(*(g0,4x))', epoch, average_cost
+                    print '(*(g0,4x))', epoch, average_cost
                     write(plot_file%plot_unit,'(*(g0,4x))') epoch, average_cost
 
                     associate(json_file => trainable_network%to_json())
