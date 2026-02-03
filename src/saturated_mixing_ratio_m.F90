@@ -31,7 +31,7 @@ module saturated_mixing_ratio_m
   !! in the Intermediate Complexity Atmospheric Research (ICAR) model file src/physics/mp_simple.f90.
   !! ICAR is distributed under the above MIT license.  See https://github.com/ncar/icar.
   use fiats_m, only : tensor_t
-  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
+  use julienne_m, only : call_julienne_assert_, operator(.also.), operator(.equalsExpected.), operator(//)
   implicit none
  
   private
@@ -75,7 +75,7 @@ contains
     type(tensor_t), intent(in) :: x_in
     type(tensor_t) a
     associate(x => x_in%values())
-      call_julienne_assert((lbound(x,1) .equalsExpected. 1) .also. (ubound(x,1) .equalsExpected. 2,"y(x) :: sufficient input"))
+      call_julienne_assert((lbound(x,1) .equalsExpected. 1) .also. ((ubound(x,1) .equalsExpected. 2) // "y(x) :: sufficient input"))
       a = tensor_t([saturated_mixing_ratio(x(1),x(2))])
     end associate
   end function
