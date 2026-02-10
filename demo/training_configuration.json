@@ -6,11 +6,11 @@
      },
      "network configuration": {
          "skip connections" : false,
-         "nodes per layer" : [7,32,32,32,5],
+         "nodes per layer" : [11,32,32,32,9],
          "activation function" : "sigmoid"
      },
      "tensor names": {
-         "inputs"  : ["potential_temperature","qv", "qc", "qr", "qs", "pressure", "temperature"],
-         "outputs" : ["potential_temperature","qv", "qc", "qr", "qs"]
+         "inputs"  : ["potential_temperature","qv", "qc", "qr", "qs", "pressure", "temperature", "ni", "nr", "qi", "qg"],
+         "outputs" : ["potential_temperature","qv", "qc", "qr", "qs", "ni", "nr", "qi", "qg"]
      }
  }
