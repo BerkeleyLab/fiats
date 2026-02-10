@@ -6,8 +6,3 @@
          "infixes" : ["450", "500"]
      }
  }
-
-training_input-image-_450.nc
-training_output-image-_450.nc
-training_input-image-_500.nc
-training_output-image-_500.nc
