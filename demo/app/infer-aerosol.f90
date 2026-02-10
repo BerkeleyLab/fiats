@@ -5,7 +5,7 @@ program infer_aerosol
 
   ! External dependencies:
   use fiats_m, only : unmapped_network_t, tensor_t, double_precision, double_precision_file_t
-  use julienne_m, only : string_t, command_line_t, csv
+  use julienne_m, only : string_t, command_line_t, csv, call_julienne_assert_, operator(.all.), operator(.equalsExpected.)
   use omp_lib
   use iso_fortran_env, only : int64, real64
 
@@ -120,45 +120,31 @@ contains
         print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
 
 
-! [m, 20] -> [m,20,1]
-! aug_v: [m, 20, 20]
-! Concat(aug_v, trunk_3d) -> [m, 20, 21]
 
-! We aim to start with a basis array of shape [m, 20]
-! and end up with an aug_v array of shape [m, 20, 20]
-! m = size(trunk_outputs,1) ?
+!     
+! Concatenate basis (shape [m,20]) with raw_trunk_outputs (shape []) [m, 20, 21]
 
 
         print*, "Starting concatenation" 
         block
-          double precision, allocatable, dimension(:,:,:) :: aug_v, concat, aug_trunk
-          integer i, j, k
-          allocate(aug_v(size(trunk_outputs,1), size(basis,1), size(basis,2)))
-          print*, "Defining aug_v arary of shape " , shape(aug_v), "from basis arary of shape ", shape(basis)
-          do concurrent(integer :: i=1:size(trunk_outputs,1), j=1:size(basis,1), k=1:size(basis,2) )
-            aug_v(i,j,k) = basis(j,k)
-          end do
+          double precision, allocatable :: raw_trunk_outputs(:,:), aug_trunk(:,:,:)
+          double precision, pointer :: basis_3d(:,:,:)
+          integer s
 
-          do concurrent(integer :: i=1:size(trunk_outputs,1))
-            aug_v(i,:,:) = basis(:,:)
-          end do
+          basis_3d(1:size(basis,1), 1:size(basis,2), 1:1) => basis
 
-          allocate(aug_trunk(size(trunk_outputs,1), size(basis,1), size(basis,2)+1))
-          aug_trunk(:,:,1:size(basis,2)) = aug_v(:,:,1:size(basis,2))
+          associate(m=> size(trunk_outputs), n => size(trunk_outputs(1)%values()))
+            
+            allocate(raw_trunk_outputs(m,n))
 
-          print*, "Defining aug_trunk array of shape " , shape(aug_trunk)
-          do concurrent(integer :: i=1:size(aug_trunk,1), j=1:size(aug_trunk,2), m=1:size(trunk_outputs))
-            aug_trunk(i,j,1:size(basis,2)+1) = trunk_outputs(m)%values()
-          end do
+            do concurrent(s=1:size(trunk_outputs)) default(none) shared(raw_trunk_outputs, trunk_outputs)
+              raw_trunk_outputs(s,:) = trunk_outputs(s)%values()
+            end do
 
-          print *, "size(trunk_outputs): ", size(trunk_outputs)
-          print *, "size(trunk_outputs(1)%values): ", size(trunk_outputs(1)%values())
-
-          !aug_trunk(:,:,size(basis,2)+1) = trunk_outputs(:)
-
-          !print *, " ------ row 1 -------"
-          !print '(*(g20.15,:," , ")', aug_trunk(1,:,:)
-          !print *, " ------ row 1 -------"
+            call_julienne_assert(size(basis_3d)*size(raw_trunk_outputs) .equalsExpected. m*n*(n+1))
+          
+            aug_trunk = reshape([basis_3d, raw_trunk_outputs], [m,n,n+1])
+          end associate
         end block
 
     end associate count_samples
