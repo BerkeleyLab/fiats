@@ -93,25 +93,25 @@ contains
     integer ncid, varid, x_dimid, y_dimid
 
     associate(nf_status => nf90_create(file_name, nf90_clobber, ncid)) ! create or ovewrite file
-      call_assert_diagnose(nf_status == nf90_noerr, "nf90_create(file_name, nf90_clobber, ncid) succeeds",trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_dim(ncid, "x", size(data_out,2), x_dimid)) ! define x dimension & get its ID
-      call_assert_diagnose(nf_status == nf90_noerr,'nf90_def_dim(ncid,"x",size(data_out,2),x_dimid) succeeds',trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ",  " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_dim(ncid, "y", size(data_out,1), y_dimid)) ! define y dimension & get its ID
-      call_assert_diagnose(nf_status==nf90_noerr, 'nf90_def_dim(ncid,"y",size(data_out,2),y_dimid) succeeds', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_def_var(ncid, "data", nf90_int, [y_dimid, x_dimid], varid))!define integer 'data' variable & get ID
-      call_assert_diagnose(nf_status == nf90_noerr, 'nf90_def_var(ncid,"data",nf90_int,[y_dimid,x_dimid],varid) succeds', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_enddef(ncid)) ! exit define mode: tell NetCDF we are done defining metadata
-      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_enddef(ncid)', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_put_var(ncid, varid, data_out)) ! write all data to file
-      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_put_var(ncid, varid, data_out)', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
     associate(nf_status => nf90_close(ncid)) ! close file to free associated NetCDF resources and flush buffers
-      call_assert_diagnose(nf_status == nf90_noerr, 'nff90_noerr == nf90_close(ncid)', trim(nf90_strerror(nf_status)))
+      call julienne_assert((nf_status .equalsExpected. nf90_noerr) // ", " // trim(nf90_strerror(nf_status)))
     end associate
   end subroutine
 

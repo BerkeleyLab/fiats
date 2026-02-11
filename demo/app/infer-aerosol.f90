@@ -5,7 +5,7 @@ program infer_aerosol
 
   ! External dependencies:
   use fiats_m, only : unmapped_network_t, tensor_t, double_precision, double_precision_file_t
-  use julienne_m, only : string_t, command_line_t, csv, call_julienne_assert_, operator(.all.), operator(.equalsExpected.)
+  use julienne_m, only : string_t, command_line_t, csv, julienne_assert, operator(.all.), operator(.equalsExpected.)
   use omp_lib
   use iso_fortran_env, only : int64, real64
 
@@ -44,7 +44,8 @@ contains
     character(len=*), parameter :: branch_file_name = "model_branch.json", trunk_file_name = "model_trunk.json"
     character(len=*), parameter :: saved_data_file_name = "saved_data.nc"
     double precision, allocatable, dimension(:) :: longitude, latitude, level, ymean, mean_X, std_X, mean_y, std_y
-    double precision, allocatable, dimension(:,:) :: basis, X_test, branch_inputs, trunk_inputs
+    double precision, allocatable, dimension(:,:) :: X_test, branch_inputs, trunk_inputs
+    double precision, allocatable, dimension(:,:), target :: basis
     double precision, allocatable, dimension(:,:) :: cldfr_idx, slice
     type(unmapped_network_t(double_precision)) branch_network, trunk_network
     integer(selected_int_kind(18)) t_start, t_finish, clock_rate
@@ -141,7 +142,7 @@ contains
               raw_trunk_outputs(s,:) = trunk_outputs(s)%values()
             end do
 
-            call_julienne_assert(size(basis_3d)*size(raw_trunk_outputs) .equalsExpected. m*n*(n+1))
+            call julienne_assert(size(basis_3d)*size(raw_trunk_outputs) .equalsExpected. m*n*(n+1))
           
             aug_trunk = reshape([basis_3d, raw_trunk_outputs], [m,n,n+1])
           end associate
