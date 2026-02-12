@@ -121,10 +121,7 @@ contains
         print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
 
 
-
-!     
-! Concatenate basis (shape [m,20]) with raw_trunk_outputs (shape []) [m, 20, 21]
-
+! Concatenate basis (shape [m,20]) with raw_trunk_outputs (shape [m,20,20]) to form aug_trunk (shape [m, 20, 21])
 
         print*, "Starting concatenation" 
         block
