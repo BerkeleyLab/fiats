@@ -1,11 +1,13 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
 
+#include "julienne-assert-macros.h"
+
 program infer_aerosol
 
   ! External dependencies:
   use fiats_m, only : unmapped_network_t, tensor_t, double_precision, double_precision_file_t
-  use julienne_m, only : string_t, command_line_t, csv, julienne_assert, operator(.all.), operator(.equalsExpected.)
+  use julienne_m, only : string_t, command_line_t, csv, call_julienne_assert_, operator(.all.), operator(.equalsExpected.)
   use omp_lib
   use iso_fortran_env, only : int64, real64
 
@@ -42,7 +44,7 @@ contains
     integer,          parameter :: branch_net_inputs = 39, branch_net_outputs = 20
     integer,          parameter :: trunk_net_inputs = 4, trunk_net_outputs = 20
     character(len=*), parameter :: branch_file_name = "model_branch.json", trunk_file_name = "model_trunk.json"
-    character(len=*), parameter :: saved_data_file_name = "saved_data.nc"
+    character(len=*), parameter :: saved_data_file_name = "saved_data2.nc"
     double precision, allocatable, dimension(:) :: longitude, latitude, level, ymean, mean_X, std_X, mean_y, std_y
     double precision, allocatable, dimension(:,:) :: X_test, branch_inputs, trunk_inputs
     double precision, allocatable, dimension(:,:), target :: basis
@@ -121,32 +123,37 @@ contains
         print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
 
 
-! Concatenate basis (shape [m,20]) with raw_trunk_outputs (shape [m,20,20]) to form aug_trunk (shape [m, 20, 21])
+        call_julienne_assert(.all. (shape(basis) .equalsExpected. [20,20]))
 
         print*, "Starting concatenation" 
         block
-          double precision, allocatable :: raw_trunk_outputs(:,:), aug_trunk(:,:,:)
-          double precision, pointer :: basis_3d(:,:,:)
-          integer s
+          double precision, allocatable :: raw_trunk_outputs(:,:), aug_trunk(:,:,:), basis_repeated(:,:,:)
 
-          basis_3d(1:size(basis,1), 1:size(basis,2), 1:1) => basis
+          associate(m=> size(raw_trunk_outputs), n => size(trunk_outputs(1)%values()))
 
-          associate(m=> size(trunk_outputs), n => size(trunk_outputs(1)%values()))
+            ! Copy basis (shape [20,20]) m times to form basis_repeated (shape [m,20,20])
+            allocate(basis_repeated(m, size(basis,1), size(basis,2)))
+
+            do concurrent(integer :: b = 1:m) default(none) shared(basis, basis_repeated)
+              basis_repeated(b,:,:) = basis 
+            end do
             
             allocate(raw_trunk_outputs(m,n))
 
-            do concurrent(s=1:size(trunk_outputs)) default(none) shared(raw_trunk_outputs, trunk_outputs)
+            do concurrent(integer :: s=1:size(trunk_outputs)) default(none) shared(raw_trunk_outputs, trunk_outputs)
               raw_trunk_outputs(s,:) = trunk_outputs(s)%values()
             end do
 
-            call julienne_assert(size(basis_3d)*size(raw_trunk_outputs) .equalsExpected. m*n*(n+1))
-          
-            aug_trunk = reshape([basis_3d, raw_trunk_outputs], [m,n,n+1])
+            ! Concatenate basis_repeated (shape [m,20,20]) with raw_trunk_outputs (shape [m,20]))
+            ! to form aug_trunk (shape [m,20,21])
+            aug_trunk = reshape([basis_repeated, raw_trunk_outputs], [m,n,n+1])
           end associate
         end block
 
     end associate count_samples
-    
+
+    stop "made it"
+
     end block time_inference
    
   end subroutine read_stats_and_perform_inference
