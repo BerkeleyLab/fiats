@@ -59,19 +59,25 @@ if [[ -z ${LC_RPATH:-} ]]; then
   exit 1
 fi
 
-if [[ -z ${HDF5_LIB_PATH:-}    ]]; then
-  printf "Please set HDF5_LIB_PATH to the HDF5 library path and restart this script.\n\n"
+missing_prereq=false
+
+if [[ -z ${HDF5_LIB_PATH:-} ]]; then
+  printf "Please set HDF5_LIB_PATH to the HDF5 library path and restart this script.\n"
   printf "If Homebrew installed HDF5, try the following: export HDF5_LIB_PATH=\"\`brew --prefix hdf5\`/lib\"\n\n"
-  exit 1
+  missing_prereq=true
 fi
 if [[ -z ${NETCDF_LIB_PATH:-}  ]]; then
-  printf "Please set NETCDF_LIB_PATH to the NetCDF library path and restart this script.\n\n"
+  printf "Please set NETCDF_LIB_PATH to the NetCDF library path and restart this script.\n"
   printf "If Homebrew installed NetCDF, try the following: export NETCDF_LIB_PATH=\"\`brew --prefix netcdf\`/lib\"\n\n"
-  exit 1
+  missing_prereq=true
 fi
 if [[ -z ${NETCDFF_LIB_PATH:-} ]]; then
-  printf "Please set NETCDFF_LIB_PATH to the NetCDF-Fortran library path and restart this script.\n\n"
+  printf "Please set NETCDFF_LIB_PATH to the NetCDF-Fortran library path and restart this script.\n"
   printf "If Homebrew installed NetCDF-Fortran, try the following: export NETCDFF_LIB_PATH=\"\`brew --prefix netcdf-fortran\`/lib\"\n\n"
+  missing_prereq=true
+fi
+
+if $missing_prereq; then
   exit 1
 fi
 
@@ -142,7 +148,8 @@ echo "--compiler \"`pkg-config fiats --variable=FIATS_FPM_FC`\" \\"       >> $RU
 if [[ ! -z ${FPM_RUNNER:-} ]];  then
   echo "--runner \"`pkg-config fiats --variable=FIATS_FPM_RUNNER`\" \\"   >> $RUN_FPM_SH
 fi
-echo "--flag \"-cpp -O3 `pkg-config fiats --variable=FIATS_FPM_FLAG`\" \\">> $RUN_FPM_SH
+
+echo "--flag \"-cpp -O3 -DASSERTIONS -fopenmp -fdo-concurrent-to-openmp=host `pkg-config fiats --variable=FIATS_FPM_FLAG`\" \\">> $RUN_FPM_SH
 echo "--link-flag \"`pkg-config fiats --variable=FIATS_FPM_LD_FLAG`\" \\" >> $RUN_FPM_SH
 echo "\$program_arguments"                                                >> $RUN_FPM_SH
 chmod u+x $RUN_FPM_SH
