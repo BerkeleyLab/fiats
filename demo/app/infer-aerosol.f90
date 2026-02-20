@@ -88,7 +88,7 @@ contains
     block
       integer(int64) t_start_dc, t_end_dc, clock_rate, t_start_omp, t_end_omp
       type(tensor_t(double_precision)), allocatable :: branch_outputs(:), trunk_outputs(:)
-      real, allocatable :: output_slice(:)
+      real, allocatable :: output_slice(:), out(:,:)
       integer s
 
       count_samples: &
@@ -122,12 +122,12 @@ contains
         call system_clock(t_end_dc)
         print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
 
-
         call_julienne_assert(.all. (shape(basis) .equalsExpected. [20,20]))
 
         print*, "Starting concatenation" 
         block
-          double precision, allocatable :: raw_trunk_outputs(:,:), aug_trunk(:,:,:), basis_repeated(:,:,:)
+          double precision, allocatable, dimension(:,:,:) :: aug_trunk, basis_repeated
+          double precision, allocatable, dimension(:,:)   :: raw_trunk_outputs, raw_branch_outputs, branch_dot_trunk
 
           associate(m=> size(raw_trunk_outputs), n => size(trunk_outputs(1)%values()))
 
@@ -147,12 +147,26 @@ contains
             ! Concatenate basis_repeated (shape [m,20,20]) with raw_trunk_outputs (shape [m,20]))
             ! to form aug_trunk (shape [m,20,21])
             aug_trunk = reshape([basis_repeated, raw_trunk_outputs], [m,n,n+1])
+
+            stop "--->  about to allocate raw_branch_outputs"
+
+            allocate(raw_branch_outputs(size(branch_outputs),size(branch_outputs(1)%values())))
+
+            call_julienne_assert(.all. (shape(raw_branch_outputs) .equalsExpected. [m,21]))
+
+            do concurrent(integer :: s=1:size(branch_outputs)) default(none) shared(raw_branch_outputs, branch_outputs)
+              raw_branch_outputs(s,:) = branch_outputs(s)%values()
+            end do
+
+            allocate(branch_dot_trunk(size(aug_trunk,1), size(aug_trunk,2)))
+
+            ! Inner product (B,n) <- matmul( (B,n,m), (B,m) )
+            do concurrent(integer :: b = 1:size(aug_trunk,1)) default(none) shared(branch_dot_trunk, aug_trunk, raw_branch_outputs)
+               branch_dot_trunk(b,:) = matmul(aug_trunk(b,:,:), raw_branch_outputs(b,:))
+            end do
           end associate
         end block
-
     end associate count_samples
-
-    stop "made it"
 
     end block time_inference
    
