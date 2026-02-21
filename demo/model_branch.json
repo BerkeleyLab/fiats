@@ -1,5 +1,5 @@
 {
-    "acceptable_engine_tag": "0.4.7",
+    "minimum_acceptable_tag": "0.15.0",
     "metadata": {
         "modelName": "E3SM2_branchnet",
         "modelAuthor": "Zhe Bai",
