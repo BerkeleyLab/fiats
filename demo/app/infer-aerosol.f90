@@ -129,27 +129,34 @@ contains
           double precision, allocatable, dimension(:,:,:) :: aug_trunk, basis_repeated
           double precision, allocatable, dimension(:,:)   :: raw_trunk_outputs, raw_branch_outputs, branch_dot_trunk
 
-          associate(m=> size(raw_trunk_outputs), n => size(trunk_outputs(1)%values()))
+          associate(m=> size(trunk_outputs), n => size(trunk_outputs(1)%values()))
+
+            print *,"Allocating basis_repeated to shape ", m, size(basis,1), size(basis,2)
 
             ! Copy basis (shape [20,20]) m times to form basis_repeated (shape [m,20,20])
+
             allocate(basis_repeated(m, size(basis,1), size(basis,2)))
 
             do concurrent(integer :: b = 1:m) default(none) shared(basis, basis_repeated)
               basis_repeated(b,:,:) = basis 
             end do
             
+            print *,"Allocating raw_trunk_outputs to shape ", m, n
+
             allocate(raw_trunk_outputs(m,n))
 
             do concurrent(integer :: s=1:size(trunk_outputs)) default(none) shared(raw_trunk_outputs, trunk_outputs)
               raw_trunk_outputs(s,:) = trunk_outputs(s)%values()
             end do
 
+            call_julienne_assert(.all. (shape(raw_trunk_outputs) .equalsExpected. [m,20]))
+            call_julienne_assert(.all. (shape(basis_repeated) .equalsExpected. [m,20,20]))
+
             ! Concatenate basis_repeated (shape [m,20,20]) with raw_trunk_outputs (shape [m,20]))
             ! to form aug_trunk (shape [m,20,21])
             aug_trunk = reshape([basis_repeated, raw_trunk_outputs], [m,n,n+1])
 
-            stop "--->  about to allocate raw_branch_outputs"
-
+            print *,"Allocating raw_branch_outputs to shape ", size(branch_outputs), size(branch_outputs(1)%values())
             allocate(raw_branch_outputs(size(branch_outputs),size(branch_outputs(1)%values())))
 
             call_julienne_assert(.all. (shape(raw_branch_outputs) .equalsExpected. [m,21]))
@@ -157,6 +164,8 @@ contains
             do concurrent(integer :: s=1:size(branch_outputs)) default(none) shared(raw_branch_outputs, branch_outputs)
               raw_branch_outputs(s,:) = branch_outputs(s)%values()
             end do
+
+            print *,"Allocating branch_dot_trunk to shape ", size(aug_trunk,1), size(aug_trunk,2)
 
             allocate(branch_dot_trunk(size(aug_trunk,1), size(aug_trunk,2)))
 
