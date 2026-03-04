@@ -37,6 +37,8 @@ contains
           activation%selection_ = step
         case("swish")
           activation%selection_ = swish
+        case("tanh")
+          activation%selection_ = tanh_
         case default
           error stop "activation_s(construct_from_name): unknown name"
       end select
@@ -56,6 +58,8 @@ contains
           associate(sigmoid_activation => 1./(1.+exp(-x)))
             y = x*sigmoid_activation
           end associate
+        case(tanh_)
+          y = (exp(x) - exp(-x))/(exp(x) + exp(-x))
         case default
           error stop "activation_s(default_real_evaluate): unknown activation"
       end select
@@ -75,6 +79,8 @@ contains
           associate(sigmoid_activation => 1D0/(1D0+exp(-x)))
             y = x*sigmoid_activation
           end associate
+        case(tanh_)
+          y = (exp(x) - exp(-x))/(exp(x) + exp(-x))
         case default
           error stop "activation_s(double_precision_evaluate): unknown activation"
       end select
@@ -94,6 +100,8 @@ contains
           associate(sigmoid_activation => 1./(1.+exp(-x)), sigmoid_differentiate => exp(-x)/(1.+exp(-x))**2)
             dy_dx = sigmoid_activation + x * sigmoid_differentiate
           end associate
+        case(tanh_)
+          dy_dx = 1. - ((exp(x) - exp(-x))/(exp(x) + exp(-x)))**2
         case default
           error stop "activation_s(default_real_differentiate): unknown activation"
       end select
@@ -113,6 +121,8 @@ contains
           associate(sigmoid_activation => 1D0/(1D0+exp(-x)), sigmoid_differentiate => exp(-x)/(1D0+exp(-x))**2)
             dy_dx = sigmoid_activation + x * sigmoid_differentiate
           end associate
+        case(tanh_)
+          dy_dx = 1D0 - ((exp(x) - exp(-x))/(exp(x) + exp(-x)))**2
         case default
           error stop "activation_s(double_precision_differentiate): unknown activation"
       end select

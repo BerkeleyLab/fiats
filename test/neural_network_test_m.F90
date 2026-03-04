@@ -43,8 +43,9 @@ contains
     type(neural_network_test_t) neural_network_test
 
     test_results = neural_network_test%run([ &
-       test_description_t("performing elemental inference with 1 hidden layer", elemental_infer_with_1_hidden_layer_xor_net) &
-      ,test_description_t("performing elemental inference with 2 hidden layers", elemental_infer_with_2_hidden_layer_xor_net) &
+       test_description_t("elemental inference with step activation and 1 hidden layer", elemental_infer_1_hidden_layer_xor_step) &
+      ,test_description_t("elemental inference with relu activation and 1 hidden layer", elemental_infer_1_hidden_layer_xor_relu) &
+      ,test_description_t("elemental inference with 2 hidden layers", elemental_infer_with_2_hidden_layer_xor_net) &
       ,test_description_t("converting a network with 2 hidden layers to and from JSON format", multi_hidden_layer_net_to_from_json) &
       ,test_description_t("converting a network with varying-width hidden layers to/from JSON", varying_width_net_to_from_json) &
       ,test_description_t("performing inference with a network with hidden layers of varying width", infer_with_varying_width_net) &
@@ -52,15 +53,18 @@ contains
     ])
   end function
 
-  function single_hidden_layer_xor_network() result(neural_network)
+  function one_hidden_layer_xor_net(activation) result(neural_network)
+    character(len=*), intent(in) :: activation
     type(neural_network_t) neural_network
     integer, parameter :: nodes_per_layer(*) = [2, 3, 1]
     integer, parameter :: max_n = maxval(nodes_per_layer), layers = size(nodes_per_layer)
 
+    if (.not. any(activation==["step","relu"])) error stop "neural_network_test_m(one_hidden_layer_xor_net): step or relu required."
+
     neural_network = neural_network_t( &
-      metadata = [string_t("XOR"), string_t("Damian Rouson"), string_t("2023-07-02"), string_t("step"), string_t("false")], &
+      metadata = [string_t("XOR"), string_t("Damian Rouson"), string_t("2023-07-02"), string_t(activation), string_t("false")], &
       weights = reshape([real:: [1,1,0, 0,1,1, 0,0,0], [1,0,0, -2,0,0, 1,0,0]], [max_n, max_n, layers-1]), &
-      biases = reshape([[0.,-1.99,0.], [0., 0., 0.]], [max_n, layers-1]), &
+      biases = reshape([[0.,-1.,0.], [0., 0., 0.]], [max_n, layers-1]), &
       nodes = nodes_per_layer &
     )
   end function
@@ -71,10 +75,10 @@ contains
     integer, parameter :: max_n = maxval(nodes_per_layer), layers = size(nodes_per_layer)
 
     neural_network = neural_network_t( &
-      metadata = [string_t("XOR"), string_t("Damian Rouson"), string_t("2023-07-02"), string_t("step"), string_t("false")], &
+      metadata = [string_t("XOR"), string_t("Damian Rouson"), string_t("2023-07-02"), string_t("relu"), string_t("false")], &
       weights = reshape([real:: [1,1,0, 0,1,1, 1,0,0, 1,0,0, 0,1,0, 0,0,1], [1,0,0, -2,0,0, 1,0,0]], &
         [max_n, max_n, layers-1]), &
-      biases = reshape([[0.,-1.99,0.], [0., 0., 0.], [0., 0., 0.]], [max_n, layers-1]), &
+      biases = reshape([[0.,-1.,0.], [0., 0., 0.], [0., 0., 0.]], [max_n, layers-1]), &
       nodes = nodes_per_layer &
     )
   end function
@@ -205,11 +209,33 @@ contains
     test_diagnosis = .all. (inputs%values() .approximates. outputs%values() .within. tolerance)
   end function
 
-  function elemental_infer_with_1_hidden_layer_xor_net() result(test_diagnosis)
+  function elemental_infer_1_hidden_layer_xor_step() result(test_diagnosis)
     type(test_diagnosis_t) test_diagnosis
     type(neural_network_t) neural_network
 
-    neural_network = single_hidden_layer_xor_network()
+    neural_network = one_hidden_layer_xor_net("step")
+
+    block
+      type(tensor_t), allocatable :: truth_table(:)
+      real, parameter :: tolerance = 1.E-08, false = 0., true = 1.
+      integer i
+
+      associate(array_of_inputs => [tensor_t([true,true]), tensor_t([true,false]), tensor_t([false,true]), tensor_t([false,false])])
+        truth_table = neural_network%infer(array_of_inputs)
+      end associate
+      test_diagnosis =  &
+               (.all. (truth_table(1)%values() .approximates. (false) .within. tolerance)) &
+        .also. (.all. (truth_table(2)%values() .approximates. ( true) .within. tolerance)) &
+        .also. (.all. (truth_table(3)%values() .approximates. ( true) .within. tolerance)) &
+        .also. (.all. (truth_table(4)%values() .approximates. (false) .within. tolerance))
+    end block
+  end function
+
+  function elemental_infer_1_hidden_layer_xor_relu() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
+    type(neural_network_t) neural_network
+
+    neural_network = one_hidden_layer_xor_net("relu")
 
     block
       type(tensor_t), allocatable :: truth_table(:)
