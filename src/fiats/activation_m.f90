@@ -8,13 +8,13 @@ module activation_m
 
   private
   public :: activation_t
-  public :: gelu, relu, sigmoid, step, swish
+  public :: gelu, relu, sigmoid, step, swish, tanh_
 
   enum, bind(C)
-    enumerator :: gelu=1, relu, sigmoid, step, swish
+    enumerator :: gelu=1, relu, sigmoid, step, swish, tanh_
   end enum
 
-  character(len=*), parameter :: activation_name(*) =  [character(len("sigmoid")) :: "gelu", "relu", "sigmoid", "step", "swish"]
+  character(len=*), parameter :: activation_name(*) =  [character(len("sigmoid")) :: "gelu", "relu", "sigmoid", "step", "swish", "tanh"]
 
   type activation_t
     private
