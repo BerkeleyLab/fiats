@@ -10,7 +10,7 @@ Fiats: Functional inference and training for surrogates
 =======================================================
 Alternatively, _Fortran inference and training for science_.
 
-[Overview](#overview) | [Getting Started](#getting-started) | [Documentation](#documentation)
+[Overview](#overview) | [Getting Started](#getting-started) | [Documentation](#documentation) | [Publications](#publications)
 
 Overview
 --------
@@ -208,6 +208,40 @@ Please see our [GitHub Pages site] for Hypertext Markup Languge (HTML) documenta
 
 ### UML
 Please see the [`doc/uml`](https://github.com/BerkeleyLab/fiats/blob/main/doc/uml) subdirectory for Unified Modeling Language (UML) diagrams such as a comprehensive Fiats [class diagram] with human-readable [Mermaid] source that renders graphically when opened by browsing to the document on GitHub.
+
+Publications
+------------
+
+### Citing Fiats? Please use the following publication:
+
+Damian Rouson, Dan Bonachea, Brad Richardson, Jordan A. Welsman, Jeremiah Bailey, Ethan D Gutmann, David Torres, Katherine Rasmussen, Baboucarr Dibba, Yunhao Zhang, Kareem Weaver, Zhe Bai, Tan Nguyen.    
+"[Fiats: Functional inference and training for surrogates](https://dx.doi.org/10.21105/joss.08785)",    
+The Journal of Open Source Software, 10(116):8785, Dec 2025.  [![DOI](https://joss.theoj.org/papers/10.21105/joss.08785/status.svg)](https://doi.org/10.21105/joss.08785)    
+Paper: <https://dx.doi.org/10.21105/joss.08785>
+
+### Additional Publications:
+
+Damian Rouson, Zhe Bai, Dan Bonachea, Baboucarr Dibba, Ethan D Gutmann, Katherine Rasmussen, David Torres, Jordan A. Welsman, Yunhao Zhang.    
+"[Cloud microphysics training and aerosol inference with the Fiats deep learning library](https://dx.doi.org/10.25344/S4QS3J)",    
+Proceedings of the [Improving Scientific Software Conference (ISS25)](https://sea.ucar.edu/iss/2025/program/), Sep 2025.    
+Paper: <https://dx.doi.org/10.25344/S4QS3J>
+
+Damian Rouson, Zhe Bai, Dan Bonachea, Kareem Ergawy, Ethan Gutmann, Michael Klemm, Katherine Rasmussen, Brad Richardson, Sameer Shende, David Torres, Yunhao Zhang.     
+"[Automatically parallelizing batch inference on deep neural networks using Fiats and Fortran 2023 `do concurrent`](https://doi.org/10.25344/S4VG6T)",     
+Proceedings of the [Fifth International Workshop on Computational Aspects of Deep Learning (CADL)](https://sites.google.com/view/cadl2025/program), Jun 2025.     
+Paper: <https://doi.org/10.25344/S4VG6T>
+
+Acknowledgments
+---------------
+
+This material is based upon work supported by the U.S. Department of Energy,
+Office of Science, Office of Advanced Scientific Computing Research and Office
+of Nuclear Physics, Scientific Discovery through Advanced Computing (SciDAC)
+Next-Generation Scientific Software Technologies (NGSST) programs under
+Contract No. DE-AC02-05CH11231. This material is also based on work supported
+by Laboratory Directed Research and Development (LDRD) funding from Lawrence
+Berkeley National Laboratory, provided by the Director, Office of Science, of
+the U.S. DOE under Contract No. DE-AC02-05CH11231. 
 
 [Building and testing]: #building-and-testing
 [Caffeine]: https://go.lbl.gov/caffeine
