@@ -127,7 +127,7 @@ contains
         print*, "Starting concatenation" 
         block
           double precision, allocatable, dimension(:,:,:) :: aug_trunk, basis_repeated
-          double precision, allocatable, dimension(:,:)   :: raw_trunk_outputs, raw_branch_outputs, branch_dot_trunk
+          double precision, allocatable, dimension(:,:)   :: raw_trunk_outputs, raw_branch_outputs, branch_dot_trunk, final_output
 
           associate(m=> size(trunk_outputs), n => size(trunk_outputs(1)%values()))
 
@@ -174,9 +174,11 @@ contains
                branch_dot_trunk(b,:) = matmul(aug_trunk(b,:,:), raw_branch_outputs(b,:))
             end do
 
-            call_julienne_assert(size(branch_dot_trunk,2) .equalsExpected. size(ymean))
-            do concurrent(integer :: i = 1:size(branch_dot_trunk,2)) default(none) shared(branch_dot_trunk, ymean)
-               branch_dot_trunk(:,i) = branch_dot_trunk(:,i) + ymean(i)
+            allocate(final_output(size(branch_dot_trunk,1), size(branch_dot_trunk,2)))
+
+            call_julienne_assert(size(final_output,2) .equalsExpected. size(ymean))
+            do concurrent(integer :: i = 1:size(final_output,2)) default(none) shared(final_output, ymean)
+               final_output(:,i) = final_output(:,i) + ymean(i)
             end do
           end associate
         end block
