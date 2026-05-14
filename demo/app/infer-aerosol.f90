@@ -173,12 +173,17 @@ contains
             do concurrent(integer :: b = 1:size(aug_trunk,1)) default(none) shared(branch_dot_trunk, aug_trunk, raw_branch_outputs)
                branch_dot_trunk(b,:) = matmul(aug_trunk(b,:,:), raw_branch_outputs(b,:))
             end do
+
+            call_julienne_assert(size(branch_dot_trunk,2) .equalsExpected. size(ymean))
+            do concurrent(integer :: i = 1:size(branch_dot_trunk,2)) default(none) shared(branch_dot_trunk, ymean)
+               branch_dot_trunk(:,i) = branch_dot_trunk(:,i) + ymean(i)
+            end do
           end associate
         end block
     end associate count_samples
 
     end block time_inference
-   
+
   end subroutine read_stats_and_perform_inference
 
   function read_tensor_statistics(mean_file, standard_deviation_file, n) result(tensor_statistics)
