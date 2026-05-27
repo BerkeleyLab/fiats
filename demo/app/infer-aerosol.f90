@@ -78,7 +78,7 @@ contains
 
     allocate(branch_inputs(size(X_test,2),size(X_test,1)))
 
-    do concurrent(i = 1:size(X_test,1),  j = 1:size(X_test,2)) ! default(none) shared(X_test,input_components)
+    do concurrent(i = 1:size(X_test,1),  j = 1:size(X_test,2))  default(none) shared(X_test, branch_inputs, mean_X, std_X)
       associate(cube_root => (abs(X_test(i,j))**(1.d0/3.d0))*sign(1.d0,X_test(i,j)))
         branch_inputs(j,i) = (cube_root - mean_X(i))/std_X(i)
       end associate
@@ -177,9 +177,16 @@ contains
             allocate(final_output(size(branch_dot_trunk,1), size(branch_dot_trunk,2)))
 
             call_julienne_assert(size(final_output,2) .equalsExpected. size(ymean))
-            do concurrent(integer :: i = 1:size(final_output,2)) default(none) shared(final_output, ymean)
-               final_output(:,i) = final_output(:,i) + ymean(i)
+            call_julienne_assert(size(final_output,2) .equalsExpected. size(mean_y))
+            do concurrent(integer :: i = 1:size(final_output,2)) default(none) shared(final_output, ymean, mean_y, std_y)
+               final_output(:,i) = ((final_output(:,i) + ymean(i) + mean_y(i)) * std_y(i))**3
             end do
+
+            ! do concurrent(i = 1:size(X_test,1),  j = 1:size(X_test,2))  default(none) shared(X_test, branch_inputs, mean_X, std_X)
+            !    associate(cube_root => (abs(X_test(i,j))**(1.d0/3.d0))*sign(1.d0,X_test(i,j)))
+            !      branch_inputs(j,i) = (cube_root - mean_X(i))/std_X(i)
+            !    end associate
+            ! end do
           end associate
         end block
     end associate count_samples
