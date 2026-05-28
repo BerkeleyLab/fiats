@@ -158,20 +158,21 @@ contains
               raw_trunk_outputs(s,:) = trunk_outputs(s)%values()
             end do
 
-            adon_check: &
-            associate(adon_arrays => adon_arrays_t(path="adon"))
-               
-               print *,"shape(raw_trunk_outputs) =", shape(raw_trunk_outputs)
-               print *,"shape(adon_arrays%trunk_output(:,:,1)) =", shape(adon_arrays%trunk_output(:,:,:))
-               call_julienne_assert(.all. (shape(raw_trunk_outputs) .equalsExpected.  shape(adon_arrays%trunk_output(:,:,1))))
-               call_julienne_assert(.all. (raw_trunk_outputs .approximates.  adon_arrays%trunk_output(:,:,1) .within. 1D-03))
-
             call_julienne_assert(.all. (shape(raw_trunk_outputs) .equalsExpected. [m,20]))
             call_julienne_assert(.all. (shape(basis_repeated) .equalsExpected. [m,20,20]))
 
             ! Concatenate basis_repeated (shape [m,20,20]) with raw_trunk_outputs (shape [m,20]))
             ! to form aug_trunk (shape [m,20,21])
             aug_trunk = reshape([basis_repeated, raw_trunk_outputs], [m,n,n+1])
+
+            adon_check: &
+            associate(adon_arrays => adon_arrays_t(path="adon"))
+
+               print *,"shape(aug_trunk_outputs) =", shape(aug_trunk)
+               print *,"shape(adon_arrays%trunk_output) =", shape(adon_arrays%trunk_output)
+
+               call_julienne_assert(.all. (shape(aug_trunk) .equalsExpected.  shape(adon_arrays%trunk_output)))
+               call_julienne_assert(.all. (aug_trunk .approximates.  adon_arrays%trunk_output .within. 1D-03))
 
             print *,"Allocating raw_branch_outputs to shape ", size(branch_outputs), size(branch_outputs(1)%values())
             allocate(raw_branch_outputs(size(branch_outputs),size(branch_outputs(1)%values())))
