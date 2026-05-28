@@ -7,7 +7,16 @@ program infer_aerosol
 
   ! External dependencies:
   use fiats_m, only : unmapped_network_t, tensor_t, double_precision, double_precision_file_t
-  use julienne_m, only : string_t, command_line_t, csv, call_julienne_assert_, operator(.all.), operator(.equalsExpected.)
+  use julienne_m, only : &
+     call_julienne_assert_ &
+    ,command_line_t &
+    ,csv &
+    ,string_t &
+    ,operator(.approximates.) &
+    ,operator(.all.) &
+    ,operator(.equalsExpected.) &
+    ,operator(.within.)
+  use adon_arrays_m, only : adon_arrays_t
   use omp_lib
   use iso_fortran_env, only : int64, real64
 
@@ -149,6 +158,14 @@ contains
               raw_trunk_outputs(s,:) = trunk_outputs(s)%values()
             end do
 
+            adon_check: &
+            associate(adon_arrays => adon_arrays_t(path="adon"))
+               
+               print *,"shape(raw_trunk_outputs) =", shape(raw_trunk_outputs)
+               print *,"shape(adon_arrays%trunk_output(:,:,1)) =", shape(adon_arrays%trunk_output(:,:,:))
+               call_julienne_assert(.all. (shape(raw_trunk_outputs) .equalsExpected.  shape(adon_arrays%trunk_output(:,:,1))))
+               call_julienne_assert(.all. (raw_trunk_outputs .approximates.  adon_arrays%trunk_output(:,:,1) .within. 1D-03))
+
             call_julienne_assert(.all. (shape(raw_trunk_outputs) .equalsExpected. [m,20]))
             call_julienne_assert(.all. (shape(basis_repeated) .equalsExpected. [m,20,20]))
 
@@ -173,6 +190,11 @@ contains
             do concurrent(integer :: b = 1:size(aug_trunk,1)) default(none) shared(branch_dot_trunk, aug_trunk, raw_branch_outputs)
                branch_dot_trunk(b,:) = matmul(aug_trunk(b,:,:), raw_branch_outputs(b,:))
             end do
+
+               call_julienne_assert(.all.(shape(branch_dot_trunk) .equalsExpected. shape(adon_arrays%branch_dot_trunk)))
+               call_julienne_assert(.all.(adon_arrays%branch_dot_trunk .approximates. branch_dot_trunk .within. 1D-03))
+
+            end associate adon_check
 
             allocate(final_output(size(branch_dot_trunk,1), size(branch_dot_trunk,2)))
 
