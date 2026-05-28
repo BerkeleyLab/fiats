@@ -9,6 +9,8 @@ module adon_arrays_m
   public :: adon_arrays_t
 
   type adon_arrays_t
+    real(real64), allocatable :: branch_input(:,:)
+    real(real64), allocatable :: branch_output(:,:)
     real(real64), allocatable :: branch_dot_trunk(:,:)
     real(real64), allocatable :: trunk_output(:,:,:)
   end type

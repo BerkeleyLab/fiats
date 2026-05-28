@@ -13,6 +13,18 @@ contains
 
   module procedure read_npy
 
+    associate(file_metadata => open_npy(path // "/branch_input.npy"))
+      allocate(adon_arrays%branch_input(file_metadata%dims(1), file_metadata%dims(2))) ! C/Python ordering
+      read(file_metadata%unit_num) adon_arrays%branch_dot_trunk
+      close(file_metadata%unit_num)
+    end associate
+
+    associate(file_metadata => open_npy(path // "/branch_output_10_21.npy"))
+      allocate(adon_arrays%branch_output(file_metadata%dims(1), file_metadata%dims(2))) ! C/Python ordering
+      read(file_metadata%unit_num) adon_arrays%branch_dot_trunk
+      close(file_metadata%unit_num)
+    end associate
+
     associate(file_metadata => open_npy(path // "/branch_dot_trunk_10_20.npy"))
       allocate(adon_arrays%branch_dot_trunk(file_metadata%dims(1), file_metadata%dims(2))) ! C/Python ordering
       read(file_metadata%unit_num) adon_arrays%branch_dot_trunk
