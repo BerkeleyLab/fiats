@@ -20,23 +20,12 @@ contains
     read(unit_num) adon_arrays%branch_dot_trunk
     close(unit_num)
 
-    write(output_unit,'(a,2(i0,1x),a)') &
-      "branch_dot_trunk: Fortran shape = (", shape(adon_arrays%branch_dot_trunk), ")"
-    write(output_unit,'(a,4f12.6)') &
-      "  first 4 values:  ", adon_arrays%branch_dot_trunk(1,1), adon_arrays%branch_dot_trunk(2,1), &
-                             adon_arrays%branch_dot_trunk(3,1), adon_arrays%branch_dot_trunk(4,1)
-
     deallocate(dims)
 
     call open_npy(path // "/trunk_output_10_20_21.npy", unit_num, dims)
     allocate(adon_arrays%trunk_output(dims(3), dims(2), dims(1)))
     read(unit_num) adon_arrays%trunk_output
     close(unit_num)
-    write(output_unit,'(a,3(i0,1x),a)') &
-      "trunk_output:      Fortran shape = (", shape(adon_arrays%trunk_output), ")"
-    write(output_unit,'(a,4f12.6)') &
-      "  first 4 values:  ", adon_arrays%trunk_output(1,1,1), adon_arrays%trunk_output(2,1,1), &
-                             adon_arrays%trunk_output(3,1,1), adon_arrays%trunk_output(4,1,1)
 
   contains
 
