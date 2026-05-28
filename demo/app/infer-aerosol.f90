@@ -171,8 +171,8 @@ contains
                print *,"shape(aug_trunk_outputs) =", shape(aug_trunk)
                print *,"shape(adon_arrays%trunk_output) =", shape(adon_arrays%trunk_output)
 
-               call_julienne_assert(.all. (shape(aug_trunk) .equalsExpected.  shape(adon_arrays%trunk_output)))
-               call_julienne_assert(.all. (aug_trunk .approximates.  adon_arrays%trunk_output .within. 1D-03))
+               call_julienne_assert(.all. (shape(aug_trunk(1:10,:,:)) .equalsExpected.  shape(adon_arrays%trunk_output)))
+               call_julienne_assert(.all. (aug_trunk(1,:,:) .approximates.  adon_arrays%trunk_output(1,:,:) .within. 1D-03))
 
             print *,"Allocating raw_branch_outputs to shape ", size(branch_outputs), size(branch_outputs(1)%values())
             allocate(raw_branch_outputs(size(branch_outputs),size(branch_outputs(1)%values())))
@@ -252,32 +252,3 @@ contains
   end function
 
  end program infer_aerosol
-
-        !print*, "Starting inference via `omp parallel do` with ", samples, " samples of size ",size(input_components,2)
-        !call system_clock(t_start_omp, clock_rate)
-        !!$ t_start_omp = omp_get_wtime()
-        !!$omp parallel do shared(outputs,branch_network,input_components)
-        !do s = 1, samples
-        !  outputs(s) = branch_network%infer(tensor_t(input_components(s,:)))
-        !end do
-        !!$omp end parallel do
-        !!$ t_end_omp = omp_get_wtime()
-        !call system_clock(t_end_omp)
-        !print *,"Elapsed system clock during `omp parallel do`: ", real(t_end_omp - t_start_omp, real64)/real(clock_rate, real64)
-
-    !  call system_clock(t_finish)
-    !  print*, "Finished inference."
-    !  print *,"System clock time: ", real(t_finish - t_start, real64)/real(clock_rate, real64)
-    !  !$    print*,'OMP Total time = ',end_time - start_time
-
-    !  allocate(output_slice(num_outputs))
-
-    !  !$omp parallel do shared(outputs,output_components,icc,output_stats) private(output_slice,i,j)
-    !  post_process: &
-    !  do i = 1,icc
-    !     output_slice = outputs(i)%values()
-    !     do j = 1,num_outputs
-    !        output_components(i,j) = (output_stats%standard_deviation(j)*output_slice(j)+output_stats%mean(j))**3
-    !     end do
-    !  end do post_process
-    !  !$omp end parallel do

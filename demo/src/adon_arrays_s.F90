@@ -4,59 +4,55 @@
 submodule(adon_arrays_m) adon_arrays_s
   implicit none
 
+  type file_metadata_t
+    integer unit_num
+    integer, allocatable :: dims(:)
+  end type
+
 contains
 
   module procedure read_npy
 
-    integer :: unit_num
-    integer, allocatable :: dims(:)
+    associate(file_metadata => open_npy(path // "/branch_dot_trunk_10_20.npy"))
+      allocate(adon_arrays%branch_dot_trunk(file_metadata%dims(1), file_metadata%dims(2))) ! C/Python ordering
+      read(file_metadata%unit_num) adon_arrays%branch_dot_trunk
+      close(file_metadata%unit_num)
+    end associate
 
-    ! Dimensions reversed from numpy (C order) so a direct stream read is correct.
-    ! numpy branch_dot_trunk shape (10, 20)  -> Fortran (20, 10)
-    ! numpy trunk_output      shape (10,20,21)-> Fortran (21, 20, 10)
-
-    call open_npy(path // "/branch_dot_trunk_10_20.npy", unit_num, dims)
-    allocate(adon_arrays%branch_dot_trunk(dims(2), dims(1)))
-    read(unit_num) adon_arrays%branch_dot_trunk
-    close(unit_num)
-
-    deallocate(dims)
-
-    call open_npy(path // "/trunk_output_10_20_21.npy", unit_num, dims)
-    allocate(adon_arrays%trunk_output(dims(3), dims(2), dims(1)))
-    read(unit_num) adon_arrays%trunk_output
-    close(unit_num)
+    associate(file_metadata => open_npy(path // "/trunk_output_10_20_21.npy"))
+      allocate(adon_arrays%trunk_output(file_metadata%dims(1), file_metadata%dims(2), file_metadata%dims(3))) ! C/Python ordering
+      read(file_metadata%unit_num) adon_arrays%trunk_output
+      close(file_metadata%unit_num)
+    end associate
 
   contains
 
-    subroutine open_npy(filename, unit_num, dims)
+    function open_npy(filename) result(file_metadata_)
       character(len=*), intent(in) :: filename
-      integer, intent(out) :: unit_num
-      integer, allocatable, intent(out) :: dims(:)
-
+      type(file_metadata_t) file_metadata_
       integer :: ios, header_len
       integer(kind=int8)  :: preamble(8)
       integer(kind=int16) :: header_len_i16
       character(len=:), allocatable :: header
 
-      open(newunit=unit_num, file=filename, access='stream', form='unformatted', &
+      open(newunit=file_metadata_%unit_num, file=filename, access='stream', form='unformatted', &
            status='old', action='read', iostat=ios)
       if (ios /= 0) error stop "Cannot open .npy file"
 
-      read(unit_num) preamble
-      read(unit_num) header_len_i16
+      read(file_metadata_%unit_num) preamble
+      read(file_metadata_%unit_num) header_len_i16
       header_len = int(header_len_i16)
       if (header_len < 0) header_len = header_len + 65536  ! treat as unsigned
 
       allocate(character(len=header_len) :: header)
-      read(unit_num) header
+      read(file_metadata_%unit_num) header
 
-      call parse_shape(header, dims)
-    end subroutine
+      file_metadata_%dims = parse_shape(header)
+    end function
 
-    subroutine parse_shape(header, dims)
+    pure function parse_shape(header) result(dims_)
       character(len=*), intent(in) :: header
-      integer, allocatable, intent(out) :: dims(:)
+      integer, allocatable :: dims_(:)
 
       integer :: p, p_open, p_close, i, j, n, ios, val
       character(len=len(header)) :: tuple_str
@@ -77,7 +73,7 @@ contains
         end if
       end do
 
-      allocate(dims(n))
+      allocate(dims_(n))
 
       n = 0
       j = 1
@@ -87,13 +83,13 @@ contains
           if (len_trim(token) > 0) then
             n = n + 1
             read(token, *, iostat=ios) val
-            if (ios == 0) dims(n) = val
+            if (ios == 0) dims_(n) = val
           end if
           j = i + 1
         end if
       end do
-    end subroutine
+    end function
 
-  end procedure
+  end procedure read_npy
 
 end submodule adon_arrays_s
