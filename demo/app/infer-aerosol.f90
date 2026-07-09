@@ -201,8 +201,8 @@ contains
 
             call_julienne_assert(size(final_output,2) .equalsExpected. size(ymean))
             call_julienne_assert(size(final_output,2) .equalsExpected. size(mean_y))
-            do concurrent(integer :: i = 1:size(final_output,2)) default(none) shared(final_output, ymean, mean_y, std_y)
-               final_output(:,i) = ((final_output(:,i) + ymean(i) + mean_y(i)) * std_y(i))**3
+            do concurrent(integer :: i = 1:size(final_output,2)) default(none) shared(branch_dot_trunk, final_output, ymean, mean_y, std_y)
+               final_output(:,i) = ((branch_dot_trunk(:,i) + ymean(i) + mean_y(i)) * std_y(i))**3
             end do
 
             ! do concurrent(i = 1:size(X_test,1),  j = 1:size(X_test,2))  default(none) shared(X_test, branch_inputs, mean_X, std_X)
