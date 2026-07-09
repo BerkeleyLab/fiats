@@ -85,11 +85,11 @@ contains
     print *, "Reading the trunk network from " // trunk_file_name
     trunk_network = unmapped_network_t(double_precision_file_t(path // trunk_file_name))
 
-    allocate(branch_inputs(size(X_test,2),size(X_test,1)))
+    allocate(branch_inputs(size(X_test,1),size(X_test,2)))
 
     do concurrent(i = 1:size(X_test,1),  j = 1:size(X_test,2))  default(none) shared(X_test, branch_inputs, mean_X, std_X)
       associate(cube_root => (abs(X_test(i,j))**(1.d0/3.d0))*sign(1.d0,X_test(i,j)))
-        branch_inputs(j,i) = (cube_root - mean_X(i))/std_X(i)
+        branch_inputs(i,j) = (cube_root - mean_X(i))/std_X(i)
       end associate
     end do
 
@@ -101,14 +101,14 @@ contains
       integer s
 
       count_samples: &
-      associate(samples => size(branch_inputs,1))
+      associate(samples => size(branch_inputs,2))
 
         allocate(branch_outputs(samples))
 
-        print '(2(a,i))', "Starting branch inference via `do concurrent` with ", samples, " samples of size ",size(branch_inputs,2)
+        print '(2(a,i))', "Starting branch inference via `do concurrent` with ", samples, " samples of size ",size(branch_inputs,1)
         call system_clock(t_start_dc, clock_rate)
         do concurrent(integer :: s = 1:samples) default(none) shared(branch_outputs, branch_network, branch_inputs)
-          branch_outputs(s) = branch_network%infer(tensor_t(branch_inputs(s,:)))
+          branch_outputs(s) = branch_network%infer(tensor_t(branch_inputs(:,s)))
         end do
         call system_clock(t_end_dc)
         print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
@@ -117,16 +117,16 @@ contains
 
         associate(ncol => size(mean_X))
           do concurrent(i = 1:size(slice,1),  j = 1:size(slice,2)) ! default(none) shared(slice,input_components)
-            trunk_inputs(i,j) = (slice(i,j) - mean_X(ncol-4+j))/std_X(ncol-4+j)
+            trunk_inputs(i,j) = (slice(i,j) - mean_X(ncol-4+i))/std_X(ncol-4+i)
           end do
         end associate
 
         allocate(trunk_outputs(samples))
 
-        print*, "Starting trunk inference via `do concurrent` with ", samples, " samples of size ",size(trunk_inputs,2)
+        print*, "Starting trunk inference via `do concurrent` with ", samples, " samples of size ",size(trunk_inputs,1)
         call system_clock(t_start_dc, clock_rate)
         do concurrent(integer :: s = 1:samples) default(none) shared(trunk_outputs, trunk_network, trunk_inputs)
-          trunk_outputs(s) = trunk_network%infer(tensor_t(trunk_inputs(s,:)))
+          trunk_outputs(s) = trunk_network%infer(tensor_t(trunk_inputs(:,s)))
         end do
         call system_clock(t_end_dc)
         print *,"Elapsed system clock during `do concurrent`: ", real(t_end_dc - t_start_dc, real64)/real(clock_rate, real64)
@@ -140,30 +140,32 @@ contains
 
           associate(m=> size(trunk_outputs), n => size(trunk_outputs(1)%values()))
 
-            print *,"Allocating basis_repeated to shape ", m, size(basis,1), size(basis,2)
+            print *,"Allocating basis_repeated to shape ", size(basis,1), size(basis,2), m
 
-            ! Copy basis (shape [20,20]) m times to form basis_repeated (shape [m,20,20])
+            ! Copy basis (shape [20,20]) m times to form basis_repeated (shape [20,20,m])
 
-            allocate(basis_repeated(m, size(basis,1), size(basis,2)))
+            allocate(basis_repeated(size(basis,1), size(basis,2), m))
 
             do concurrent(integer :: b = 1:m) default(none) shared(basis, basis_repeated)
-              basis_repeated(b,:,:) = basis 
+              basis_repeated(:,:,b) = basis
             end do
-            
-            print *,"Allocating raw_trunk_outputs to shape ", m, n
 
-            allocate(raw_trunk_outputs(m,n))
+            print *,"Allocating raw_trunk_outputs to shape ", n, m
+
+            allocate(raw_trunk_outputs(n,m))
 
             do concurrent(integer :: s=1:size(trunk_outputs)) default(none) shared(raw_trunk_outputs, trunk_outputs)
-              raw_trunk_outputs(s,:) = trunk_outputs(s)%values()
+              raw_trunk_outputs(:,s) = trunk_outputs(s)%values()
             end do
 
-            call_julienne_assert(.all. (shape(raw_trunk_outputs) .equalsExpected. [m,20]))
-            call_julienne_assert(.all. (shape(basis_repeated) .equalsExpected. [m,20,20]))
+            call_julienne_assert(.all. (shape(raw_trunk_outputs) .equalsExpected. [20,m]))
+            call_julienne_assert(.all. (shape(basis_repeated) .equalsExpected. [20,20,m]))
 
-            ! Concatenate basis_repeated (shape [m,20,20]) with raw_trunk_outputs (shape [m,20]))
-            ! to form aug_trunk (shape [m,20,21])
-            aug_trunk = reshape([basis_repeated, raw_trunk_outputs], [m,n,n+1])
+            ! Concatenate basis_repeated (shape [20,20,m]) with raw_trunk_outputs (shape [20,m])
+            ! to form aug_trunk (shape [n+1,n,m])
+            allocate(aug_trunk(n+1, n, m))
+            aug_trunk(1:n, :, :) = basis_repeated
+            aug_trunk(n+1, :, :) = raw_trunk_outputs
 
             adon_check: &
             associate(adon_arrays => adon_arrays_t(path="adon"))
@@ -171,38 +173,41 @@ contains
                print *,"shape(aug_trunk_outputs) =", shape(aug_trunk)
                print *,"shape(adon_arrays%trunk_output) =", shape(adon_arrays%trunk_output)
 
-               call_julienne_assert(.all. (shape(aug_trunk(1:10,:,:)) .equalsExpected.  shape(adon_arrays%trunk_output)))
-               call_julienne_assert(.all. (aug_trunk(1,:,:) .approximates.  adon_arrays%trunk_output(1,:,:) .within. 1D-03))
+               call_julienne_assert(.all. (shape(aug_trunk(:,:,1:10)) .equalsExpected.  shape(adon_arrays%trunk_output)))
+               call_julienne_assert(.all. (aug_trunk(:,:,1) .approximates.  adon_arrays%trunk_output(:,:,1) .within. 1D-03))
 
-            print *,"Allocating raw_branch_outputs to shape ", size(branch_outputs), size(branch_outputs(1)%values())
-            allocate(raw_branch_outputs(size(branch_outputs),size(branch_outputs(1)%values())))
+            print *,"Allocating raw_branch_outputs to shape ", size(branch_outputs(1)%values()), size(branch_outputs)
+            allocate(raw_branch_outputs(size(branch_outputs(1)%values()),size(branch_outputs)))
 
-            call_julienne_assert(.all. (shape(raw_branch_outputs) .equalsExpected. [m,21]))
+            call_julienne_assert(.all. (shape(raw_branch_outputs) .equalsExpected. [21,m]))
 
             do concurrent(integer :: s=1:size(branch_outputs)) default(none) shared(raw_branch_outputs, branch_outputs)
-              raw_branch_outputs(s,:) = branch_outputs(s)%values()
+              raw_branch_outputs(:,s) = branch_outputs(s)%values()
             end do
 
-            print *,"Allocating branch_dot_trunk to shape ", size(aug_trunk,1), size(aug_trunk,2)
+            print *,"Allocating branch_dot_trunk to shape ", size(aug_trunk,2), size(aug_trunk,3)
 
-            allocate(branch_dot_trunk(size(aug_trunk,1), size(aug_trunk,2)))
+            allocate(branch_dot_trunk(size(aug_trunk,2), size(aug_trunk,3)))
 
-            ! Inner product (B,n) <- matmul( (B,n,m), (B,m) )
-            do concurrent(integer :: b = 1:size(aug_trunk,1)) default(none) shared(branch_dot_trunk, aug_trunk, raw_branch_outputs)
-               branch_dot_trunk(b,:) = matmul(aug_trunk(b,:,:), raw_branch_outputs(b,:))
+            ! Inner product (n,B): (21,) * (21,20) -> (20,) for each sample b
+            do concurrent(integer :: b = 1:size(aug_trunk,3)) default(none) shared(branch_dot_trunk, aug_trunk, raw_branch_outputs)
+               branch_dot_trunk(:,b) = matmul(raw_branch_outputs(:,b), aug_trunk(:,:,b))
             end do
 
-               call_julienne_assert(.all.(shape(branch_dot_trunk) .equalsExpected. shape(adon_arrays%branch_dot_trunk)))
-               call_julienne_assert(.all.(adon_arrays%branch_dot_trunk .approximates. branch_dot_trunk .within. 1D-03))
+            call_julienne_assert(.all.(shape(branch_dot_trunk(:,1:10)) .equalsExpected. shape(adon_arrays%branch_dot_trunk)))
+
+            call_julienne_assert(.all.(adon_arrays%branch_dot_trunk .approximates. branch_dot_trunk(:,1:10) .within. 1D-03))
 
             end associate adon_check
 
+            print *, "adon_check complete"
+
             allocate(final_output(size(branch_dot_trunk,1), size(branch_dot_trunk,2)))
 
-            call_julienne_assert(size(final_output,2) .equalsExpected. size(ymean))
-            call_julienne_assert(size(final_output,2) .equalsExpected. size(mean_y))
-            do concurrent(integer :: i = 1:size(final_output,2)) default(none) shared(branch_dot_trunk, final_output, ymean, mean_y, std_y)
-               final_output(:,i) = ((branch_dot_trunk(:,i) + ymean(i) + mean_y(i)) * std_y(i))**3
+            call_julienne_assert(size(final_output,1) .equalsExpected. size(ymean))
+            call_julienne_assert(size(final_output,1) .equalsExpected. size(mean_y))
+            do concurrent(integer :: i = 1:size(final_output,1)) default(none) shared(branch_dot_trunk, final_output, ymean, mean_y, std_y)
+               final_output(i,:) = ((branch_dot_trunk(i,:) + ymean(i) + mean_y(i)) * std_y(i))**3
             end do
 
             ! do concurrent(i = 1:size(X_test,1),  j = 1:size(X_test,2))  default(none) shared(X_test, branch_inputs, mean_X, std_X)
@@ -243,12 +248,12 @@ contains
     double precision, intent(in) :: level(:), longitude(:), latitude(:)
     double precision, intent(in) :: cldfr_idx(:,:)
     integer, intent(in) :: i
-    double precision :: X_test_aug(size(cldfr_idx,1), 4)
+    double precision :: X_test_aug(4, size(cldfr_idx,1))
 
-    X_test_aug(:,1) =     level(int(cldfr_idx(:,1))+1)
-    X_test_aug(:,2) =  latitude(int(cldfr_idx(:,2))+1)
-    X_test_aug(:,3) = longitude(int(cldfr_idx(:,2))+1)
-    X_test_aug(:,4) = dble(i)
+    X_test_aug(1,:) =     level(int(cldfr_idx(:,1))+1)
+    X_test_aug(2,:) =  latitude(int(cldfr_idx(:,2))+1)
+    X_test_aug(3,:) = longitude(int(cldfr_idx(:,2))+1)
+    X_test_aug(4,:) = dble(i)
   end function
 
  end program infer_aerosol
