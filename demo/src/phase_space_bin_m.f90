@@ -1,6 +1,14 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
+#include "julienne-assert-macros.h"
+
 module phase_space_bin_m
+  use julienne_m, only : &
+     call_julienne_assert_ &
+    ,operator(.all.) &
+    ,operator(.greaterThan.) &
+    ,operator(.isAtLeast.)
   use tensor_map_m, only : tensor_map_t
   use tensor_m, only : tensor_t
   implicit none
@@ -32,6 +40,9 @@ contains
   module procedure bin
 
     real, parameter :: half = 0.5
+
+    call_julienne_assert(.all. (maxima .greaterThan. minima))
+    call_julienne_assert(.all. (num_bins .isAtLeast. 1))
 
     associate(bin_widths => (maxima - minima)/real(num_bins))
       associate(tensor_values => min(tensor%values(), maxima - half*bin_widths))
