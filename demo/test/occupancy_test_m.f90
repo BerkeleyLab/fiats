@@ -91,15 +91,46 @@ contains
      end do
 
      associate(bin => [(phase_space_bin_t(tensors(i), minima = minval(components, dim=1), maxima = maxval(components, dim=1), num_bins = bins), i = 1, num_tensors)])
-
-       call occupancy%vacate(dims = [( bins, i = 1, num_components)])
-
-       populate_bins: &
        do i = 1, size(bin)
-         if (occupancy%occupied(bin(i)%loc)) cycle
          call occupancy%occupy(bin(i)%loc)
-      end do populate_bins
+      end do
     end associate
+
+    block
+
+    integer unique1, unique2, unique3
+    logical list1(3*3)
+    logical list2(3*3)
+    logical list3(3*3)
+
+
+    do i = 1,num_tensors
+
+
+     associate(bin => [(phase_space_bin_t(tensors(i), minima = minval(components, dim=1), maxima = maxval(components, dim=1), num_bins = bins), i = 1, num_tensors)])
+       do i = 1, size(bin)
+         !call occupancy%occupy(bin(i)%loc) ! This designates the bin as occupied (or does nothing if it's already occupied).
+         unique1 = (bin%loc(1)-1) + (bin%loc(2) - 1)*3 + (bin%loc(3) - 1)*(3**2)
+         unique2 = (bin%loc(4)-1) + (bin%loc(5) - 1)*3 + (bin%loc(6) - 1)*(3**2)
+         unique3 = (bin%loc(7)-1) + (bin%loc(8) - 1)*3 + (bin%loc(9) - 1)*(3**2)
+      end do
+      end associate
+
+      if (list1(unique1) = .true. .and. list2(unique2) = .true. .and. list3(unique3) .eq. .true.)
+         do j = 1,number_in_list
+            - Compare each element
+              if (Not in list) then
+                 Add the sample
+              else
+                 Do not add the sample
+              end if
+      else
+         -- Add the sample
+      end if
+
+    end do
+
+    end block
 
     test_diagnosis = passing_test()
     test_diagnosis = test_diagnosis .also. ((int(occupancy%num_bins()) .equalsExpected. int(bins**num_components)))
