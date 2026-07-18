@@ -63,19 +63,19 @@ contains
     call_julienne_assert(self%num_occupied_ .isAtLeast. 0)
     call_julienne_assert(self%num_occupied_ .isAtMost. size(self%phase_space_bin_))
 
-    if (self%num_occupied_ < size(self%phase_space_bin_)) then
-      self%phase_space_bin_(self%num_occupied_+1) = bin
+    self%num_occupied_ = self%num_occupied_ + 1
+
+    if (self%num_occupied_ <= size(self%phase_space_bin_)) then
+      self%phase_space_bin_(self%num_occupied_) = bin
     else
       block
         type(phase_space_bin_t), allocatable :: tmp(:)
         call move_alloc(self%phase_space_bin_, tmp)
-        allocate(self%phase_space_bin_(self%num_occupied_+1))
-        self%phase_space_bin_(1:self%num_occupied_) = tmp
-        self%phase_space_bin_(self%num_occupied_+1) = bin
+        allocate(self%phase_space_bin_(2*self%num_occupied_))
+        self%phase_space_bin_(1:size(tmp)) = tmp
+        self%phase_space_bin_(size(tmp)+1) = bin
       end block
     end if
-
-    self%num_occupied_ = self%num_occupied_ + 1
 
   end procedure
 
