@@ -72,7 +72,7 @@ contains
        num_tensors => size(tensors) &
       ,num_components => size(tensors(1)%values()) &
     )
-      call_julienne_assert(.all. [( size(tensors(t)%values()), i=2,num_tensors )] .equalsExpected. num_tensors)
+      call_julienne_assert(.all. ([( size(tensors(t)%values()), t=2,num_tensors )] .equalsExpected. num_components))
 
       allocate(components(num_tensors, num_components))
 

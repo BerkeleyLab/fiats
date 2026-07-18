@@ -4,7 +4,14 @@
 #include "julienne-assert-macros.h"
 
 submodule(occupancy_m) occupancy_s
-  use julienne_m, only : call_julienne_assert_, operator(.equalsExpected.)
+  use julienne_m, only : &
+     call_julienne_assert_ &
+    ,operator(.all.) &
+    ,operator(.equalsExpected.) &
+    ,operator(.expect.) &
+    ,operator(.greaterThan.) &
+    ,operator(.isAtMost.) &
+    ,operator(.isAtLeast.)
   implicit none
 
 contains
@@ -14,6 +21,7 @@ contains
     occupancy%maxima_ = maxima
     occupancy%bins_per_dimension_ = bins_per_dimension
     occupancy%phase_space_bin_ = [phase_space_bin_t::]
+    occupancy%num_occupied_ = 0
   end procedure
 
   module procedure construct_phase_space_bin
@@ -35,7 +43,10 @@ contains
 
     integer b
 
-    do b = 1, size(self%phase_space_bin_,1)
+    call_julienne_assert(.expect. allocated(self%phase_space_bin_))
+    call_julienne_assert(self%num_occupied_ .isAtMost. size(self%phase_space_bin_))
+
+    do b = 1, self%num_occupied_
       if (all(self%phase_space_bin_(b)%loc == bin%loc)) then
         bin_occupied = .true.
         return
@@ -47,11 +58,29 @@ contains
   end procedure
 
   module procedure add
-    self%phase_space_bin_ = [self%phase_space_bin_, bin] ! ToDo: double list instead of growing by one whenever needed
+
+    call_julienne_assert(.expect. allocated(self%phase_space_bin_))
+    call_julienne_assert(self%num_occupied_ .isAtLeast. 0)
+    call_julienne_assert(self%num_occupied_ .isAtMost. size(self%phase_space_bin_))
+
+    if (self%num_occupied_ < size(self%phase_space_bin_)) then
+      self%phase_space_bin_(self%num_occupied_+1) = bin
+    else
+      block
+        type(phase_space_bin_t), allocatable :: tmp(:)
+        call move_alloc(self%phase_space_bin_, tmp)
+        allocate(self%phase_space_bin_(self%num_occupied_+1))
+        self%phase_space_bin_(1:self%num_occupied_) = tmp
+        self%phase_space_bin_(self%num_occupied_+1) = bin
+      end block
+    end if
+
+    self%num_occupied_ = self%num_occupied_ + 1
+
   end procedure
 
   module procedure num_occupied
-    occupied = size(self%phase_space_bin_)
+    occupied = self%num_occupied_
   end procedure
 
   module procedure num_bins

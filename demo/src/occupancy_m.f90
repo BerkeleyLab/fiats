@@ -33,7 +33,7 @@ module occupancy_m
     private
     type(phase_space_bin_t), allocatable :: phase_space_bin_(:)
     real, allocatable :: minima_(:), maxima_(:)
-    integer bins_per_dimension_
+    integer bins_per_dimension_, num_occupied_
   contains
     procedure, non_overridable :: occupied
     procedure, non_overridable :: add
@@ -54,7 +54,7 @@ module occupancy_m
 
   interface
 
-    pure module subroutine add(self, bin)
+    module subroutine add(self, bin)
       !! Add bin to list of occupied bins
       implicit none
       class(occupancy_t), intent(inout) :: self
