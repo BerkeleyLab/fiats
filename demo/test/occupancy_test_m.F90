@@ -14,14 +14,12 @@ module occupancy_test_m
     ,operator(.expect.) &
     ,operator(.equalsExpected.) &
     ,passing_test &
-    ,string_t &
     ,test_t &
     ,test_result_t &
     ,test_description_t &
     ,test_diagnosis_t
   use fiats_m, only : tensor_t
-  use phase_space_bin_m, only : phase_space_bin_t
-  use occupancy_m, only : occupancy_t
+  use occupancy_m, only : occupancy_t, phase_space_bin_t
   implicit none
 
   private
@@ -49,67 +47,65 @@ contains
     ])
   end function
 
-  type(test_diagnosis_t) function check_bin_occupation() result(test_diagnosis)
+  function check_bin_occupation() result(test_diagnosis)
+    type(test_diagnosis_t) test_diagnosis
       
     type(tensor_t), allocatable :: tensors(:)
-    type(occupancy_t) occupancy
     real, allocatable :: components(:,:)
-    integer, parameter :: bins = 3
-    integer(int64) i
+    integer, parameter :: bins_per_dimension = 3
+    integer(int64) t
 
-     ! Define tensors with the depicted tensor counts in a 2D slice of a 9D bin space:
-!    |----|----|----|
-!    |    |    |  1 |
-!    |----|----|----|
-!    |    | 3  |    |
-!    |----|----|----|
-!    | 2  |    |    |
-!    |----|----|----|    plus one extra tensor to extablish the ranges ofthe other components
+    ! Define tensors with the tensor counts depicted below in a 2D slice of a 9D bin space.
+    ! Add one extra tensor to extablish the ranges of the other components
+
     tensors = [ &
-       tensor_t([ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & 
-      ,tensor_t([ 1.5, 1.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & 
-
-      ,tensor_t([ 2.5, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & 
-      ,tensor_t([ 2.5, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & 
-      ,tensor_t([ 2.5, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & 
-
-      ,tensor_t([ 4.0, 4.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & 
-
-      ,tensor_t([ 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0]) & 
+       tensor_t([ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & !    |----|----|----|
+      ,tensor_t([ 1.5, 1.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & !    |    |    |  1 |
+      ,tensor_t([ 2.5, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & !    |----|----|----|
+      ,tensor_t([ 2.5, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & !    |    | 3  |    |
+      ,tensor_t([ 2.5, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & !    |----|----|----|
+      ,tensor_t([ 4.0, 4.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]) & !    | 2  |    |    |
+      ,tensor_t([ 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0]) & !    |----|----|----|
     ]
 
-   associate( &
-      num_tensors => size(tensors) &
-     ,num_components => size(tensors(1)%values()) &
-   )
-     call_julienne_assert(.all. [( size(tensors(i)%values()), i=2,num_tensors )] .equalsExpected. num_tensors)
+    associate( &
+       num_tensors => size(tensors) &
+      ,num_components => size(tensors(1)%values()) &
+    )
+      call_julienne_assert(.all. [( size(tensors(t)%values()), i=2,num_tensors )] .equalsExpected. num_tensors)
 
-     allocate(components(num_tensors, num_components))
+      allocate(components(num_tensors, num_components))
 
-     do concurrent(integer :: tensor = 1:num_tensors)
-       components(tensor,:) = tensors(tensor)%values()
-     end do
+      do concurrent(integer :: t = 1:num_tensors)
+        components(t,:) = tensors(t)%values()
+      end do
 
-     associate(bin => [(phase_space_bin_t(tensors(i), minima = minval(components, dim=1), maxima = maxval(components, dim=1), num_bins = bins), i = 1, num_tensors)])
+      block 
+        type(occupancy_t) occupancy
+        integer c
 
-       call occupancy%vacate(dims = [( bins, i = 1, num_components)])
+        associate( &
+           minima => [(minval(components(:,c)), c = 1, num_components)] &
+          ,maxima => [(maxval(components(:,c)), c = 1, num_components)] &
+        )
+          associate(bin => [(phase_space_bin_t(tensors(t), minima = minima, maxima = maxima, bins_per_dimension = bins_per_dimension), t = 1, num_tensors)])
+            
+            occupancy = occupancy_t(minima = minima, maxima = maxima, bins_per_dimension = bins_per_dimension)
+        
+            do t = 1, num_tensors
+             if (.not. occupancy%occupied(bin(t))) call occupancy%add(bin(t))
+            end do
 
-       populate_bins: &
-       do i = 1, size(bin)
-         if (occupancy%occupied(bin(i)%loc)) cycle
-         call occupancy%occupy(bin(i)%loc)
-      end do populate_bins
+            test_diagnosis = passing_test()
+            test_diagnosis = test_diagnosis .also. (.expect. occupancy%occupied(phase_space_bin_t([1,1,1, 1,1,1, 1,1,1])))
+            test_diagnosis = test_diagnosis .also. (.expect. occupancy%occupied(phase_space_bin_t([2,2,1, 1,1,1, 1,1,1])))
+            test_diagnosis = test_diagnosis .also. (.expect. occupancy%occupied(phase_space_bin_t([3,3,1, 1,1,1, 1,1,1])))
+            test_diagnosis = test_diagnosis .also. (.expect. occupancy%occupied(phase_space_bin_t([3,3,3, 3,3,3, 3,3,3])))
+            test_diagnosis = test_diagnosis .also. (occupancy%num_occupied() .equalsExpected. 4) // "number of occupied bins"
+          end associate
+        end associate
+      end block
     end associate
-
-    test_diagnosis = passing_test()
-    test_diagnosis = test_diagnosis .also. ((int(occupancy%num_bins()) .equalsExpected. int(bins**num_components)))
-    test_diagnosis = test_diagnosis .also. ((.expect. occupancy%occupied([[1,1,1, 1,1,1, 1,1,1]])))
-    test_diagnosis = test_diagnosis .also. ((.expect. occupancy%occupied([[2,2,1, 1,1,1, 1,1,1]])))
-    test_diagnosis = test_diagnosis .also. ((.expect. occupancy%occupied([[3,3,1, 1,1,1, 1,1,1]])))
-    test_diagnosis = test_diagnosis .also. ((.expect. occupancy%occupied([[3,3,3, 3,3,3, 3,3,3]])))
-
-  end associate
-
   end function
 
 end module occupancy_test_m
