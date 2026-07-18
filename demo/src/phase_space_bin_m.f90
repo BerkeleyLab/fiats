@@ -12,11 +12,14 @@ module phase_space_bin_m
   use tensor_map_m, only : tensor_map_t
   use tensor_m, only : tensor_t
   implicit none
-  
+
   public :: phase_space_bin_t
 
-  type phase_space_bin_t
-    integer, allocatable :: loc(:)
+  integer, parameter :: default_kind = kind(1)
+
+  type phase_space_bin_t(k)
+    integer, kind :: k = default_kind
+    integer(k), allocatable :: loc(:)
   end type
  
   interface phase_space_bin_t
