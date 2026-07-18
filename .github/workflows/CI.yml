@@ -10,9 +10,9 @@ jobs:
       matrix:
         os: [ubuntu-24.04]
       fail-fast: true
-    container: gmao/llvm-flang:latest
+    container: phhargrove/llvm-flang:22.1.0-latest
     env:
-      FC: flang-new
+      FC: flang
       CC: clang
 
     steps:
@@ -31,4 +31,4 @@ jobs:
         $CC --version
         export FPM_FC=$FC
         export FPM_CC=$CC
-        fpm test --flag "-mmlir -allow-assumed-rank -O3"
+        fpm test --profile release
