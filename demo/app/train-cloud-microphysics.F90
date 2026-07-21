@@ -17,10 +17,9 @@ program train_cloud_microphysics
     tensor_map_t, training_configuration_t, training_data_files_t, shuffle
 
   !! Internal dependencies:
-  use phase_space_bin_m, only : phase_space_bin_t
   use NetCDF_file_m, only: NetCDF_file_t
   use NetCDF_variable_m, only: NetCDF_variable_t, tensors, time_derivative_t
-  use occupancy_m, only : occupancy_t
+  use occupancy_m, only : occupancy_t, phase_space_bin_t
   use default_m, only: default_or_internal_read
   use time_data_m, only: time_data_t
 
@@ -316,15 +315,15 @@ contains
         ! Determine the phase-space bin that holds each output tensor
         associate(output_minima => output_map%minima(), output_maxima => output_map%maxima())
           bin = [(phase_space_bin_t(output_tensors(i), output_minima, output_maxima, args%num_bins), i = 1, size(output_tensors))]
+          occupancy = occupancy_t(minima = output_minima, maxima = output_maxima, bins_per_dimension = args%num_bins)
         end associate
-
-        call occupancy%vacate( dims = [( args%num_bins, i = 1, size(derivative,1))] )
 
         print *, "Populate bins"
         do i = 1, size(output_tensors)
-          if (occupancy%occupied(bin(i)%loc)) cycle
-          call occupancy%occupy(bin(i)%loc)
-          keepers(i) = .true.
+          if (.not. occupancy%occupied(bin(i))) then
+            call occupancy%add(bin(i))
+            keepers(i) = .true.
+          end if
         end do
 
         print *, "Pack remaining input/output tensor pairs"

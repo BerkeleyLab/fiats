@@ -1,77 +1,88 @@
 ! Copyright (c), The Regents of the University of California
 ! Terms of use are as specified in LICENSE.txt
+
 module occupancy_m
   use iso_fortran_env, only : int64
+  use tensor_m, only : tensor_t
   implicit none
 
   private
   public :: occupancy_t
+  public :: phase_space_bin_t
 
- type occupancy_t
-   private
-   logical, allocatable :: occupied_1D_(:)
-   logical, allocatable :: occupied_2D_(:,:)
-   logical, allocatable :: occupied_3D_(:,:,:)
-   logical, allocatable :: occupied_4D_(:,:,:,:)
-   logical, allocatable :: occupied_5D_(:,:,:,:,:)
-   logical, allocatable :: occupied_6D_(:,:,:,:,:,:)
-   logical, allocatable :: occupied_7D_(:,:,:,:,:,:,:)
-   logical, allocatable :: occupied_8D_(:,:,:,:,:,:,:,:)
-   logical, allocatable :: occupied_9D_(:,:,:,:,:,:,:,:,:)
-   logical, allocatable :: occupied_10D_(:,:,:,:,:,:,:,:,:,:)
-   logical, allocatable :: occupied_11D_(:,:,:,:,:,:,:,:,:,:,:)
-   logical, allocatable :: occupied_12D_(:,:,:,:,:,:,:,:,:,:,:,:)
-   logical, allocatable :: occupied_13D_(:,:,:,:,:,:,:,:,:,:,:,:,:)
-   logical, allocatable :: occupied_14D_(:,:,:,:,:,:,:,:,:,:,:,:,:,:)
-   logical, allocatable :: occupied_15D_(:,:,:,:,:,:,:,:,:,:,:,:,:,:,:)
- contains
-   procedure, non_overridable :: vacate
-   procedure, non_overridable :: occupy
-   procedure, non_overridable :: occupied
-   procedure, non_overridable :: num_occupied
-   procedure, non_overridable :: num_bins
-   procedure, non_overridable :: allocated_dim
- end type
+  integer, parameter :: default_kind = kind(1)
 
- interface
+  type phase_space_bin_t
+    integer, allocatable :: loc(:)
+  end type
+ 
+  interface phase_space_bin_t
 
-   pure module subroutine vacate(self, dims)
-     implicit none
-     class(occupancy_t), intent(inout) :: self
-     integer, intent(in) :: dims(:)
-   end subroutine
+    pure module function construct_phase_space_bin(tensor, minima, maxima, bins_per_dimension) result(phase_space_bin)
+      implicit none
+      type(tensor_t), intent(in) :: tensor
+      real, intent(in) :: minima(:), maxima(:)
+      integer, intent(in) :: bins_per_dimension
+      type(phase_space_bin_t) phase_space_bin
+    end function
 
-   pure module subroutine occupy(self, loc)
-     implicit none
-     class(occupancy_t), intent(inout) :: self
-     integer, intent(in) :: loc(:)
-   end subroutine
+  end interface
 
-   pure module function occupied(self, loc) result(bin_occupied)
-     implicit none
-     class(occupancy_t), intent(in) :: self
-     integer, intent(in) :: loc(:)
-     logical bin_occupied
-   end function
+  type occupancy_t
+    !! Encapsulate the occupancy status of phase-space bins
+    private
+    type(phase_space_bin_t), allocatable :: phase_space_bin_(:)
+    real, allocatable :: minima_(:), maxima_(:)
+    integer bins_per_dimension_, num_occupied_
+  contains
+    procedure, non_overridable :: occupied
+    procedure, non_overridable :: add
+    procedure, non_overridable :: num_occupied
+    procedure, non_overridable :: num_bins
+  end type
 
-   pure module function num_occupied(self) result(bins_occupied)
-     implicit none
-     class(occupancy_t), intent(in) :: self
-     integer(int64) bins_occupied
-   end function
+  interface occupancy_t
 
-   pure module function num_bins(self) result(bins_total)
-     implicit none
-     class(occupancy_t), intent(in) :: self
-     integer(int64) bins_total
-   end function
+    module pure function construct_occupancy(minima, maxima, bins_per_dimension) result(occupancy)
+      implicit none
+      real, intent(in) :: minima(:), maxima(:)
+      integer, intent(in) ::  bins_per_dimension
+      type(occupancy_t) occupancy
+    end function
 
-   pure module function allocated_dim(self) result(my_dim)
-     implicit none
-     class(occupancy_t), intent(in) :: self
-     integer my_dim
-   end function
+  end interface
 
- end interface
+  interface
+
+    module subroutine add(self, bin)
+      !! Add bin to list of occupied bins
+      implicit none
+      class(occupancy_t), intent(inout) :: self
+      type(phase_space_bin_t), intent(in) :: bin
+    end subroutine
+
+    pure module function occupied(self, bin) result(bin_occupied)
+      !! Result is true if the provided bin location has been occupied
+      implicit none
+      class(occupancy_t), intent(in) :: self
+      type(phase_space_bin_t), intent(in) :: bin
+      logical bin_occupied
+    end function
+
+    pure module function num_occupied(self) result(occupied)
+      !! Result is the number of occupied bins
+      implicit none
+      class(occupancy_t), intent(in) :: self
+      integer occupied
+    end function
+
+    pure module function num_bins(self) result(bins)
+      !! Result is the total number of bins
+      implicit none
+      class(occupancy_t), intent(in) :: self
+      integer(int64) bins
+    end function
+
+  end interface
   
 end module occupancy_m
