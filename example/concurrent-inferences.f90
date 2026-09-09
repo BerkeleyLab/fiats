@@ -104,7 +104,7 @@ contains
     allocate(input_components(lat,lev,lon,neural_network%num_inputs()))
     call random_number(input_components)
 
-    do concurrent(i=1:lat, k=1:lev, j=1:lon)
+    do concurrent(i=1:lat, k=1:lev, j=1:lon) default(none) shared(random_inputs, input_components)
       random_inputs(i,k,j) = tensor_t(input_components(i,k,j,:))
     end do
   end function
@@ -115,7 +115,7 @@ contains
 
     print *,"Performing",lat*lev*lon," inferences inside `do concurrent`."
     call system_clock(t_start, clock_rate)
-    do concurrent(i=1:lat, k=1:lev, j=1:lon)
+    do concurrent(i=1:lat, k=1:lev, j=1:lon) default(none) shared(outputs, neural_network, inputs)
       outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
     end do
     call system_clock(t_finish)
@@ -171,13 +171,13 @@ contains
     allocate(input_components(lat,lev,lon,neural_network%num_inputs()))
     call random_number(input_components)
 
-    do concurrent(i=1:lat, k=1:lev, j=1:lon)
+    do concurrent(i=1:lat, k=1:lev, j=1:lon) default(none) shared(input_components,inputs)
       inputs(i,k,j) = tensor_t(input_components(i,k,j,:))
     end do
 
     print *,"Performing double-precision inference inside `do concurrent`"
     call system_clock(t_start, clock_rate)
-    do concurrent(i=1:lat, k=1:lev, j=1:lon)
+    do concurrent(i=1:lat, k=1:lev, j=1:lon) default(none) shared(outputs, neural_network, inputs)
       outputs(i,k,j) = neural_network%infer(inputs(i,k,j))
     end do
     call system_clock(t_finish)
