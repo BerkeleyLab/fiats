@@ -659,7 +659,7 @@ contains
     block
       integer l
       logical layer_eq(ubound(lhs%nodes_,1))
-      real, parameter :: tolerance = 1.D-12
+      double precision, parameter :: tolerance = 1.D-12
 
       associate(n => lhs%nodes_)
         do concurrent(l = 1:ubound(n,1))
